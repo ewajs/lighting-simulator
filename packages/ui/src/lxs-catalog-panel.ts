@@ -1,4 +1,4 @@
-import type { Catalog } from '@lighting-sim/core';
+import type { Catalog } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -14,17 +14,17 @@ import { icon, mountIcon } from './icons';
 import { sharedStyles } from './styles';
 
 /** dataTransfer type carrying a productId while a product card is dragged. */
-export const PRODUCT_DRAG_TYPE = 'application/x-lsim-product';
+export const PRODUCT_DRAG_TYPE = 'application/x-lxs-product';
 
 /**
  * Browse, search and filter the host's catalog. Clicking a product (or
  * pressing Enter on it) asks to add it; cards can also be dragged into the viewport.
  *
- * @fires lsim-add-product - `detail: { productId }`
+ * @fires lxs-add-product - `detail: { productId }`
  */
-@customElement('lsim-catalog-panel')
+@customElement('lxs-catalog-panel')
 @localized()
-export class LsimCatalogPanel extends LitElement {
+export class LxsCatalogPanel extends LitElement {
   static override styles = [
     sharedStyles,
     css`
@@ -35,22 +35,22 @@ export class LsimCatalogPanel extends LitElement {
       }
       .tools {
         display: grid;
-        gap: var(--lsim-sp-2);
-        padding: var(--lsim-sp-3);
+        gap: var(--lxs-sp-2);
+        padding: var(--lxs-sp-3);
       }
       .search {
         display: flex;
         align-items: center;
-        gap: var(--lsim-sp-2);
-        height: var(--lsim-control-h);
-        padding: 0 var(--lsim-sp-2);
-        background: var(--lsim-surface-2);
-        border: 1px solid var(--lsim-line);
-        border-radius: var(--lsim-r-md);
-        color: var(--lsim-text-faint);
+        gap: var(--lxs-sp-2);
+        height: var(--lxs-control-h);
+        padding: 0 var(--lxs-sp-2);
+        background: var(--lxs-surface-2);
+        border: 1px solid var(--lxs-line);
+        border-radius: var(--lxs-r-md);
+        color: var(--lxs-text-faint);
       }
       .search:focus-within {
-        border-color: var(--lsim-accent);
+        border-color: var(--lxs-accent);
       }
       .search input {
         flex: 1;
@@ -58,53 +58,53 @@ export class LsimCatalogPanel extends LitElement {
         border: 0;
         background: transparent;
         outline: none;
-        color: var(--lsim-text);
+        color: var(--lxs-text);
       }
       .chips {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--lsim-sp-1);
+        gap: var(--lxs-sp-1);
       }
       .chip {
         height: 24px;
-        padding: 0 var(--lsim-sp-2);
-        border: 1px solid var(--lsim-line);
+        padding: 0 var(--lxs-sp-2);
+        border: 1px solid var(--lxs-line);
         border-radius: 12px;
         background: transparent;
-        color: var(--lsim-text-muted);
-        font-size: var(--lsim-fs-xs);
+        color: var(--lxs-text-muted);
+        font-size: var(--lxs-fs-xs);
         cursor: pointer;
       }
       .chip:hover {
-        color: var(--lsim-text);
-        border-color: var(--lsim-line-strong);
+        color: var(--lxs-text);
+        border-color: var(--lxs-line-strong);
       }
       .chip[aria-pressed='true'] {
         border-color: transparent;
-        background: var(--lsim-accent-soft);
-        color: var(--lsim-accent);
+        background: var(--lxs-accent-soft);
+        color: var(--lxs-accent);
       }
       .list {
         flex: 1;
         overflow-y: auto;
-        padding: 0 var(--lsim-sp-2) var(--lsim-sp-3);
+        padding: 0 var(--lxs-sp-2) var(--lxs-sp-3);
       }
       .card {
         display: grid;
         grid-template-columns: 44px minmax(0, 1fr) auto;
         align-items: center;
-        gap: var(--lsim-sp-3);
+        gap: var(--lxs-sp-3);
         width: 100%;
-        padding: var(--lsim-sp-2);
+        padding: var(--lxs-sp-2);
         border: 1px solid transparent;
-        border-radius: var(--lsim-r-md);
+        border-radius: var(--lxs-r-md);
         background: transparent;
         text-align: left;
         cursor: grab;
       }
       .card:hover {
-        background: var(--lsim-surface-2);
-        border-color: var(--lsim-line);
+        background: var(--lxs-surface-2);
+        border-color: var(--lxs-line);
       }
       .thumb {
         display: grid;
@@ -112,10 +112,10 @@ export class LsimCatalogPanel extends LitElement {
         width: 44px;
         height: 44px;
         overflow: hidden;
-        border: 1px solid var(--lsim-line);
-        border-radius: var(--lsim-r-md);
-        background: var(--lsim-surface-2);
-        color: var(--lsim-text-faint);
+        border: 1px solid var(--lxs-line);
+        border-radius: var(--lxs-r-md);
+        background: var(--lxs-surface-2);
+        color: var(--lxs-text-faint);
       }
       .thumb img {
         width: 100%;
@@ -130,15 +130,15 @@ export class LsimCatalogPanel extends LitElement {
       }
       .name {
         font-weight: 600;
-        font-size: var(--lsim-fs-sm);
+        font-size: var(--lxs-fs-sm);
       }
       .spec {
-        color: var(--lsim-text-faint);
-        font-size: var(--lsim-fs-xs);
+        color: var(--lxs-text-faint);
+        font-size: var(--lxs-fs-xs);
       }
       .add {
         opacity: 0;
-        color: var(--lsim-text-muted);
+        color: var(--lxs-text-muted);
       }
       .card:hover .add,
       .card:focus-visible .add {
@@ -234,16 +234,16 @@ export class LsimCatalogPanel extends LitElement {
 
   #add(productId: string): void {
     this.dispatchEvent(
-      new CustomEvent('lsim-add-product', { detail: { productId }, bubbles: true, composed: true }),
+      new CustomEvent('lxs-add-product', { detail: { productId }, bubbles: true, composed: true }),
     );
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-catalog-panel': LsimCatalogPanel;
+    'lxs-catalog-panel': LxsCatalogPanel;
   }
   interface HTMLElementEventMap {
-    'lsim-add-product': CustomEvent<{ productId: string }>;
+    'lxs-add-product': CustomEvent<{ productId: string }>;
   }
 }

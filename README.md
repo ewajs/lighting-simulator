@@ -8,8 +8,8 @@ preview of the light.
 
 Planned packages (npm workspaces):
 
-- `@lighting-sim/core`: headless engine (scene model, photometry, rendering)
-- `@lighting-sim/ui`: optional Lit web components, i18n (`es-AR` / `en`)
+- `@luxstudio/core`: headless engine (scene model, photometry, rendering)
+- `@luxstudio/ui`: optional Lit web components, i18n (`es-AR` / `en`)
 - `apps/demo`: reference integration with sample data, deployed to
   https://ewajs.github.io/lighting-simulator/
 
@@ -17,7 +17,7 @@ Planned packages (npm workspaces):
 
 **Realignment in progress** (roadmap Phase 0). Core has the scene model,
 undo/redo and a three.js viewport. The live demo shows a sample room with
-selection, inside the `@lighting-sim/ui` shell (Spanish by default), with a
+selection, inside the `@luxstudio/ui` shell (Spanish by default), with a
 catalog to add products (click or drag), a scene list with totals, an
 inspector, undo/redo, view controls, keyboard shortcuts, light/dark themes
 and ES/EN. Phase 0 is complete; next is a polish step, then M1, photometry with IES files.

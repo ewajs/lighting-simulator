@@ -4,7 +4,7 @@ import prettier from 'eslint-config-prettier';
 import tseslint from 'typescript-eslint';
 
 const appsImport = {
-  group: ['**/apps/**', '@lighting-sim/demo'],
+  group: ['**/apps/**', '@luxstudio/demo'],
   message: 'packages/ must not import from apps/ (ADR 0006).',
 };
 
@@ -29,7 +29,7 @@ export default defineConfig(
           patterns: [
             appsImport,
             {
-              group: ['@lighting-sim/ui', '@lighting-sim/ui/*', '**/packages/ui/**'],
+              group: ['@luxstudio/ui', '@luxstudio/ui/*', '**/packages/ui/**'],
               message: 'core must not import ui (ADR 0006).',
             },
           ],

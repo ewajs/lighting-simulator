@@ -1,4 +1,4 @@
-import type { Simulator } from '@lighting-sim/core';
+import type { Simulator } from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -16,13 +16,13 @@ export type PanelName = 'library' | 'inspector';
  * the rest is UI state, reported as events.
  *
  * @slot brand - The host's logo or name.
- * @fires lsim-theme-change - `detail: { theme }`
- * @fires lsim-locale-request - `detail: { locale }`
- * @fires lsim-panel-toggle - `detail: { panel }`
+ * @fires lxs-theme-change - `detail: { theme }`
+ * @fires lxs-locale-request - `detail: { locale }`
+ * @fires lxs-panel-toggle - `detail: { panel }`
  */
-@customElement('lsim-top-bar')
+@customElement('lxs-top-bar')
 @localized()
-export class LsimTopBar extends LitElement {
+export class LxsTopBar extends LitElement {
   static override styles = [
     sharedStyles,
     segmentedStyles,
@@ -30,15 +30,15 @@ export class LsimTopBar extends LitElement {
       :host {
         display: flex;
         align-items: center;
-        gap: var(--lsim-sp-3);
-        padding: 0 var(--lsim-sp-3);
-        background: var(--lsim-surface-1);
-        border-bottom: 1px solid var(--lsim-line);
+        gap: var(--lxs-sp-3);
+        padding: 0 var(--lxs-sp-3);
+        background: var(--lxs-surface-1);
+        border-bottom: 1px solid var(--lxs-line);
       }
       .side {
         display: flex;
         align-items: center;
-        gap: var(--lsim-sp-1);
+        gap: var(--lxs-sp-1);
         flex: 1;
       }
       .side.end {
@@ -53,13 +53,13 @@ export class LsimTopBar extends LitElement {
         background: transparent;
       }
       .icon-btn[aria-pressed='false'] {
-        color: var(--lsim-text-faint);
+        color: var(--lxs-text-faint);
       }
       .divider {
         width: 1px;
         height: 20px;
-        margin: 0 var(--lsim-sp-1);
-        background: var(--lsim-line);
+        margin: 0 var(--lxs-sp-1);
+        background: var(--lxs-line);
       }
     `,
   ];
@@ -84,7 +84,7 @@ export class LsimTopBar extends LitElement {
         ${this.#button(
           msg('Show library'),
           icon(PanelLeft),
-          () => this.#emit('lsim-panel-toggle', { panel: 'library' }),
+          () => this.#emit('lxs-panel-toggle', { panel: 'library' }),
           {
             pressed: this.libraryOpen,
           },
@@ -92,14 +92,13 @@ export class LsimTopBar extends LitElement {
         ${this.#button(
           msg('Show inspector'),
           icon(PanelRight),
-          () => this.#emit('lsim-panel-toggle', { panel: 'inspector' }),
+          () => this.#emit('lxs-panel-toggle', { panel: 'inspector' }),
           { pressed: this.inspectorOpen },
         )}
         ${this.#button(
           this.theme === 'dark' ? msg('Light theme') : msg('Dark theme'),
           icon(this.theme === 'dark' ? Sun : Moon),
-          () =>
-            this.#emit('lsim-theme-change', { theme: this.theme === 'dark' ? 'light' : 'dark' }),
+          () => this.#emit('lxs-theme-change', { theme: this.theme === 'dark' ? 'light' : 'dark' }),
         )}
         <span class="divider"></span>
         <div class="segmented" role="radiogroup" aria-label=${msg('Language')}>
@@ -109,7 +108,7 @@ export class LsimTopBar extends LitElement {
                 type="button"
                 role="radio"
                 aria-checked=${this.locale === locale}
-                @click=${() => this.#emit('lsim-locale-request', { locale })}
+                @click=${() => this.#emit('lxs-locale-request', { locale })}
               >
                 ${locale === 'es-AR' ? 'ES' : 'EN'}
               </button>`,
@@ -145,11 +144,11 @@ export class LsimTopBar extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-top-bar': LsimTopBar;
+    'lxs-top-bar': LxsTopBar;
   }
   interface HTMLElementEventMap {
-    'lsim-theme-change': CustomEvent<{ theme: Theme }>;
-    'lsim-locale-request': CustomEvent<{ locale: Locale }>;
-    'lsim-panel-toggle': CustomEvent<{ panel: PanelName }>;
+    'lxs-theme-change': CustomEvent<{ theme: Theme }>;
+    'lxs-locale-request': CustomEvent<{ locale: Locale }>;
+    'lxs-panel-toggle': CustomEvent<{ panel: PanelName }>;
   }
 }

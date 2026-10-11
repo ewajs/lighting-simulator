@@ -1,4 +1,4 @@
-import type { RenderMode, ViewName } from '@lighting-sim/core';
+import type { RenderMode, ViewName } from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -6,7 +6,7 @@ import { Scan } from 'lucide';
 import type { FieldChange } from './field-change';
 import { formatFixed } from './format';
 import { icon } from './icons';
-import './lsim-slider-field';
+import './lxs-slider-field';
 import { segmentedStyles, sharedStyles } from './styles';
 
 /** Exposure range offered, in EV stops. */
@@ -16,14 +16,14 @@ const EXPOSURE_RANGE = { min: -3, max: 3, step: 0.1 };
  * Floating controls over the viewport: render mode, preset views, framing and
  * exposure. Pure UI: reports choices as events for the host to apply.
  *
- * @fires lsim-render-mode-change - `detail: { mode }`
- * @fires lsim-view-request - `detail: { view }`
- * @fires lsim-frame-request
- * @fires lsim-exposure-change - `detail: { ev }`
+ * @fires lxs-render-mode-change - `detail: { mode }`
+ * @fires lxs-view-request - `detail: { view }`
+ * @fires lxs-frame-request
+ * @fires lxs-exposure-change - `detail: { ev }`
  */
-@customElement('lsim-viewport-controls')
+@customElement('lxs-viewport-controls')
 @localized()
-export class LsimViewportControls extends LitElement {
+export class LxsViewportControls extends LitElement {
   static override styles = [
     sharedStyles,
     segmentedStyles,
@@ -36,15 +36,15 @@ export class LsimViewportControls extends LitElement {
       .glass {
         position: absolute;
         pointer-events: auto;
-        background: var(--lsim-overlay);
+        background: var(--lxs-overlay);
         -webkit-backdrop-filter: blur(12px);
         backdrop-filter: blur(12px);
-        border: 1px solid var(--lsim-line);
-        border-radius: var(--lsim-r-lg);
-        box-shadow: var(--lsim-shadow);
+        border: 1px solid var(--lxs-line);
+        border-radius: var(--lxs-r-lg);
+        box-shadow: var(--lxs-shadow);
       }
       .modes {
-        top: var(--lsim-sp-3);
+        top: var(--lxs-sp-3);
         left: 50%;
         transform: translateX(-50%);
         padding: 3px;
@@ -54,8 +54,8 @@ export class LsimViewportControls extends LitElement {
         background: transparent;
       }
       .views {
-        top: var(--lsim-sp-3);
-        right: var(--lsim-sp-3);
+        top: var(--lxs-sp-3);
+        right: var(--lxs-sp-3);
         display: grid;
         gap: 2px;
         padding: 3px;
@@ -64,32 +64,32 @@ export class LsimViewportControls extends LitElement {
         width: 56px;
         height: 28px;
         border: 0;
-        border-radius: var(--lsim-r-sm);
+        border-radius: var(--lxs-r-sm);
         background: transparent;
-        color: var(--lsim-text-muted);
-        font-size: var(--lsim-fs-xs);
+        color: var(--lxs-text-muted);
+        font-size: var(--lxs-fs-xs);
         font-weight: 600;
         cursor: pointer;
       }
       .views button:hover {
-        background: var(--lsim-surface-3);
-        color: var(--lsim-text);
+        background: var(--lxs-surface-3);
+        color: var(--lxs-text);
       }
       .views button[aria-pressed='true'] {
-        background: var(--lsim-accent-soft);
-        color: var(--lsim-accent);
+        background: var(--lxs-accent-soft);
+        color: var(--lxs-accent);
       }
       .views .frame {
         display: grid;
         place-items: center;
-        border-top: 1px solid var(--lsim-line);
-        border-radius: 0 0 var(--lsim-r-sm) var(--lsim-r-sm);
+        border-top: 1px solid var(--lxs-line);
+        border-radius: 0 0 var(--lxs-r-sm) var(--lxs-r-sm);
       }
       .exposure {
-        right: var(--lsim-sp-3);
-        bottom: var(--lsim-sp-3);
+        right: var(--lxs-sp-3);
+        bottom: var(--lxs-sp-3);
         width: 180px;
-        padding: var(--lsim-sp-2) var(--lsim-sp-3);
+        padding: var(--lxs-sp-2) var(--lxs-sp-3);
       }
     `,
   ];
@@ -118,7 +118,7 @@ export class LsimViewportControls extends LitElement {
                 type="button"
                 role="radio"
                 aria-checked=${this.renderMode === mode}
-                @click=${() => this.#emit('lsim-render-mode-change', { mode })}
+                @click=${() => this.#emit('lxs-render-mode-change', { mode })}
               >
                 ${label}
               </button>`,
@@ -140,7 +140,7 @@ export class LsimViewportControls extends LitElement {
             html`<button
               type="button"
               aria-pressed=${this.view === view}
-              @click=${() => this.#emit('lsim-view-request', { view })}
+              @click=${() => this.#emit('lxs-view-request', { view })}
             >
               ${label}
             </button>`,
@@ -150,7 +150,7 @@ export class LsimViewportControls extends LitElement {
           type="button"
           aria-label=${msg('Frame selection')}
           title=${msg('Frame selection')}
-          @click=${() => this.#emit('lsim-frame-request', {})}
+          @click=${() => this.#emit('lxs-frame-request', {})}
         >
           ${icon(Scan)}
         </button>
@@ -158,17 +158,17 @@ export class LsimViewportControls extends LitElement {
       <div
         class="glass exposure"
         title=${msg('Double-click to reset')}
-        @dblclick=${() => this.#emit('lsim-exposure-change', { ev: 0 })}
+        @dblclick=${() => this.#emit('lxs-exposure-change', { ev: 0 })}
       >
-        <lsim-slider-field
+        <lxs-slider-field
           label=${msg('Exposure')}
           .value=${this.exposureEv}
           .min=${EXPOSURE_RANGE.min}
           .max=${EXPOSURE_RANGE.max}
           .step=${EXPOSURE_RANGE.step}
           .format=${(ev: number) => `${ev > 0 ? '+' : ''}${formatFixed(ev, 1)} EV`}
-          @lsim-change=${({ detail }: CustomEvent<FieldChange>) => this.#emit('lsim-exposure-change', { ev: detail.value })}
-        ></lsim-slider-field>
+          @lxs-change=${({ detail }: CustomEvent<FieldChange>) => this.#emit('lxs-exposure-change', { ev: detail.value })}
+        ></lxs-slider-field>
       </div>
     `;
   }
@@ -180,12 +180,12 @@ export class LsimViewportControls extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-viewport-controls': LsimViewportControls;
+    'lxs-viewport-controls': LxsViewportControls;
   }
   interface HTMLElementEventMap {
-    'lsim-render-mode-change': CustomEvent<{ mode: RenderMode }>;
-    'lsim-view-request': CustomEvent<{ view: ViewName }>;
-    'lsim-frame-request': CustomEvent<object>;
-    'lsim-exposure-change': CustomEvent<{ ev: number }>;
+    'lxs-render-mode-change': CustomEvent<{ mode: RenderMode }>;
+    'lxs-view-request': CustomEvent<{ view: ViewName }>;
+    'lxs-frame-request': CustomEvent<object>;
+    'lxs-exposure-change': CustomEvent<{ ev: number }>;
   }
 }

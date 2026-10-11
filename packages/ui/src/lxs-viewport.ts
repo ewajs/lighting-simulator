@@ -5,28 +5,28 @@ import {
   type RenderMode,
   type Simulator,
   type ViewName,
-} from '@lighting-sim/core';
+} from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { PRODUCT_DRAG_TYPE } from './lsim-catalog-panel';
+import { PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
 
 /**
  * The 3D viewport: wraps core's Viewport (ADR 0019). It highlights what it is
- * given and reports clicks as `lsim-pick` events; it keeps no selection itself.
+ * given and reports clicks as `lxs-pick` events; it keeps no selection itself.
  *
- * @fires lsim-pick - `detail` is core's PickEvent: `{ luminaireId, event }`.
- * @fires lsim-drop-product - a catalog card was dropped: `detail: { productId, at }`.
+ * @fires lxs-pick - `detail` is core's PickEvent: `{ luminaireId, event }`.
+ * @fires lxs-drop-product - a catalog card was dropped: `detail: { productId, at }`.
  */
-@customElement('lsim-viewport')
+@customElement('lxs-viewport')
 @localized()
-export class LsimViewport extends LitElement {
+export class LxsViewport extends LitElement {
   static override styles = css`
     :host {
       display: block;
       position: relative;
       overflow: hidden;
-      background: var(--lsim-viewport-bg);
+      background: var(--lxs-viewport-bg);
     }
     .canvas {
       position: absolute;
@@ -37,8 +37,8 @@ export class LsimViewport extends LitElement {
       inset: 0;
       display: grid;
       place-content: center;
-      color: var(--lsim-text-muted);
-      font: var(--lsim-fs-md) var(--lsim-font-ui);
+      color: var(--lxs-text-muted);
+      font: var(--lxs-fs-md) var(--lxs-font-ui);
     }
   `;
 
@@ -127,7 +127,7 @@ export class LsimViewport extends LitElement {
     if (!productId || !at) return;
     event.preventDefault();
     this.dispatchEvent(
-      new CustomEvent<DropProductDetail>('lsim-drop-product', {
+      new CustomEvent<DropProductDetail>('lxs-drop-product', {
         detail: { productId, at },
         bubbles: true,
         composed: true,
@@ -137,12 +137,12 @@ export class LsimViewport extends LitElement {
 
   #emitPick(pick: PickEvent): void {
     this.dispatchEvent(
-      new CustomEvent<PickEvent>('lsim-pick', { detail: pick, bubbles: true, composed: true }),
+      new CustomEvent<PickEvent>('lxs-pick', { detail: pick, bubbles: true, composed: true }),
     );
   }
 }
 
-/** Detail of `lsim-drop-product`: which product, and where on the floor it was dropped. */
+/** Detail of `lxs-drop-product`: which product, and where on the floor it was dropped. */
 export interface DropProductDetail {
   readonly productId: string;
   readonly at: FloorPoint;
@@ -150,10 +150,10 @@ export interface DropProductDetail {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-viewport': LsimViewport;
+    'lxs-viewport': LxsViewport;
   }
   interface HTMLElementEventMap {
-    'lsim-pick': CustomEvent<PickEvent>;
-    'lsim-drop-product': CustomEvent<DropProductDetail>;
+    'lxs-pick': CustomEvent<PickEvent>;
+    'lxs-drop-product': CustomEvent<DropProductDetail>;
   }
 }

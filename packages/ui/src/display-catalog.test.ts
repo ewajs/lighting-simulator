@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_ROOM, type Luminaire } from '@lighting-sim/core';
+import { DEFAULT_ROOM, type Luminaire } from '@luxstudio/core';
 import { filterItems, luminaireNames, type CatalogItem } from './display-catalog';
 
 const items: CatalogItem[] = [

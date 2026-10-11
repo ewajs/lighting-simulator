@@ -1,4 +1,4 @@
-import type { RenderMode, ViewName } from '@lighting-sim/core';
+import type { RenderMode, ViewName } from '@luxstudio/core';
 
 /** What a keyboard shortcut asks the app to do. */
 export type ShortcutAction =

@@ -1,7 +1,7 @@
 // Selection rules for the UI (ADR 0019: the host owns selection). Pure, so
 // they're unit-tested without a browser.
 
-import type { Scene } from '@lighting-sim/core';
+import type { Scene } from '@luxstudio/core';
 
 /**
  * Selection after a click. A plain click selects only the hit luminaire (or

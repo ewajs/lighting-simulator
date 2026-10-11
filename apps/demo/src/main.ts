@@ -1,24 +1,24 @@
-import { Simulator } from '@lighting-sim/core';
-import '@lighting-sim/ui';
-import '@lighting-sim/ui/theme.css';
+import { Simulator } from '@luxstudio/core';
+import '@luxstudio/ui';
+import '@luxstudio/ui/theme.css';
 import { sampleCatalog } from './sample-catalog';
 import { sampleDisplay } from './sample-display';
 
 const simulator = new Simulator({ catalog: sampleCatalog });
 addStarterLayout(simulator);
 
-const app = document.createElement('lsim-app');
+const app = document.createElement('lxs-app');
 app.simulator = simulator;
 app.catalog = sampleDisplay('es-AR'); // Matches the default UI locale.
 // Product names come from the host, so swap them when the user changes language.
 app.addEventListener(
-  'lsim-locale-change',
+  'lxs-locale-change',
   ({ detail }) => (app.catalog = sampleDisplay(detail.locale)),
 );
 
 const brand = document.createElement('span');
 brand.slot = 'brand';
-brand.textContent = 'Lighting Simulator';
+brand.textContent = 'Lux Studio';
 app.append(brand);
 document.body.append(app);
 

@@ -11,34 +11,34 @@ import { parseNumberInput, stepValue } from './number-input';
  * separator; ↑/↓ step (×10 with Shift); Enter commits, Esc reverts. Invalid
  * text reverts to the current value and out-of-range values are clamped.
  *
- * @fires lsim-change - `detail: FieldChange`. One focus session shares a merge key.
+ * @fires lxs-change - `detail: FieldChange`. One focus session shares a merge key.
  */
-@customElement('lsim-number-field')
+@customElement('lxs-number-field')
 @localized()
-export class LsimNumberField extends LitElement {
+export class LxsNumberField extends LitElement {
   static override styles = [
     fieldStyles,
     css`
       .control {
         display: flex;
         align-items: center;
-        height: var(--lsim-control-h);
-        background: var(--lsim-surface-2);
-        border: 1px solid var(--lsim-line);
-        border-radius: var(--lsim-r-md);
+        height: var(--lxs-control-h);
+        background: var(--lxs-surface-2);
+        border: 1px solid var(--lxs-line);
+        border-radius: var(--lxs-r-md);
       }
       .control:hover {
-        border-color: var(--lsim-line-strong);
+        border-color: var(--lxs-line-strong);
       }
       .control:focus-within {
-        border-color: var(--lsim-accent);
+        border-color: var(--lxs-accent);
       }
       input {
         flex: 1;
         width: 100%;
         min-width: 0;
         height: 100%;
-        padding: 0 var(--lsim-sp-2);
+        padding: 0 var(--lxs-sp-2);
         border: 0;
         background: transparent;
         color: inherit;
@@ -47,9 +47,9 @@ export class LsimNumberField extends LitElement {
         outline: none;
       }
       .unit {
-        padding: 0 var(--lsim-sp-2);
-        color: var(--lsim-text-faint);
-        font-size: var(--lsim-fs-xs);
+        padding: 0 var(--lxs-sp-2);
+        color: var(--lxs-text-faint);
+        font-size: var(--lxs-fs-xs);
       }
       :host([disabled]) .control {
         opacity: 0.4;
@@ -129,6 +129,6 @@ export class LsimNumberField extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-number-field': LsimNumberField;
+    'lxs-number-field': LxsNumberField;
   }
 }

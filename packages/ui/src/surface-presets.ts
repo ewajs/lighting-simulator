@@ -1,5 +1,5 @@
 import { msg } from '@lit/localize';
-import type { Surface } from '@lighting-sim/core';
+import type { Surface } from '@luxstudio/core';
 
 /** A named room finish offered as a one-click preset. */
 export interface SurfacePreset extends Surface {

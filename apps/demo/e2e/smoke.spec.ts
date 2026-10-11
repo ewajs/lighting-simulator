@@ -16,7 +16,7 @@ async function openDemo(page: Page): Promise<string[]> {
   });
   await page.goto('/');
   // The viewport appends its canvas once the renderer has started.
-  await expect(page.locator('lsim-viewport canvas')).toBeVisible();
+  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
   return errors;
 }
 
@@ -62,14 +62,14 @@ test('adds products from the catalog by click and by drag and drop', async ({ pa
 
   await page
     .getByRole('button', { name: /Colgante 48 W/ })
-    .dragTo(page.locator('lsim-viewport'), { targetPosition: { x: 200, y: 600 } });
+    .dragTo(page.locator('lxs-viewport'), { targetPosition: { x: 200, y: 600 } });
   await expect(page.getByText('Luminarias: 9')).toBeVisible();
   expect(errors).toEqual([]);
 });
 
 test('search filters the catalog, ignoring accents', async ({ page }) => {
   await openDemo(page);
-  const cards = page.locator('lsim-catalog-panel .card');
+  const cards = page.locator('lxs-catalog-panel .card');
   await expect(cards).toHaveCount(6);
   await page.getByPlaceholder('Buscar productos').fill('lampara');
   await expect(cards).toHaveCount(2);
@@ -81,8 +81,8 @@ test('the scene tab shows totals and selects from the list', async ({ page }) =>
   await openDemo(page);
   await page.getByRole('tab', { name: 'Escena' }).click();
   // Starter layout: 48 + 3 × 7 + 12 + 6 + 9 = 96 W and 4200 + 3 × 560 + 1000 + 420 + 806 = 8106 lm.
-  await expect(page.locator('lsim-scene-panel .stat', { hasText: 'Potencia' })).toContainText('96');
-  await expect(page.locator('lsim-scene-panel .stat', { hasText: 'Flujo' })).toContainText('8.106');
+  await expect(page.locator('lxs-scene-panel .stat', { hasText: 'Potencia' })).toContainText('96');
+  await expect(page.locator('lxs-scene-panel .stat', { hasText: 'Flujo' })).toContainText('8.106');
 
   const row = page.getByRole('option', { name: /Colgante 48 W 1/ });
   await row.click();
@@ -184,11 +184,11 @@ test('keyboard shortcuts delete, undo, duplicate and switch off', async ({ page 
 test('theme, language, collapsed panels and the plan view', async ({ page }) => {
   const errors = await openDemo(page);
   await page.getByRole('button', { name: 'Tema claro' }).click();
-  await expect(page.locator('lsim-app')).toHaveAttribute('data-lsim-theme', 'light');
+  await expect(page.locator('lxs-app')).toHaveAttribute('data-lxs-theme', 'light');
 
   await page.getByRole('radio', { name: 'EN' }).click();
   await expect(page.getByRole('heading', { name: 'Catalog' })).toBeVisible();
-  // The host swaps product names on lsim-locale-change.
+  // The host swaps product names on lxs-locale-change.
   await expect(page.getByRole('button', { name: /Pendant 48 W/ })).toBeVisible();
 
   await page.getByRole('button', { name: 'Show library' }).click();

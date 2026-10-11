@@ -15,7 +15,7 @@ ADR 0012 requires every UI string to be translatable, with `es-AR` as the defaul
 
 ## Decision
 
-Use `@lit/localize` in runtime mode. Source strings are English (`msg('…')`), translations live in `packages/ui/xliff/es-AR.xlf`, and `lit-localize build` generates locale modules into `packages/ui/src/generated/` (committed). `<lsim-app locale="…">` sets the page locale, defaulting to `es-AR`; `setLocale()` is exported for hosts.
+Use `@lit/localize` in runtime mode. Source strings are English (`msg('…')`), translations live in `packages/ui/xliff/es-AR.xlf`, and `lit-localize build` generates locale modules into `packages/ui/src/generated/` (committed). `<lxs-app locale="…">` sets the page locale, defaulting to `es-AR`; `setLocale()` is exported for hosts.
 
 ## Consequences
 

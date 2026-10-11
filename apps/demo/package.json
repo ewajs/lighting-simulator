@@ -1,5 +1,5 @@
 {
-  "name": "@lighting-sim/demo",
+  "name": "@luxstudio/demo",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "typecheck": "tsc -p ."
   },
   "dependencies": {
-    "@lighting-sim/core": "0.0.0",
-    "@lighting-sim/ui": "0.0.0"
+    "@luxstudio/core": "0.0.0",
+    "@luxstudio/ui": "0.0.0"
   }
 }

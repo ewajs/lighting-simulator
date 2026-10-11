@@ -1,4 +1,4 @@
-import type { DisplayCatalog } from '@lighting-sim/ui';
+import type { DisplayCatalog } from '@luxstudio/ui';
 
 type Labels = Record<'es-AR' | 'en', string>;
 

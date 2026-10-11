@@ -6,17 +6,17 @@ export const fieldStyles = css`
     display: grid;
     gap: 6px;
     min-width: 0;
-    font: var(--lsim-fs-md) / 1.45 var(--lsim-font-ui);
-    color: var(--lsim-text);
+    font: var(--lxs-fs-md) / 1.45 var(--lxs-font-ui);
+    color: var(--lxs-text);
   }
   .label {
     display: flex;
     justify-content: space-between;
-    color: var(--lsim-text-muted);
-    font-size: var(--lsim-fs-xs);
+    color: var(--lxs-text-muted);
+    font-size: var(--lxs-fs-xs);
   }
   .readout {
-    color: var(--lsim-text);
-    font-family: var(--lsim-font-mono);
+    color: var(--lxs-text);
+    font-family: var(--lxs-font-mono);
   }
 `;
