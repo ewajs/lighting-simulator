@@ -1,15 +1,19 @@
-import type { Catalog } from '@luxstudio/core';
+import type { Catalog, MountType } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { Plus, Search } from 'lucide';
 import {
+  catalogFacets,
   EMPTY_DISPLAY_CATALOG,
   filterItems,
+  NO_FILTER,
+  type CatalogFilter,
   type CatalogItem,
   type DisplayCatalog,
 } from './display-catalog';
 import { formatKelvin, formatNumber } from './format';
+import { mountLabel } from './labels';
 import { icon, mountIcon } from './icons';
 import { sharedStyles } from './styles';
 
@@ -59,6 +63,26 @@ export class LxsCatalogPanel extends LitElement {
         background: transparent;
         outline: none;
         color: var(--lxs-text);
+      }
+      .selects {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--lxs-sp-2);
+      }
+      select {
+        min-width: 0;
+        height: var(--lxs-control-h);
+        padding: 0 var(--lxs-sp-2);
+        border: 1px solid var(--lxs-line);
+        border-radius: var(--lxs-r-md);
+        background: var(--lxs-surface-2);
+        color: var(--lxs-text);
+        font: inherit;
+        font-size: var(--lxs-fs-sm);
+        cursor: pointer;
+      }
+      select:focus-visible {
+        border-color: var(--lxs-accent);
       }
       .chips {
         display: flex;
@@ -152,11 +176,13 @@ export class LxsCatalogPanel extends LitElement {
   /** Simulation data, for the spec line on each card. */
   @property({ attribute: false }) products: Catalog | undefined;
 
-  @state() private query = '';
-  @state() private categoryId: string | null = null;
+  @state() private filter: CatalogFilter = NO_FILTER;
 
   override render() {
-    const matches = filterItems(this.display.items, this.query, this.categoryId);
+    const empty: Catalog = { get: () => undefined };
+    const products = this.products ?? empty;
+    const matches = filterItems(this.display.items, this.filter, products);
+    const facets = catalogFacets(this.display.items, products);
     return html`
       <div class="panel-header">
         <h2>${msg('Catalog')}</h2>
@@ -167,12 +193,44 @@ export class LxsCatalogPanel extends LitElement {
           ${icon(Search)}
           <input
             type="search"
-            .value=${this.query}
+            .value=${this.filter.query}
             placeholder=${msg('Search products')}
             aria-label=${msg('Search products')}
-            @input=${(event: Event) => (this.query = (event.target as HTMLInputElement).value)}
+            @input=${(event: Event) => this.#setFilter({ query: (event.target as HTMLInputElement).value })}
           />
         </label>
+        <div class="selects">
+          <select
+            aria-label=${msg('Mount type')}
+            @change=${(event: Event) =>
+              this.#setFilter({
+                mount: ((event.target as HTMLSelectElement).value || null) as MountType | null,
+              })}
+          >
+            <option value="" ?selected=${this.filter.mount === null}>${msg('Mount')}</option>
+            ${facets.mounts.map(
+              (mount) =>
+                html`<option value=${mount} ?selected=${this.filter.mount === mount}>
+                  ${mountLabel(mount)}
+                </option>`,
+            )}
+          </select>
+          <select
+            aria-label=${msg('Colour temperature')}
+            @change=${(event: Event) => {
+              const value = (event.target as HTMLSelectElement).value;
+              this.#setFilter({ cct: value ? Number(value) : null });
+            }}
+          >
+            <option value="" ?selected=${this.filter.cct === null}>${msg('Temperature')}</option>
+            ${facets.ccts.map(
+              (cct) =>
+                html`<option value=${cct} ?selected=${this.filter.cct === cct}>
+                  ${formatKelvin(cct)}
+                </option>`,
+            )}
+          </select>
+        </div>
         <div class="chips" role="toolbar" aria-label=${msg('Filter by category')}>
           ${this.#chip(null, msg('All'))}
           ${this.display.categories.map((category) => this.#chip(category.id, category.label))}
@@ -194,12 +252,16 @@ export class LxsCatalogPanel extends LitElement {
     `;
   }
 
+  #setFilter(change: Partial<CatalogFilter>): void {
+    this.filter = { ...this.filter, ...change };
+  }
+
   #chip(categoryId: string | null, label: string) {
     return html`<button
       class="chip"
       type="button"
-      aria-pressed=${this.categoryId === categoryId}
-      @click=${() => (this.categoryId = categoryId)}
+      aria-pressed=${this.filter.categoryId === categoryId}
+      @click=${() => this.#setFilter({ categoryId })}
     >
       ${label}
     </button>`;

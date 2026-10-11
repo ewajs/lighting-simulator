@@ -61,6 +61,11 @@ export class LuminaireMeshes {
     return undefined;
   }
 
+  /** Shows or hides all highlight outlines without changing which are highlighted. */
+  setOutlinesVisible(visible: boolean): void {
+    for (const item of this.#items.values()) if (item.outline) item.outline.visible = visible;
+  }
+
   dispose(): void {
     for (const id of [...this.#items.keys()]) this.#remove(id);
   }

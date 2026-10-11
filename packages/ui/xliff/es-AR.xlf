@@ -330,6 +330,26 @@
   <source>Exposure</source>
   <target>Exposición</target>
 </trans-unit>
+<trans-unit id="s8ada49fbc8a09fb3">
+  <source>scene</source>
+  <target>escena</target>
+</trans-unit>
+<trans-unit id="s65886b26ce0aecee">
+  <source>Mount type</source>
+  <target>Tipo de montaje</target>
+</trans-unit>
+<trans-unit id="s12e9c9d9d9b94cf1">
+  <source>Screenshot</source>
+  <target>Captura</target>
+</trans-unit>
+<trans-unit id="sc9af69f95c8205da">
+  <source>Mount</source>
+  <target>Montaje</target>
+</trans-unit>
+<trans-unit id="s67326397a256c6b5">
+  <source>Temperature</source>
+  <target>Temperatura</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

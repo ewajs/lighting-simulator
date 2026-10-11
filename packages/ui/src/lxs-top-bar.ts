@@ -2,7 +2,7 @@ import type { Simulator } from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Moon, PanelLeft, PanelRight, Redo2, Sun, Undo2 } from 'lucide';
+import { Camera, Moon, PanelLeft, PanelRight, Redo2, Sun, Undo2 } from 'lucide';
 import { icon } from './icons';
 import type { Locale } from './localization';
 import { segmentedStyles, sharedStyles } from './styles';
@@ -19,6 +19,7 @@ export type PanelName = 'library' | 'inspector';
  * @fires lxs-theme-change - `detail: { theme }`
  * @fires lxs-locale-request - `detail: { locale }`
  * @fires lxs-panel-toggle - `detail: { panel }`
+ * @fires lxs-screenshot-request
  */
 @customElement('lxs-top-bar')
 @localized()
@@ -81,6 +82,8 @@ export class LxsTopBar extends LitElement {
         ${this.#button(msg('Redo'), icon(Redo2), () => sim?.redo(), { disabled: !sim?.canRedo() })}
       </div>
       <div class="side end">
+        ${this.#button(msg('Screenshot'), icon(Camera), () => this.#emit('lxs-screenshot-request', {}))}
+        <span class="divider"></span>
         ${this.#button(
           msg('Show library'),
           icon(PanelLeft),
@@ -150,5 +153,6 @@ declare global {
     'lxs-theme-change': CustomEvent<{ theme: Theme }>;
     'lxs-locale-request': CustomEvent<{ locale: Locale }>;
     'lxs-panel-toggle': CustomEvent<{ panel: PanelName }>;
+    'lxs-screenshot-request': CustomEvent<object>;
   }
 }

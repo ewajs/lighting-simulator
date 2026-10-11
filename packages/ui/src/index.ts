@@ -1,4 +1,5 @@
 export { LxsApp } from './lxs-app';
+export type { ScreenshotDetail } from './lxs-app';
 export { LxsViewport } from './lxs-viewport';
 export type { DropProductDetail } from './lxs-viewport';
 export { LxsLibrary } from './lxs-library';

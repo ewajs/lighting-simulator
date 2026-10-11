@@ -7,6 +7,7 @@ import { EMPTY_DISPLAY_CATALOG, luminaireNames, type DisplayCatalog } from './di
 import { newMergeKey, type FieldChange } from './field-change';
 import { formatKelvin, formatNumber } from './format';
 import { icon, mountIcon } from './icons';
+import { mountLabel } from './labels';
 import './lxs-number-field';
 import './lxs-slider-field';
 import { inspectorStyles, sharedStyles } from './styles';
@@ -22,16 +23,6 @@ const AIMABLE: readonly MountType[] = ['recessed', 'track'];
 export interface SetSelectionDetail {
   readonly ids: readonly string[];
 }
-
-const mountLabel = (mount: MountType): string =>
-  ({
-    recessed: msg('Recessed'),
-    pendant: msg('Pendant'),
-    track: msg('Track'),
-    wall: msg('Wall'),
-    floor: msg('Floor lamp'),
-    table: msg('Table lamp'),
-  })[mount];
 
 const percent = (value: number) => `${formatNumber(value * 100)}%`;
 
