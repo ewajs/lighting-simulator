@@ -97,8 +97,8 @@ Priority: **P0** = MVP, **P1** = next, **P2** = later.
   distribution (three.js `IESSpotLight` / IES texture profile).
 - P0: Light colour comes from CCT (blackbody approximation). Intensity comes
   from the IES candela values scaled by dimming.
-- P0: Physically based units: `renderer.physicallyCorrectLights` behaviour
-  (default in r155+), candela on lights, exposure control on the camera.
+- P0: Physically based units (the three.js default since r155): candela on
+  lights, ACES/AgX tone mapping, user exposure control.
 - P0: Shadows from luminaires (shadow maps, quality setting).
 - P1: Approximate indirect light (bounce). Options to evaluate: light probes /
   irradiance volume, or a progressive path-traced "Render" mode
@@ -148,9 +148,9 @@ See [DESIGN.md](./DESIGN.md) for the visual system. Layout summary:
 ├──────────┬───────────────────────────────────────┬────────────┤
 │ Left     │                                       │ Right      │
 │ panel    │            3D viewport                │ inspector  │
-│ (tabs:   │                                       │ (context:  │
-│ Catalog, │   floating: view cube, exposure,      │ room /     │
-│ Room,    │   heatmap legend                      │ luminaire /│
+│ (rail +  │                                       │ (context:  │
+│ tabs:    │   floating: render mode, views,       │ room /     │
+│ Catalog, │   exposure, heatmap legend, hints     │ luminaire /│
 │ Scene)   │                                       │ multi-sel) │
 ├──────────┴───────────────────────────────────────┴────────────┤
 │ Status bar: selection · cursor lux · fixtures · W · fps       │
@@ -163,13 +163,16 @@ Key interaction rules:
   become bottom sheets.
 - **Direct manipulation first.** Drag from the catalog, move with gizmos.
   Numeric fields exist for precision in the inspector.
-- **Inspector is contextual.** Nothing selected shows the room. One luminaire
+- **Inspector is contextual.** Nothing selected shows the room (size and
+  surfaces). One luminaire
   shows its product and instance settings. Several selected show the shared
   fields.
 - **Every edit is undoable** (command pattern on the store).
-- Keyboard: `W/E/R` move/rotate/aim, `Del` delete, `Ctrl/⌘+D` duplicate,
-  `Ctrl/⌘+Z / Shift+Z` undo/redo, `1/2/3` render modes, `F` frame
-  selection, `Esc` deselect.
+- Keyboard (implemented): `⌘/Ctrl+Z` undo, `⇧⌘Z` / `Ctrl+Y` redo,
+  `⌘/Ctrl+D` duplicate, `⌘/Ctrl+A` select all, `Del` delete, `H` on/off,
+  `F` frame selection, `Esc` deselect, `1/2` render modes, `0/7/8/9`
+  perspective / top / front / side.
+  Planned with gizmos (M1): `W/E` move/aim.
 
 ## 6. Architecture
 
@@ -184,26 +187,31 @@ automatically, and it is where `IESSpotLight` and TSL node materials live
 
 ```
 src/
-  main.js              bootstrap: store → scene → UI
+  main.js              bootstrap: store → viewport → UI; shortcuts, drag & drop
   state/
-    store.js           single observable store, actions, undo/redo history
+    store.js           observable store, immutable updates, undo/redo history
+    actions.js         every state change goes through here
+    initialState.js    default room, starter layout, surface presets
   scene/
-    Viewport.js        renderer, camera, controls, resize, render loop
-    RoomBuilder.js     room state → meshes
-    LuminaireLayer.js  luminaire state → lights + fixture meshes   (P0)
-    ies/               IES parsing/caching                         (P0)
-    analysis/          illuminance worker, false-colour material   (P0)
+    Viewport.js        renderer, camera, orbit controls, presets, picking
+    RoomBuilder.js     room state → meshes (inward faces = free cutaway)
+    LuminaireLayer.js  luminaire state → lights + fixture meshes, shadow budget,
+                       indirect fill estimate
+    color.js           CCT (K) → RGB
+    ies/               IES parsing/caching                         (M1, todo)
+    analysis/          illuminance worker, false-colour material   (M2, todo)
   ui/
-    dom.js             tiny h() element helper
+    dom.js             h() element helper, number formatters
     icons.js           inline SVG icon set
-    TopBar.js, SidePanel.js, CatalogPanel.js, RoomPanel.js,
-    Inspector.js, StatusBar.js, ViewportOverlay.js
+    controls.js        number/slider/select fields, segmented, section, toast
+    TopBar.js, SidePanel.js, CatalogPanel.js, ScenePanel.js,
+    Inspector.js, ViewportOverlay.js, StatusBar.js
   data/
     catalog.js         sample catalog (later: fetched from leuk-api)
   styles/
     tokens.css         design tokens (colour, type, spacing, radii)
     base.css           reset + element defaults
-    layout.css         app shell grid
+    layout.css         app shell grid + responsive rules
     components.css     buttons, fields, panels, lists…
 public/
   ies/                 IES files served statically (MVP)
@@ -214,6 +222,14 @@ public/
 notifies → scene layer and UI re-render the parts that changed. The scene layer
 never mutates state directly. Picking in the viewport dispatches `select` /
 `move` actions like any other UI.
+
+**Interim lighting model (M0)**: until IES files are attached, a spot
+product's candela is estimated from its lumens spread over its beam cone, and
+a wide product is treated as isotropic (lm / 4π). Indirect light is a single
+uniform fill from the integrating-sphere formula E = Φ·ρ̄ / (A·(1−ρ̄)). The
+display exposure is calibrated so 100–500 lx interiors sit mid-range
+(`BASE_EXPOSURE` in `Viewport.js`). Shadow maps re-render only when the scene
+changes.
 
 ## 7. Performance targets
 
@@ -238,7 +254,7 @@ available, WebGL 2 otherwise. Desktop and tablet first. Phone is view-only
 
 | # | Milestone | Contents |
 |---|---|---|
-| M0 | **Scaffold** (this commit) | Vite + three, app shell UI, design tokens, store, parametric room, sample catalog |
+| M0 | **Scaffold** ✅ | Vite + three (WebGPU), app shell UI, design tokens, store + undo, parametric room & surfaces, sample catalog, click/drag to add, select, inspector editing, clay mode, snapshot |
 | M1 | **Place & light** | Drag-and-drop luminaires, IES loading, CCT, dimming, selection + gizmos, undo/redo |
 | M2 | **Analysis** | Illuminance worker, false-colour mode, lux probe, legend, plane stats |
 | M3 | **Persist & share** | JSON import/export, autosave, screenshot, API save + share link |
