@@ -68,8 +68,8 @@ export const sharedStyles = css`
   .icon-btn {
     display: inline-grid;
     place-items: center;
-    width: 36px;
-    height: 36px;
+    width: var(--lxs-icon-btn);
+    height: var(--lxs-icon-btn);
     border: 0;
     border-radius: var(--lxs-r-md);
     background: transparent;
@@ -205,7 +205,7 @@ export const segmentedStyles = css`
     background: var(--lxs-surface-2);
   }
   .segmented button {
-    height: 26px;
+    height: var(--lxs-segment-h);
     padding: 0 var(--lxs-sp-3);
     border: 0;
     border-radius: var(--lxs-r-sm);

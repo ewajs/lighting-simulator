@@ -61,7 +61,7 @@ CSS variables. Below, token names are listed without the prefix.
 | Type | `--font-ui`, `--font-mono`, sizes `--fs-xs/sm/md/lg/xl` |
 | Space | `--sp-1 … --sp-8` (4 px steps) |
 | Shape | `--r-sm` 4, `--r-md` 6, `--r-lg` 10, `--shadow` |
-| Layout | `--topbar-h` 48, `--statusbar-h` 28, `--panel-w` 304, `--inspector-w` 300, `--rail-w` 48, `--control-h` 32 |
+| Layout | `--topbar-h` 48, `--statusbar-h` 28, `--panel-w` 304, `--inspector-w` 300, `--control-h` 32, `--icon-btn` 36, `--segment-h` 26, `--chip-h` 24 (the last four grow towards 44 px on touch screens) |
 | Motion | `--ease`, `--t-fast` 120 ms, `--t-med` 200 ms (0 under `prefers-reduced-motion`) |
 
 **Fonts:** a system UI stack by default (`Inter` if installed). Hosts change
@@ -84,8 +84,9 @@ grid-template-areas:
 
 - Side panels collapse to an icon rail. The viewport takes the freed space
   and the renderer resizes through a `ResizeObserver`.
-- **< 1100 px**: the left panel starts collapsed.
-- **< 900 px**: the inspector becomes a bottom sheet over the viewport.
+- **< 1200 px**: the library starts collapsed to its rail (landscape tablets).
+- **≤ 900 px**: the inspector becomes a sheet over the viewport. It shows only
+  its header until something is selected or the header is tapped.
 - **< 600 px**: view-only. Both panels hidden, top bar reduced.
 
 The viewport has an overlay layer for floating controls: render-mode switch
@@ -114,6 +115,14 @@ defined when the ui package is built (roadmap step 0.6).
 | **Section** | Collapsible group inside panels, uppercase xs heading. |
 | **Legend** | Vertical gradient bar with lux ticks. |
 | **Status item** | Icon + mono value, separated by hairlines. |
+
+## Touch
+
+- Under `(pointer: coarse)` the size tokens grow towards 44 px touch targets,
+  and hover-only hints are always visible.
+- Tap = click (10 px movement allowed). Long press (500 ms) = Shift-click:
+  it adds or removes a luminaire from the selection, in 3D and in the scene list.
+- Dragging products from the catalog is mouse-only; on touch, tap to add.
 
 ## States
 

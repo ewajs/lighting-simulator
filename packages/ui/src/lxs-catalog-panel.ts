@@ -90,10 +90,10 @@ export class LxsCatalogPanel extends LitElement {
         gap: var(--lxs-sp-1);
       }
       .chip {
-        height: 24px;
+        height: var(--lxs-chip-h);
         padding: 0 var(--lxs-sp-2);
         border: 1px solid var(--lxs-line);
-        border-radius: 12px;
+        border-radius: calc(var(--lxs-chip-h) / 2);
         background: transparent;
         color: var(--lxs-text-muted);
         font-size: var(--lxs-fs-xs);
@@ -167,6 +167,12 @@ export class LxsCatalogPanel extends LitElement {
       .card:hover .add,
       .card:focus-visible .add {
         opacity: 1;
+      }
+      /* No hover on touch screens: always show the add hint. */
+      @media (hover: none) {
+        .add {
+          opacity: 1;
+        }
       }
     `,
   ];

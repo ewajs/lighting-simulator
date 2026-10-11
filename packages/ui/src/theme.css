@@ -73,6 +73,9 @@
   --lxs-panel-w: 304px;
   --lxs-inspector-w: 300px;
   --lxs-control-h: 32px;
+  --lxs-icon-btn: 36px;
+  --lxs-segment-h: 26px;
+  --lxs-chip-h: 24px;
 
   /* Motion */
   --lxs-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -97,6 +100,16 @@
   --lxs-accent-soft: rgb(196 122 10 / 0.12);
   --lxs-on-accent: #ffffff;
   --lxs-shadow: 0 8px 24px rgb(20 24 30 / 0.12), 0 1px 2px rgb(20 24 30 / 0.08);
+}
+
+/* Touch screens: controls grow towards the ~44 px recommended for fingers. */
+@media (pointer: coarse) {
+  :root {
+    --lxs-control-h: 44px;
+    --lxs-icon-btn: 44px;
+    --lxs-segment-h: 40px;
+    --lxs-chip-h: 36px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

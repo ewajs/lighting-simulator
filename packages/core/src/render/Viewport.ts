@@ -13,7 +13,10 @@ import { LuminaireMeshes } from './LuminaireMeshes';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
 
 /** Pointer movement allowed between press and release for it to count as a click, in px. */
-const CLICK_TOLERANCE_PX = 4;
+/** Pointer movement allowed for a press to still count as a click or tap, in px. Fingers wobble more than mice. */
+const TAP_TOLERANCE_PX = { mouse: 4, other: 10 };
+/** How long a touch or pen must stay still to count as a long press, in ms. */
+export const LONG_PRESS_MS = 500;
 const VIEW_TRANSITION_MS = 450;
 /** Camera distance when framing a selection, in m. */
 const FRAME_DISTANCE = 3;
@@ -40,6 +43,11 @@ export interface ViewportOptions {
 export interface PickEvent {
   readonly luminaireId: string | null;
   readonly event: PointerEvent;
+  /**
+   * True when a touch or pen was held still for LONG_PRESS_MS. Fired while the
+   * finger is still down; hosts usually treat it like Shift-click.
+   */
+  readonly longPress: boolean;
 }
 
 /**
@@ -73,7 +81,9 @@ export class Viewport {
   #exposureEv = 0;
   #highlighted: readonly string[] = [];
   #transition: ((now: number) => void) | undefined;
-  #pointerDown: { x: number; y: number } | undefined;
+  #press:
+    | { readonly event: PointerEvent; readonly timer: number | undefined; longPressed: boolean }
+    | undefined;
   #captures: PendingCapture[] = [];
   #started = false;
 
@@ -102,7 +112,9 @@ export class Viewport {
     canvas.style.width = canvas.style.height = '100%';
     canvas.style.touchAction = 'none';
     canvas.addEventListener('pointerdown', this.#onPointerDown);
+    canvas.addEventListener('pointermove', this.#onPointerMove);
     canvas.addEventListener('pointerup', this.#onPointerUp);
+    canvas.addEventListener('pointercancel', this.#cancelPress);
     this.#container.append(canvas);
     this.#resizeObserver.observe(this.#container);
     this.#resize();
@@ -219,6 +231,7 @@ export class Viewport {
   dispose(): void {
     // Both return promises only to wait for init(), which has already happened.
     void this.#renderer.setAnimationLoop(null);
+    this.#cancelPress();
     for (const { reject } of this.#captures) reject(new Error('Viewport disposed'));
     this.#captures = [];
     this.#unsubscribe?.();
@@ -323,19 +336,50 @@ export class Viewport {
     );
   }
 
+  /** A press becomes a pick (on release) or a long press (after LONG_PRESS_MS, touch and pen only). */
   readonly #onPointerDown = (event: PointerEvent): void => {
-    this.#pointerDown = { x: event.clientX, y: event.clientY };
+    this.#cancelPress();
+    // A second finger means pinch or two-finger pan, never a pick.
+    if (!event.isPrimary) return;
+    const timer =
+      event.pointerType === 'mouse'
+        ? undefined
+        : window.setTimeout(() => {
+            if (!this.#press) return;
+            this.#press.longPressed = true;
+            this.#pick(event, true);
+          }, LONG_PRESS_MS);
+    this.#press = { event, timer, longPressed: false };
+  };
+
+  readonly #onPointerMove = (event: PointerEvent): void => {
+    if (this.#press && this.#movedTooFar(this.#press.event, event)) this.#cancelPress();
   };
 
   readonly #onPointerUp = (event: PointerEvent): void => {
-    const down = this.#pointerDown;
-    if (!down || Math.hypot(event.clientX - down.x, event.clientY - down.y) > CLICK_TOLERANCE_PX)
-      return;
+    const press = this.#press;
+    this.#cancelPress();
+    if (!press || press.longPressed || this.#movedTooFar(press.event, event)) return;
+    this.#pick(event, false);
+  };
+
+  readonly #cancelPress = (): void => {
+    window.clearTimeout(this.#press?.timer);
+    this.#press = undefined;
+  };
+
+  #movedTooFar(from: PointerEvent, to: PointerEvent): boolean {
+    const tolerance =
+      from.pointerType === 'mouse' ? TAP_TOLERANCE_PX.mouse : TAP_TOLERANCE_PX.other;
+    return Math.hypot(to.clientX - from.clientX, to.clientY - from.clientY) > tolerance;
+  }
+
+  #pick(event: PointerEvent, longPress: boolean): void {
     const raycaster = this.#raycasterAt(event.clientX, event.clientY);
     // Nearest hit that belongs to a fixture; outlines and other helpers are skipped.
     const hits = raycaster.intersectObject(this.#luminaires.group, true);
     const luminaireId =
       hits.map((hit) => this.#luminaires.luminaireIdOf(hit.object)).find(Boolean) ?? null;
-    this.#pickListeners.forEach((listener) => listener({ luminaireId, event }));
-  };
+    this.#pickListeners.forEach((listener) => listener({ luminaireId, event, longPress }));
+  }
 }

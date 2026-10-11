@@ -62,7 +62,8 @@ export class LxsViewportControls extends LitElement {
       }
       .views button {
         width: 56px;
-        height: 28px;
+        /* A little taller than segmented buttons with a mouse; touch-sized on touch screens. */
+        height: max(28px, var(--lxs-segment-h));
         border: 0;
         border-radius: var(--lxs-r-sm);
         background: transparent;
@@ -87,7 +88,8 @@ export class LxsViewportControls extends LitElement {
       }
       .exposure {
         right: var(--lxs-sp-3);
-        bottom: var(--lxs-sp-3);
+        /* --lxs-stage-inset-bottom: space taken by a sheet floating over the viewport. */
+        bottom: calc(var(--lxs-sp-3) + var(--lxs-stage-inset-bottom, 0px));
         width: 180px;
         padding: var(--lxs-sp-2) var(--lxs-sp-3);
       }

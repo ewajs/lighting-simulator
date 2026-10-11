@@ -18,6 +18,11 @@ import './lxs-viewport-controls';
 import { pruneSelection, selectionAfterPick } from './selection';
 import { isTyping, shortcutAction, type ShortcutAction } from './shortcuts';
 
+/** Below this width the library starts collapsed, leaving the viewport room (landscape tablets). */
+const AUTO_COLLAPSE_LIBRARY_BELOW_PX = 1200;
+/** Matches the narrow layout in the styles below, where the inspector becomes a sheet over the viewport. */
+const NARROW_LAYOUT = '(max-width: 900px)';
+
 /**
  * The full simulator UI: top bar, library panel, viewport with its controls,
  * inspector and status bar. Owns UI state (selection, view settings, panels,
@@ -106,6 +111,10 @@ export class LxsApp extends LitElement {
           'left viewport'
           'status status';
       }
+      .stage {
+        /* Keeps floating controls above the collapsed sheet: header + margins. */
+        --lxs-stage-inset-bottom: calc(44px + 2 * var(--lxs-sp-2));
+      }
       .inspector {
         grid-area: viewport;
         z-index: 1;
@@ -147,6 +156,10 @@ export class LxsApp extends LitElement {
   @state() private renderMode: RenderMode = 'realistic';
   @state() private exposureEv = 0;
   @state() private view: ViewName = 'perspective';
+  /** Narrow layout: the inspector is a sheet over the viewport. */
+  @state() private narrow = false;
+  @state() private sheetOpen = false;
+  readonly #narrowQuery = window.matchMedia(NARROW_LAYOUT);
 
   @query('lxs-viewport') private viewport!: LxsViewport;
   #unsubscribe: (() => void) | undefined;
@@ -205,6 +218,9 @@ export class LxsApp extends LitElement {
         .scene=${this.scene}
         .selection=${this.selection}
         .display=${this.catalog}
+        .sheet=${this.narrow}
+        .collapsed=${this.narrow && !this.sheetOpen}
+        @lxs-sheet-toggle=${() => (this.sheetOpen = !this.sheetOpen)}
         @lxs-set-selection=${({ detail }: CustomEvent<SetSelectionDetail>) => (this.selection = detail.ids)}
       ></lxs-inspector>
       <footer>
@@ -217,16 +233,36 @@ export class LxsApp extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
     window.addEventListener('keydown', this.#onKeyDown);
+    this.#narrowQuery.addEventListener('change', this.#onNarrowChange);
+    this.narrow = this.#narrowQuery.matches;
+  }
+
+  protected override firstUpdated(): void {
+    // Hosts that set library-collapsed themselves keep their choice.
+    if (
+      !this.hasAttribute('library-collapsed') &&
+      this.clientWidth < AUTO_COLLAPSE_LIBRARY_BELOW_PX
+    ) {
+      this.libraryCollapsed = true;
+    }
   }
 
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.#onKeyDown);
+    this.#narrowQuery.removeEventListener('change', this.#onNarrowChange);
     this.#unsubscribe?.();
     this.#unsubscribe = undefined;
   }
 
   protected override willUpdate(changed: PropertyValues<this>): void {
+    // The sheet opens when something gets selected and folds away when the selection is cleared.
+    const previous = (changed as Map<string, unknown>).get('selection') as
+      readonly string[] | undefined;
+    if (previous) {
+      if (previous.length === 0 && this.selection.length > 0) this.sheetOpen = true;
+      else if (previous.length > 0 && this.selection.length === 0) this.sheetOpen = false;
+    }
     if (changed.has('locale'))
       void this.#applyLocale(this.locale, changed.get('locale') !== undefined);
     if (changed.has('simulator')) this.#watch(this.simulator);
@@ -294,8 +330,14 @@ export class LxsApp extends LitElement {
     this.viewport.setView(view);
   }
 
+  #onNarrowChange = (event: MediaQueryListEvent): void => {
+    this.narrow = event.matches;
+  };
+
   #onPick = ({ detail }: CustomEvent<PickEvent>): void => {
-    this.selection = selectionAfterPick(this.selection, detail.luminaireId, detail.event.shiftKey);
+    // Long press (touch) toggles, like Shift-click.
+    const toggle = detail.event.shiftKey || detail.longPress;
+    this.selection = selectionAfterPick(this.selection, detail.luminaireId, toggle);
   };
 
   #onSelect = ({ detail }: CustomEvent<SelectDetail>): void => {
