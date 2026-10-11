@@ -14,7 +14,7 @@ UI elements need the simulator, the selection and view settings. Elements must a
 
 ## Decision
 
-`<lsim-app>` owns UI state (e.g. the selection) and passes it to children as properties. Children report user actions as DOM `CustomEvent`s named `lsim-*` (bubbling, composed). Custom elements use the placeholder prefix `lsim-` (ADR 0007).
+`<lxs-app>` owns UI state (e.g. the selection) and passes it to children as properties. Children report user actions as DOM `CustomEvent`s named `lxs-*` (bubbling, composed). Custom elements use the prefix `lxs-` (ADR 0027).
 
 ## Consequences
 

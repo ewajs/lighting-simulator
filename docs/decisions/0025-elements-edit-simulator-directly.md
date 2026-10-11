@@ -7,20 +7,20 @@
 
 ADR 0021 set "props down, events up". The inspector makes many kinds of
 document edits (room size, surfaces, luminaire output, position, aim,
-duplicate, delete). Routing each through an event to `<lsim-app>` would add
+duplicate, delete). Routing each through an event to `<lxs-app>` would add
 about eight event types that only forward to Simulator methods.
 
 ## Options
 
 - Elements receive the Simulator as a property and call its methods for document edits
-- Elements emit an event per edit and `<lsim-app>` applies it
+- Elements emit an event per edit and `<lxs-app>` applies it
 
 ## Decision
 
 The Simulator is the shared document model, passed down like any other
 property. Elements call its methods for **document edits** (always with a
 `mergeKey` per gesture, ADR 0018). Events up are only for **UI state** the
-parent owns, such as the selection (`lsim-select`, `lsim-set-selection`).
+parent owns, such as the selection (`lxs-select`, `lxs-set-selection`).
 
 ## Consequences
 

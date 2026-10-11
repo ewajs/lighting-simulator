@@ -6,8 +6,8 @@ What we build next is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## What this is
 
-A client-agnostic 3D lighting simulation library for the web, built on
-three.js, plus a demo app that uses it.
+**Lux Studio**: a client-agnostic 3D lighting simulation library for the
+web, built on three.js, plus a demo app that uses it.
 
 The library never contains client names, branding, catalogs, credentials or
 backend details. Sample data and backend adapters live outside the library
@@ -124,18 +124,19 @@ When rendering changes on purpose, refresh the screenshot baselines with
 - UI text is never inline. All strings use `msg()` from `@lit/localize`
   ([ADR 0020](docs/decisions/0020-i18n-lit-localize.md)). Spanish (Argentina,
   `es-AR`, the default) and English (`en`) are always kept complete.
-- Lit elements: `lsim-` prefix, legacy TypeScript decorators
+- Lit elements: `lxs-` prefix, legacy TypeScript decorators
   ([ADR 0022](docs/decisions/0022-legacy-typescript-decorators.md)), state
-  passed down as properties and actions reported up as `lsim-*` events
+  passed down as properties and actions reported up as `lxs-*` events
   ([ADR 0021](docs/decisions/0021-props-down-events-up.md)). Styles only use
-  `--lsim-*` tokens from `theme.css`. Document edits call the Simulator
+  `--lxs-*` tokens from `theme.css`. Document edits call the Simulator
   directly, each gesture with its own `mergeKey`; events are only for UI
   state like selection
   ([ADR 0025](docs/decisions/0025-elements-edit-simulator-directly.md)).
 - Units: SI. 1 world unit = 1 m, Y-up. Light in lm / cd / lx, colour
   temperature in K.
-- Package names use the placeholder scope `@lighting-sim/*` until there is
-  a product name.
+- Product name: **Lux Studio**. Packages `@luxstudio/*`, element, event and
+  token prefix `lxs-`, scene files `.lux.json`
+  ([ADR 0027](docs/decisions/0027-product-name-lux-studio.md)).
 
 ## Verification before "done"
 

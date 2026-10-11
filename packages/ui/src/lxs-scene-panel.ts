@@ -1,4 +1,4 @@
-import { summarizeScene, type Catalog, type Scene } from '@lighting-sim/core';
+import { summarizeScene, type Catalog, type Scene } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -7,7 +7,7 @@ import { formatNumber } from './format';
 import { mountIcon } from './icons';
 import { sharedStyles } from './styles';
 
-/** Detail of `lsim-select`: a luminaire chosen in a list, with Shift/⌘ held for `toggle`. */
+/** Detail of `lxs-select`: a luminaire chosen in a list, with Shift/⌘ held for `toggle`. */
 export interface SelectDetail {
   readonly luminaireId: string;
   readonly toggle: boolean;
@@ -17,12 +17,12 @@ export interface SelectDetail {
  * Scene totals and the list of luminaires. Rows report clicks; the selection
  * itself is owned by the host (ADR 0019).
  *
- * @fires lsim-select - `detail: SelectDetail`
- * @fires lsim-open-catalog - from the empty state's button
+ * @fires lxs-select - `detail: SelectDetail`
+ * @fires lxs-open-catalog - from the empty state's button
  */
-@customElement('lsim-scene-panel')
+@customElement('lxs-scene-panel')
 @localized()
-export class LsimScenePanel extends LitElement {
+export class LxsScenePanel extends LitElement {
   static override styles = [
     sharedStyles,
     css`
@@ -34,53 +34,53 @@ export class LsimScenePanel extends LitElement {
       .stats {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: var(--lsim-sp-2);
-        padding: var(--lsim-sp-3);
+        gap: var(--lxs-sp-2);
+        padding: var(--lxs-sp-3);
       }
       .stat {
-        padding: var(--lsim-sp-2) var(--lsim-sp-3);
-        border: 1px solid var(--lsim-line);
-        border-radius: var(--lsim-r-md);
-        background: var(--lsim-surface-2);
+        padding: var(--lxs-sp-2) var(--lxs-sp-3);
+        border: 1px solid var(--lxs-line);
+        border-radius: var(--lxs-r-md);
+        background: var(--lxs-surface-2);
       }
       .stat-label {
-        color: var(--lsim-text-faint);
-        font-size: var(--lsim-fs-xs);
+        color: var(--lxs-text-faint);
+        font-size: var(--lxs-fs-xs);
       }
       .stat-value {
-        font: var(--lsim-fs-lg) var(--lsim-font-mono);
+        font: var(--lxs-fs-lg) var(--lxs-font-mono);
       }
       .stat-value small {
         margin-left: 2px;
-        color: var(--lsim-text-muted);
-        font-size: var(--lsim-fs-xs);
+        color: var(--lxs-text-muted);
+        font-size: var(--lxs-fs-xs);
       }
       .list {
         flex: 1;
         overflow-y: auto;
-        padding: 0 var(--lsim-sp-2) var(--lsim-sp-3);
+        padding: 0 var(--lxs-sp-2) var(--lxs-sp-3);
       }
       .row {
         display: flex;
         align-items: center;
-        gap: var(--lsim-sp-2);
+        gap: var(--lxs-sp-2);
         width: 100%;
         height: 32px;
-        padding: 0 var(--lsim-sp-2) 0 var(--lsim-sp-3);
+        padding: 0 var(--lxs-sp-2) 0 var(--lxs-sp-3);
         border: 0;
-        border-radius: var(--lsim-r-sm);
+        border-radius: var(--lxs-r-sm);
         background: transparent;
-        color: var(--lsim-text-muted);
+        color: var(--lxs-text-muted);
         text-align: left;
         cursor: pointer;
       }
       .row:hover {
-        background: var(--lsim-surface-2);
-        color: var(--lsim-text);
+        background: var(--lxs-surface-2);
+        color: var(--lxs-text);
       }
       .row[aria-selected='true'] {
-        background: var(--lsim-accent-soft);
-        color: var(--lsim-accent);
+        background: var(--lxs-accent-soft);
+        color: var(--lxs-accent);
       }
       .row-name {
         flex: 1;
@@ -89,8 +89,8 @@ export class LsimScenePanel extends LitElement {
         text-overflow: ellipsis;
       }
       .row-meta {
-        color: var(--lsim-text-faint);
-        font: var(--lsim-fs-xs) var(--lsim-font-mono);
+        color: var(--lxs-text-faint);
+        font: var(--lxs-fs-xs) var(--lxs-font-mono);
       }
       .off .row-name {
         opacity: 0.45;
@@ -162,7 +162,7 @@ export class LsimScenePanel extends LitElement {
         type="button"
         @click=${() =>
           this.dispatchEvent(
-            new CustomEvent('lsim-open-catalog', { bubbles: true, composed: true }),
+            new CustomEvent('lxs-open-catalog', { bubbles: true, composed: true }),
           )}
       >
         ${msg('Open catalog')}
@@ -172,7 +172,7 @@ export class LsimScenePanel extends LitElement {
 
   #select(luminaireId: string, toggle: boolean): void {
     this.dispatchEvent(
-      new CustomEvent<SelectDetail>('lsim-select', {
+      new CustomEvent<SelectDetail>('lxs-select', {
         detail: { luminaireId, toggle },
         bubbles: true,
         composed: true,
@@ -183,10 +183,10 @@ export class LsimScenePanel extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-scene-panel': LsimScenePanel;
+    'lxs-scene-panel': LxsScenePanel;
   }
   interface HTMLElementEventMap {
-    'lsim-select': CustomEvent<SelectDetail>;
-    'lsim-open-catalog': CustomEvent<undefined>;
+    'lxs-select': CustomEvent<SelectDetail>;
+    'lxs-open-catalog': CustomEvent<undefined>;
   }
 }

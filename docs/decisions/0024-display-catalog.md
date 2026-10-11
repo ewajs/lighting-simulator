@@ -15,7 +15,7 @@ The catalog panel needs names, categories and thumbnails. Core's `Product` delib
 
 ## Decision
 
-`<lsim-app>` takes a `catalog` property: `{ categories: [{ id, label }], items: [{ productId, name, categoryId, thumbnailUrl? }] }`. Simulation data (power, CCT, flux) is read from the Simulator's core catalog through `productId`.
+`<lxs-app>` takes a `catalog` property: `{ categories: [{ id, label }], items: [{ productId, name, categoryId, thumbnailUrl? }] }`. Simulation data (power, CCT, flux) is read from the Simulator's core catalog through `productId`.
 
 ## Consequences
 

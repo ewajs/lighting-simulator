@@ -2,12 +2,12 @@ import { css } from 'lit';
 
 /**
  * Styles shared by the ui elements (each has its own shadow DOM). Only uses
- * --lsim-* tokens from theme.css.
+ * --lxs-* tokens from theme.css.
  */
 export const sharedStyles = css`
   :host {
-    font: var(--lsim-fs-md) / 1.45 var(--lsim-font-ui);
-    color: var(--lsim-text);
+    font: var(--lxs-fs-md) / 1.45 var(--lxs-font-ui);
+    color: var(--lxs-text);
   }
   button,
   input {
@@ -15,9 +15,9 @@ export const sharedStyles = css`
     color: inherit;
   }
   :focus-visible {
-    outline: 2px solid var(--lsim-accent);
+    outline: 2px solid var(--lxs-accent);
     outline-offset: 2px;
-    border-radius: var(--lsim-r-sm);
+    border-radius: var(--lxs-r-sm);
   }
   .icon {
     width: 16px;
@@ -28,24 +28,24 @@ export const sharedStyles = css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--lsim-sp-2);
+    gap: var(--lxs-sp-2);
     height: 44px;
-    padding: 0 var(--lsim-sp-4);
-    border-bottom: 1px solid var(--lsim-line);
+    padding: 0 var(--lxs-sp-4);
+    border-bottom: 1px solid var(--lxs-line);
   }
   .panel-header h2 {
     margin: 0;
-    font-size: var(--lsim-fs-md);
+    font-size: var(--lxs-fs-md);
     font-weight: 600;
   }
   .meta {
-    color: var(--lsim-text-faint);
-    font-size: var(--lsim-fs-xs);
+    color: var(--lxs-text-faint);
+    font-size: var(--lxs-fs-xs);
   }
   .group-label {
-    padding: var(--lsim-sp-3) var(--lsim-sp-2) var(--lsim-sp-1);
-    color: var(--lsim-text-faint);
-    font-size: var(--lsim-fs-xs);
+    padding: var(--lxs-sp-3) var(--lxs-sp-2) var(--lxs-sp-1);
+    color: var(--lxs-text-faint);
+    font-size: var(--lxs-fs-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -54,16 +54,16 @@ export const sharedStyles = css`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--lsim-sp-2);
-    height: var(--lsim-control-h);
-    padding: 0 var(--lsim-sp-3);
-    border: 1px solid var(--lsim-line-strong);
-    border-radius: var(--lsim-r-md);
+    gap: var(--lxs-sp-2);
+    height: var(--lxs-control-h);
+    padding: 0 var(--lxs-sp-3);
+    border: 1px solid var(--lxs-line-strong);
+    border-radius: var(--lxs-r-md);
     background: transparent;
     cursor: pointer;
   }
   .btn:hover {
-    background: var(--lsim-surface-3);
+    background: var(--lxs-surface-3);
   }
   .icon-btn {
     display: inline-grid;
@@ -71,9 +71,9 @@ export const sharedStyles = css`
     width: 36px;
     height: 36px;
     border: 0;
-    border-radius: var(--lsim-r-md);
+    border-radius: var(--lxs-r-md);
     background: transparent;
-    color: var(--lsim-text-muted);
+    color: var(--lxs-text-muted);
     cursor: pointer;
   }
   .icon-btn .icon {
@@ -81,21 +81,21 @@ export const sharedStyles = css`
     height: 18px;
   }
   .icon-btn:hover {
-    background: var(--lsim-surface-3);
-    color: var(--lsim-text);
+    background: var(--lxs-surface-3);
+    color: var(--lxs-text);
   }
   .icon-btn[aria-selected='true'] {
-    background: var(--lsim-accent-soft);
-    color: var(--lsim-accent);
+    background: var(--lxs-accent-soft);
+    color: var(--lxs-accent);
   }
   .empty {
     display: grid;
     justify-items: center;
-    gap: var(--lsim-sp-3);
-    padding: var(--lsim-sp-8) var(--lsim-sp-6);
+    gap: var(--lxs-sp-3);
+    padding: var(--lxs-sp-8) var(--lxs-sp-6);
     text-align: center;
-    color: var(--lsim-text-muted);
-    font-size: var(--lsim-fs-sm);
+    color: var(--lxs-text-muted);
+    font-size: var(--lxs-fs-sm);
   }
 `;
 
@@ -106,9 +106,9 @@ export const inspectorStyles = css`
   }
   .entity {
     display: flex;
-    gap: var(--lsim-sp-3);
-    padding: var(--lsim-sp-4);
-    border-bottom: 1px solid var(--lsim-line);
+    gap: var(--lxs-sp-3);
+    padding: var(--lxs-sp-4);
+    border-bottom: 1px solid var(--lxs-line);
   }
   .thumb {
     display: grid;
@@ -116,49 +116,49 @@ export const inspectorStyles = css`
     flex: none;
     width: 48px;
     height: 48px;
-    border: 1px solid var(--lsim-line);
-    border-radius: var(--lsim-r-md);
-    background: var(--lsim-surface-2);
-    color: var(--lsim-text-faint);
+    border: 1px solid var(--lxs-line);
+    border-radius: var(--lxs-r-md);
+    background: var(--lxs-surface-2);
+    color: var(--lxs-text-faint);
   }
   .thumb .icon {
     width: 22px;
     height: 22px;
   }
   .title {
-    font-size: var(--lsim-fs-lg);
+    font-size: var(--lxs-fs-lg);
     font-weight: 600;
   }
   .sub {
-    color: var(--lsim-text-muted);
-    font-size: var(--lsim-fs-sm);
+    color: var(--lxs-text-muted);
+    font-size: var(--lxs-fs-sm);
   }
   .actions {
     display: flex;
-    gap: var(--lsim-sp-1);
-    padding: var(--lsim-sp-2) var(--lsim-sp-3);
-    border-bottom: 1px solid var(--lsim-line);
+    gap: var(--lxs-sp-1);
+    padding: var(--lxs-sp-2) var(--lxs-sp-3);
+    border-bottom: 1px solid var(--lxs-line);
   }
   .actions .spacer {
     flex: 1;
   }
   .icon-btn[aria-pressed='true'] {
-    background: var(--lsim-accent-soft);
-    color: var(--lsim-accent);
+    background: var(--lxs-accent-soft);
+    color: var(--lxs-accent);
   }
   .icon-btn.danger:hover {
-    color: var(--lsim-danger);
+    color: var(--lxs-danger);
   }
   section {
     display: grid;
-    gap: var(--lsim-sp-3);
-    padding: var(--lsim-sp-3) var(--lsim-sp-4) var(--lsim-sp-4);
-    border-bottom: 1px solid var(--lsim-line);
+    gap: var(--lxs-sp-3);
+    padding: var(--lxs-sp-3) var(--lxs-sp-4) var(--lxs-sp-4);
+    border-bottom: 1px solid var(--lxs-line);
   }
   h3 {
     margin: 0;
-    color: var(--lsim-text-faint);
-    font-size: var(--lsim-fs-xs);
+    color: var(--lxs-text-faint);
+    font-size: var(--lxs-fs-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -166,7 +166,7 @@ export const inspectorStyles = css`
   .grid-2,
   .grid-3 {
     display: grid;
-    gap: var(--lsim-sp-2);
+    gap: var(--lxs-sp-2);
   }
   .grid-2 {
     grid-template-columns: 1fr 1fr;
@@ -177,20 +177,20 @@ export const inspectorStyles = css`
   .spec {
     display: flex;
     justify-content: space-between;
-    font-size: var(--lsim-fs-sm);
-    color: var(--lsim-text-muted);
+    font-size: var(--lxs-fs-sm);
+    color: var(--lxs-text-muted);
   }
   .spec span:last-child {
-    color: var(--lsim-text);
-    font-family: var(--lsim-font-mono);
+    color: var(--lxs-text);
+    font-family: var(--lxs-font-mono);
   }
   .warn {
-    color: var(--lsim-warn) !important;
+    color: var(--lxs-warn) !important;
   }
   .hint {
-    padding: var(--lsim-sp-4);
-    color: var(--lsim-text-muted);
-    font-size: var(--lsim-fs-sm);
+    padding: var(--lxs-sp-4);
+    color: var(--lxs-text-muted);
+    font-size: var(--lxs-fs-sm);
   }
 `;
 
@@ -200,27 +200,27 @@ export const segmentedStyles = css`
     display: inline-flex;
     gap: 2px;
     padding: 2px;
-    border: 1px solid var(--lsim-line);
-    border-radius: var(--lsim-r-md);
-    background: var(--lsim-surface-2);
+    border: 1px solid var(--lxs-line);
+    border-radius: var(--lxs-r-md);
+    background: var(--lxs-surface-2);
   }
   .segmented button {
     height: 26px;
-    padding: 0 var(--lsim-sp-3);
+    padding: 0 var(--lxs-sp-3);
     border: 0;
-    border-radius: var(--lsim-r-sm);
+    border-radius: var(--lxs-r-sm);
     background: transparent;
-    color: var(--lsim-text-muted);
-    font-size: var(--lsim-fs-sm);
+    color: var(--lxs-text-muted);
+    font-size: var(--lxs-fs-sm);
     font-weight: 500;
     cursor: pointer;
   }
   .segmented button:hover {
-    color: var(--lsim-text);
+    color: var(--lxs-text);
   }
   .segmented button[aria-checked='true'] {
-    background: var(--lsim-surface-3);
-    color: var(--lsim-text);
+    background: var(--lxs-surface-3);
+    color: var(--lxs-text);
   }
   .segmented button:disabled {
     opacity: 0.4;

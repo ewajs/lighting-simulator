@@ -2,7 +2,7 @@
 // Catalog, which stays the single source of simulation data. Names and labels
 // arrive already in the active language.
 
-import type { Scene } from '@lighting-sim/core';
+import type { Scene } from '@luxstudio/core';
 
 export interface CatalogCategory {
   readonly id: string;

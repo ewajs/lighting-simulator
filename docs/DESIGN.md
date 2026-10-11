@@ -1,6 +1,6 @@
 # Front-end Design System
 
-The visual system for `@lighting-sim/ui`. The UI is a **quiet frame around the
+The visual system for `@luxstudio/ui`. The UI is a **quiet frame around the
 light**. A lighting tool is judged by its viewport, so the chrome is neutral,
 low-contrast and out of the way. Colour is kept for state (selection, focus)
 and data (the false-colour scale).
@@ -25,27 +25,27 @@ and data (the false-colour scale).
 
 **Design tokens are the integrator's theming surface.** Every visual value
 (colour, font, radius, spacing, layout size) is a CSS custom property named
-`--lsim-*`, and the components only reference tokens. The ui package ships
-`@lighting-sim/ui/theme.css`, which defines them on `:root`. A host imports
+`--lxs-*`, and the components only reference tokens. The ui package ships
+`@luxstudio/ui/theme.css`, which defines them on `:root`. A host imports
 it once and rebrands by overriding tokens anywhere, without touching
 component code:
 
 ```css
 :root {
-  --lsim-accent: #0a7cff;
-  --lsim-font-ui: "Host Sans", system-ui, sans-serif;
+  --lxs-accent: #0a7cff;
+  --lxs-font-ui: "Host Sans", system-ui, sans-serif;
 }
 ```
 
-The `--lsim-` prefix keeps our tokens from clashing with the host page's own
+The `--lxs-` prefix keeps our tokens from clashing with the host page's own
 CSS variables. Below, token names are listed without the prefix.
 
 - Token names are part of the public API. Renaming or removing one is a
   breaking change.
 - Logos, product names and other branding come from the host (slots or
   properties), never from the library.
-- Built-in themes: dark (default) and light. Set `data-lsim-theme="light"`
-  on `<lsim-app>` (its theme toggle does this) or on any ancestor of the
+- Built-in themes: dark (default) and light. Set `data-lxs-theme="light"`
+  on `<lxs-app>` (its theme toggle does this) or on any ancestor of the
   elements (e.g. `<html>`).
 
 ## Tokens

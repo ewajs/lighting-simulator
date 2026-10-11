@@ -15,7 +15,7 @@ The UI needs about 15 icons (tabs, search, add, mount types, later undo/redo, vi
 
 ## Decision
 
-Add `lucide` (ISC licence) to `@lighting-sim/ui` and render its icon data through a small `icon()` helper in `icons.ts`.
+Add `lucide` (ISC licence) to `@luxstudio/ui` and render its icon data through a small `icon()` helper in `icons.ts`.
 
 ## Consequences
 

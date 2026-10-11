@@ -1,4 +1,4 @@
-import type { Scene, Simulator, SurfaceName } from '@lighting-sim/core';
+import type { Scene, Simulator, SurfaceName } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -6,8 +6,8 @@ import { Box } from 'lucide';
 import { newMergeKey, type FieldChange } from './field-change';
 import { formatNumber } from './format';
 import { icon } from './icons';
-import './lsim-number-field';
-import './lsim-slider-field';
+import './lxs-number-field';
+import './lxs-slider-field';
 import { sharedStyles, inspectorStyles } from './styles';
 import { surfacePresets } from './surface-presets';
 
@@ -17,9 +17,9 @@ const ROOM_SIZE_RANGE = { min: 1, max: 30 };
 const MAX_REFLECTANCE = 0.95;
 
 /** Edits the room: dimensions and surface finishes. */
-@customElement('lsim-room-inspector')
+@customElement('lxs-room-inspector')
 @localized()
-export class LsimRoomInspector extends LitElement {
+export class LxsRoomInspector extends LitElement {
   static override styles = [
     sharedStyles,
     inspectorStyles,
@@ -27,19 +27,19 @@ export class LsimRoomInspector extends LitElement {
       .finish {
         display: flex;
         align-items: end;
-        gap: var(--lsim-sp-3);
+        gap: var(--lxs-sp-3);
       }
-      .finish lsim-slider-field {
+      .finish lxs-slider-field {
         flex: 1;
       }
       .swatch {
         flex: none;
-        width: var(--lsim-control-h);
-        height: var(--lsim-control-h);
+        width: var(--lxs-control-h);
+        height: var(--lxs-control-h);
         padding: 0;
         overflow: hidden;
-        border: 1px solid var(--lsim-line-strong);
-        border-radius: var(--lsim-r-md);
+        border: 1px solid var(--lxs-line-strong);
+        border-radius: var(--lxs-r-md);
         cursor: pointer;
       }
       .swatch input {
@@ -53,29 +53,29 @@ export class LsimRoomInspector extends LitElement {
       .chips {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--lsim-sp-1);
+        gap: var(--lxs-sp-1);
       }
       .chip {
         display: inline-flex;
         align-items: center;
         gap: 6px;
         height: 24px;
-        padding: 0 var(--lsim-sp-2);
-        border: 1px solid var(--lsim-line);
+        padding: 0 var(--lxs-sp-2);
+        border: 1px solid var(--lxs-line);
         border-radius: 12px;
         background: transparent;
-        color: var(--lsim-text-muted);
-        font-size: var(--lsim-fs-xs);
+        color: var(--lxs-text-muted);
+        font-size: var(--lxs-fs-xs);
         cursor: pointer;
       }
       .chip:hover {
-        color: var(--lsim-text);
-        border-color: var(--lsim-line-strong);
+        color: var(--lxs-text);
+        border-color: var(--lxs-line-strong);
       }
       .dot {
         width: 8px;
         height: 8px;
-        border: 1px solid var(--lsim-line-strong);
+        border: 1px solid var(--lxs-line-strong);
         border-radius: 50%;
       }
     `,
@@ -116,15 +116,15 @@ export class LsimRoomInspector extends LitElement {
   }
 
   #size(key: 'width' | 'depth' | 'height', label: string, value: number) {
-    return html`<lsim-number-field
+    return html`<lxs-number-field
       label=${label}
       unit="m"
       .value=${value}
       .min=${ROOM_SIZE_RANGE.min}
       .max=${ROOM_SIZE_RANGE.max}
-      @lsim-change=${({ detail }: CustomEvent<FieldChange>) =>
+      @lxs-change=${({ detail }: CustomEvent<FieldChange>) =>
         this.simulator?.setRoomSize({ [key]: detail.value }, { mergeKey: detail.mergeKey })}
-    ></lsim-number-field>`;
+    ></lxs-number-field>`;
   }
 
   #surface(name: SurfaceName, label: string) {
@@ -146,18 +146,18 @@ export class LsimRoomInspector extends LitElement {
             @change=${() => this.#colorKeys.delete(name)}
           />
         </span>
-        <lsim-slider-field
+        <lxs-slider-field
           label=${msg('Reflectance ρ')}
           .value=${surface.reflectance}
           .max=${MAX_REFLECTANCE}
           .format=${(value: number) => `${formatNumber(value * 100)}%`}
-          @lsim-change=${({ detail }: CustomEvent<FieldChange>) =>
+          @lxs-change=${({ detail }: CustomEvent<FieldChange>) =>
             this.simulator?.setSurface(
               name,
               { reflectance: detail.value },
               { mergeKey: detail.mergeKey },
             )}
-        ></lsim-slider-field>
+        ></lxs-slider-field>
       </div>
       <div class="chips">
         ${surfacePresets().map(
@@ -182,6 +182,6 @@ export class LsimRoomInspector extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-room-inspector': LsimRoomInspector;
+    'lxs-room-inspector': LxsRoomInspector;
   }
 }

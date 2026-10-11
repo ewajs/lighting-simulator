@@ -1,19 +1,19 @@
-import type { Scene, Simulator } from '@lighting-sim/core';
+import type { Scene, Simulator } from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
-import './lsim-luminaire-inspector';
-import './lsim-room-inspector';
+import './lxs-luminaire-inspector';
+import './lxs-room-inspector';
 import { sharedStyles } from './styles';
 
 /**
  * The right panel: the room when nothing is selected, otherwise the selected
  * luminaires.
  */
-@customElement('lsim-inspector')
+@customElement('lxs-inspector')
 @localized()
-export class LsimInspector extends LitElement {
+export class LxsInspector extends LitElement {
   static override styles = [
     sharedStyles,
     css`
@@ -21,7 +21,7 @@ export class LsimInspector extends LitElement {
         display: flex;
         flex-direction: column;
         min-height: 0;
-        background: var(--lsim-surface-1);
+        background: var(--lxs-surface-1);
       }
       .body {
         flex: 1;
@@ -44,16 +44,16 @@ export class LsimInspector extends LitElement {
       <div class="body">
         ${
           room
-            ? html`<lsim-room-inspector
+            ? html`<lxs-room-inspector
                 .simulator=${this.simulator}
                 .scene=${this.scene}
-              ></lsim-room-inspector>`
-            : html`<lsim-luminaire-inspector
+              ></lxs-room-inspector>`
+            : html`<lxs-luminaire-inspector
                 .simulator=${this.simulator}
                 .scene=${this.scene}
                 .selection=${this.selection}
                 .display=${this.display}
-              ></lsim-luminaire-inspector>`
+              ></lxs-luminaire-inspector>`
         }
       </div>
     `;
@@ -62,6 +62,6 @@ export class LsimInspector extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-inspector': LsimInspector;
+    'lxs-inspector': LxsInspector;
   }
 }

@@ -166,8 +166,7 @@ export class Viewport {
    * Returns null when the point is above the horizon.
    */
   pointOnFloor(clientX: number, clientY: number): FloorPoint | null {
-    const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(this.#pointer(clientX, clientY), this.#camera);
+    const raycaster = this.#raycasterAt(clientX, clientY);
     const floor = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
     const hit = raycaster.ray.intersectPlane(floor, new THREE.Vector3());
     if (!hit) return null;
@@ -223,6 +222,8 @@ export class Viewport {
     if (!animate) {
       this.#camera.position.copy(position);
       this.#controls.target.copy(target);
+      // Orient now rather than on the next controls.update(), so picking works before the first frame.
+      this.#camera.lookAt(target);
       return;
     }
     const fromPosition = this.#camera.position.clone();
@@ -236,6 +237,20 @@ export class Viewport {
       this.#controls.target.lerpVectors(fromTarget, target, eased);
       if (t === 1) this.#transition = undefined;
     };
+  }
+
+  /**
+   * A ray from the camera through a screen point. World matrices are brought up
+   * to date first: three.js only updates them when it renders, so objects added
+   * since the last frame (e.g. restored by undo), or the camera itself before
+   * the first frame, would otherwise be in the wrong place.
+   */
+  #raycasterAt(clientX: number, clientY: number): THREE.Raycaster {
+    this.#scene.updateMatrixWorld();
+    this.#camera.updateMatrixWorld();
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(this.#pointer(clientX, clientY), this.#camera);
+    return raycaster;
   }
 
   /** Screen coordinates → normalised device coordinates (−1…1). */
@@ -255,11 +270,7 @@ export class Viewport {
     const down = this.#pointerDown;
     if (!down || Math.hypot(event.clientX - down.x, event.clientY - down.y) > CLICK_TOLERANCE_PX)
       return;
-    // Objects added since the last frame (e.g. restored by undo) have no world
-    // matrix until the next render; raycasting without this misses them.
-    this.#scene.updateMatrixWorld();
-    const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(this.#pointer(event.clientX, event.clientY), this.#camera);
+    const raycaster = this.#raycasterAt(event.clientX, event.clientY);
     // Nearest hit that belongs to a fixture; outlines and other helpers are skipped.
     const hits = raycaster.intersectObject(this.#luminaires.group, true);
     const luminaireId =

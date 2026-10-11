@@ -8,40 +8,40 @@ import { fieldStyles } from './field-styles';
  * A labelled range slider with a value readout. Fires continuously while
  * dragging; the whole drag shares one merge key.
  *
- * @fires lsim-change - `detail: FieldChange`
+ * @fires lxs-change - `detail: FieldChange`
  */
-@customElement('lsim-slider-field')
+@customElement('lxs-slider-field')
 @localized()
-export class LsimSliderField extends LitElement {
+export class LxsSliderField extends LitElement {
   static override styles = [
     fieldStyles,
     css`
       input {
         width: 100%;
         margin: 0;
-        accent-color: var(--lsim-accent);
+        accent-color: var(--lxs-accent);
         cursor: pointer;
       }
       :host([variant='cct']) input {
         appearance: none;
         height: 6px;
         border-radius: 3px;
-        background: var(--lsim-cct-gradient);
+        background: var(--lxs-cct-gradient);
       }
       :host([variant='cct']) input::-webkit-slider-thumb {
         appearance: none;
         width: 14px;
         height: 14px;
         border-radius: 50%;
-        background: var(--lsim-text);
-        border: 2px solid var(--lsim-surface-1);
+        background: var(--lxs-text);
+        border: 2px solid var(--lxs-surface-1);
       }
       :host([variant='cct']) input::-moz-range-thumb {
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        background: var(--lsim-text);
-        border: 2px solid var(--lsim-surface-1);
+        background: var(--lxs-text);
+        border: 2px solid var(--lxs-surface-1);
       }
     `,
   ];
@@ -85,6 +85,6 @@ export class LsimSliderField extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-slider-field': LsimSliderField;
+    'lxs-slider-field': LxsSliderField;
   }
 }

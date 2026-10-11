@@ -1,4 +1,4 @@
-import type { Luminaire, MountType, Scene, Simulator } from '@lighting-sim/core';
+import type { Luminaire, MountType, Scene, Simulator } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -7,8 +7,8 @@ import { EMPTY_DISPLAY_CATALOG, luminaireNames, type DisplayCatalog } from './di
 import { newMergeKey, type FieldChange } from './field-change';
 import { formatKelvin, formatNumber } from './format';
 import { icon, mountIcon } from './icons';
-import './lsim-number-field';
-import './lsim-slider-field';
+import './lxs-number-field';
+import './lxs-slider-field';
 import { inspectorStyles, sharedStyles } from './styles';
 
 /** Colour temperature range offered by the slider, in K. */
@@ -18,7 +18,7 @@ const FIXED_HEIGHT: readonly MountType[] = ['recessed', 'track', 'floor', 'table
 /** Mounts with an adjustable head. */
 const AIMABLE: readonly MountType[] = ['recessed', 'track'];
 
-/** Detail of `lsim-set-selection`: replace the host's selection with these ids. */
+/** Detail of `lxs-set-selection`: replace the host's selection with these ids. */
 export interface SetSelectionDetail {
   readonly ids: readonly string[];
 }
@@ -40,11 +40,11 @@ const percent = (value: number) => `${formatNumber(value * 100)}%`;
  * Edits go straight to the Simulator; after duplicating, it asks the host to
  * select the copies.
  *
- * @fires lsim-set-selection - `detail: SetSelectionDetail`
+ * @fires lxs-set-selection - `detail: SetSelectionDetail`
  */
-@customElement('lsim-luminaire-inspector')
+@customElement('lxs-luminaire-inspector')
 @localized()
-export class LsimLuminaireInspector extends LitElement {
+export class LxsLuminaireInspector extends LitElement {
   static override styles = [sharedStyles, inspectorStyles];
 
   @property({ attribute: false }) simulator: Simulator | undefined;
@@ -73,7 +73,7 @@ export class LsimLuminaireInspector extends LitElement {
       max: number,
       disabled = false,
     ) =>
-      html`<lsim-number-field
+      html`<lxs-number-field
         label=${label}
         unit="m"
         .value=${luminaire.position[key]}
@@ -81,9 +81,9 @@ export class LsimLuminaireInspector extends LitElement {
         .min=${min}
         .max=${max}
         ?disabled=${disabled}
-        @lsim-change=${({ detail }: CustomEvent<FieldChange>) =>
+        @lxs-change=${({ detail }: CustomEvent<FieldChange>) =>
           update({ position: { ...luminaire.position, [key]: detail.value } }, detail)}
-      ></lsim-number-field>`;
+      ></lxs-number-field>`;
 
     return html`
       <div class="entity">
@@ -97,13 +97,13 @@ export class LsimLuminaireInspector extends LitElement {
       ${this.#actions([luminaire])}
       <section>
         <h3>${msg('Output')}</h3>
-        <lsim-slider-field
+        <lxs-slider-field
           label=${msg('Dimming')}
           .value=${luminaire.dimming}
           .format=${percent}
-          @lsim-change=${({ detail }: CustomEvent<FieldChange>) => update({ dimming: detail.value }, detail)}
-        ></lsim-slider-field>
-        <lsim-slider-field
+          @lxs-change=${({ detail }: CustomEvent<FieldChange>) => update({ dimming: detail.value }, detail)}
+        ></lxs-slider-field>
+        <lxs-slider-field
           label=${msg('Colour temperature')}
           variant="cct"
           .value=${luminaire.cct}
@@ -111,8 +111,8 @@ export class LsimLuminaireInspector extends LitElement {
           .max=${CCT_RANGE.max}
           .step=${CCT_RANGE.step}
           .format=${formatKelvin}
-          @lsim-change=${({ detail }: CustomEvent<FieldChange>) => update({ cct: detail.value }, detail)}
-        ></lsim-slider-field>
+          @lxs-change=${({ detail }: CustomEvent<FieldChange>) => update({ cct: detail.value }, detail)}
+        ></lxs-slider-field>
       </section>
       <section>
         <h3>${msg('Position')}</h3>
@@ -127,7 +127,7 @@ export class LsimLuminaireInspector extends LitElement {
           ? html`<section>
               <h3>${msg('Aim')}</h3>
               <div class="grid-2">
-                <lsim-number-field
+                <lxs-number-field
                   label=${msg('Tilt')}
                   unit="°"
                   .value=${luminaire.aim.tiltDeg}
@@ -135,10 +135,10 @@ export class LsimLuminaireInspector extends LitElement {
                   .min=${0}
                   .max=${90}
                   .decimals=${0}
-                  @lsim-change=${({ detail }: CustomEvent<FieldChange>) =>
+                  @lxs-change=${({ detail }: CustomEvent<FieldChange>) =>
                     update({ aim: { ...luminaire.aim, tiltDeg: detail.value } }, detail)}
-                ></lsim-number-field>
-                <lsim-number-field
+                ></lxs-number-field>
+                <lxs-number-field
                   label=${msg('Pan')}
                   unit="°"
                   .value=${luminaire.aim.panDeg}
@@ -146,9 +146,9 @@ export class LsimLuminaireInspector extends LitElement {
                   .min=${-180}
                   .max=${180}
                   .decimals=${0}
-                  @lsim-change=${({ detail }: CustomEvent<FieldChange>) =>
+                  @lxs-change=${({ detail }: CustomEvent<FieldChange>) =>
                     update({ aim: { ...luminaire.aim, panDeg: detail.value } }, detail)}
-                ></lsim-number-field>
+                ></lxs-number-field>
               </div>
             </section>`
           : ''
@@ -194,11 +194,11 @@ export class LsimLuminaireInspector extends LitElement {
       ${this.#actions(selected)}
       <section>
         <h3>${msg('Output')}</h3>
-        <lsim-slider-field
+        <lxs-slider-field
           label=${msg('Dimming (all)')}
           .value=${selected[0]!.dimming}
           .format=${percent}
-          @lsim-change=${({ detail }: CustomEvent<FieldChange>) => {
+          @lxs-change=${({ detail }: CustomEvent<FieldChange>) => {
             for (const { id } of selected) {
               this.simulator?.updateLuminaire(
                 id,
@@ -207,7 +207,7 @@ export class LsimLuminaireInspector extends LitElement {
               );
             }
           }}
-        ></lsim-slider-field>
+        ></lxs-slider-field>
       </section>
     `;
   }
@@ -245,7 +245,7 @@ export class LsimLuminaireInspector extends LitElement {
       ${button(msg('Duplicate'), icon(Copy), () => {
         const copies = this.simulator?.duplicateLuminaires(ids) ?? [];
         this.dispatchEvent(
-          new CustomEvent<SetSelectionDetail>('lsim-set-selection', {
+          new CustomEvent<SetSelectionDetail>('lxs-set-selection', {
             detail: { ids: copies },
             bubbles: true,
             composed: true,
@@ -260,9 +260,9 @@ export class LsimLuminaireInspector extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-luminaire-inspector': LsimLuminaireInspector;
+    'lxs-luminaire-inspector': LxsLuminaireInspector;
   }
   interface HTMLElementEventMap {
-    'lsim-set-selection': CustomEvent<SetSelectionDetail>;
+    'lxs-set-selection': CustomEvent<SetSelectionDetail>;
   }
 }

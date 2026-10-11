@@ -2,7 +2,7 @@ import { html, type TemplateResult } from 'lit';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { IconNode } from 'lucide';
 import { LampCeiling, LampDesk, LampFloor, LampWallDown, Lightbulb, Spotlight } from 'lucide';
-import type { MountType } from '@lighting-sim/core';
+import type { MountType } from '@luxstudio/core';
 
 const markup = new WeakMap<IconNode, string>();
 

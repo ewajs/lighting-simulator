@@ -1,4 +1,4 @@
-import type { Catalog, Product } from '@lighting-sim/core';
+import type { Catalog, Product } from '@luxstudio/core';
 
 /**
  * Generic sample products for the demo. Values are typical for each kind of

@@ -210,13 +210,13 @@ Key interaction rules:
 
 Structure and rules are in [CLAUDE.md](../CLAUDE.md). In short:
 
-- **`@lighting-sim/core`** (TypeScript, depends on three.js): scene model
+- **`@luxstudio/core`** (TypeScript, depends on three.js): scene model
   and its operations, undo/redo history, photometry (IES parsing,
   candela lookup), the lighting model, three.js rendering
   (`WebGPURenderer` with WebGL 2 fallback,
   [ADR 0013](./decisions/0013-webgpu-renderer.md)), picking, and illuminance
   analysis. No DOM UI.
-- **`@lighting-sim/ui`** (TypeScript, Lit): optional web components built on
+- **`@luxstudio/ui`** (TypeScript, Lit): optional web components built on
   core's public API, with i18n and design tokens.
 - **`apps/demo`**: a reference integration. It provides sample catalog and
   photometry data and deploys to GitHub Pages.

@@ -1,19 +1,19 @@
-import type { PickEvent, RenderMode, Scene, Simulator, ViewName } from '@lighting-sim/core';
+import type { PickEvent, RenderMode, Scene, Simulator, ViewName } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { newMergeKey } from './field-change';
 import { DEFAULT_LOCALE, setLocale, type Locale } from './localization';
-import './lsim-inspector';
-import './lsim-library';
-import type { SetSelectionDetail } from './lsim-luminaire-inspector';
-import type { SelectDetail } from './lsim-scene-panel';
-import './lsim-top-bar';
-import type { PanelName, Theme } from './lsim-top-bar';
-import './lsim-viewport';
-import type { DropProductDetail, LsimViewport } from './lsim-viewport';
-import './lsim-viewport-controls';
+import './lxs-inspector';
+import './lxs-library';
+import type { SetSelectionDetail } from './lxs-luminaire-inspector';
+import type { SelectDetail } from './lxs-scene-panel';
+import './lxs-top-bar';
+import type { PanelName, Theme } from './lxs-top-bar';
+import './lxs-viewport';
+import type { DropProductDetail, LxsViewport } from './lxs-viewport';
+import './lxs-viewport-controls';
 import { pruneSelection, selectionAfterPick } from './selection';
 import { isTyping, shortcutAction, type ShortcutAction } from './shortcuts';
 
@@ -24,54 +24,54 @@ import { isTyping, shortcutAction, type ShortcutAction } from './shortcuts';
  * (ADR 0025).
  *
  * ```html
- * <lsim-app .simulator=${simulator} .catalog=${displayCatalog} locale="es-AR">
+ * <lxs-app .simulator=${simulator} .catalog=${displayCatalog} locale="es-AR">
  *   <img slot="brand" src="logo.svg" alt="Acme" />
- * </lsim-app>
+ * </lxs-app>
  * ```
  *
  * @slot brand - The host's logo or name, shown in the top bar.
- * @fires lsim-locale-change - after the UI language changed: `detail: { locale }`.
+ * @fires lxs-locale-change - after the UI language changed: `detail: { locale }`.
  *   Hosts update `catalog` names in response.
  */
-@customElement('lsim-app')
+@customElement('lxs-app')
 @localized()
-export class LsimApp extends LitElement {
+export class LxsApp extends LitElement {
   static override styles = css`
     :host {
-      --lsim-left-w: var(--lsim-panel-w);
-      --lsim-right-w: var(--lsim-inspector-w);
+      --lxs-left-w: var(--lxs-panel-w);
+      --lxs-right-w: var(--lxs-inspector-w);
       display: grid;
       height: 100%;
-      grid-template-columns: var(--lsim-left-w) minmax(0, 1fr) var(--lsim-right-w);
-      grid-template-rows: var(--lsim-topbar-h) minmax(0, 1fr) var(--lsim-statusbar-h);
+      grid-template-columns: var(--lxs-left-w) minmax(0, 1fr) var(--lxs-right-w);
+      grid-template-rows: var(--lxs-topbar-h) minmax(0, 1fr) var(--lxs-statusbar-h);
       grid-template-areas:
         'top top top'
         'left viewport right'
         'status status status';
-      background: var(--lsim-bg);
-      color: var(--lsim-text);
-      font: var(--lsim-fs-md) / 1.45 var(--lsim-font-ui);
+      background: var(--lxs-bg);
+      color: var(--lxs-text);
+      font: var(--lxs-fs-md) / 1.45 var(--lxs-font-ui);
       -webkit-font-smoothing: antialiased;
     }
     :host([library-collapsed]) {
-      --lsim-left-w: 48px;
+      --lxs-left-w: 48px;
     }
     :host([inspector-collapsed]) {
-      --lsim-right-w: 0px;
+      --lxs-right-w: 0px;
     }
     :host([inspector-collapsed]) .inspector {
       display: none;
     }
-    lsim-top-bar {
+    lxs-top-bar {
       grid-area: top;
     }
-    lsim-library {
+    lxs-library {
       grid-area: left;
-      border-right: 1px solid var(--lsim-line);
+      border-right: 1px solid var(--lxs-line);
     }
     .inspector {
       grid-area: right;
-      border-left: 1px solid var(--lsim-line);
+      border-left: 1px solid var(--lxs-line);
     }
     .stage {
       grid-area: viewport;
@@ -79,7 +79,7 @@ export class LsimApp extends LitElement {
       min-width: 0;
       min-height: 0;
     }
-    lsim-viewport {
+    lxs-viewport {
       position: absolute;
       inset: 0;
     }
@@ -87,17 +87,17 @@ export class LsimApp extends LitElement {
       grid-area: status;
       display: flex;
       align-items: center;
-      gap: var(--lsim-sp-4);
-      padding: 0 var(--lsim-sp-4);
-      background: var(--lsim-surface-1);
-      border-top: 1px solid var(--lsim-line);
-      color: var(--lsim-text-muted);
-      font-size: var(--lsim-fs-xs);
+      gap: var(--lxs-sp-4);
+      padding: 0 var(--lxs-sp-4);
+      background: var(--lxs-surface-1);
+      border-top: 1px solid var(--lxs-line);
+      color: var(--lxs-text-muted);
+      font-size: var(--lxs-fs-xs);
     }
     /* Tablet: the inspector floats over the bottom of the viewport. */
     @media (max-width: 900px) {
       :host {
-        grid-template-columns: var(--lsim-left-w) minmax(0, 1fr);
+        grid-template-columns: var(--lxs-left-w) minmax(0, 1fr);
         grid-template-areas:
           'top top'
           'left viewport'
@@ -108,10 +108,10 @@ export class LsimApp extends LitElement {
         z-index: 1;
         align-self: end;
         max-height: 45%;
-        margin: var(--lsim-sp-2);
-        border: 1px solid var(--lsim-line);
-        border-radius: var(--lsim-r-lg);
-        box-shadow: var(--lsim-shadow);
+        margin: var(--lxs-sp-2);
+        border: 1px solid var(--lxs-line);
+        border-radius: var(--lxs-r-lg);
+        box-shadow: var(--lxs-shadow);
       }
     }
     /* Phone: view-only. */
@@ -120,7 +120,7 @@ export class LsimApp extends LitElement {
         grid-template-columns: minmax(0, 1fr);
         grid-template-areas: 'top' 'viewport' 'status';
       }
-      lsim-library,
+      lxs-library,
       .inspector {
         display: none;
       }
@@ -133,7 +133,7 @@ export class LsimApp extends LitElement {
   /** UI language for the whole page. */
   @property() locale: Locale = DEFAULT_LOCALE;
   /** Colour theme; reflected so the theme tokens apply to this subtree. */
-  @property({ reflect: true, attribute: 'data-lsim-theme' }) theme: Theme = 'dark';
+  @property({ reflect: true, attribute: 'data-lxs-theme' }) theme: Theme = 'dark';
   @property({ type: Boolean, reflect: true, attribute: 'library-collapsed' }) libraryCollapsed =
     false;
   @property({ type: Boolean, reflect: true, attribute: 'inspector-collapsed' }) inspectorCollapsed =
@@ -145,64 +145,64 @@ export class LsimApp extends LitElement {
   @state() private exposureEv = 0;
   @state() private view: ViewName = 'perspective';
 
-  @query('lsim-viewport') private viewport!: LsimViewport;
+  @query('lxs-viewport') private viewport!: LxsViewport;
   #unsubscribe: (() => void) | undefined;
 
   override render() {
     const total = this.scene?.luminaires.length ?? 0;
     const selected = this.selection.length;
     return html`
-      <lsim-top-bar
+      <lxs-top-bar
         .simulator=${this.simulator}
         .scene=${this.scene}
         .theme=${this.theme}
         .locale=${this.locale}
         .libraryOpen=${!this.libraryCollapsed}
         .inspectorOpen=${!this.inspectorCollapsed}
-        @lsim-theme-change=${({ detail }: CustomEvent<{ theme: Theme }>) => (this.theme = detail.theme)}
-        @lsim-locale-request=${({ detail }: CustomEvent<{ locale: Locale }>) => (this.locale = detail.locale)}
-        @lsim-panel-toggle=${({ detail }: CustomEvent<{ panel: PanelName }>) => this.#togglePanel(detail.panel)}
+        @lxs-theme-change=${({ detail }: CustomEvent<{ theme: Theme }>) => (this.theme = detail.theme)}
+        @lxs-locale-request=${({ detail }: CustomEvent<{ locale: Locale }>) => (this.locale = detail.locale)}
+        @lxs-panel-toggle=${({ detail }: CustomEvent<{ panel: PanelName }>) => this.#togglePanel(detail.panel)}
       >
         <slot name="brand" slot="brand"></slot>
-      </lsim-top-bar>
-      <lsim-library
+      </lxs-top-bar>
+      <lxs-library
         .display=${this.catalog}
         .products=${this.simulator?.catalog}
         .scene=${this.scene}
         .selection=${this.selection}
         .collapsed=${this.libraryCollapsed}
-        @lsim-add-product=${this.#onAddProduct}
-        @lsim-select=${this.#onSelect}
-        @lsim-collapse-request=${({ detail }: CustomEvent<{ collapsed: boolean }>) =>
+        @lxs-add-product=${this.#onAddProduct}
+        @lxs-select=${this.#onSelect}
+        @lxs-collapse-request=${({ detail }: CustomEvent<{ collapsed: boolean }>) =>
           (this.libraryCollapsed = detail.collapsed)}
-      ></lsim-library>
+      ></lxs-library>
       <div class="stage">
-        <lsim-viewport
+        <lxs-viewport
           .simulator=${this.simulator}
           .highlighted=${this.selection}
           .renderMode=${this.renderMode}
           .exposureEv=${this.exposureEv}
-          @lsim-pick=${this.#onPick}
-          @lsim-drop-product=${this.#onDropProduct}
-        ></lsim-viewport>
-        <lsim-viewport-controls
+          @lxs-pick=${this.#onPick}
+          @lxs-drop-product=${this.#onDropProduct}
+        ></lxs-viewport>
+        <lxs-viewport-controls
           .renderMode=${this.renderMode}
           .view=${this.view}
           .exposureEv=${this.exposureEv}
-          @lsim-render-mode-change=${({ detail }: CustomEvent<{ mode: RenderMode }>) => (this.renderMode = detail.mode)}
-          @lsim-exposure-change=${({ detail }: CustomEvent<{ ev: number }>) => (this.exposureEv = detail.ev)}
-          @lsim-view-request=${({ detail }: CustomEvent<{ view: ViewName }>) => this.#setView(detail.view)}
-          @lsim-frame-request=${() => this.viewport.frame(this.selection)}
-        ></lsim-viewport-controls>
+          @lxs-render-mode-change=${({ detail }: CustomEvent<{ mode: RenderMode }>) => (this.renderMode = detail.mode)}
+          @lxs-exposure-change=${({ detail }: CustomEvent<{ ev: number }>) => (this.exposureEv = detail.ev)}
+          @lxs-view-request=${({ detail }: CustomEvent<{ view: ViewName }>) => this.#setView(detail.view)}
+          @lxs-frame-request=${() => this.viewport.frame(this.selection)}
+        ></lxs-viewport-controls>
       </div>
-      <lsim-inspector
+      <lxs-inspector
         class="inspector"
         .simulator=${this.simulator}
         .scene=${this.scene}
         .selection=${this.selection}
         .display=${this.catalog}
-        @lsim-set-selection=${({ detail }: CustomEvent<SetSelectionDetail>) => (this.selection = detail.ids)}
-      ></lsim-inspector>
+        @lxs-set-selection=${({ detail }: CustomEvent<SetSelectionDetail>) => (this.selection = detail.ids)}
+      ></lxs-inspector>
       <footer>
         <span>${msg(str`Luminaires: ${total}`)}</span>
         <span>${msg(str`Selected: ${selected}`)}</span>
@@ -237,7 +237,7 @@ export class LsimApp extends LitElement {
     }
     if (announce) {
       this.dispatchEvent(
-        new CustomEvent('lsim-locale-change', {
+        new CustomEvent('lxs-locale-change', {
           detail: { locale },
           bubbles: true,
           composed: true,
@@ -330,9 +330,9 @@ export class LsimApp extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'lsim-app': LsimApp;
+    'lxs-app': LxsApp;
   }
   interface HTMLElementEventMap {
-    'lsim-locale-change': CustomEvent<{ locale: Locale }>;
+    'lxs-locale-change': CustomEvent<{ locale: Locale }>;
   }
 }
