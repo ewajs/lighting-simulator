@@ -37,7 +37,8 @@ npm run build         production build of the demo → apps/demo/dist
 npm run lint          ESLint (type-aware, plus the boundary rule)
 npm run typecheck     tsc in every workspace
 npm test              Vitest in every workspace
-npm run test:e2e      Playwright smoke tests (local only; system Chrome)
+npm run test:e2e      Playwright e2e on chrome, chrome-webgl2 and webkit (local only;
+                      add `-- --project chrome` for a quick run; ADR 0032)
 npm run format        Prettier (Markdown is excluded)
 npm run i18n:extract  collect msg() strings into packages/ui/xliff/
 npm run i18n:build    regenerate locale modules after editing the XLIFF

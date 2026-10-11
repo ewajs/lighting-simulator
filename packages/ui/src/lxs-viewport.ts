@@ -63,6 +63,11 @@ export class LxsViewport extends LitElement {
     this.#applyProperties();
   }
 
+  /** Which backend the renderer uses, once it has started. */
+  get backend(): 'WebGPU' | 'WebGL 2' | undefined {
+    return this.#viewport?.backend;
+  }
+
   /** Moves the camera to a preset view. No-op until the renderer has started. */
   setView(view: ViewName): void {
     this.#viewport?.setView(view);

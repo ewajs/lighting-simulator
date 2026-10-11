@@ -35,3 +35,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0029 | [Screenshots: core capture, cancelable UI event, neutral file name](0029-screenshots.md) | Accepted |
 | 0030 | [Touch and tablet interaction](0030-touch-and-tablet.md) | Accepted |
 | 0031 | [Supported browsers, and full phone support](0031-supported-browsers-and-phones.md) | Accepted |
+| 0032 | [E2E runs on Chrome (WebGPU), Chrome (WebGL 2) and WebKit](0032-e2e-browser-projects.md) | Accepted |
