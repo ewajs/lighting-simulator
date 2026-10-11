@@ -67,20 +67,44 @@ export function toneMappingExposure(ev: number): number {
 /** Preset camera views. */
 export type ViewName = 'perspective' | 'top' | 'front' | 'side';
 
-/** Camera position and look-at target for a preset view of `room`. */
-export function viewPose(view: ViewName, room: Room): { position: Vec3; target: Vec3 } {
+/** Extra room around the framed room, as a factor of the fitting distance. */
+export const FRAME_MARGIN = 1.05;
+
+/** Viewing direction (from target towards camera) for each preset, not normalised. */
+const VIEW_DIRECTIONS: Record<ViewName, Vec3> = {
+  perspective: { x: 0.5, y: 0.48, z: 0.74 },
+  // A tiny z component keeps OrbitControls' up vector well defined when looking straight down.
+  top: { x: 0, y: 1, z: 0.001 },
+  front: { x: 0, y: 0.1, z: 1 },
+  side: { x: 1, y: 0.1, z: 0 },
+};
+
+/**
+ * Camera position and look-at target that fit the whole room in view. The
+ * room's bounding sphere (radius = half its diagonal) must fit the narrower of
+ * the vertical and horizontal fields of view: distance = r / sin(fov / 2).
+ */
+export function viewPose(
+  view: ViewName,
+  room: Room,
+  aspect: number,
+  verticalFovDeg: number,
+): { position: Vec3; target: Vec3 } {
   const { width, depth, height } = room;
-  const size = Math.max(width, depth);
-  const target = { x: 0, y: height * 0.4, z: 0 };
-  switch (view) {
-    case 'top':
-      // A tiny z offset keeps OrbitControls' up vector well defined.
-      return { position: { x: 0, y: size * 2.4, z: 0.001 }, target: { x: 0, y: 0, z: 0 } };
-    case 'front':
-      return { position: { x: 0, y: height * 0.55, z: depth / 2 + size * 1.6 }, target };
-    case 'side':
-      return { position: { x: width / 2 + size * 1.6, y: height * 0.55, z: 0 }, target };
-    case 'perspective':
-      return { position: { x: width * 0.85, y: height * 1.9, z: depth * 1.35 + 1 }, target };
-  }
+  const radius = 0.5 * Math.hypot(width, depth, height);
+  const verticalFov = (verticalFovDeg * Math.PI) / 180;
+  const horizontalFov = 2 * Math.atan(Math.tan(verticalFov / 2) * aspect);
+  const distance = (radius / Math.sin(Math.min(verticalFov, horizontalFov) / 2)) * FRAME_MARGIN;
+
+  const direction = VIEW_DIRECTIONS[view];
+  const length = Math.hypot(direction.x, direction.y, direction.z);
+  const target = { x: 0, y: height / 2, z: 0 };
+  return {
+    target,
+    position: {
+      x: target.x + (direction.x / length) * distance,
+      y: target.y + (direction.y / length) * distance,
+      z: target.z + (direction.z / length) * distance,
+    },
+  };
 }

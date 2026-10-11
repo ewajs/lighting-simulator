@@ -71,15 +71,37 @@ describe('toneMappingExposure', () => {
 });
 
 describe('viewPose', () => {
-  it('looks straight down for the top view', () => {
-    const { position, target } = viewPose('top', DEFAULT_ROOM);
+  const distance = (pose: ReturnType<typeof viewPose>) =>
+    Math.hypot(
+      pose.position.x - pose.target.x,
+      pose.position.y - pose.target.y,
+      pose.position.z - pose.target.z,
+    );
+
+  it('fits the room’s bounding sphere in the vertical field of view on wide viewports', () => {
+    // r = ½·√(5² + 4² + 2.7²) = 3.4746 m. At aspect 1.6 the 40° vertical fov is the narrower one:
+    // d = 3.4746 / sin 20° × 1.05 = 10.667 m.
+    expect(distance(viewPose('perspective', DEFAULT_ROOM, 1.6, 40))).toBeCloseTo(10.667, 2);
+  });
+
+  it('backs off on narrow viewports, where the horizontal fov is narrower', () => {
+    // Aspect 0.5: hfov = 2·atan(tan 20° × 0.5) = 20.6°, so d = 3.4746 / sin 10.3° × 1.05 = 20.376 m.
+    expect(distance(viewPose('perspective', DEFAULT_ROOM, 0.5, 40))).toBeCloseTo(20.376, 2);
+  });
+
+  it('aims at the room centre and looks down from above for the top view', () => {
+    const { position, target } = viewPose('top', DEFAULT_ROOM, 1.6, 40);
+    expect(target).toEqual({ x: 0, y: DEFAULT_ROOM.height / 2, z: 0 });
     expect(position.x).toBe(0);
     expect(position.y).toBeGreaterThan(DEFAULT_ROOM.height);
-    expect(target).toEqual({ x: 0, y: 0, z: 0 });
   });
 
   it('places the front and side cameras outside the room', () => {
-    expect(viewPose('front', DEFAULT_ROOM).position.z).toBeGreaterThan(DEFAULT_ROOM.depth / 2);
-    expect(viewPose('side', DEFAULT_ROOM).position.x).toBeGreaterThan(DEFAULT_ROOM.width / 2);
+    expect(viewPose('front', DEFAULT_ROOM, 1.6, 40).position.z).toBeGreaterThan(
+      DEFAULT_ROOM.depth / 2,
+    );
+    expect(viewPose('side', DEFAULT_ROOM, 1.6, 40).position.x).toBeGreaterThan(
+      DEFAULT_ROOM.width / 2,
+    );
   });
 });

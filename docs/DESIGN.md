@@ -45,7 +45,8 @@ CSS variables. Below, token names are listed without the prefix.
 - Logos, product names and other branding come from the host (slots or
   properties), never from the library.
 - Built-in themes: dark (default) and light. Set `data-lsim-theme="light"`
-  on any ancestor of the elements (e.g. `<html>`).
+  on `<lsim-app>` (its theme toggle does this) or on any ancestor of the
+  elements (e.g. `<html>`).
 
 ## Tokens
 

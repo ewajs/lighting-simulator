@@ -11,7 +11,13 @@ import { sharedStyles } from './styles';
 
 type Tab = 'catalog' | 'scene';
 
-/** The left panel: an icon rail switching between the catalog and the scene list. */
+/**
+ * The left panel: an icon rail switching between the catalog and the scene
+ * list. When `collapsed`, only the rail shows. Clicking the active tab asks to
+ * collapse; clicking any tab while collapsed asks to expand.
+ *
+ * @fires lsim-collapse-request - `detail: { collapsed }`
+ */
 @customElement('lsim-library')
 @localized()
 export class LsimLibrary extends LitElement {
@@ -36,6 +42,9 @@ export class LsimLibrary extends LitElement {
       lsim-scene-panel {
         min-height: 0;
       }
+      :host([collapsed]) {
+        grid-template-columns: 48px;
+      }
     `,
   ];
 
@@ -43,6 +52,8 @@ export class LsimLibrary extends LitElement {
   @property({ attribute: false }) products: Catalog | undefined;
   @property({ attribute: false }) scene: Scene | undefined;
   @property({ attribute: false }) selection: readonly string[] = [];
+
+  @property({ type: Boolean, reflect: true }) collapsed = false;
 
   @state() private tab: Tab = 'catalog';
 
@@ -53,22 +64,38 @@ export class LsimLibrary extends LitElement {
         ${this.#tabButton('scene', msg('Scene'), icon(Layers))}
       </nav>
       ${
-        this.tab === 'catalog'
-          ? html`<lsim-catalog-panel
-              role="tabpanel"
-              .display=${this.display}
-              .products=${this.products}
-            ></lsim-catalog-panel>`
-          : html`<lsim-scene-panel
-              role="tabpanel"
-              .scene=${this.scene}
-              .products=${this.products}
-              .display=${this.display}
-              .selection=${this.selection}
-              @lsim-open-catalog=${() => (this.tab = 'catalog')}
-            ></lsim-scene-panel>`
+        this.collapsed
+          ? ''
+          : this.tab === 'catalog'
+            ? html`<lsim-catalog-panel
+                role="tabpanel"
+                .display=${this.display}
+                .products=${this.products}
+              ></lsim-catalog-panel>`
+            : html`<lsim-scene-panel
+                role="tabpanel"
+                .scene=${this.scene}
+                .products=${this.products}
+                .display=${this.display}
+                .selection=${this.selection}
+                @lsim-open-catalog=${() => (this.tab = 'catalog')}
+              ></lsim-scene-panel>`
       }
     `;
+  }
+
+  #onTab(tab: Tab): void {
+    const collapse = tab === this.tab && !this.collapsed;
+    this.tab = tab;
+    if (collapse || this.collapsed) {
+      this.dispatchEvent(
+        new CustomEvent('lsim-collapse-request', {
+          detail: { collapsed: collapse },
+          bubbles: true,
+          composed: true,
+        }),
+      );
+    }
   }
 
   #tabButton(tab: Tab, label: string, content: unknown) {
@@ -76,10 +103,10 @@ export class LsimLibrary extends LitElement {
       class="icon-btn"
       type="button"
       role="tab"
-      aria-selected=${this.tab === tab}
+      aria-selected=${this.tab === tab && !this.collapsed}
       aria-label=${label}
       title=${label}
-      @click=${() => (this.tab = tab)}
+      @click=${() => this.#onTab(tab)}
     >
       ${content}
     </button>`;
@@ -87,6 +114,9 @@ export class LsimLibrary extends LitElement {
 }
 
 declare global {
+  interface HTMLElementEventMap {
+    'lsim-collapse-request': CustomEvent<{ collapsed: boolean }>;
+  }
   interface HTMLElementTagNameMap {
     'lsim-library': LsimLibrary;
   }

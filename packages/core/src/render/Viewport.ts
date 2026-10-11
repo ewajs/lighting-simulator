@@ -132,7 +132,12 @@ export class Viewport {
 
   /** Moves the camera to a preset view of the room. */
   setView(view: ViewName, { animate = true } = {}): void {
-    const { position, target } = viewPose(view, this.#simulator.scene.room);
+    const { position, target } = viewPose(
+      view,
+      this.#simulator.scene.room,
+      this.#camera.aspect,
+      this.#camera.fov,
+    );
     this.#flyTo(
       new THREE.Vector3(position.x, position.y, position.z),
       new THREE.Vector3(target.x, target.y, target.z),
@@ -250,6 +255,9 @@ export class Viewport {
     const down = this.#pointerDown;
     if (!down || Math.hypot(event.clientX - down.x, event.clientY - down.y) > CLICK_TOLERANCE_PX)
       return;
+    // Objects added since the last frame (e.g. restored by undo) have no world
+    // matrix until the next render; raycasting without this misses them.
+    this.#scene.updateMatrixWorld();
     const raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(this.#pointer(event.clientX, event.clientY), this.#camera);
     // Nearest hit that belongs to a fixture; outlines and other helpers are skipped.

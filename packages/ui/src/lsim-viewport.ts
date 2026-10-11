@@ -4,6 +4,7 @@ import {
   type PickEvent,
   type RenderMode,
   type Simulator,
+  type ViewName,
 } from '@lighting-sim/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement, type PropertyValues } from 'lit';
@@ -60,6 +61,16 @@ export class LsimViewport extends LitElement {
   protected override updated(changed: PropertyValues<this>): void {
     if (changed.has('simulator')) void this.#mount();
     this.#applyProperties();
+  }
+
+  /** Moves the camera to a preset view. No-op until the renderer has started. */
+  setView(view: ViewName): void {
+    this.#viewport?.setView(view);
+  }
+
+  /** Centres the camera on these luminaires. */
+  frame(ids: readonly string[]): void {
+    this.#viewport?.frame(ids);
   }
 
   override disconnectedCallback(): void {

@@ -191,7 +191,7 @@ Key interaction rules:
   ([ADR 0012](./decisions/0012-language-and-i18n.md)).
 - Keyboard: `⌘/Ctrl+Z` undo, `⇧⌘Z` / `Ctrl+Y` redo, `⌘/Ctrl+D` duplicate,
   `⌘/Ctrl+A` select all, `Del` delete, `H` on/off, `F` frame selection,
-  `Esc` deselect, `1/2/3` render modes, `0/7/8/9` perspective / top / front
+  `Esc` deselect, `1/2` render modes (`3` for illuminance in M2), `0/7/8/9` perspective / top / front
   / side, and `W/E` move/aim once handles exist.
 
 ## 6. Architecture

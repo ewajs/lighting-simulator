@@ -9,8 +9,17 @@ addStarterLayout(simulator);
 
 const app = document.createElement('lsim-app');
 app.simulator = simulator;
-// Spanish to match the default UI locale. Switching language arrives with the toggle in 0.6d.
-app.catalog = sampleDisplay('es-AR');
+app.catalog = sampleDisplay('es-AR'); // Matches the default UI locale.
+// Product names come from the host, so swap them when the user changes language.
+app.addEventListener(
+  'lsim-locale-change',
+  ({ detail }) => (app.catalog = sampleDisplay(detail.locale)),
+);
+
+const brand = document.createElement('span');
+brand.slot = 'brand';
+brand.textContent = 'Lighting Simulator';
+app.append(brand);
 document.body.append(app);
 
 /** A small lit room: a pendant over the centre, downlights, a tilted track spot, a wall light and a floor lamp. */
