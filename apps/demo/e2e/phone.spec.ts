@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 // Portrait phone (390 × 844) with touch. Screen points are for the default view.
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });

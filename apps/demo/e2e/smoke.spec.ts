@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 // Screen points at the fixed 1280×800 viewport (playwright.config.ts) with the
 // default perspective view. If the layout or camera changes, update these and
@@ -269,4 +269,14 @@ test('the catalog filters by mount type and colour temperature', async ({ page }
   await expect(cards).toHaveCount(3);
   await page.getByRole('combobox', { name: 'Tipo de montaje' }).selectOption({ label: 'Colgante' });
   await expect(page.getByText('Ningún producto coincide con la búsqueda.')).toBeVisible();
+});
+
+test('renders with the backend this project targets', async ({ page, browserName }, testInfo) => {
+  await openDemo(page);
+  const backend = await page
+    .locator('lxs-viewport')
+    .evaluate((el) => (el as unknown as { backend?: string }).backend);
+  // WebKit (Safari) has no WebGPU here, so it falls back like the chrome-webgl2 project.
+  const expected = testInfo.project.name === 'chrome' ? 'WebGPU' : 'WebGL 2';
+  expect(backend, `${testInfo.project.name} on ${browserName}`).toBe(expected);
 });

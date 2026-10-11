@@ -16,32 +16,49 @@ export class LxsSliderField extends LitElement {
   static override styles = [
     fieldStyles,
     css`
+      /*
+       * Fully custom range: Safari ignores accent-color on range inputs, so the
+       * track is drawn here with the fill up to --pct (set from the value).
+       */
       input {
+        --thumb: 14px;
+        appearance: none;
+        -webkit-appearance: none;
         width: 100%;
-        margin: 0;
-        accent-color: var(--lxs-accent);
+        height: 6px;
+        margin: calc(var(--thumb) / 2) 0;
+        border-radius: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--lxs-accent) var(--pct),
+          var(--lxs-surface-3) var(--pct)
+        );
         cursor: pointer;
       }
       :host([variant='cct']) input {
-        appearance: none;
-        height: 6px;
-        border-radius: 3px;
         background: var(--lxs-cct-gradient);
       }
-      :host([variant='cct']) input::-webkit-slider-thumb {
+      input::-webkit-slider-thumb {
+        -webkit-appearance: none;
         appearance: none;
-        width: 14px;
-        height: 14px;
+        width: var(--thumb);
+        height: var(--thumb);
+        border-radius: 50%;
+        background: var(--lxs-text);
+        border: 2px solid var(--lxs-surface-1);
+        box-shadow: 0 0 0 1px var(--lxs-line-strong);
+      }
+      input::-moz-range-thumb {
+        width: var(--thumb);
+        height: var(--thumb);
         border-radius: 50%;
         background: var(--lxs-text);
         border: 2px solid var(--lxs-surface-1);
       }
-      :host([variant='cct']) input::-moz-range-thumb {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: var(--lxs-text);
-        border: 2px solid var(--lxs-surface-1);
+      @media (pointer: coarse) {
+        input {
+          --thumb: 24px;
+        }
       }
     `,
   ];
@@ -69,6 +86,7 @@ export class LxsSliderField extends LitElement {
         .max=${String(this.max)}
         .step=${String(this.step)}
         .value=${String(this.value)}
+        style="--pct: ${((this.value - this.min) / (this.max - this.min)) * 100}%"
         aria-label=${this.label}
         @input=${this.#onInput}
         @change=${() => (this.#mergeKey = undefined)}

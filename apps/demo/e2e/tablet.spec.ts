@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page } from './fixtures';
 
 // Tablet sizes with a touch screen. Screen points are for the default view at
 // each size; see smoke.spec.ts for how to refresh them.
@@ -31,7 +31,10 @@ test.describe('landscape tablet (1024 × 768, touch)', () => {
     await expect(page).toHaveScreenshot('tablet-landscape.png');
   });
 
-  test('tap selects, long press adds to the selection', async ({ page }) => {
+  test('tap selects, long press adds to the selection', async ({ page, browserName }) => {
+    // Long press is driven through Chrome's DevTools protocol, which WebKit doesn't have.
+    test.skip(browserName !== 'chromium', 'needs CDP touch events');
+
     await openDemo(page);
     await page.touchscreen.tap(PENDANT.x, PENDANT.y);
     await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
@@ -40,7 +43,13 @@ test.describe('landscape tablet (1024 × 768, touch)', () => {
     await expect(page.getByText('2 luminarias seleccionadas')).toBeVisible();
   });
 
-  test('tapping a product adds it; long press on a list row toggles it', async ({ page }) => {
+  test('tapping a product adds it; long press on a list row toggles it', async ({
+    page,
+    browserName,
+  }) => {
+    // Long press is driven through Chrome's DevTools protocol, which WebKit doesn't have.
+    test.skip(browserName !== 'chromium', 'needs CDP touch events');
+
     await openDemo(page);
     await page.getByRole('tab', { name: 'Catálogo' }).tap();
     await page.getByRole('button', { name: /Lámpara de mesa 5 W/ }).tap();
