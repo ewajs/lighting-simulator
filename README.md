@@ -1,48 +1,28 @@
-# Leuk Lighting Simulator
+# Lighting Simulator (working name)
 
-A browser-based 3D lighting simulator for Leuk luminaires, built with
-[three.js](https://threejs.org) (WebGPU with a WebGL 2 fallback) and Vite.
-You lay out a room, place fixtures from the catalog, and preview the light.
+A client-agnostic library for building 3D lighting simulators on the web,
+using [three.js](https://threejs.org) (WebGPU with a WebGL 2 fallback).
+With an app built on it, users lay out a room, place luminaires from a
+catalog the host app provides, and see a believable, photometrically based
+preview of the light.
 
-**Live demo:** https://ewajs.github.io/lighting-simulator/ (deployed from `master` by `.github/workflows/pages.yml`)
+Planned packages (npm workspaces):
 
-- **Product & technical spec:** [docs/SPEC.md](docs/SPEC.md)
-- **Front-end design system:** [docs/DESIGN.md](docs/DESIGN.md)
-
-## Getting started
-
-```bash
-npm install
-npm run dev       # http://localhost:5173
-npm run build     # production build in dist/
-npm run preview   # serve the build
-```
-
-Requires Node 20+.
+- `@lighting-sim/core`: headless engine (scene model, photometry, rendering)
+- `@lighting-sim/ui`: optional Lit web components, i18n (`es-AR` / `en`)
+- `apps/demo`: reference integration with sample data, deployed to
+  https://ewajs.github.io/lighting-simulator/
 
 ## Status
 
-Milestone **M0 (scaffold)**:
-- App shell: top bar, catalog/scene panel, contextual inspector, viewport overlays, status bar.
-- Dark and light themes.
-- Parametric room with editable surfaces.
-- Click or drag a product to place it, then select it and edit it in the inspector.
-- Undo/redo, Realistic and Clay render modes, PNG snapshot.
+**Realignment in progress** (roadmap Phase 0). The current `src/` is an early
+prototype that will be deleted in step 0.2. Until the new demo lands, the
+live site shows the prototype or a placeholder.
 
-Photometry is approximate for now: lumens and beam angle only, no IES yet.
-See the milestones in the spec.
+## Docs
 
-## Layout
-
-```
-docs/        spec and design system
-src/state/   store, actions, initial state
-src/scene/   three.js viewport, room and luminaire layers
-src/ui/      DOM components (no framework)
-src/styles/  tokens → base → layout → components
-src/data/    sample catalog
-public/ies/  IES photometry files
-```
-
-In dev mode, `store`, `actions` and `viewport` are exposed on `window` for
-console debugging.
+- [CLAUDE.md](CLAUDE.md): working rules and coding standards
+- [docs/ROADMAP.md](docs/ROADMAP.md): steps and milestones
+- [docs/SPEC.md](docs/SPEC.md): product and technical spec
+- [docs/DESIGN.md](docs/DESIGN.md): design system and theming
+- [docs/decisions/](docs/decisions/): architecture decision records
