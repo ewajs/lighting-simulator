@@ -1,4 +1,4 @@
-# Lighting Simulator (working name)
+# Lux Studio
 
 A client-agnostic library for building 3D lighting simulators on the web,
 using [three.js](https://threejs.org) (WebGPU with a WebGL 2 fallback).
@@ -20,7 +20,7 @@ undo/redo and a three.js viewport. The live demo shows a sample room with
 selection, inside the `@lighting-sim/ui` shell (Spanish by default), with a
 catalog to add products (click or drag), a scene list with totals, an
 inspector, undo/redo, view controls, keyboard shortcuts, light/dark themes
-and ES/EN. Phase 0 is complete; next is M1, photometry with IES files.
+and ES/EN. Phase 0 is complete; next is a polish step, then M1, photometry with IES files.
 
 ```
 nvm use          # Node 24

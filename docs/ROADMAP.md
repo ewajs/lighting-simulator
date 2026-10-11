@@ -26,12 +26,17 @@ Its ideas get re-implemented to the new standards, slice by slice.
 
 ## Phase 1+: Features
 
+Order reviewed on 2026-10-11: what makes the best demo first (IES light, direct manipulation, visuals, saving), then lux analysis, and packaging for clients last.
+
 | Milestone | Scope |
 |---|---|
+| **P Polish** | Close the Phase 0 gaps: PNG screenshot, catalog filters by mount type and CCT, touch and tablet support (layout, touch orbit and picking, tests at tablet width), local checks on Safari, Firefox and the WebGL 2 fallback, and the rename to **Lux Studio** (ADR 0027). |
 | **M1 Photometry** | IES LM-63 parser in core (pure, tested against hand-made files), a photometry provider interface, IES-driven lights, three.js sample IES files in the demo (ADR 0014). |
-| **M2 Analysis** | Illuminance at points and on planes (Web Worker), lux probe, false-colour heatmap and legend, plane stats (avg / min / max / U₀). |
-| **M3 Manipulation** | Drag to move, move/aim handles, snapping to ceiling, walls and floor. |
-| **M4 Persistence** | Versioned scene schema, import/export, local autosave, storage provider interface for backends. |
+| **M2 Manipulation** | Drag to move, move/aim handles, snapping to ceiling, walls and floor. |
+| **M3 Visual quality** | glTF fixture models through a model provider, surface textures, simple parametric furniture and props. Bounce light stays the uniform estimate until M5. |
+| **M4 Persistence** | Versioned scene schema, import/export, local autosave, storage provider interface for backends, room templates (starter scenes). |
+| **M5 Analysis** | Direct illuminance plus inter-reflections from a room radiosity solve, in a Web Worker (ADR 0028). Lux probe, false-colour heatmap and legend, plane stats (avg / min / max / U₀). Finally, the radiosity solution drives the rendered bounce light, replacing the uniform estimate. |
+| **M6 Distribution** | How clients receive the library (an ADR on the delivery format), an embeddable build, integrator docs, a sample integration. |
 
 Each milestone is split into steps when it is planned, like Phase 0.
 
@@ -39,7 +44,7 @@ Each milestone is split into steps when it is planned, like Phase 0.
 
 - Backend adapter (reference implementation of the providers)
 - Simplified customer-facing mode
-- Path-traced "Render" stills for better indirect light
+- Path-traced "Render" stills
 - PDF report, bill of materials
-- Polygon rooms, openings, furniture / glTF import
-- Product name: package scope, element prefix, file extension (ADR 0007)
+- Polygon rooms, openings, glTF import of architecture and furniture
+- Performance benchmark: a 100-luminaire scene measured against SPEC §7

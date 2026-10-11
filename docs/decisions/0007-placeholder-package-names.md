@@ -1,6 +1,6 @@
 # 0007. Placeholder package names
 
-- **Status:** Accepted
+- **Status:** Superseded by [0027](0027-product-name-lux-studio.md)
 - **Date:** 2026-10-11
 
 ## Context

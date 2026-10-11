@@ -1,6 +1,6 @@
-# Lighting Simulator: Product & Technical Spec
+# Lux Studio: Product & Technical Spec
 
-Status: **Draft v0.2** · Last updated: 2026-10-11
+Status: **Draft v0.3** · Last updated: 2026-10-11
 
 Working rules are in [CLAUDE.md](../CLAUDE.md), the reasoning behind
 decisions is in [decisions/](./decisions/), and the delivery order is in
@@ -92,6 +92,10 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
   (white paint 0.8, concrete 0.4, wood floor 0.3, dark 0.1).
 - P1: L-shaped / polygon floor plans drawn in a 2D plan view.
 - P1: Openings (doors, windows) as cut-outs.
+- P1: Simple parametric furniture and props (table, sofa, desk, shelf) for
+  scale and to catch light.
+- P1: Room templates: starter scenes (living room, kitchen, office, shop)
+  with sizes, finishes and a lighting layout.
 - P2: glTF import for furniture and architecture.
 
 ### 4.2 Luminaires
@@ -132,11 +136,19 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
 - P1: Power density (W/m²) and fixture count summary / bill of materials.
 - P2: Export PDF report.
 
-Illuminance is computed **analytically** (direct component). For each sample
-point, sum over all luminaires: E = I(θ,φ) · cos(α) / d², with I taken from the
-IES table and occlusion from a ray test. This runs in a Web Worker (or a GPU
-compute pass) so it doesn't block rendering. It is independent of the
-rendered image, so the numbers stay the same whatever the visual quality.
+Illuminance has two parts, computed in a Web Worker so rendering never blocks
+([ADR 0028](./decisions/0028-indirect-illuminance-radiosity.md)):
+
+- **Direct:** for each sample point, sum over all luminaires
+  E = I(θ,φ) · cos(α) / d², with I taken from the IES table and occlusion from
+  a ray test.
+- **Indirect:** a radiosity solve over the room surfaces split into patches,
+  iterating a few bounces, using each surface's reflectance. In light rooms
+  this adds roughly 20–40%, so leaving it out would make results read low
+  compared with DIALux/Relux.
+
+The numbers are independent of the rendered image, so they stay the same
+whatever the visual quality.
 
 ### 4.5 Views & output
 
@@ -191,7 +203,7 @@ Key interaction rules:
   ([ADR 0012](./decisions/0012-language-and-i18n.md)).
 - Keyboard: `⌘/Ctrl+Z` undo, `⇧⌘Z` / `Ctrl+Y` redo, `⌘/Ctrl+D` duplicate,
   `⌘/Ctrl+A` select all, `Del` delete, `H` on/off, `F` frame selection,
-  `Esc` deselect, `1/2` render modes (`3` for illuminance in M2), `0/7/8/9` perspective / top / front
+  `Esc` deselect, `1/2` render modes (`3` for illuminance in M5), `0/7/8/9` perspective / top / front
   / side, and `W/E` move/aim once handles exist.
 
 ## 6. Architecture
@@ -247,8 +259,9 @@ occlusion test for every light.
 ## 8. Browser support
 
 Latest two versions of Chrome, Edge, Safari and Firefox. WebGPU where
-available, WebGL 2 otherwise. Desktop and tablet first. On phones, apps
-are view-only (open a shared scene and orbit).
+available, WebGL 2 otherwise. Desktop and tablet first, with touch input
+(orbit, pick, place) supported on tablets. On phones, apps are view-only
+(open a shared scene and orbit).
 
 ## 9. Open questions
 
@@ -260,5 +273,5 @@ are view-only (open a shared scene and orbit).
    path-traced still) acceptable, or must real-time look final?
 4. **Customer mode**: a separate set of components, or a configuration of
    the same ones?
-5. **Product name**: decides the package scope, the custom element prefix
-   and the scene file extension ([ADR 0007](./decisions/0007-placeholder-package-names.md)).
+5. **Delivery format** for clients (bundled script, git dependency, private
+   registry): decided in M6.
