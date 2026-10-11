@@ -109,7 +109,8 @@ When rendering changes on purpose, refresh the screenshot baselines with
   with clear messages. Trust internal code.
 
 ### Dependencies
-- Allowed runtime deps: **core → three**, **ui → core + lit**. Anything else
+- Allowed runtime deps: **core → three**, **ui → core + lit + @lit/localize +
+  lucide** (ADRs 0004, 0020, 0023). Anything else
   needs approval and an ADR covering why, bundle size, maintenance health,
   licence (MIT/BSD/Apache-compatible) and the alternatives considered.
 - New dev dependencies also need approval, with a one-line justification in the PR.

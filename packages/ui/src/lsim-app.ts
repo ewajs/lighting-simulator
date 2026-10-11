@@ -2,8 +2,12 @@ import type { PickEvent, Scene, Simulator } from '@lighting-sim/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { DEFAULT_LOCALE, setLocale, type Locale } from './localization';
+import type { SelectDetail } from './lsim-scene-panel';
+import type { DropProductDetail } from './lsim-viewport';
 import { pruneSelection, selectionAfterPick } from './selection';
+import './lsim-library';
 import './lsim-viewport';
 
 /**
@@ -11,7 +15,7 @@ import './lsim-viewport';
  * status bar. Owns the selection and passes it down (ADR 0021).
  *
  * ```html
- * <lsim-app .simulator=${simulator} locale="es-AR"></lsim-app>
+ * <lsim-app .simulator=${simulator} .catalog=${displayCatalog} locale="es-AR"></lsim-app>
  * ```
  */
 @customElement('lsim-app')
@@ -45,7 +49,7 @@ export class LsimApp extends LitElement {
       min-height: 0;
       overflow: auto;
     }
-    .library {
+    lsim-library {
       grid-area: left;
       border-right: 1px solid var(--lsim-line);
     }
@@ -107,6 +111,8 @@ export class LsimApp extends LitElement {
   `;
 
   @property({ attribute: false }) simulator: Simulator | undefined;
+  /** Product names, categories and thumbnails, in the active language. */
+  @property({ attribute: false }) catalog: DisplayCatalog = EMPTY_DISPLAY_CATALOG;
   /** UI language for the whole page. */
   @property() locale: Locale = DEFAULT_LOCALE;
 
@@ -119,11 +125,19 @@ export class LsimApp extends LitElement {
     const selected = this.selection.length;
     return html`
       <header></header>
-      <aside class="library"><h2>${msg('Catalog')}</h2></aside>
+      <lsim-library
+        .display=${this.catalog}
+        .products=${this.simulator?.catalog}
+        .scene=${this.scene}
+        .selection=${this.selection}
+        @lsim-add-product=${this.#onAddProduct}
+        @lsim-select=${this.#onSelect}
+      ></lsim-library>
       <lsim-viewport
         .simulator=${this.simulator}
         .highlighted=${this.selection}
         @lsim-pick=${this.#onPick}
+        @lsim-drop-product=${this.#onDropProduct}
       ></lsim-viewport>
       <aside class="inspector"><h2>${msg('Inspector')}</h2></aside>
       <footer>
@@ -162,6 +176,18 @@ export class LsimApp extends LitElement {
 
   #onPick = ({ detail }: CustomEvent<PickEvent>): void => {
     this.selection = selectionAfterPick(this.selection, detail.luminaireId, detail.event.shiftKey);
+  };
+
+  #onSelect = ({ detail }: CustomEvent<SelectDetail>): void => {
+    this.selection = selectionAfterPick(this.selection, detail.luminaireId, detail.toggle);
+  };
+
+  #onAddProduct = ({ detail }: CustomEvent<{ productId: string }>): void => {
+    if (this.simulator) this.selection = [this.simulator.addLuminaire(detail.productId)];
+  };
+
+  #onDropProduct = ({ detail }: CustomEvent<DropProductDetail>): void => {
+    if (this.simulator) this.selection = [this.simulator.addLuminaire(detail.productId, detail.at)];
   };
 
   #onKeyDown = (event: KeyboardEvent): void => {

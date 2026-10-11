@@ -1,4 +1,10 @@
 export { LsimApp } from './lsim-app';
 export { LsimViewport } from './lsim-viewport';
+export type { DropProductDetail } from './lsim-viewport';
+export { LsimLibrary } from './lsim-library';
+export { LsimCatalogPanel, PRODUCT_DRAG_TYPE } from './lsim-catalog-panel';
+export { LsimScenePanel } from './lsim-scene-panel';
+export type { SelectDetail } from './lsim-scene-panel';
+export type { CatalogCategory, CatalogItem, DisplayCatalog } from './display-catalog';
 export { DEFAULT_LOCALE, getLocale, setLocale } from './localization';
 export type { Locale } from './localization';

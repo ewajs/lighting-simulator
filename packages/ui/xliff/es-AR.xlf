@@ -22,6 +22,70 @@
   <source>This browser cannot start WebGPU or WebGL 2.</source>
   <target>Este navegador no puede iniciar WebGPU ni WebGL 2.</target>
 </trans-unit>
+<trans-unit id="s298d1047ee8bb99b">
+  <source><x id="0" equiv-text="${this.display.items.length}"/> products</source>
+  <target><x id="0" equiv-text="${this.display.items.length}"/> productos</target>
+</trans-unit>
+<trans-unit id="s58510772ceb9b9a3">
+  <source>Search products</source>
+  <target>Buscar productos</target>
+</trans-unit>
+<trans-unit id="se6a32a0239523724">
+  <source>Filter by category</source>
+  <target>Filtrar por categoría</target>
+</trans-unit>
+<trans-unit id="sf993bb199fefbe04">
+  <source>All</source>
+  <target>Todos</target>
+</trans-unit>
+<trans-unit id="sf29819a1c2d62d38">
+  <source>No products match your search.</source>
+  <target>Ningún producto coincide con la búsqueda.</target>
+</trans-unit>
+<trans-unit id="sdfe8965f9cac95e0">
+  <source>Click to add, or drag into the room</source>
+  <target>Hacé clic para agregar o arrastrá al ambiente</target>
+</trans-unit>
+<trans-unit id="s4a9a31623ab5f213">
+  <source>Scene</source>
+  <target>Escena</target>
+</trans-unit>
+<trans-unit id="s131434f4c287d694">
+  <source><x id="0" equiv-text="${count}"/> luminaires</source>
+  <target><x id="0" equiv-text="${count}"/> luminarias</target>
+</trans-unit>
+<trans-unit id="sba56141a5ab71a2a">
+  <source>Luminaires</source>
+  <target>Luminarias</target>
+</trans-unit>
+<trans-unit id="s4815759f6d9abd93">
+  <source>Fixtures</source>
+  <target>Artefactos</target>
+</trans-unit>
+<trans-unit id="s053eb89714fe5c46">
+  <source>Power</source>
+  <target>Potencia</target>
+</trans-unit>
+<trans-unit id="sfd43de85073c7122">
+  <source>Flux</source>
+  <target>Flujo</target>
+</trans-unit>
+<trans-unit id="s812b30a6166ff13b">
+  <source>Density</source>
+  <target>Densidad</target>
+</trans-unit>
+<trans-unit id="s1a249b1921e2bdea">
+  <source>off</source>
+  <target>apagada</target>
+</trans-unit>
+<trans-unit id="se4db0cd00918347a">
+  <source>No luminaires yet. Add one from the catalog.</source>
+  <target>Todavía no hay luminarias. Agregá una desde el catálogo.</target>
+</trans-unit>
+<trans-unit id="sc2bea9976d81ad86">
+  <source>Open catalog</source>
+  <target>Abrir catálogo</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

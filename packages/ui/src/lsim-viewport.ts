@@ -1,13 +1,21 @@
-import { Viewport, type PickEvent, type RenderMode, type Simulator } from '@lighting-sim/core';
+import {
+  Viewport,
+  type FloorPoint,
+  type PickEvent,
+  type RenderMode,
+  type Simulator,
+} from '@lighting-sim/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { PRODUCT_DRAG_TYPE } from './lsim-catalog-panel';
 
 /**
  * The 3D viewport: wraps core's Viewport (ADR 0019). It highlights what it is
  * given and reports clicks as `lsim-pick` events; it keeps no selection itself.
  *
  * @fires lsim-pick - `detail` is core's PickEvent: `{ luminaireId, event }`.
+ * @fires lsim-drop-product - a catalog card was dropped: `detail: { productId, at }`.
  */
 @customElement('lsim-viewport')
 @localized()
@@ -46,7 +54,7 @@ export class LsimViewport extends LitElement {
   override render() {
     return this.failed
       ? html`<p class="error">${msg('This browser cannot start WebGPU or WebGL 2.')}</p>`
-      : html`<div class="canvas"></div>`;
+      : html`<div class="canvas" @dragover=${this.#onDragOver} @drop=${this.#onDrop}></div>`;
   }
 
   protected override updated(changed: PropertyValues<this>): void {
@@ -96,11 +104,37 @@ export class LsimViewport extends LitElement {
     this.#viewport.exposureEv = this.exposureEv;
   }
 
+  #onDragOver = (event: DragEvent): void => {
+    if (!event.dataTransfer?.types.includes(PRODUCT_DRAG_TYPE)) return;
+    event.preventDefault(); // Allows the drop.
+    event.dataTransfer.dropEffect = 'copy';
+  };
+
+  #onDrop = (event: DragEvent): void => {
+    const productId = event.dataTransfer?.getData(PRODUCT_DRAG_TYPE);
+    const at = this.#viewport?.pointOnFloor(event.clientX, event.clientY);
+    if (!productId || !at) return;
+    event.preventDefault();
+    this.dispatchEvent(
+      new CustomEvent<DropProductDetail>('lsim-drop-product', {
+        detail: { productId, at },
+        bubbles: true,
+        composed: true,
+      }),
+    );
+  };
+
   #emitPick(pick: PickEvent): void {
     this.dispatchEvent(
       new CustomEvent<PickEvent>('lsim-pick', { detail: pick, bubbles: true, composed: true }),
     );
   }
+}
+
+/** Detail of `lsim-drop-product`: which product, and where on the floor it was dropped. */
+export interface DropProductDetail {
+  readonly productId: string;
+  readonly at: FloorPoint;
 }
 
 declare global {
@@ -109,5 +143,6 @@ declare global {
   }
   interface HTMLElementEventMap {
     'lsim-pick': CustomEvent<PickEvent>;
+    'lsim-drop-product': CustomEvent<DropProductDetail>;
   }
 }

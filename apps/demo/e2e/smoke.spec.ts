@@ -52,3 +52,41 @@ test('click selects, Shift-click adds, empty space and Esc clear', async ({ page
   await expect(page).toHaveScreenshot('starter-scene.png');
   expect(errors).toEqual([]);
 });
+
+test('adds products from the catalog by click and by drag and drop', async ({ page }) => {
+  const errors = await openDemo(page);
+
+  await page.getByRole('button', { name: /Lámpara de mesa 5 W/ }).click();
+  await expect(page.getByText('Luminarias: 8')).toBeVisible();
+  await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+
+  await page
+    .getByRole('button', { name: /Colgante 48 W/ })
+    .dragTo(page.locator('lsim-viewport'), { targetPosition: { x: 200, y: 600 } });
+  await expect(page.getByText('Luminarias: 9')).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test('search filters the catalog, ignoring accents', async ({ page }) => {
+  await openDemo(page);
+  const cards = page.locator('lsim-catalog-panel .card');
+  await expect(cards).toHaveCount(6);
+  await page.getByPlaceholder('Buscar productos').fill('lampara');
+  await expect(cards).toHaveCount(2);
+  await page.getByPlaceholder('Buscar productos').fill('zzz');
+  await expect(page.getByText('Ningún producto coincide con la búsqueda.')).toBeVisible();
+});
+
+test('the scene tab shows totals and selects from the list', async ({ page }) => {
+  await openDemo(page);
+  await page.getByRole('tab', { name: 'Escena' }).click();
+  // Starter layout: 48 + 3 × 7 + 12 + 6 + 9 = 96 W and 4200 + 3 × 560 + 1000 + 420 + 806 = 8106 lm.
+  await expect(page.locator('lsim-scene-panel .stat', { hasText: 'Potencia' })).toContainText('96');
+  await expect(page.locator('lsim-scene-panel .stat', { hasText: 'Flujo' })).toContainText('8.106');
+
+  const row = page.getByRole('option', { name: /Colgante 48 W 1/ });
+  await row.click();
+  await expect(row).toHaveAttribute('aria-selected', 'true');
+  await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+  await expect(page).toHaveScreenshot('scene-tab-pendant-selected.png');
+});

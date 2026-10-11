@@ -5,6 +5,8 @@ export type { PickEvent, ViewportOptions } from './render/Viewport';
 export type { ViewName } from './render/lighting';
 export type { RenderMode } from './render/RoomMeshes';
 export { DEFAULT_ROOM } from './room';
+export { summarizeScene } from './summary';
+export type { SceneSummary } from './summary';
 export type { RoomSize } from './room';
 export type { LuminairePatch } from './luminaires';
 export type {
