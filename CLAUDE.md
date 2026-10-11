@@ -2,6 +2,7 @@
 
 Guardrails for working on this repo. The reasoning behind each rule lives in
 [docs/decisions/](docs/decisions/). This file states the rules; the ADRs say why.
+What we build next is in [docs/ROADMAP.md](docs/ROADMAP.md).
 
 ## What this is
 
@@ -25,9 +26,10 @@ docs/           spec, design system, decisions (ADRs)
 Dependencies only go one way: **demo → ui → core**. Nothing in `packages/`
 imports from `apps/`, and core never imports ui. ESLint enforces this.
 
-> **Transitional state:** the code currently in `src/` predates these rules
-> (plain JS, a home-grown `h()` DOM helper, sample data inside the app). It
-> will be realigned in a dedicated step. Don't treat it as precedent.
+> **Transitional state:** the code currently in `src/` is an early prototype
+> that predates these rules (plain JS, a home-grown `h()` DOM helper, sample
+> data inside the app). It is deleted in roadmap step 0.2. Don't treat it as
+> precedent.
 
 ## Data boundary
 

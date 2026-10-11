@@ -1,52 +1,73 @@
 # Front-end Design System
 
-The UI is a **quiet frame around the light**. A lighting tool is judged by its
-viewport, so the chrome is neutral and low-contrast and gets out of the way.
-Colour is kept for state (selection, focus) and data (the false-colour scale).
+The visual system for `@lighting-sim/ui`. The UI is a **quiet frame around the
+light**. A lighting tool is judged by its viewport, so the chrome is neutral,
+low-contrast and out of the way. Colour is kept for state (selection, focus)
+and data (the false-colour scale).
 
 ## Principles
 
 1. **Dark by default.** A dark frame doesn't compete with the rendered scene
    and doesn't bias how bright the scene looks. A light theme exists for
-   print/screenshots and user preference (`data-theme="light"`).
+   print/screenshots and user preference.
 2. **One accent.** A warm amber (light-coloured, "2700 K") marks selection,
    focus and primary actions. Nothing else is saturated except data.
+   Integrators can swap the accent for their brand colour (see Theming).
 3. **Dense but calm.** It's a professional tool: 13 px base text, 32 px
    controls, 8 px grid, and hairline separators instead of boxes.
-4. **Numbers are first-class.** Tabular figures, units always shown
-   (`2.70 m`, `450 lx`, `3000 K`), monospace for live readouts.
+4. **Numbers are first-class.** Tabular figures, units always shown, monospace
+   for live readouts. Formatting follows the active locale: `2,70 m` in
+   `es-AR`, `2.70 m` in `en`.
 5. **Nothing moves without reason.** 120–200 ms ease-out transitions on
    panels and hovers only. No decorative animation.
 
-## Tokens
+## Theming
 
-All tokens live in `src/styles/tokens.css` as CSS custom properties. Components
-use only tokens, never raw values.
+**Design tokens are the integrator's theming surface.** Every visual value
+(colour, font, radius, spacing, layout size) is a CSS custom property, and
+the components only reference tokens. A host rebrands our UI by setting
+tokens on the element or on `:root`, without touching component code:
+
+```css
+lighting-sim-app {            /* element prefix is a placeholder (ADR 0007) */
+  --accent: #0a7cff;
+  --font-ui: "Host Sans", system-ui, sans-serif;
+}
+```
+
+- Token names are part of the public API. Renaming or removing one is a
+  breaking change.
+- Logos, product names and other branding come from the host (slots or
+  properties), never from the library.
+- Built-in themes: dark (default) and light, switched with a `theme`
+  attribute.
+
+## Tokens
 
 | Group | Tokens |
 |---|---|
-| Surfaces | `--bg` (app), `--surface-1` (panels), `--surface-2` (fields, cards), `--surface-3` (hover) |
+| Surfaces | `--bg` (app), `--surface-1` (panels), `--surface-2` (fields, cards), `--surface-3` (hover), `--overlay` (floating controls), `--viewport-bg` |
 | Lines | `--line` (hairline), `--line-strong` (field borders) |
 | Text | `--text`, `--text-muted`, `--text-faint` |
 | Accent | `--accent`, `--accent-hover`, `--accent-soft` (tinted bg), `--on-accent` |
 | Status | `--ok`, `--warn`, `--danger` |
+| Data | `--heat-0 … --heat-7` (false colour), `--cct-gradient` |
 | Type | `--font-ui`, `--font-mono`, sizes `--fs-xs/sm/md/lg/xl` |
-| Space | `--sp-1 … --sp-8` (4 px steps up to 8, then 8 px) |
-| Shape | `--r-sm` 4, `--r-md` 6, `--r-lg` 10 |
-| Layout | `--topbar-h` 48, `--statusbar-h` 28, `--panel-w` 280, `--inspector-w` 300 |
+| Space | `--sp-1 … --sp-8` (4 px steps) |
+| Shape | `--r-sm` 4, `--r-md` 6, `--r-lg` 10, `--shadow` |
+| Layout | `--topbar-h` 48, `--statusbar-h` 28, `--panel-w` 304, `--inspector-w` 300, `--rail-w` 48, `--control-h` 32 |
+| Motion | `--ease`, `--t-fast` 120 ms, `--t-med` 200 ms (0 under `prefers-reduced-motion`) |
 
-**Fonts:** system UI stack (`Inter` if installed). Replace with brand
-fonts (DIN Next for UI/numbers, Simplifica for the logo only) by changing
-`--font-ui`, once the licence for web embedding is confirmed.
+**Fonts:** a system UI stack by default (`Inter` if installed). Hosts change
+`--font-ui` / `--font-mono` to use their own fonts.
 
-**False-colour scale** (`--heat-0 … --heat-6`): a perceptually ordered
-scale, dark blue → cyan → green → yellow → orange → red → white, mapped on a
-log scale from 0 to 2000 lx by default. The legend always shows the scale and
-the range.
+**False-colour scale** (`--heat-*`): a perceptually ordered scale, dark
+blue → cyan → green → yellow → orange → red → white, mapped on a log scale
+from 0 to 2000 lx by default. The legend always shows the scale and the range.
 
 ## Layout
 
-CSS grid app shell (`src/styles/layout.css`):
+The full-app shell is a CSS grid:
 
 ```
 grid-template-areas:
@@ -55,29 +76,35 @@ grid-template-areas:
   "status status   status";
 ```
 
-- Side panels collapse to an icon rail (`data-left="collapsed"` on the
-  shell). The viewport takes the freed space and the renderer resizes through
-  a `ResizeObserver`.
+- Side panels collapse to an icon rail. The viewport takes the freed space
+  and the renderer resizes through a `ResizeObserver`.
+- **< 1100 px**: the left panel starts collapsed.
 - **< 900 px**: the inspector becomes a bottom sheet over the viewport.
 - **< 600 px**: view-only. Both panels hidden, top bar reduced.
 
-The viewport has its own overlay layer (`.viewport-overlay`) for floating
-controls: render-mode switch (top-centre), view presets (top-right),
-legend and exposure (bottom-right), hints (bottom-left). Overlay controls use
-a translucent surface with backdrop blur so the scene shows through.
+The viewport has an overlay layer for floating controls: render-mode switch
+(top centre), view presets (top right), legend and exposure (bottom right),
+hints (bottom left). Overlay controls use a translucent surface with
+backdrop blur so the scene shows through.
+
+Each part (viewport, panels, inspector) is a component of its own, so
+integrators can use the full shell or only the pieces they need.
 
 ## Components
 
+These are the visual building blocks. Their element names and APIs are
+defined when the ui package is built (roadmap step 0.6).
+
 | Component | Notes |
 |---|---|
-| **Icon button** | 32×32, ghost by default, `aria-pressed` for toggles, tooltip from `title`. |
-| **Button** | `.btn` ghost / `.btn--primary` (accent) / `.btn--subtle`. 32 px tall. |
-| **Segmented control** | Mutually exclusive modes (render mode, units). Keyboard arrows move selection. |
-| **Tabs** | Left panel: Catalog · Room · Scene. Underline indicator in accent. |
-| **Field** | Label on top (xs, muted). Input with unit suffix inside (`m`, `lx`, `K`, `%`). Number inputs accept arrow keys (±0.1, Shift ±1). |
-| **Slider + value** | For dimming, exposure, CCT. Track shows the value. CCT track shows a warm→cool gradient. |
-| **Swatch** | Surface colour + reflectance. |
-| **Product card** | Thumbnail, name, short spec line (`10 W · 3000 K · 900 lm`). Draggable. Hover shows "drag to place". |
+| **Icon button** | 32×32, ghost by default, `aria-pressed` for toggles, tooltip and `aria-label` from a localised string. |
+| **Button** | Ghost / primary (accent) / subtle. 32 px tall. |
+| **Segmented control** | Mutually exclusive modes (render mode). Arrow keys move the selection. |
+| **Rail tabs** | Left panel: Catalog · Scene. Clicking the active tab collapses the panel. |
+| **Field** | Label on top (xs, muted). Input with unit suffix inside (`m`, `lx`, `K`, `%`). ↑/↓ steps, Shift ×10. Accepts the locale's decimal separator. |
+| **Slider + value** | For dimming, exposure, CCT. The track shows the value. The CCT track shows a warm→cool gradient. |
+| **Swatch** | Surface colour + reflectance, with presets. |
+| **Product card** | Thumbnail, name, short spec line (power · CCT · flux). Click to add, drag to place. |
 | **Section** | Collapsible group inside panels, uppercase xs heading. |
 | **Legend** | Vertical gradient bar with lux ticks. |
 | **Status item** | Icon + mono value, separated by hairlines. |
@@ -87,17 +114,18 @@ a translucent surface with backdrop blur so the scene shows through.
 - **Hover**: `--surface-3` background.
 - **Focus**: 2 px accent outline with offset (`:focus-visible` only).
 - **Selected**: accent-soft background + accent text/icon. In 3D, an accent
-  outline on the fixture plus a halo marker on the light.
+  outline around the fixture.
 - **Disabled**: 40 % opacity, no pointer events.
-- **Empty states**: a short sentence and one action ("No luminaires yet. Drag
-  one from the catalog.").
+- **Empty states**: a short sentence and one action (e.g. "No luminaires
+  yet" with a button that opens the catalog).
 
 ## Accessibility
 
-- All controls reachable by keyboard; panels are landmarks (`<aside>`,
-  `<main>`, `<header>`, `<footer>`).
-- Contrast ≥ 4.5:1 for text on all surfaces in both themes.
-- Icon-only buttons always have `aria-label`.
+- All controls reachable by keyboard. Panels are landmarks (`aside`, `main`,
+  `header`, `footer` roles).
+- Contrast ≥ 4.5:1 for text on all surfaces in both themes, which integrator
+  token overrides should keep.
+- Icon-only buttons always have an accessible label.
 - False-colour mode is paired with numeric readouts (probe and legend), so
   colour is never the only carrier of information.
 - Respect `prefers-reduced-motion` (transitions off).

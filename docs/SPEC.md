@@ -1,13 +1,20 @@
-# Lighting Simulator — Product & Technical Spec
+# Lighting Simulator: Product & Technical Spec
 
-Status: **Draft v0.1** · Owner: Ezequiel Wajs · Last updated: 2026-10-11
+Status: **Draft v0.2** · Last updated: 2026-10-11
+
+Working rules are in [CLAUDE.md](../CLAUDE.md), the reasoning behind
+decisions is in [decisions/](./decisions/), and the delivery order is in
+[ROADMAP.md](./ROADMAP.md). This document describes **what** we are
+building.
 
 ## 1. Purpose
 
-A browser-based 3D tool where a user builds a simple space (a room), places
-Leuk luminaires from the catalog, and sees a believable preview of how the
-space will be lit. The tool also shows how much light reaches each surface,
-using the luminaires' real photometric data (IES files).
+A client-agnostic library for building browser-based 3D lighting
+simulators. With an app built on it, a user sets up a simple space (a room),
+places luminaires from a catalog the host app provides, and sees a
+believable preview of how the space will be lit. The app also shows how
+much light reaches each surface, using the luminaires' photometric data
+(IES files).
 
 It sits between a marketing configurator and a full lighting-design package
 (DIALux, Relux). It is good enough to support a sale and a first-pass layout,
@@ -15,12 +22,14 @@ but it is not a certified calculation tool.
 
 ### Goals
 
-1. **Visual confidence**: a customer can tell what a room will feel like with
+1. **Visual confidence**: the user can tell what a room will feel like with
    a given set of fixtures.
 2. **Photometric honesty**: light distribution comes from each product's IES
    file, not from generic spotlights.
 3. **Speed**: a useful scene in under 2 minutes, with no training.
 4. **Shareable**: a scene can be saved, reopened and sent as a link.
+5. **Embeddable and agnostic**: any lighting company can integrate it with
+   its own catalog, backend and branding, without changes to the library.
 
 ### Non-goals (for now)
 
@@ -33,42 +42,43 @@ but it is not a certified calculation tool.
 
 | User | Need |
 |---|---|
+| **Integrator** (a lighting company's dev team) | Plugs in their catalog, photometry, storage and branding. Uses our UI, or builds their own on the core. |
 | **End customer** (retail / web) | "Will this pendant look good over my table?" Wants a picture, not numbers. |
 | **Sales / showroom staff** | Builds a scene with the customer and adjusts it live. Needs speed and a few presets. |
 | **Architect / interior designer** | Wants approximate lux levels, uniformity and product counts to pick fixtures before a formal calculation. |
 
-The MVP targets **sales staff and designers**. The customer-facing mode is a
-simplified skin over the same engine (see §9).
+The first end-user target is **sales staff and designers**. A simplified
+customer-facing mode comes later, on the same engine.
 
 ## 3. Core concepts (domain model)
 
 ```
-Project
- └─ Scene
-     ├─ Room            dimensions, surfaces (floor / ceiling / walls), materials
-     ├─ Objects[]       optional furniture / props (boxes, tables, imported glTF)
-     ├─ Luminaires[]    instances of catalog Products
-     │    ├─ productId
-     │    ├─ transform  position, rotation (aim), mount type
-     │    ├─ dimming    0–100 %
-     │    └─ cct        colour temperature override (if the product allows it)
-     ├─ CalcPlanes[]    work planes / surfaces where illuminance is sampled
-     └─ View            camera bookmarks, exposure, render mode
+Scene
+ ├─ Room            dimensions, surfaces (floor / ceiling / walls), materials
+ ├─ Objects[]       optional furniture / props (boxes, tables, imported glTF)
+ ├─ Luminaires[]    instances of catalog Products
+ │    ├─ productId
+ │    ├─ transform  position, aim, mount type
+ │    ├─ dimming    0–1
+ │    └─ cct        colour temperature override (if the product allows it)
+ ├─ CalcPlanes[]    work planes / surfaces where illuminance is sampled
+ └─ View            camera bookmarks, exposure, render mode
 ```
 
-**Product** (catalog entry): id, name, category, finish/colour, wattage,
-luminous flux (lm), CCT (K), CRI, beam angle, mount type(s), dimensions,
-3D model (glTF), photometry (IES LM-63 file), thumbnail.
-
-Catalog categories follow the existing Leuk catalog: *Colgante, Spot de
-embutir, Cardánico de embutir, Riel, Exterior, Velador, Lámpara de pie, Aplique*.
+**Product** (catalog entry, supplied by the host): id, name, category,
+finish, power (W), luminous flux (lm), CCT (K), CRI, beam angle, mount
+type(s), dimensions, 3D model (glTF), photometry (IES LM-63), thumbnail.
+Categories are defined by the host's catalog, not by the library. The
+library only needs the **mount type** (recessed, pendant, track, wall,
+floor, table) to know where a product can go.
 
 **Units**: SI throughout. Metres for geometry, lumens / candelas / lux for
-light, Kelvin for CCT. One three.js world unit = 1 m, Y-up.
+light, kelvin for CCT. One three.js world unit = 1 m, Y-up.
 
 ## 4. Features
 
-Priority: **P0** = MVP, **P1** = next, **P2** = later.
+Priority: **P0** = first version, **P1** = next, **P2** = later.
+[ROADMAP.md](./ROADMAP.md) has the milestone each one lands in.
 
 ### 4.1 Room
 
@@ -81,34 +91,36 @@ Priority: **P0** = MVP, **P1** = next, **P2** = later.
 
 ### 4.2 Luminaires
 
-- P0: Browse the catalog by category, search by name, filter by mount type / CCT.
-- P0: Drag a product into the viewport. It snaps to a valid surface
-  (recessed and pendant go on the ceiling, wall-mounted on walls, floor and
+- P0: Browse the host's catalog by category, search by name, filter by
+  mount type / CCT.
+- P0: Place a product in the viewport. It snaps to a valid surface
+  (recessed and pendant on the ceiling, wall-mounted on walls, floor and
   table lamps on the floor).
-- P0: Select, move, rotate/aim, duplicate, delete. Undo/redo.
+- P0: Select, move, aim, duplicate, delete. Undo/redo for every scene edit.
 - P0: Per-instance dimming and on/off.
 - P1: Array tool: grid placement (rows × cols, spacing) on the ceiling.
-- P1: Track (riel) systems with heads that snap along a rail.
-- P1: Groups / scenes ("Dinner", "Work") that switch dimming presets.
+- P1: Track systems with heads that snap along a rail.
+- P1: Groups / presets ("Dinner", "Work") that switch dimming levels.
 
 ### 4.3 Photometry & lighting
 
-- P0: Parse IES LM-63-2002/2019 files. Use them as the light's intensity
-  distribution (three.js `IESSpotLight` / IES texture profile).
+- P0: Parse IES LM-63-2002/2019 files and use them as the light's intensity
+  distribution (three.js `IESSpotLight` / IES profile).
 - P0: Light colour comes from CCT (blackbody approximation). Intensity comes
-  from the IES candela values scaled by dimming.
-- P0: Physically based units (the three.js default since r155): candela on
-  lights, ACES/AgX tone mapping, user exposure control.
-- P0: Shadows from luminaires (shadow maps, quality setting).
-- P1: Approximate indirect light (bounce). Options to evaluate: light probes /
-  irradiance volume, or a progressive path-traced "Render" mode
-  (e.g. `three-gpu-pathtracer`) for stills.
+  from the IES candela values, scaled by dimming.
+- P0: Physically based units: candela on lights, AgX tone mapping, user
+  exposure control.
+- P0: Shadows from luminaires, with a shadow budget (see §7).
+- P0: Fallback for products without IES: a generic distribution derived
+  from flux and beam angle.
+- P1: Better indirect light (bounce). Options to evaluate: light probes /
+  irradiance volume, or a progressive path-traced "Render" mode for stills.
 - P2: Glare indicators, UGR estimate.
 
 ### 4.4 Analysis
 
-- P0: **False-colour (heatmap) mode**: illuminance on floor and work plane,
-  with a legend in lux.
+- P0: **False-colour (heatmap) mode**: illuminance on the floor and work
+  plane, with a legend in lux.
 - P0: Point probe: hover or click any surface to read lux.
 - P1: Calc grid summary per plane: E<sub>avg</sub>, E<sub>min</sub>,
   E<sub>max</sub>, uniformity U₀ = E<sub>min</sub>/E<sub>avg</sub>.
@@ -118,33 +130,35 @@ Priority: **P0** = MVP, **P1** = next, **P2** = later.
 Illuminance is computed **analytically** (direct component). For each sample
 point, sum over all luminaires: E = I(θ,φ) · cos(α) / d², with I taken from the
 IES table and occlusion from a ray test. This runs in a Web Worker (or a GPU
-compute pass) so it doesn't block rendering. It is independent from the
+compute pass) so it doesn't block rendering. It is independent of the
 rendered image, so the numbers stay the same whatever the visual quality.
 
 ### 4.5 Views & output
 
-- P0: Orbit / pan / zoom 3D camera. Preset views: Perspective, Top (plan),
+- P0: Orbit / pan / zoom camera. Preset views: Perspective, Top (plan),
   Front, Side.
 - P0: Render modes: **Realistic**, **Illuminance (false colour)**, **Clay**
-  (white materials, shows light only).
+  (neutral materials, shows light only).
 - P0: Screenshot to PNG.
 - P1: Walk mode (first-person at eye height 1.6 m).
 - P1: Camera bookmarks.
 
 ### 4.6 Persistence
 
-- P0: Autosave the current scene to `localStorage`/IndexedDB.
-- P0: Export / import scene as JSON (`.leuk.json`, versioned schema).
-- P1: Save to backend (`leuk-api`, Laravel) with a shareable URL.
-  Catalog served from the same API.
+- P0: Export / import a scene as versioned JSON. The file extension is
+  chosen with the product name.
+- P0: Autosave the current scene locally (IndexedDB).
+- P1: Save and share through a host-provided storage provider (e.g. the
+  integrator's backend), giving a shareable URL.
 
 ## 5. Front-end UX
 
-See [DESIGN.md](./DESIGN.md) for the visual system. Layout summary:
+See [DESIGN.md](./DESIGN.md) for the visual system. Reference layout of our
+UI package:
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│ Top bar: logo · project name · undo/redo · view modes · share │
+│ Top bar: host logo · project name · undo/redo · share         │
 ├──────────┬───────────────────────────────────────┬────────────┤
 │ Left     │                                       │ Right      │
 │ panel    │            3D viewport                │ inspector  │
@@ -159,77 +173,58 @@ See [DESIGN.md](./DESIGN.md) for the visual system. Layout summary:
 
 Key interaction rules:
 
-- **The viewport is the hero.** Panels can collapse; on narrow screens they
+- **The viewport is the hero.** Panels can collapse. On narrow screens they
   become bottom sheets.
-- **Direct manipulation first.** Drag from the catalog, move with gizmos.
-  Numeric fields exist for precision in the inspector.
+- **Direct manipulation first.** Place from the catalog, move with handles.
+  Numeric fields in the inspector are there for precision.
 - **Inspector is contextual.** Nothing selected shows the room (size and
-  surfaces). One luminaire
-  shows its product and instance settings. Several selected show the shared
-  fields.
-- **Every edit is undoable** (command pattern on the store).
-- Keyboard (implemented): `⌘/Ctrl+Z` undo, `⇧⌘Z` / `Ctrl+Y` redo,
-  `⌘/Ctrl+D` duplicate, `⌘/Ctrl+A` select all, `Del` delete, `H` on/off,
-  `F` frame selection, `Esc` deselect, `1/2` render modes, `0/7/8/9`
-  perspective / top / front / side.
-  Planned with gizmos (M1): `W/E` move/aim.
+  surfaces). One luminaire shows its product and instance settings. Several
+  selected show the shared fields.
+- **Every scene edit is undoable.** History lives in core
+  ([ADR 0016](./decisions/0016-undo-redo-in-core.md)).
+- **All UI text is localised**: `es-AR` default, `en` always available
+  ([ADR 0012](./decisions/0012-language-and-i18n.md)).
+- Keyboard: `⌘/Ctrl+Z` undo, `⇧⌘Z` / `Ctrl+Y` redo, `⌘/Ctrl+D` duplicate,
+  `⌘/Ctrl+A` select all, `Del` delete, `H` on/off, `F` frame selection,
+  `Esc` deselect, `1/2/3` render modes, `0/7/8/9` perspective / top / front
+  / side, and `W/E` move/aim once handles exist.
 
 ## 6. Architecture
 
-**Stack**: Vanilla JavaScript (ES modules) + Vite + three.js. No UI
-framework at this stage. The UI is small, and a thin component helper keeps
-it dependency-free. Revisit (Lit / Preact / React) if the panel count grows.
-TypeScript-style checking via JSDoc + `// @ts-check` is optional.
+Structure and rules are in [CLAUDE.md](../CLAUDE.md). In short:
 
-**Renderer**: `WebGPURenderer` from `three/webgpu`. It falls back to WebGL 2
-automatically, and it is where `IESSpotLight` and TSL node materials live
-(required for IES profiles).
+- **`@lighting-sim/core`** (TypeScript, depends on three.js): scene model
+  and its operations, undo/redo history, photometry (IES parsing,
+  candela lookup), the lighting model, three.js rendering
+  (`WebGPURenderer` with WebGL 2 fallback,
+  [ADR 0013](./decisions/0013-webgpu-renderer.md)), picking, and illuminance
+  analysis. No DOM UI.
+- **`@lighting-sim/ui`** (TypeScript, Lit): optional web components built on
+  core's public API, with i18n and design tokens.
+- **`apps/demo`**: a reference integration. It provides sample catalog and
+  photometry data and deploys to GitHub Pages.
 
-```
-src/
-  main.js              bootstrap: store → viewport → UI; shortcuts, drag & drop
-  state/
-    store.js           observable store, immutable updates, undo/redo history
-    actions.js         every state change goes through here
-    initialState.js    default room, starter layout, surface presets
-  scene/
-    Viewport.js        renderer, camera, orbit controls, presets, picking
-    RoomBuilder.js     room state → meshes (inward faces = free cutaway)
-    LuminaireLayer.js  luminaire state → lights + fixture meshes, shadow budget,
-                       indirect fill estimate
-    color.js           CCT (K) → RGB
-    ies/               IES parsing/caching                         (M1, todo)
-    analysis/          illuminance worker, false-colour material   (M2, todo)
-  ui/
-    dom.js             h() element helper, number formatters
-    icons.js           inline SVG icon set
-    controls.js        number/slider/select fields, segmented, section, toast
-    TopBar.js, SidePanel.js, CatalogPanel.js, ScenePanel.js,
-    Inspector.js, ViewportOverlay.js, StatusBar.js
-  data/
-    catalog.js         sample catalog (later: fetched from leuk-api)
-  styles/
-    tokens.css         design tokens (colour, type, spacing, radii)
-    base.css           reset + element defaults
-    layout.css         app shell grid + responsive rules
-    components.css     buttons, fields, panels, lists…
-public/
-  ies/                 IES files served statically (MVP)
-  models/              fixture glTF models (MVP)
-```
+**Injection points.** The host supplies data through providers instead of
+the library fetching it. Each one's API is designed in the milestone that
+needs it:
 
-**Data flow** is one-way: UI dispatches actions → store updates state and
-notifies → scene layer and UI re-render the parts that changed. The scene layer
-never mutates state directly. Picking in the viewport dispatches `select` /
-`move` actions like any other UI.
+| Provider | Supplies | Needed in |
+|---|---|---|
+| Catalog | products and categories | port (0.3 / 0.5) |
+| Photometry | IES data for a product | M1 |
+| Storage | save / load / share scenes | M4 |
 
-**Interim lighting model (M0)**: until IES files are attached, a spot
-product's candela is estimated from its lumens spread over its beam cone, and
-a wide product is treated as isotropic (lm / 4π). Indirect light is a single
-uniform fill from the integrating-sphere formula E = Φ·ρ̄ / (A·(1−ρ̄)). The
-display exposure is calibrated so 100–500 lx interiors sit mid-range
-(`BASE_EXPOSURE` in `Viewport.js`). Shadow maps re-render only when the scene
-changes.
+**Data flow** is one-way. UI or host calls core operations → core updates
+the scene (recording history) and notifies → the renderer and UI update
+what changed. Picking in the viewport goes through the same operations as
+any other input.
+
+**Lighting model before IES (fallback).** A spot product's candela is
+estimated from its lumens spread over its beam cone. A wide product is
+treated as isotropic (lm / 4π). Indirect light is one uniform fill from the
+integrating-sphere formula E = Φ·ρ̄ / (A·(1−ρ̄)). Display exposure is
+calibrated so 100–500 lx interiors sit mid-range. Shadow maps re-render
+only when the scene changes.
 
 ## 7. Performance targets
 
@@ -241,35 +236,24 @@ changes.
 | Max luminaires per scene | 100 (shadows auto-limited to the 8 most significant) |
 
 Shadow-casting lights are expensive. Lights beyond the shadow budget still
-light the scene but don't cast shadows. The analysis worker still runs its
+light the scene but don't cast shadows. The analysis still runs its
 occlusion test for every light.
 
 ## 8. Browser support
 
 Latest two versions of Chrome, Edge, Safari and Firefox. WebGPU where
-available, WebGL 2 otherwise. Desktop and tablet first. Phone is view-only
-(open a shared scene and orbit).
+available, WebGL 2 otherwise. Desktop and tablet first. On phones, apps
+are view-only (open a shared scene and orbit).
 
-## 9. Milestones
+## 9. Open questions
 
-| # | Milestone | Contents |
-|---|---|---|
-| M0 | **Scaffold** ✅ | Vite + three (WebGPU), app shell UI, design tokens, store + undo, parametric room & surfaces, sample catalog, click/drag to add, select, inspector editing, clay mode, snapshot |
-| M1 | **Place & light** | Drag-and-drop luminaires, IES loading, CCT, dimming, selection + gizmos, undo/redo |
-| M2 | **Analysis** | Illuminance worker, false-colour mode, lux probe, legend, plane stats |
-| M3 | **Persist & share** | JSON import/export, autosave, screenshot, API save + share link |
-| M4 | **Customer mode** | Simplified UI skin, presets, embeddable on leuk website |
-
-## 10. Open questions
-
-1. **Catalog source of truth**: is `leuk-api` (Simulador V2) the backend for
-   this, or is this a separate product? It decides the catalog schema and auth.
-2. **IES coverage**: do we have IES + glTF for every product, or only some?
-   What fallback do we use for products without photometry (generic beam
-   from the beam angle)?
-3. **Language**: UI in Spanish, English, or both? The architecture keeps
-   strings in one place to allow i18n.
-4. **Brand fonts**: DIN Next / Simplifica licences allow web embedding?
-   The UI uses a system stack until confirmed.
-5. **Indirect light**: is a "Render" button (wait a few seconds for a
+1. **Provider shape**: sync or async, how auth is passed, how catalogs page
+   or search server-side. Decided per provider in its milestone.
+2. **Missing photometry**: is the generic fallback (flux + beam) good enough,
+   or should products without IES be flagged or blocked in analysis mode?
+3. **Indirect light**: is a "Render" button (wait a few seconds for a
    path-traced still) acceptable, or must real-time look final?
+4. **Customer mode**: a separate set of components, or a configuration of
+   the same ones?
+5. **Product name**: decides the package scope, the custom element prefix
+   and the scene file extension ([ADR 0007](./decisions/0007-placeholder-package-names.md)).
