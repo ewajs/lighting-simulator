@@ -66,3 +66,31 @@ test('the ⋯ menu switches language and theme', async ({ page }) => {
   await page.getByRole('menuitem', { name: 'Light theme' }).tap();
   await expect(page.locator('lxs-app')).toHaveAttribute('data-lxs-theme', 'light');
 });
+
+test.describe('landscape phone (844 × 390)', () => {
+  test.use({ viewport: { width: 844, height: 390 }, hasTouch: true, isMobile: true });
+  const PENDANT = { x: 458, y: 204 };
+
+  test('the tab bar becomes a left rail', async ({ page }) => {
+    await openDemo(page);
+    await expect(page.locator('lxs-app')).toHaveAttribute('landscape', '');
+    const rail = (await page.locator('lxs-tab-bar').boundingBox())!;
+    expect(rail.x).toBe(0);
+    expect(rail.height).toBeGreaterThan(rail.width);
+    await expect(page).toHaveScreenshot('phone-landscape-default.png');
+  });
+
+  test('sheets slide in from the right and can take the full width', async ({ page }) => {
+    await openDemo(page);
+    await page.touchscreen.tap(PENDANT.x, PENDANT.y);
+    await expect(sheetHeading(page, 'Propiedades')).toBeVisible();
+    const sheet = page.locator('lxs-sheet');
+    // Right half of the screen, leaving the 3D view visible on the left.
+    expect((await sheet.boundingBox())!.x).toBeGreaterThan(844 * 0.4);
+    await expect(page).toHaveScreenshot('phone-landscape-properties.png');
+
+    await page.getByRole('button', { name: 'Ancho completo' }).tap();
+    await expect(sheet).toHaveAttribute('expanded', '');
+    await expect(page.getByRole('button', { name: 'Medio ancho' })).toBeVisible();
+  });
+});

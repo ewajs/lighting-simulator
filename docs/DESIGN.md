@@ -91,6 +91,9 @@ grid-template-areas:
   undo/redo, ⋯ menu), and a bottom tab bar (Catálogo, Escena, Propiedades,
   Vista) that opens each panel in a half-height sheet, with a button for full
   height. Selecting a fixture opens Propiedades.
+- **Landscape phones** (touch, ≤ 500 px tall): the same pieces, with the tab
+  bar as a left rail and sheets sliding in from the right at half width
+  (full width on demand).
 - **< 600 px**: view-only. Both panels hidden, top bar reduced.
 
 The viewport has an overlay layer for floating controls: render-mode switch

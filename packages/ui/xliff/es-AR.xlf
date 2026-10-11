@@ -374,6 +374,14 @@
   <source>More options</source>
   <target>Más opciones</target>
 </trans-unit>
+<trans-unit id="s60d7540e99cac6b8">
+  <source>Half width</source>
+  <target>Medio ancho</target>
+</trans-unit>
+<trans-unit id="s037caef1307c29f0">
+  <source>Full width</source>
+  <target>Ancho completo</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

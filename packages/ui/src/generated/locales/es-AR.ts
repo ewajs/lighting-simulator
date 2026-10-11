@@ -9,7 +9,8 @@
     /* eslint-disable @typescript-eslint/no-explicit-any */
 
     export const templates = {
-      's053eb89714fe5c46': `Potencia`,
+      's037caef1307c29f0': `Ancho completo`,
+'s053eb89714fe5c46': `Potencia`,
 's07ff5207b4bfba92': `3D`,
 's0f46657bfb26f224': `Encuadrar selección`,
 's126219b722a3c643': `Temperatura de color`,
@@ -44,6 +45,7 @@
 's5d838598f78157f2': `Carbón`,
 's5e1b62a66c3d3c7e': `Pintura blanca`,
 's5e8250fb85d64c23': `Cerrar`,
+'s60d7540e99cac6b8': `Medio ancho`,
 's61a295b36933aeb2': `Paredes`,
 's6282ee4c5295cdb3': str`Color de ${0}`,
 's62d50a44609285f6': `Iluminancia`,

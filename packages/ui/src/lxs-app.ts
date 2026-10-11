@@ -30,7 +30,10 @@ const AUTO_COLLAPSE_LIBRARY_BELOW_PX = 1200;
 /** Matches the narrow layout in the styles below, where the inspector becomes a sheet over the viewport. */
 const NARROW_LAYOUT = '(max-width: 900px)';
 /** Phones: a full-screen viewport with a tab bar and sheets instead of side panels (ADR 0031). */
-const PHONE_LAYOUT = '(max-width: 600px)';
+const PHONE_LAYOUT =
+  '(max-width: 600px), (max-height: 500px) and (orientation: landscape) and (pointer: coarse)';
+/** Within the phone layout: tab bar as a left rail, sheets from the right. */
+const LANDSCAPE = '(orientation: landscape)';
 
 type PhoneTab = 'catalog' | 'scene' | 'properties' | 'view';
 
@@ -85,6 +88,9 @@ export class LxsApp extends LitElement {
   /** Whether the open phone sheet was opened by selecting, so clearing the selection closes it. */
   #sheetOpenedBySelection = false;
   readonly #phoneQuery = window.matchMedia(PHONE_LAYOUT);
+  /** Landscape phone (reflected as the `landscape` attribute). */
+  @state() private landscape = false;
+  readonly #landscapeQuery = window.matchMedia(LANDSCAPE);
 
   @query('lxs-viewport') private viewport!: LxsViewport;
   #unsubscribe: (() => void) | undefined;
@@ -133,6 +139,7 @@ export class LxsApp extends LitElement {
         tab
           ? html`<lxs-sheet
               class="phone-sheet"
+              .side=${this.landscape}
               heading=${tabs.find((t) => t.id === tab)?.label ?? ''}
               .expanded=${this.sheetFull}
               @lxs-sheet-expand=${({ detail }: CustomEvent<{ expanded: boolean }>) =>
@@ -144,6 +151,7 @@ export class LxsApp extends LitElement {
           : nothing
       }
       <lxs-tab-bar
+        .vertical=${this.landscape}
         .tabs=${tabs}
         .active=${tab}
         @lxs-tab-change=${({ detail }: CustomEvent<{ tab: string | null }>) =>
@@ -243,8 +251,10 @@ export class LxsApp extends LitElement {
     window.addEventListener('keydown', this.#onKeyDown);
     this.#narrowQuery.addEventListener('change', this.#onNarrowChange);
     this.#phoneQuery.addEventListener('change', this.#onPhoneChange);
+    this.#landscapeQuery.addEventListener('change', this.#onLandscapeChange);
     this.narrow = this.#narrowQuery.matches;
     this.phone = this.#phoneQuery.matches;
+    this.landscape = this.#landscapeQuery.matches;
   }
 
   protected override firstUpdated(): void {
@@ -262,6 +272,7 @@ export class LxsApp extends LitElement {
     window.removeEventListener('keydown', this.#onKeyDown);
     this.#narrowQuery.removeEventListener('change', this.#onNarrowChange);
     this.#phoneQuery.removeEventListener('change', this.#onPhoneChange);
+    this.#landscapeQuery.removeEventListener('change', this.#onLandscapeChange);
     this.#unsubscribe?.();
     this.#unsubscribe = undefined;
   }
@@ -279,7 +290,11 @@ export class LxsApp extends LitElement {
       this.#sheetOpenedBySelection = true;
     }
     if (this.phone && cleared && this.#sheetOpenedBySelection) this.#openPhoneTab(null);
-    if ((changed as Map<string, unknown>).has('phone')) this.toggleAttribute('phone', this.phone);
+    const changedState = changed as Map<string, unknown>;
+    if (changedState.has('phone') || changedState.has('landscape')) {
+      this.toggleAttribute('phone', this.phone);
+      this.toggleAttribute('landscape', this.phone && this.landscape);
+    }
     if (changed.has('locale'))
       void this.#applyLocale(this.locale, changed.get('locale') !== undefined);
     if (changed.has('simulator')) this.#watch(this.simulator);
@@ -353,6 +368,10 @@ export class LxsApp extends LitElement {
 
   #onPhoneChange = (event: MediaQueryListEvent): void => {
     this.phone = event.matches;
+  };
+
+  #onLandscapeChange = (event: MediaQueryListEvent): void => {
+    this.landscape = event.matches;
   };
 
   #onPick = ({ detail }: CustomEvent<PickEvent>): void => {

@@ -30,7 +30,7 @@ Order reviewed on 2026-10-11: what makes the best demo first (IES light, direct 
 
 | Milestone | Scope |
 |---|---|
-| **P Polish** | Close the Phase 0 gaps: rename to **Lux Studio** (P.1 ✅), PNG screenshot and catalog filters (P.2 ✅), touch and tablet support (P.3 ✅), full phone layout: portrait (P.4a) and landscape (P.4b), then WebKit (iOS/macOS Safari) and WebGL 2 fallback checks (P.5). Firefox is not supported (ADR 0031). |
+| **P Polish** | Close the Phase 0 gaps: rename to **Lux Studio** (P.1 ✅), PNG screenshot and catalog filters (P.2 ✅), touch and tablet support (P.3 ✅), full phone layout: portrait (P.4a ✅) and landscape (P.4b ✅), then WebKit (iOS/macOS Safari) and WebGL 2 fallback checks (P.5). Firefox is not supported (ADR 0031). |
 | **M1 Photometry** | IES LM-63 parser in core (pure, tested against hand-made files), a photometry provider interface, IES-driven lights, three.js sample IES files in the demo (ADR 0014). |
 | **M2 Manipulation** | Drag to move, move/aim handles, snapping to ceiling, walls and floor. |
 | **M3 Visual quality** | glTF fixture models through a model provider, surface textures, simple parametric furniture and props. Bounce light stays the uniform estimate until M5. |
