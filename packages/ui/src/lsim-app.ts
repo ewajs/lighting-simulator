@@ -7,7 +7,9 @@ import { DEFAULT_LOCALE, setLocale, type Locale } from './localization';
 import type { SelectDetail } from './lsim-scene-panel';
 import type { DropProductDetail } from './lsim-viewport';
 import { pruneSelection, selectionAfterPick } from './selection';
+import './lsim-inspector';
 import './lsim-library';
+import type { SetSelectionDetail } from './lsim-luminaire-inspector';
 import './lsim-viewport';
 
 /**
@@ -44,11 +46,6 @@ export class LsimApp extends LitElement {
       background: var(--lsim-surface-1);
       border-bottom: 1px solid var(--lsim-line);
     }
-    aside {
-      background: var(--lsim-surface-1);
-      min-height: 0;
-      overflow: auto;
-    }
     lsim-library {
       grid-area: left;
       border-right: 1px solid var(--lsim-line);
@@ -56,13 +53,6 @@ export class LsimApp extends LitElement {
     .inspector {
       grid-area: right;
       border-left: 1px solid var(--lsim-line);
-    }
-    h2 {
-      margin: 0;
-      padding: var(--lsim-sp-3) var(--lsim-sp-4);
-      font-size: var(--lsim-fs-md);
-      font-weight: 600;
-      border-bottom: 1px solid var(--lsim-line);
     }
     lsim-viewport {
       grid-area: viewport;
@@ -104,7 +94,8 @@ export class LsimApp extends LitElement {
         grid-template-columns: minmax(0, 1fr);
         grid-template-areas: 'top' 'viewport' 'status';
       }
-      aside {
+      lsim-library,
+      .inspector {
         display: none;
       }
     }
@@ -139,7 +130,15 @@ export class LsimApp extends LitElement {
         @lsim-pick=${this.#onPick}
         @lsim-drop-product=${this.#onDropProduct}
       ></lsim-viewport>
-      <aside class="inspector"><h2>${msg('Inspector')}</h2></aside>
+      <lsim-inspector
+        class="inspector"
+        .simulator=${this.simulator}
+        .scene=${this.scene}
+        .selection=${this.selection}
+        .display=${this.catalog}
+        @lsim-set-selection=${({ detail }: CustomEvent<SetSelectionDetail>) =>
+          (this.selection = detail.ids)}
+      ></lsim-inspector>
       <footer>
         <span>${msg(str`Luminaires: ${total}`)}</span>
         <span>${msg(str`Selected: ${selected}`)}</span>

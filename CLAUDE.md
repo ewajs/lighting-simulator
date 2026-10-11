@@ -128,7 +128,10 @@ When rendering changes on purpose, refresh the screenshot baselines with
   ([ADR 0022](docs/decisions/0022-legacy-typescript-decorators.md)), state
   passed down as properties and actions reported up as `lsim-*` events
   ([ADR 0021](docs/decisions/0021-props-down-events-up.md)). Styles only use
-  `--lsim-*` tokens from `theme.css`.
+  `--lsim-*` tokens from `theme.css`. Document edits call the Simulator
+  directly, each gesture with its own `mergeKey`; events are only for UI
+  state like selection
+  ([ADR 0025](docs/decisions/0025-elements-edit-simulator-directly.md)).
 - Units: SI. 1 world unit = 1 m, Y-up. Light in lm / cd / lx, colour
   temperature in K.
 - Package names use the placeholder scope `@lighting-sim/*` until there is

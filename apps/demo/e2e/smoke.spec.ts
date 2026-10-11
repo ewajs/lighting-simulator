@@ -90,3 +90,53 @@ test('the scene tab shows totals and selects from the list', async ({ page }) =>
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
   await expect(page).toHaveScreenshot('scene-tab-pendant-selected.png');
 });
+
+test('the inspector edits the room when nothing is selected', async ({ page }) => {
+  await openDemo(page);
+  await expect(page.getByRole('heading', { name: 'Ambiente', exact: true })).toBeVisible();
+  const width = page.getByRole('textbox', { name: 'Ancho' });
+  await width.fill('6');
+  await width.press('Enter');
+  // 6 × 4 m = 24 m²; the comma decimal is accepted too.
+  await expect(page.getByText(/Área 24 m²/)).toBeVisible();
+  await width.fill('5,5');
+  await width.press('Enter');
+  await expect(page.getByText(/Área 22 m²/)).toBeVisible();
+  await expect(width).toHaveValue('5,50');
+});
+
+test('the inspector edits, duplicates and deletes the selected luminaire', async ({ page }) => {
+  const errors = await openDemo(page);
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  await expect(page.getByRole('heading', { name: 'Luminaria', exact: true })).toBeVisible();
+
+  await page.getByRole('slider', { name: 'Atenuación' }).fill('0.5');
+  await page.getByRole('tab', { name: 'Escena' }).click();
+  await expect(page.getByRole('option', { name: /Colgante 48 W 1/ })).toContainText('50%');
+  await expect(page).toHaveScreenshot('inspector-pendant-dimmed.png');
+
+  await page.getByRole('button', { name: 'Duplicar' }).click();
+  await expect(page.getByText('Luminarias: 8')).toBeVisible();
+  await expect(page.getByRole('option', { name: /Colgante 48 W 2/ })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  );
+
+  await page.getByRole('button', { name: 'Eliminar' }).click();
+  await expect(page.getByText('Luminarias: 7')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Ambiente', exact: true })).toBeVisible();
+  expect(errors).toEqual([]);
+});
+
+test('several selected luminaires share one inspector', async ({ page }) => {
+  await openDemo(page);
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  await page.keyboard.down('Shift');
+  await page.mouse.click(FLOOR_LAMP.x, FLOOR_LAMP.y);
+  await page.keyboard.up('Shift');
+  await expect(page.getByText('2 luminarias seleccionadas')).toBeVisible();
+  await page.getByRole('button', { name: 'Apagar' }).click();
+  await page.getByRole('tab', { name: 'Escena' }).click();
+  await expect(page.getByRole('option', { name: /Lámpara de pie 9 W 1/ })).toContainText('apagada');
+  await expect(page.getByRole('option', { name: /Colgante 48 W 1/ })).toContainText('apagada');
+});

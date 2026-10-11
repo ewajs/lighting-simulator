@@ -9,3 +9,12 @@ export function formatNumber(value: number, maximumFractionDigits = 0): string {
 export function formatKelvin(kelvin: number): string {
   return `${Math.round(kelvin)} K`;
 }
+
+/** Fixed decimals in the active locale, without grouping, for editable fields ("2,70"). */
+export function formatFixed(value: number, decimals: number): string {
+  return new Intl.NumberFormat(getLocale(), {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+    useGrouping: false,
+  }).format(value);
+}
