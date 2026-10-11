@@ -193,3 +193,37 @@ export const inspectorStyles = css`
     font-size: var(--lsim-fs-sm);
   }
 `;
+
+/** Segmented control (mutually exclusive options), used by the top bar and viewport controls. */
+export const segmentedStyles = css`
+  .segmented {
+    display: inline-flex;
+    gap: 2px;
+    padding: 2px;
+    border: 1px solid var(--lsim-line);
+    border-radius: var(--lsim-r-md);
+    background: var(--lsim-surface-2);
+  }
+  .segmented button {
+    height: 26px;
+    padding: 0 var(--lsim-sp-3);
+    border: 0;
+    border-radius: var(--lsim-r-sm);
+    background: transparent;
+    color: var(--lsim-text-muted);
+    font-size: var(--lsim-fs-sm);
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .segmented button:hover {
+    color: var(--lsim-text);
+  }
+  .segmented button[aria-checked='true'] {
+    background: var(--lsim-surface-3);
+    color: var(--lsim-text);
+  }
+  .segmented button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+`;

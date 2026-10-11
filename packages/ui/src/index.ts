@@ -15,3 +15,6 @@ export type { SetSelectionDetail } from './lsim-luminaire-inspector';
 export { LsimNumberField } from './lsim-number-field';
 export { LsimSliderField } from './lsim-slider-field';
 export type { FieldChange } from './field-change';
+export { LsimTopBar } from './lsim-top-bar';
+export type { PanelName, Theme } from './lsim-top-bar';
+export { LsimViewportControls } from './lsim-viewport-controls';

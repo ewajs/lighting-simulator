@@ -3,9 +3,9 @@ import { expect, test, type Page } from '@playwright/test';
 // Screen points at the fixed 1280×800 viewport (playwright.config.ts) with the
 // default perspective view. If the layout or camera changes, update these and
 // refresh the baselines with `npm run test:e2e -- --update-snapshots`.
-const PENDANT = { x: 641, y: 341 };
-const FLOOR_LAMP = { x: 350, y: 398 };
-const EMPTY_SPACE = { x: 330, y: 120 };
+const PENDANT = { x: 641, y: 379 };
+const FLOOR_LAMP = { x: 422, y: 420 };
+const EMPTY_SPACE = { x: 380, y: 150 };
 
 /** Opens the demo and returns the page and console errors seen so far (and from now on). */
 async function openDemo(page: Page): Promise<string[]> {
@@ -139,4 +139,61 @@ test('several selected luminaires share one inspector', async ({ page }) => {
   await page.getByRole('tab', { name: 'Escena' }).click();
   await expect(page.getByRole('option', { name: /Lámpara de pie 9 W 1/ })).toContainText('apagada');
   await expect(page.getByRole('option', { name: /Colgante 48 W 1/ })).toContainText('apagada');
+});
+
+test('undo and redo, with one slider drag as one undo step', async ({ page }) => {
+  await openDemo(page);
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  const slider = page.getByRole('slider', { name: 'Atenuación' });
+  const box = (await slider.boundingBox())!;
+  // Drag from the right end (100%) to the middle in many small moves: many input events, one gesture.
+  await page.mouse.move(box.x + box.width - 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2, { steps: 12 });
+  await page.mouse.up();
+
+  await page.getByRole('tab', { name: 'Escena' }).click();
+  const row = page.getByRole('option', { name: /Colgante 48 W 1/ });
+  await expect(row).not.toContainText('100%');
+
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(row).toContainText('100%');
+  await page.keyboard.press('ControlOrMeta+Shift+z');
+  await expect(row).not.toContainText('100%');
+  await page.getByRole('button', { name: 'Deshacer' }).click();
+  await expect(row).toContainText('100%');
+});
+
+test('keyboard shortcuts delete, undo, duplicate and switch off', async ({ page }) => {
+  await openDemo(page);
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  await page.keyboard.press('Delete');
+  await expect(page.getByText('Luminarias: 6')).toBeVisible();
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(page.getByText('Luminarias: 7')).toBeVisible();
+
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  await page.keyboard.press('ControlOrMeta+d');
+  await expect(page.getByText('Luminarias: 8')).toBeVisible();
+  await page.keyboard.press('h');
+  await page.getByRole('tab', { name: 'Escena' }).click();
+  await expect(page.getByRole('option', { name: /Colgante 48 W 2/ })).toContainText('apagada');
+  await expect(page.getByRole('option', { name: /Colgante 48 W 1/ })).toContainText('100%');
+});
+
+test('theme, language, collapsed panels and the plan view', async ({ page }) => {
+  const errors = await openDemo(page);
+  await page.getByRole('button', { name: 'Tema claro' }).click();
+  await expect(page.locator('lsim-app')).toHaveAttribute('data-lsim-theme', 'light');
+
+  await page.getByRole('radio', { name: 'EN' }).click();
+  await expect(page.getByRole('heading', { name: 'Catalog' })).toBeVisible();
+  // The host swaps product names on lsim-locale-change.
+  await expect(page.getByRole('button', { name: /Pendant 48 W/ })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Show library' }).click();
+  await page.getByRole('button', { name: 'Show inspector' }).click();
+  await page.getByRole('button', { name: 'Plan', exact: true }).click();
+  await expect(page).toHaveScreenshot('light-en-collapsed-plan.png');
+  expect(errors).toEqual([]);
 });

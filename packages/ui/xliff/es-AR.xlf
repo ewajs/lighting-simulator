@@ -250,6 +250,86 @@
   <source>Charcoal</source>
   <target>Carbón</target>
 </trans-unit>
+<trans-unit id="s8f4be9f086eb530f">
+  <source>Undo</source>
+  <target>Deshacer</target>
+</trans-unit>
+<trans-unit id="s7417792bbe720149">
+  <source>Redo</source>
+  <target>Rehacer</target>
+</trans-unit>
+<trans-unit id="sc2a0d4b11466df9f">
+  <source>Show library</source>
+  <target>Mostrar biblioteca</target>
+</trans-unit>
+<trans-unit id="s3daa88e60196c5c5">
+  <source>Show inspector</source>
+  <target>Mostrar propiedades</target>
+</trans-unit>
+<trans-unit id="s93670069199e8dda">
+  <source>Light theme</source>
+  <target>Tema claro</target>
+</trans-unit>
+<trans-unit id="s3ac6d6bc5baddf30">
+  <source>Dark theme</source>
+  <target>Tema oscuro</target>
+</trans-unit>
+<trans-unit id="sefcf950b3cc4fc3b">
+  <source>Language</source>
+  <target>Idioma</target>
+</trans-unit>
+<trans-unit id="s07ff5207b4bfba92">
+  <source>3D</source>
+  <target>3D</target>
+</trans-unit>
+<trans-unit id="scd104d19b5a0ef92">
+  <source>Plan</source>
+  <target>Planta</target>
+</trans-unit>
+<trans-unit id="s666973b7f5d01698">
+  <source>Front</source>
+  <target>Frente</target>
+</trans-unit>
+<trans-unit id="s789a8b24e7a5f41e">
+  <source>Side</source>
+  <target>Lateral</target>
+</trans-unit>
+<trans-unit id="s88c48021207597df">
+  <source>Realistic</source>
+  <target>Realista</target>
+</trans-unit>
+<trans-unit id="s3e24259d1ef97e28">
+  <source>Clay</source>
+  <target>Arcilla</target>
+</trans-unit>
+<trans-unit id="sad81e40380c383b0">
+  <source>Render mode</source>
+  <target>Modo de visualización</target>
+</trans-unit>
+<trans-unit id="s392f667420703599">
+  <source>Coming soon</source>
+  <target>Próximamente</target>
+</trans-unit>
+<trans-unit id="s62d50a44609285f6">
+  <source>Illuminance</source>
+  <target>Iluminancia</target>
+</trans-unit>
+<trans-unit id="s473c8c0de08cea10">
+  <source>Camera views</source>
+  <target>Vistas de cámara</target>
+</trans-unit>
+<trans-unit id="s0f46657bfb26f224">
+  <source>Frame selection</source>
+  <target>Encuadrar selección</target>
+</trans-unit>
+<trans-unit id="sdcedf55d4f51241d">
+  <source>Double-click to reset</source>
+  <target>Doble clic para restablecer</target>
+</trans-unit>
+<trans-unit id="sc33b882428a669a0">
+  <source>Exposure</source>
+  <target>Exposición</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
