@@ -26,10 +26,22 @@ docs/           spec, design system, decisions (ADRs)
 Dependencies only go one way: **demo → ui → core**. Nothing in `packages/`
 imports from `apps/`, and core never imports ui. ESLint enforces this.
 
-> **Transitional state:** the code currently in `src/` is an early prototype
-> that predates these rules (plain JS, a home-grown `h()` DOM helper, sample
-> data inside the app). It is deleted in roadmap step 0.2. Don't treat it as
-> precedent.
+Packages are consumed from TypeScript source and are not published to npm
+([ADR 0017](docs/decisions/0017-consume-packages-from-source.md)).
+
+## Commands
+
+```
+npm run dev           demo dev server (apps/demo)
+npm run build         production build of the demo → apps/demo/dist
+npm run lint          ESLint (type-aware, plus the boundary rule)
+npm run typecheck     tsc in every workspace
+npm test              Vitest in every workspace
+npm run format        Prettier (Markdown is excluded)
+```
+
+CI runs `format:check`, lint, typecheck, test and build on every PR. Run
+them locally before opening one.
 
 ## Data boundary
 
