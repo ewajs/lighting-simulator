@@ -87,6 +87,10 @@ grid-template-areas:
 - **< 1200 px**: the library starts collapsed to its rail (landscape tablets).
 - **≤ 900 px**: the inspector becomes a sheet over the viewport. It shows only
   its header until something is selected or the header is tapped.
+- **≤ 600 px (phones)**: a full-screen viewport, a compact top bar (brand,
+  undo/redo, ⋯ menu), and a bottom tab bar (Catálogo, Escena, Propiedades,
+  Vista) that opens each panel in a half-height sheet, with a button for full
+  height. Selecting a fixture opens Propiedades.
 - **< 600 px**: view-only. Both panels hidden, top bar reduced.
 
 The viewport has an overlay layer for floating controls: render-mode switch

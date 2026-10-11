@@ -113,7 +113,7 @@ export class LxsScenePanel extends LitElement {
     const scene = this.scene;
     const count = scene?.luminaires.length ?? 0;
     return html`
-      <div class="panel-header">
+      <div class="panel-header" part="header">
         <h2>${msg('Scene')}</h2>
         <span class="meta">${msg(str`${count} luminaires`)}</span>
       </div>

@@ -261,10 +261,11 @@ occlusion test for every light.
 
 ## 8. Browser support
 
-Latest two versions of Chrome, Edge, Safari and Firefox. WebGPU where
-available, WebGL 2 otherwise. Desktop and tablet first, with touch input
-(orbit, pick, place) supported on tablets. On phones, apps are view-only
-(open a shared scene and orbit).
+Latest two versions of Chrome and Edge (desktop and Android) and Safari
+(macOS, iOS and iPadOS). Firefox is not supported. WebGPU where available,
+WebGL 2 otherwise. Desktop, tablets and phones are all first-class: phones
+get every feature in a layout of their own, with a tab bar and sheets
+([ADR 0031](./decisions/0031-supported-browsers-and-phones.md)).
 
 ## 9. Open questions
 

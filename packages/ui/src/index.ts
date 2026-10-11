@@ -19,3 +19,6 @@ export type { FieldChange } from './field-change';
 export { LxsTopBar } from './lxs-top-bar';
 export type { PanelName, Theme } from './lxs-top-bar';
 export { LxsViewportControls } from './lxs-viewport-controls';
+export { LxsSheet } from './lxs-sheet';
+export { LxsTabBar } from './lxs-tab-bar';
+export type { TabBarItem } from './lxs-tab-bar';

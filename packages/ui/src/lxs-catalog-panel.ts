@@ -190,7 +190,7 @@ export class LxsCatalogPanel extends LitElement {
     const matches = filterItems(this.display.items, this.filter, products);
     const facets = catalogFacets(this.display.items, products);
     return html`
-      <div class="panel-header">
+      <div class="panel-header" part="header">
         <h2>${msg('Catalog')}</h2>
         <span class="meta">${msg(str`${this.display.items.length} products`)}</span>
       </div>

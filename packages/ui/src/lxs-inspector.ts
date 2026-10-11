@@ -75,7 +75,7 @@ export class LxsInspector extends LitElement {
               <h2>${room ? msg('Room') : msg('Luminaire')}</h2>
               ${icon(this.collapsed ? ChevronUp : ChevronDown)}
             </button>`
-          : html`<div class="panel-header">
+          : html`<div class="panel-header" part="header">
               <h2>${room ? msg('Room') : msg('Luminaire')}</h2>
             </div>`
       }

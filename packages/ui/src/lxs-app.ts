@@ -1,15 +1,22 @@
 import type { PickEvent, RenderMode, Scene, Simulator, ViewName } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
-import { css, html, LitElement, type PropertyValues } from 'lit';
+import { html, LitElement, nothing, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
+import { Eye, Layers, LayoutGrid, SlidersHorizontal } from 'lucide';
+import { appStyles } from './lxs-app.styles';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { newMergeKey } from './field-change';
 import { screenshotFileName } from './format';
 import { DEFAULT_LOCALE, setLocale, type Locale } from './localization';
+import './lxs-catalog-panel';
 import './lxs-inspector';
 import './lxs-library';
 import type { SetSelectionDetail } from './lxs-luminaire-inspector';
+import './lxs-scene-panel';
 import type { SelectDetail } from './lxs-scene-panel';
+import './lxs-sheet';
+import './lxs-tab-bar';
+import type { TabBarItem } from './lxs-tab-bar';
 import './lxs-top-bar';
 import type { PanelName, Theme } from './lxs-top-bar';
 import './lxs-viewport';
@@ -22,6 +29,10 @@ import { isTyping, shortcutAction, type ShortcutAction } from './shortcuts';
 const AUTO_COLLAPSE_LIBRARY_BELOW_PX = 1200;
 /** Matches the narrow layout in the styles below, where the inspector becomes a sheet over the viewport. */
 const NARROW_LAYOUT = '(max-width: 900px)';
+/** Phones: a full-screen viewport with a tab bar and sheets instead of side panels (ADR 0031). */
+const PHONE_LAYOUT = '(max-width: 600px)';
+
+type PhoneTab = 'catalog' | 'scene' | 'properties' | 'view';
 
 /**
  * The full simulator UI: top bar, library panel, viewport with its controls,
@@ -44,100 +55,7 @@ const NARROW_LAYOUT = '(max-width: 900px)';
 @customElement('lxs-app')
 @localized()
 export class LxsApp extends LitElement {
-  static override styles = css`
-    :host {
-      --lxs-left-w: var(--lxs-panel-w);
-      --lxs-right-w: var(--lxs-inspector-w);
-      display: grid;
-      height: 100%;
-      grid-template-columns: var(--lxs-left-w) minmax(0, 1fr) var(--lxs-right-w);
-      grid-template-rows: var(--lxs-topbar-h) minmax(0, 1fr) var(--lxs-statusbar-h);
-      grid-template-areas:
-        'top top top'
-        'left viewport right'
-        'status status status';
-      background: var(--lxs-bg);
-      color: var(--lxs-text);
-      font: var(--lxs-fs-md) / 1.45 var(--lxs-font-ui);
-      -webkit-font-smoothing: antialiased;
-    }
-    :host([library-collapsed]) {
-      --lxs-left-w: 48px;
-    }
-    :host([inspector-collapsed]) {
-      --lxs-right-w: 0px;
-    }
-    :host([inspector-collapsed]) .inspector {
-      display: none;
-    }
-    lxs-top-bar {
-      grid-area: top;
-    }
-    lxs-library {
-      grid-area: left;
-      border-right: 1px solid var(--lxs-line);
-    }
-    .inspector {
-      grid-area: right;
-      border-left: 1px solid var(--lxs-line);
-    }
-    .stage {
-      grid-area: viewport;
-      position: relative;
-      min-width: 0;
-      min-height: 0;
-    }
-    lxs-viewport {
-      position: absolute;
-      inset: 0;
-    }
-    footer {
-      grid-area: status;
-      display: flex;
-      align-items: center;
-      gap: var(--lxs-sp-4);
-      padding: 0 var(--lxs-sp-4);
-      background: var(--lxs-surface-1);
-      border-top: 1px solid var(--lxs-line);
-      color: var(--lxs-text-muted);
-      font-size: var(--lxs-fs-xs);
-    }
-    /* Tablet: the inspector floats over the bottom of the viewport. */
-    @media (max-width: 900px) {
-      :host {
-        grid-template-columns: var(--lxs-left-w) minmax(0, 1fr);
-        grid-template-areas:
-          'top top'
-          'left viewport'
-          'status status';
-      }
-      .stage {
-        /* Keeps floating controls above the collapsed sheet: header + margins. */
-        --lxs-stage-inset-bottom: calc(44px + 2 * var(--lxs-sp-2));
-      }
-      .inspector {
-        grid-area: viewport;
-        z-index: 1;
-        align-self: end;
-        max-height: 45%;
-        margin: var(--lxs-sp-2);
-        border: 1px solid var(--lxs-line);
-        border-radius: var(--lxs-r-lg);
-        box-shadow: var(--lxs-shadow);
-      }
-    }
-    /* Phone: view-only. */
-    @media (max-width: 600px) {
-      :host {
-        grid-template-columns: minmax(0, 1fr);
-        grid-template-areas: 'top' 'viewport' 'status';
-      }
-      lxs-library,
-      .inspector {
-        display: none;
-      }
-    }
-  `;
+  static override styles = appStyles;
 
   @property({ attribute: false }) simulator: Simulator | undefined;
   /** Product names, categories and thumbnails, in the active language. */
@@ -160,28 +78,26 @@ export class LxsApp extends LitElement {
   @state() private narrow = false;
   @state() private sheetOpen = false;
   readonly #narrowQuery = window.matchMedia(NARROW_LAYOUT);
+  /** Phone layout (reflected as the `phone` attribute for styling). */
+  @state() private phone = false;
+  @state() private phoneTab: PhoneTab | null = null;
+  @state() private sheetFull = false;
+  /** Whether the open phone sheet was opened by selecting, so clearing the selection closes it. */
+  #sheetOpenedBySelection = false;
+  readonly #phoneQuery = window.matchMedia(PHONE_LAYOUT);
 
   @query('lxs-viewport') private viewport!: LxsViewport;
   #unsubscribe: (() => void) | undefined;
 
   override render() {
+    return this.phone ? this.#renderPhone() : this.#renderDesktop();
+  }
+
+  #renderDesktop() {
     const total = this.scene?.luminaires.length ?? 0;
     const selected = this.selection.length;
     return html`
-      <lxs-top-bar
-        .simulator=${this.simulator}
-        .scene=${this.scene}
-        .theme=${this.theme}
-        .locale=${this.locale}
-        .libraryOpen=${!this.libraryCollapsed}
-        .inspectorOpen=${!this.inspectorCollapsed}
-        @lxs-theme-change=${({ detail }: CustomEvent<{ theme: Theme }>) => (this.theme = detail.theme)}
-        @lxs-locale-request=${({ detail }: CustomEvent<{ locale: Locale }>) => (this.locale = detail.locale)}
-        @lxs-screenshot-request=${() => void this.#takeScreenshot()}
-        @lxs-panel-toggle=${({ detail }: CustomEvent<{ panel: PanelName }>) => this.#togglePanel(detail.panel)}
-      >
-        <slot name="brand" slot="brand"></slot>
-      </lxs-top-bar>
+      ${this.#topBar(false)}
       <lxs-library
         .display=${this.catalog}
         .products=${this.simulator?.catalog}
@@ -193,36 +109,8 @@ export class LxsApp extends LitElement {
         @lxs-collapse-request=${({ detail }: CustomEvent<{ collapsed: boolean }>) =>
           (this.libraryCollapsed = detail.collapsed)}
       ></lxs-library>
-      <div class="stage">
-        <lxs-viewport
-          .simulator=${this.simulator}
-          .highlighted=${this.selection}
-          .renderMode=${this.renderMode}
-          .exposureEv=${this.exposureEv}
-          @lxs-pick=${this.#onPick}
-          @lxs-drop-product=${this.#onDropProduct}
-        ></lxs-viewport>
-        <lxs-viewport-controls
-          .renderMode=${this.renderMode}
-          .view=${this.view}
-          .exposureEv=${this.exposureEv}
-          @lxs-render-mode-change=${({ detail }: CustomEvent<{ mode: RenderMode }>) => (this.renderMode = detail.mode)}
-          @lxs-exposure-change=${({ detail }: CustomEvent<{ ev: number }>) => (this.exposureEv = detail.ev)}
-          @lxs-view-request=${({ detail }: CustomEvent<{ view: ViewName }>) => this.#setView(detail.view)}
-          @lxs-frame-request=${() => this.viewport.frame(this.selection)}
-        ></lxs-viewport-controls>
-      </div>
-      <lxs-inspector
-        class="inspector"
-        .simulator=${this.simulator}
-        .scene=${this.scene}
-        .selection=${this.selection}
-        .display=${this.catalog}
-        .sheet=${this.narrow}
-        .collapsed=${this.narrow && !this.sheetOpen}
-        @lxs-sheet-toggle=${() => (this.sheetOpen = !this.sheetOpen)}
-        @lxs-set-selection=${({ detail }: CustomEvent<SetSelectionDetail>) => (this.selection = detail.ids)}
-      ></lxs-inspector>
+      <div class="stage">${this.#viewport()} ${this.#controls('overlay')}</div>
+      ${this.#inspector(this.narrow)}
       <footer>
         <span>${msg(str`Luminaires: ${total}`)}</span>
         <span>${msg(str`Selected: ${selected}`)}</span>
@@ -230,11 +118,133 @@ export class LxsApp extends LitElement {
     `;
   }
 
+  #renderPhone() {
+    const tabs: TabBarItem[] = [
+      { id: 'catalog', label: msg('Catalog'), icon: LayoutGrid },
+      { id: 'scene', label: msg('Scene'), icon: Layers },
+      { id: 'properties', label: msg('Properties'), icon: SlidersHorizontal },
+      { id: 'view', label: msg('View'), icon: Eye },
+    ];
+    const tab = this.phoneTab;
+    return html`
+      ${this.#topBar(true)}
+      <div class="stage">${this.#viewport()}</div>
+      ${
+        tab
+          ? html`<lxs-sheet
+              class="phone-sheet"
+              heading=${tabs.find((t) => t.id === tab)?.label ?? ''}
+              .expanded=${this.sheetFull}
+              @lxs-sheet-expand=${({ detail }: CustomEvent<{ expanded: boolean }>) =>
+                (this.sheetFull = detail.expanded)}
+              @lxs-sheet-close=${() => this.#openPhoneTab(null)}
+            >
+              ${this.#phoneSheetContent(tab)}
+            </lxs-sheet>`
+          : nothing
+      }
+      <lxs-tab-bar
+        .tabs=${tabs}
+        .active=${tab}
+        @lxs-tab-change=${({ detail }: CustomEvent<{ tab: string | null }>) =>
+          this.#openPhoneTab(detail.tab as PhoneTab | null)}
+      ></lxs-tab-bar>
+    `;
+  }
+
+  #phoneSheetContent(tab: PhoneTab) {
+    switch (tab) {
+      case 'catalog':
+        return html`<lxs-catalog-panel
+          .display=${this.catalog}
+          .products=${this.simulator?.catalog}
+          @lxs-add-product=${this.#onAddProduct}
+        ></lxs-catalog-panel>`;
+      case 'scene':
+        return html`<lxs-scene-panel
+          .scene=${this.scene}
+          .products=${this.simulator?.catalog}
+          .display=${this.catalog}
+          .selection=${this.selection}
+          @lxs-select=${this.#onSelect}
+          @lxs-open-catalog=${() => this.#openPhoneTab('catalog')}
+        ></lxs-scene-panel>`;
+      case 'properties':
+        return this.#inspector(false);
+      case 'view':
+        return this.#controls('panel');
+    }
+  }
+
+  #topBar(compact: boolean) {
+    return html`<lxs-top-bar
+      .simulator=${this.simulator}
+      .scene=${this.scene}
+      .theme=${this.theme}
+      .locale=${this.locale}
+      .libraryOpen=${!this.libraryCollapsed}
+      .inspectorOpen=${!this.inspectorCollapsed}
+      .compact=${compact}
+      @lxs-theme-change=${({ detail }: CustomEvent<{ theme: Theme }>) => (this.theme = detail.theme)}
+      @lxs-locale-request=${({ detail }: CustomEvent<{ locale: Locale }>) => (this.locale = detail.locale)}
+      @lxs-screenshot-request=${() => void this.#takeScreenshot()}
+      @lxs-panel-toggle=${({ detail }: CustomEvent<{ panel: PanelName }>) => this.#togglePanel(detail.panel)}
+    >
+      <slot name="brand" slot="brand"></slot>
+    </lxs-top-bar>`;
+  }
+
+  #viewport() {
+    return html`<lxs-viewport
+      .simulator=${this.simulator}
+      .highlighted=${this.selection}
+      .renderMode=${this.renderMode}
+      .exposureEv=${this.exposureEv}
+      @lxs-pick=${this.#onPick}
+      @lxs-drop-product=${this.#onDropProduct}
+    ></lxs-viewport>`;
+  }
+
+  #controls(variant: 'overlay' | 'panel') {
+    return html`<lxs-viewport-controls
+      variant=${variant}
+      .renderMode=${this.renderMode}
+      .view=${this.view}
+      .exposureEv=${this.exposureEv}
+      @lxs-render-mode-change=${({ detail }: CustomEvent<{ mode: RenderMode }>) => (this.renderMode = detail.mode)}
+      @lxs-exposure-change=${({ detail }: CustomEvent<{ ev: number }>) => (this.exposureEv = detail.ev)}
+      @lxs-view-request=${({ detail }: CustomEvent<{ view: ViewName }>) => this.#setView(detail.view)}
+      @lxs-frame-request=${() => this.viewport.frame(this.selection)}
+    ></lxs-viewport-controls>`;
+  }
+
+  #inspector(sheet: boolean) {
+    // Only the desktop/tablet inspector takes the grid placement and floating-sheet styles.
+    return html`<lxs-inspector
+      class=${this.phone ? '' : 'inspector'}
+      .simulator=${this.simulator}
+      .scene=${this.scene}
+      .selection=${this.selection}
+      .display=${this.catalog}
+      .sheet=${sheet}
+      .collapsed=${sheet && !this.sheetOpen}
+      @lxs-sheet-toggle=${() => (this.sheetOpen = !this.sheetOpen)}
+      @lxs-set-selection=${({ detail }: CustomEvent<SetSelectionDetail>) => (this.selection = detail.ids)}
+    ></lxs-inspector>`;
+  }
+
+  #openPhoneTab(tab: PhoneTab | null): void {
+    this.phoneTab = tab;
+    this.#sheetOpenedBySelection = false;
+  }
+
   override connectedCallback(): void {
     super.connectedCallback();
     window.addEventListener('keydown', this.#onKeyDown);
     this.#narrowQuery.addEventListener('change', this.#onNarrowChange);
+    this.#phoneQuery.addEventListener('change', this.#onPhoneChange);
     this.narrow = this.#narrowQuery.matches;
+    this.phone = this.#phoneQuery.matches;
   }
 
   protected override firstUpdated(): void {
@@ -251,18 +261,25 @@ export class LxsApp extends LitElement {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.#onKeyDown);
     this.#narrowQuery.removeEventListener('change', this.#onNarrowChange);
+    this.#phoneQuery.removeEventListener('change', this.#onPhoneChange);
     this.#unsubscribe?.();
     this.#unsubscribe = undefined;
   }
 
   protected override willUpdate(changed: PropertyValues<this>): void {
-    // The sheet opens when something gets selected and folds away when the selection is cleared.
+    // Sheets open when something gets selected and fold away when the selection is cleared.
     const previous = (changed as Map<string, unknown>).get('selection') as
       readonly string[] | undefined;
-    if (previous) {
-      if (previous.length === 0 && this.selection.length > 0) this.sheetOpen = true;
-      else if (previous.length > 0 && this.selection.length === 0) this.sheetOpen = false;
+    const selected = previous?.length === 0 && this.selection.length > 0;
+    const cleared = !!previous?.length && this.selection.length === 0;
+    if (selected) this.sheetOpen = true;
+    if (cleared) this.sheetOpen = false;
+    if (this.phone && selected && this.phoneTab === null) {
+      this.phoneTab = 'properties';
+      this.#sheetOpenedBySelection = true;
     }
+    if (this.phone && cleared && this.#sheetOpenedBySelection) this.#openPhoneTab(null);
+    if ((changed as Map<string, unknown>).has('phone')) this.toggleAttribute('phone', this.phone);
     if (changed.has('locale'))
       void this.#applyLocale(this.locale, changed.get('locale') !== undefined);
     if (changed.has('simulator')) this.#watch(this.simulator);
@@ -334,6 +351,10 @@ export class LxsApp extends LitElement {
     this.narrow = event.matches;
   };
 
+  #onPhoneChange = (event: MediaQueryListEvent): void => {
+    this.phone = event.matches;
+  };
+
   #onPick = ({ detail }: CustomEvent<PickEvent>): void => {
     // Long press (touch) toggles, like Shift-click.
     const toggle = detail.event.shiftKey || detail.longPress;
@@ -345,7 +366,10 @@ export class LxsApp extends LitElement {
   };
 
   #onAddProduct = ({ detail }: CustomEvent<{ productId: string }>): void => {
-    if (this.simulator) this.selection = [this.simulator.addLuminaire(detail.productId)];
+    if (!this.simulator) return;
+    this.selection = [this.simulator.addLuminaire(detail.productId)];
+    // On phones, show the new luminaire's properties instead of staying in the catalog.
+    if (this.phone) this.#openPhoneTab('properties');
   };
 
   #onDropProduct = ({ detail }: CustomEvent<DropProductDetail>): void => {

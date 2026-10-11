@@ -350,6 +350,30 @@
   <source>Temperature</source>
   <target>Temperatura</target>
 </trans-unit>
+<trans-unit id="s6b7d7afabc24ff1c">
+  <source>Properties</source>
+  <target>Propiedades</target>
+</trans-unit>
+<trans-unit id="s7f59f507e02a2f38">
+  <source>View</source>
+  <target>Vista</target>
+</trans-unit>
+<trans-unit id="s96baa1b0bc4d0eef">
+  <source>Half height</source>
+  <target>Media altura</target>
+</trans-unit>
+<trans-unit id="s4ec1b8b94c172e87">
+  <source>Full height</source>
+  <target>Altura completa</target>
+</trans-unit>
+<trans-unit id="s5e8250fb85d64c23">
+  <source>Close</source>
+  <target>Cerrar</target>
+</trans-unit>
+<trans-unit id="s664a8e6c99e374be">
+  <source>More options</source>
+  <target>Más opciones</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
