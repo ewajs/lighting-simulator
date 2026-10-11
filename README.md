@@ -15,9 +15,15 @@ Planned packages (npm workspaces):
 
 ## Status
 
-**Realignment in progress** (roadmap Phase 0). The current `src/` is an early
-prototype that will be deleted in step 0.2. Until the new demo lands, the
-live site shows the prototype or a placeholder.
+**Realignment in progress** (roadmap Phase 0). The workspaces and tooling are
+in place, and the packages are still empty. The live site shows a placeholder
+until step 0.5.
+
+```
+nvm use          # Node 24
+npm install
+npm run dev
+```
 
 ## Docs
 

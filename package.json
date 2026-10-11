@@ -1,18 +1,31 @@
 {
-  "name": "lighting-simulator",
+  "name": "lighting-sim",
   "private": true,
-  "version": "0.1.0",
-  "description": "Web-based 3D lighting simulator for Leuk luminaires, built on three.js",
   "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=24"
   },
-  "dependencies": {
-    "three": "^0.186.1"
+  "scripts": {
+    "dev": "npm run dev -w apps/demo",
+    "build": "npm run build -w apps/demo",
+    "lint": "eslint .",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
-    "vite": "^8.3.4"
+    "@eslint/js": "10.0.1",
+    "eslint": "10.12.0",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.1",
+    "vite": "8.3.4",
+    "vitest": "5.0.3"
   }
 }
