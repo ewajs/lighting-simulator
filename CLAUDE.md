@@ -37,11 +37,14 @@ npm run build         production build of the demo → apps/demo/dist
 npm run lint          ESLint (type-aware, plus the boundary rule)
 npm run typecheck     tsc in every workspace
 npm test              Vitest in every workspace
+npm run test:e2e      Playwright smoke tests (local only; system Chrome)
 npm run format        Prettier (Markdown is excluded)
 ```
 
 CI runs `format:check`, lint, typecheck, test and build on every PR. Run
-them locally before opening one.
+them locally before opening one, plus `test:e2e` (CI doesn't run it, ADR 0015).
+When rendering changes on purpose, refresh the screenshot baselines with
+`npm run test:e2e -- --update-snapshots` and review the new images in the PR.
 
 ## Data boundary
 

@@ -15,9 +15,9 @@ Planned packages (npm workspaces):
 
 ## Status
 
-**Realignment in progress** (roadmap Phase 0). The workspaces and tooling are
-in place, and the packages are still empty. The live site shows a placeholder
-until step 0.5.
+**Realignment in progress** (roadmap Phase 0). Core has the scene model,
+undo/redo and a three.js viewport. The live demo shows a sample room with
+click-to-highlight. The UI package arrives in step 0.6.
 
 ```
 nvm use          # Node 24

@@ -4,35 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lighting Simulator</title>
+    <link rel="icon" href="data:," />
     <style>
+      html,
       body {
         margin: 0;
-        min-height: 100dvh;
+        height: 100%;
+        background: #121417;
+      }
+      #viewport {
+        position: fixed;
+        inset: 0;
+      }
+      #viewport.error {
         display: grid;
         place-content: center;
-        gap: 8px;
-        text-align: center;
-        background: #0e0f11;
-        color: #e8e9eb;
-        font:
-          14px/1.5 system-ui,
-          sans-serif;
-      }
-      h1 {
-        font-size: 18px;
-        font-weight: 600;
-        margin: 0;
-      }
-      p {
-        margin: 0;
         color: #a0a5ad;
+        font:
+          14px system-ui,
+          sans-serif;
       }
     </style>
   </head>
   <body>
-    <h1>Lighting Simulator</h1>
-    <p>Being rebuilt. See the roadmap on GitHub.</p>
-    <p id="versions"></p>
+    <main id="viewport" aria-label="3D viewport"></main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
