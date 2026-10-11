@@ -24,23 +24,28 @@ and data (the false-colour scale).
 ## Theming
 
 **Design tokens are the integrator's theming surface.** Every visual value
-(colour, font, radius, spacing, layout size) is a CSS custom property, and
-the components only reference tokens. A host rebrands our UI by setting
-tokens on the element or on `:root`, without touching component code:
+(colour, font, radius, spacing, layout size) is a CSS custom property named
+`--lsim-*`, and the components only reference tokens. The ui package ships
+`@lighting-sim/ui/theme.css`, which defines them on `:root`. A host imports
+it once and rebrands by overriding tokens anywhere, without touching
+component code:
 
 ```css
-lighting-sim-app {            /* element prefix is a placeholder (ADR 0007) */
-  --accent: #0a7cff;
-  --font-ui: "Host Sans", system-ui, sans-serif;
+:root {
+  --lsim-accent: #0a7cff;
+  --lsim-font-ui: "Host Sans", system-ui, sans-serif;
 }
 ```
+
+The `--lsim-` prefix keeps our tokens from clashing with the host page's own
+CSS variables. Below, token names are listed without the prefix.
 
 - Token names are part of the public API. Renaming or removing one is a
   breaking change.
 - Logos, product names and other branding come from the host (slots or
   properties), never from the library.
-- Built-in themes: dark (default) and light, switched with a `theme`
-  attribute.
+- Built-in themes: dark (default) and light. Set `data-lsim-theme="light"`
+  on any ancestor of the elements (e.g. `<html>`).
 
 ## Tokens
 

@@ -11,6 +11,9 @@
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    // Lit's TypeScript decorator setup (ADR 0022).
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false
   }
 }

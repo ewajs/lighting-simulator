@@ -17,7 +17,8 @@ Planned packages (npm workspaces):
 
 **Realignment in progress** (roadmap Phase 0). Core has the scene model,
 undo/redo and a three.js viewport. The live demo shows a sample room with
-click-to-highlight. The UI package arrives in step 0.6.
+selection, inside the first `@lighting-sim/ui` shell (Spanish by default).
+The panels fill in during steps 0.6b–d.
 
 ```
 nvm use          # Node 24

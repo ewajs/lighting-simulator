@@ -39,6 +39,9 @@ npm run typecheck     tsc in every workspace
 npm test              Vitest in every workspace
 npm run test:e2e      Playwright smoke tests (local only; system Chrome)
 npm run format        Prettier (Markdown is excluded)
+npm run i18n:extract  collect msg() strings into packages/ui/xliff/
+npm run i18n:build    regenerate locale modules after editing the XLIFF
+npm run i18n:check    fail if any UI string lacks a translation
 ```
 
 CI runs `format:check`, lint, typecheck, test and build on every PR. Run
@@ -117,9 +120,14 @@ When rendering changes on purpose, refresh the screenshot baselines with
 
 - TypeScript (strict), ESLint + Prettier.
 - Code, comments, docs, commits and PRs: English.
-- UI text is never inline. All strings go through the ui i18n layer.
-  Spanish (Argentina, `es-AR`, the default) and English (`en`) are always
-  kept complete. Hosts can override or add locales.
+- UI text is never inline. All strings use `msg()` from `@lit/localize`
+  ([ADR 0020](docs/decisions/0020-i18n-lit-localize.md)). Spanish (Argentina,
+  `es-AR`, the default) and English (`en`) are always kept complete.
+- Lit elements: `lsim-` prefix, legacy TypeScript decorators
+  ([ADR 0022](docs/decisions/0022-legacy-typescript-decorators.md)), state
+  passed down as properties and actions reported up as `lsim-*` events
+  ([ADR 0021](docs/decisions/0021-props-down-events-up.md)). Styles only use
+  `--lsim-*` tokens from `theme.css`.
 - Units: SI. 1 world unit = 1 m, Y-up. Light in lm / cd / lx, colour
   temperature in K.
 - Package names use the placeholder scope `@lighting-sim/*` until there is

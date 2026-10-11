@@ -1,0 +1,107 @@
+/*
+ * Design tokens for @lighting-sim/ui (docs/DESIGN.md). Import once in the host
+ * page. Hosts rebrand by overriding any --lsim-* property; token names are
+ * public API. Dark is the default; set data-lsim-theme="light" on any
+ * ancestor of the elements for the light theme.
+ */
+:root {
+  /* Surfaces */
+  --lsim-bg: #0e0f11;
+  --lsim-surface-1: #16181b;
+  --lsim-surface-2: #1d2024;
+  --lsim-surface-3: #262a2f;
+  --lsim-overlay: rgb(22 24 27 / 0.72);
+  --lsim-viewport-bg: #121417;
+
+  /* Lines */
+  --lsim-line: #2a2e33;
+  --lsim-line-strong: #3a3f46;
+
+  /* Text */
+  --lsim-text: #e8e9eb;
+  --lsim-text-muted: #a0a5ad;
+  --lsim-text-faint: #6b7079;
+
+  /* Accent: warm "2700 K" amber */
+  --lsim-accent: #f5b544;
+  --lsim-accent-hover: #ffc861;
+  --lsim-accent-soft: rgb(245 181 68 / 0.14);
+  --lsim-on-accent: #1a1204;
+
+  /* Status */
+  --lsim-ok: #4cc38a;
+  --lsim-warn: #f5a524;
+  --lsim-danger: #f06363;
+
+  /* Data: false-colour illuminance scale and CCT gradient */
+  --lsim-heat-0: #0b1a4a;
+  --lsim-heat-1: #1450b4;
+  --lsim-heat-2: #18b3c9;
+  --lsim-heat-3: #4ccf5c;
+  --lsim-heat-4: #f2e33a;
+  --lsim-heat-5: #f58a1f;
+  --lsim-heat-6: #e5322d;
+  --lsim-heat-7: #fff6e6;
+  --lsim-cct-gradient: linear-gradient(90deg, #ff9b3d, #ffc58a, #fff1e0, #f2f5ff, #c9d8ff);
+
+  /* Type */
+  --lsim-font-ui: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --lsim-font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+  --lsim-fs-xs: 11px;
+  --lsim-fs-sm: 12px;
+  --lsim-fs-md: 13px;
+  --lsim-fs-lg: 15px;
+  --lsim-fs-xl: 18px;
+
+  /* Space (4 px steps) */
+  --lsim-sp-1: 4px;
+  --lsim-sp-2: 8px;
+  --lsim-sp-3: 12px;
+  --lsim-sp-4: 16px;
+  --lsim-sp-6: 24px;
+  --lsim-sp-8: 32px;
+
+  /* Shape */
+  --lsim-r-sm: 4px;
+  --lsim-r-md: 6px;
+  --lsim-r-lg: 10px;
+  --lsim-shadow: 0 8px 24px rgb(0 0 0 / 0.35), 0 1px 2px rgb(0 0 0 / 0.3);
+
+  /* Layout */
+  --lsim-topbar-h: 48px;
+  --lsim-statusbar-h: 28px;
+  --lsim-panel-w: 304px;
+  --lsim-inspector-w: 300px;
+  --lsim-control-h: 32px;
+
+  /* Motion */
+  --lsim-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --lsim-t-fast: 120ms;
+  --lsim-t-med: 200ms;
+}
+
+[data-lsim-theme='light'] {
+  --lsim-bg: #eceef1;
+  --lsim-surface-1: #ffffff;
+  --lsim-surface-2: #f4f5f7;
+  --lsim-surface-3: #e8eaee;
+  --lsim-overlay: rgb(255 255 255 / 0.78);
+  --lsim-viewport-bg: #c3c7cd;
+  --lsim-line: #e1e4e8;
+  --lsim-line-strong: #c9cdd3;
+  --lsim-text: #16181b;
+  --lsim-text-muted: #5b616a;
+  --lsim-text-faint: #8a9099;
+  --lsim-accent: #c47a0a;
+  --lsim-accent-hover: #a96806;
+  --lsim-accent-soft: rgb(196 122 10 / 0.12);
+  --lsim-on-accent: #ffffff;
+  --lsim-shadow: 0 8px 24px rgb(20 24 30 / 0.12), 0 1px 2px rgb(20 24 30 / 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --lsim-t-fast: 0ms;
+    --lsim-t-med: 0ms;
+  }
+}
