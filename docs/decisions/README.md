@@ -34,3 +34,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0028 | [Illuminance includes inter-reflections (room radiosity)](0028-indirect-illuminance-radiosity.md) | Accepted |
 | 0029 | [Screenshots: core capture, cancelable UI event, neutral file name](0029-screenshots.md) | Accepted |
 | 0030 | [Touch and tablet interaction](0030-touch-and-tablet.md) | Accepted |
+| 0031 | [Supported browsers, and full phone support](0031-supported-browsers-and-phones.md) | Accepted |

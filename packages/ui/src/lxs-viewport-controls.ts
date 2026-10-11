@@ -13,8 +13,9 @@ import { segmentedStyles, sharedStyles } from './styles';
 const EXPOSURE_RANGE = { min: -3, max: 3, step: 0.1 };
 
 /**
- * Floating controls over the viewport: render mode, preset views, framing and
- * exposure. Pure UI: reports choices as events for the host to apply.
+ * Render mode, preset views, framing and exposure. As an `overlay` (default)
+ * they float over the viewport; as a `panel` they stack in normal flow, e.g.
+ * inside a phone sheet. Pure UI: reports choices as events for the host to apply.
  *
  * @fires lxs-render-mode-change - `detail: { mode }`
  * @fires lxs-view-request - `detail: { view }`
@@ -86,6 +87,35 @@ export class LxsViewportControls extends LitElement {
         border-top: 1px solid var(--lxs-line);
         border-radius: 0 0 var(--lxs-r-sm) var(--lxs-r-sm);
       }
+      :host([variant='panel']) {
+        position: static;
+        display: grid;
+        align-content: start;
+        gap: var(--lxs-sp-4);
+        padding: var(--lxs-sp-4);
+        pointer-events: auto;
+      }
+      :host([variant='panel']) .glass {
+        position: static;
+        width: auto;
+        padding: 0;
+        transform: none;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
+      :host([variant='panel']) .views {
+        display: flex;
+      }
+      :host([variant='panel']) .views button {
+        flex: 1;
+        width: auto;
+      }
+      :host([variant='panel']) .views .frame {
+        border-top: 0;
+      }
       .exposure {
         right: var(--lxs-sp-3);
         /* --lxs-stage-inset-bottom: space taken by a sheet floating over the viewport. */
@@ -96,6 +126,7 @@ export class LxsViewportControls extends LitElement {
     `,
   ];
 
+  @property({ reflect: true }) variant: 'overlay' | 'panel' = 'overlay';
   @property() renderMode: RenderMode = 'realistic';
   @property({ attribute: false }) view: ViewName = 'perspective';
   @property({ type: Number }) exposureEv = 0;
