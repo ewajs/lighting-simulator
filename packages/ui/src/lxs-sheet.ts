@@ -31,6 +31,12 @@ export class LxsSheet extends LitElement {
         box-shadow: var(--lxs-shadow);
         overflow: hidden;
       }
+      :host([side]) {
+        border-top: 0;
+        border-left: 1px solid var(--lxs-line);
+        border-radius: var(--lxs-r-lg) 0 0 var(--lxs-r-lg);
+        padding-right: env(safe-area-inset-right);
+      }
       header {
         display: flex;
         align-items: center;
@@ -61,9 +67,17 @@ export class LxsSheet extends LitElement {
   /** Shown in the title bar. */
   @property() heading = '';
   @property({ type: Boolean, reflect: true }) expanded = false;
+  /** Slides in from the right (landscape phones) instead of up from the bottom. */
+  @property({ type: Boolean, reflect: true }) side = false;
 
   override render() {
-    const sizeLabel = this.expanded ? msg('Half height') : msg('Full height');
+    const sizeLabel = this.side
+      ? this.expanded
+        ? msg('Half width')
+        : msg('Full width')
+      : this.expanded
+        ? msg('Half height')
+        : msg('Full height');
     return html`
       <header>
         <h2>${this.heading}</h2>

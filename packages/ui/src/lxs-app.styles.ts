@@ -101,6 +101,23 @@ export const appStyles = css`
   .phone-sheet[expanded] {
     height: 100%;
   }
+  /* Landscape phone: tab bar as a left rail, sheets slide in from the right. */
+  :host([phone][landscape]) {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: var(--lxs-topbar-h) minmax(0, 1fr);
+    grid-template-areas:
+      'top top'
+      'tabs viewport';
+  }
+  :host([landscape]) .phone-sheet {
+    align-self: stretch;
+    justify-self: end;
+    height: auto;
+    width: max(50%, 320px);
+  }
+  :host([landscape]) .phone-sheet[expanded] {
+    width: 100%;
+  }
   /* The sheet has its own title bar; hide the panels' duplicate headers. */
   .phone-sheet > *::part(header) {
     display: none;

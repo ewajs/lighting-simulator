@@ -12,7 +12,8 @@ export interface TabBarItem {
 }
 
 /**
- * The phone navigation bar: icon + label tabs. Tapping a tab selects it;
+ * The phone navigation bar: icon + label tabs, at the bottom or (`vertical`)
+ * as a left rail. Tapping a tab selects it;
  * tapping the active one deselects it (the host closes its sheet).
  *
  * @fires lxs-tab-change - `detail: { tab }`, where `tab` is null when deselected
@@ -32,6 +33,20 @@ export class LxsTabBar extends LitElement {
       nav {
         display: flex;
         flex: 1;
+      }
+      :host([vertical]) {
+        border-top: 0;
+        border-right: 1px solid var(--lxs-line);
+        padding-bottom: 0;
+        padding-left: env(safe-area-inset-left);
+      }
+      :host([vertical]) nav {
+        flex-direction: column;
+      }
+      :host([vertical]) button {
+        flex: none;
+        width: 72px;
+        min-height: 64px;
       }
       button {
         flex: 1;
@@ -57,6 +72,8 @@ export class LxsTabBar extends LitElement {
   ];
 
   @property({ attribute: false }) tabs: readonly TabBarItem[] = [];
+  /** A left rail instead of a bottom bar (landscape phones). */
+  @property({ type: Boolean, reflect: true }) vertical = false;
   /** Id of the active tab, or null. */
   @property({ attribute: false }) active: string | null = null;
 
