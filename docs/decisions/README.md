@@ -21,3 +21,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0015 | [CI checks on PRs, Playwright local only](0015-ci-without-playwright.md) | Accepted |
 | 0016 | [Undo/redo lives in core](0016-undo-redo-in-core.md) | Accepted |
 | 0017 | [Packages consumed from source, not published to npm](0017-consume-packages-from-source.md) | Accepted |
+| 0018 | [Core API: simulator facade, sync catalog, merge keys](0018-core-api-shape.md) | Accepted |

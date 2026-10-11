@@ -1,6 +1,8 @@
-import { VERSION as coreVersion } from '@lighting-sim/core';
+import { createSimulator } from '@lighting-sim/core';
 import { VERSION as uiVersion } from '@lighting-sim/ui';
 
 // Placeholder until roadmap step 0.5: shows that the demo resolves both workspace packages.
+const { room } = createSimulator({ catalog: { get: () => undefined } }).scene;
 const versions = document.querySelector('#versions');
-if (versions) versions.textContent = `core ${coreVersion} · ui ${uiVersion}`;
+if (versions)
+  versions.textContent = `core room ${room.width} × ${room.depth} × ${room.height} m · ui ${uiVersion}`;
