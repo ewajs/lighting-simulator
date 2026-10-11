@@ -22,3 +22,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0016 | [Undo/redo lives in core](0016-undo-redo-in-core.md) | Accepted |
 | 0017 | [Packages consumed from source, not published to npm](0017-consume-packages-from-source.md) | Accepted |
 | 0018 | [Core API: Simulator class, sync catalog, merge keys](0018-core-api-shape.md) | Accepted |
+| 0019 | [Viewport reports picks; the host owns selection](0019-viewport-host-owned-selection.md) | Accepted |

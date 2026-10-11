@@ -18,8 +18,8 @@ Its ideas get re-implemented to the new standards, slice by slice.
 | **0.1 Docs** | Make SPEC and DESIGN client-agnostic. Add this roadmap. Add ADRs 0013–0016. | Prototype (unchanged) |
 | **0.2 Workspaces + tooling** | Delete the prototype. Empty `packages/core`, `packages/ui`, `apps/demo` with TS strict, ESLint (with the boundary rule), Prettier and Vitest. A CI workflow on PRs runs lint, typecheck, unit tests and the build. The Pages workflow builds `apps/demo`. | Placeholder page |
 | **0.3 Core: scene model** | Types (Room, Product, Luminaire, Scene) and pure, tested scene operations, plus snapshot undo/redo (ADR 0016). | Placeholder |
-| **0.4 Core: renderer** | A three.js viewport that renders a scene: room, luminaires with the fallback lighting model, CCT colour, shadows, picking. A local Playwright smoke harness. | Placeholder |
-| **0.5 Demo on core** | A minimal `apps/demo` page with a sample catalog injected into core. No ui package yet. | Core-only demo |
+| **0.4 Core: renderer** | A three.js `Viewport` that renders a scene: room, luminaires with the fallback lighting model, CCT colour, shadows, picking reported to the host (ADR 0019). | Placeholder |
+| **0.5 Demo on core** | A minimal `apps/demo` page with a sample catalog injected into core. No ui package yet. A local Playwright smoke harness against the demo. | Core-only demo |
 | **0.6 UI: Lit + i18n** | Lit components for the shell, panels and inspector. Design tokens as the theming surface. `es-AR` (default) and `en` strings. The demo uses the full UI. | Full demo |
 
 ## Phase 1+: Features
