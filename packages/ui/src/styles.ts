@@ -98,3 +98,98 @@ export const sharedStyles = css`
     font-size: var(--lsim-fs-sm);
   }
 `;
+
+/** Sections, grids, chips and the entity header used by the inspector views. */
+export const inspectorStyles = css`
+  :host {
+    display: block;
+  }
+  .entity {
+    display: flex;
+    gap: var(--lsim-sp-3);
+    padding: var(--lsim-sp-4);
+    border-bottom: 1px solid var(--lsim-line);
+  }
+  .thumb {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--lsim-line);
+    border-radius: var(--lsim-r-md);
+    background: var(--lsim-surface-2);
+    color: var(--lsim-text-faint);
+  }
+  .thumb .icon {
+    width: 22px;
+    height: 22px;
+  }
+  .title {
+    font-size: var(--lsim-fs-lg);
+    font-weight: 600;
+  }
+  .sub {
+    color: var(--lsim-text-muted);
+    font-size: var(--lsim-fs-sm);
+  }
+  .actions {
+    display: flex;
+    gap: var(--lsim-sp-1);
+    padding: var(--lsim-sp-2) var(--lsim-sp-3);
+    border-bottom: 1px solid var(--lsim-line);
+  }
+  .actions .spacer {
+    flex: 1;
+  }
+  .icon-btn[aria-pressed='true'] {
+    background: var(--lsim-accent-soft);
+    color: var(--lsim-accent);
+  }
+  .icon-btn.danger:hover {
+    color: var(--lsim-danger);
+  }
+  section {
+    display: grid;
+    gap: var(--lsim-sp-3);
+    padding: var(--lsim-sp-3) var(--lsim-sp-4) var(--lsim-sp-4);
+    border-bottom: 1px solid var(--lsim-line);
+  }
+  h3 {
+    margin: 0;
+    color: var(--lsim-text-faint);
+    font-size: var(--lsim-fs-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .grid-2,
+  .grid-3 {
+    display: grid;
+    gap: var(--lsim-sp-2);
+  }
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+  .grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .spec {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--lsim-fs-sm);
+    color: var(--lsim-text-muted);
+  }
+  .spec span:last-child {
+    color: var(--lsim-text);
+    font-family: var(--lsim-font-mono);
+  }
+  .warn {
+    color: var(--lsim-warn) !important;
+  }
+  .hint {
+    padding: var(--lsim-sp-4);
+    color: var(--lsim-text-muted);
+    font-size: var(--lsim-fs-sm);
+  }
+`;

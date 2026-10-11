@@ -6,10 +6,6 @@
   <source>Catalog</source>
   <target>Catálogo</target>
 </trans-unit>
-<trans-unit id="s5f1dcc2e38de612e">
-  <source>Inspector</source>
-  <target>Propiedades</target>
-</trans-unit>
 <trans-unit id="s1a4d393d083de02a">
   <source>Luminaires: <x id="0" equiv-text="${total}"/></source>
   <target>Luminarias: <x id="0" equiv-text="${total}"/></target>
@@ -85,6 +81,174 @@
 <trans-unit id="sc2bea9976d81ad86">
   <source>Open catalog</source>
   <target>Abrir catálogo</target>
+</trans-unit>
+<trans-unit id="sca7d152bef51d9ba">
+  <source>Room</source>
+  <target>Ambiente</target>
+</trans-unit>
+<trans-unit id="s23685a920290045d">
+  <source>Luminaire</source>
+  <target>Luminaria</target>
+</trans-unit>
+<trans-unit id="sf1a326ef265bbdc3">
+  <source>Recessed</source>
+  <target>Embutida</target>
+</trans-unit>
+<trans-unit id="sbd0bb692e858350d">
+  <source>Pendant</source>
+  <target>Colgante</target>
+</trans-unit>
+<trans-unit id="s9e85800d3700e31c">
+  <source>Track</source>
+  <target>De riel</target>
+</trans-unit>
+<trans-unit id="s8904c4022d8e89f5">
+  <source>Wall</source>
+  <target>De pared</target>
+</trans-unit>
+<trans-unit id="s172412ba11f1ecb5">
+  <source>Floor lamp</source>
+  <target>Lámpara de pie</target>
+</trans-unit>
+<trans-unit id="s8cfb6cabf1c5f6e3">
+  <source>Table lamp</source>
+  <target>Lámpara de mesa</target>
+</trans-unit>
+<trans-unit id="sfd77270c3f54f664">
+  <source>Output</source>
+  <target>Emisión</target>
+</trans-unit>
+<trans-unit id="s18c92783d4042bbc">
+  <source>Dimming</source>
+  <target>Atenuación</target>
+</trans-unit>
+<trans-unit id="s126219b722a3c643">
+  <source>Colour temperature</source>
+  <target>Temperatura de color</target>
+</trans-unit>
+<trans-unit id="sc1611c0558728a2a">
+  <source>Position</source>
+  <target>Posición</target>
+</trans-unit>
+<trans-unit id="sffdadf0a576fd802">
+  <source>Height</source>
+  <target>Altura</target>
+</trans-unit>
+<trans-unit id="sf9a3e0199ffcbd16">
+  <source>Aim</source>
+  <target>Orientación</target>
+</trans-unit>
+<trans-unit id="s48de89fb300c23a6">
+  <source>Tilt</source>
+  <target>Inclinación</target>
+</trans-unit>
+<trans-unit id="s8dd37619f42fa90c">
+  <source>Pan</source>
+  <target>Giro</target>
+</trans-unit>
+<trans-unit id="sde1f02481331134c">
+  <source>Product</source>
+  <target>Producto</target>
+</trans-unit>
+<trans-unit id="sab4293ff8faeef8e">
+  <source>Luminous flux</source>
+  <target>Flujo luminoso</target>
+</trans-unit>
+<trans-unit id="s465553327d30b859">
+  <source>Nominal CCT</source>
+  <target>Temperatura nominal</target>
+</trans-unit>
+<trans-unit id="s36234b9e971fd695">
+  <source>Beam angle</source>
+  <target>Apertura del haz</target>
+</trans-unit>
+<trans-unit id="sf923dd8943afb475">
+  <source><x id="0" equiv-text="${selected.length}"/> luminaires selected</source>
+  <target><x id="0" equiv-text="${selected.length}"/> luminarias seleccionadas</target>
+</trans-unit>
+<trans-unit id="s490eada5e0b41e12">
+  <source>Dimming (all)</source>
+  <target>Atenuación (todas)</target>
+</trans-unit>
+<trans-unit id="sde736af382a428ab">
+  <source>Turn off</source>
+  <target>Apagar</target>
+</trans-unit>
+<trans-unit id="s6bb329b249dd1ee7">
+  <source>Turn on</source>
+  <target>Encender</target>
+</trans-unit>
+<trans-unit id="sfac15b89e0668996">
+  <source>Duplicate</source>
+  <target>Duplicar</target>
+</trans-unit>
+<trans-unit id="sdc673e73b5c13aea">
+  <source>Delete</source>
+  <target>Eliminar</target>
+</trans-unit>
+<trans-unit id="s1ea19e317231609e">
+  <source>Rectangular room</source>
+  <target>Ambiente rectangular</target>
+</trans-unit>
+<trans-unit id="s64dfddafe8c3fb54">
+  <source>Area <x id="0" equiv-text="${area}"/> m² · Volume <x id="1" equiv-text="${volume}"/> m³</source>
+  <target>Área <x id="0" equiv-text="${area}"/> m² · Volumen <x id="1" equiv-text="${volume}"/> m³</target>
+</trans-unit>
+<trans-unit id="s47fcbdbeb22c1210">
+  <source>Dimensions</source>
+  <target>Dimensiones</target>
+</trans-unit>
+<trans-unit id="sf21fb4f4b9e8911f">
+  <source>Width</source>
+  <target>Ancho</target>
+</trans-unit>
+<trans-unit id="s3231d0dc6fe30d4a">
+  <source>Depth</source>
+  <target>Profundidad</target>
+</trans-unit>
+<trans-unit id="sb67f5c0accf1eb1d">
+  <source>Floor</source>
+  <target>Piso</target>
+</trans-unit>
+<trans-unit id="s61a295b36933aeb2">
+  <source>Walls</source>
+  <target>Paredes</target>
+</trans-unit>
+<trans-unit id="se71cb84e88541da0">
+  <source>Ceiling</source>
+  <target>Cielorraso</target>
+</trans-unit>
+<trans-unit id="sf13d77585ed44be6">
+  <source>Select a luminaire in the viewport or the Scene list to edit it.</source>
+  <target>Seleccioná una luminaria en la vista 3D o en la lista de la escena para editarla.</target>
+</trans-unit>
+<trans-unit id="s6282ee4c5295cdb3">
+  <source><x id="0" equiv-text="${label}"/> colour</source>
+  <target>Color de <x id="0" equiv-text="${label}"/></target>
+</trans-unit>
+<trans-unit id="s71ddb19f3752ec52">
+  <source>Reflectance ρ</source>
+  <target>Reflectancia ρ</target>
+</trans-unit>
+<trans-unit id="s5e1b62a66c3d3c7e">
+  <source>White paint</source>
+  <target>Pintura blanca</target>
+</trans-unit>
+<trans-unit id="s58f56df73098b463">
+  <source>Warm grey</source>
+  <target>Gris cálido</target>
+</trans-unit>
+<trans-unit id="s79b58eeef7164dfe">
+  <source>Concrete</source>
+  <target>Hormigón</target>
+</trans-unit>
+<trans-unit id="s3044b819bfaea412">
+  <source>Oak</source>
+  <target>Roble</target>
+</trans-unit>
+<trans-unit id="s5d838598f78157f2">
+  <source>Charcoal</source>
+  <target>Carbón</target>
 </trans-unit>
 </body>
 </file>

@@ -18,8 +18,9 @@ Planned packages (npm workspaces):
 **Realignment in progress** (roadmap Phase 0). Core has the scene model,
 undo/redo and a three.js viewport. The live demo shows a sample room with
 selection, inside the `@lighting-sim/ui` shell (Spanish by default), with a
-catalog to add products (click or drag) and a scene list with totals. The
-inspector and the top bar arrive in steps 0.6c–d.
+catalog to add products (click or drag), a scene list with totals, and an
+inspector to edit the room and luminaires. The top bar, view controls and
+shortcuts arrive in step 0.6d.
 
 ```
 nvm use          # Node 24
