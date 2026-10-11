@@ -1,5 +1,5 @@
-export { createSimulator } from './simulator';
-export type { EditOptions, SceneListener, Simulator, SimulatorOptions } from './simulator';
+export { Simulator } from './simulator';
+export type { EditOptions, SceneListener, SimulatorOptions } from './simulator';
 export { DEFAULT_ROOM } from './room';
 export type { RoomSize } from './room';
 export type { LuminairePatch } from './luminaires';

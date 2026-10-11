@@ -30,85 +30,108 @@ export interface SimulatorOptions {
   readonly scene?: Scene;
 }
 
-/** The core entry point: owns the scene, its edits and their undo history. */
-export interface Simulator {
+/**
+ * The core entry point: owns the scene, its edits and their undo history.
+ *
+ * ```ts
+ * const sim = new Simulator({ catalog });
+ * const id = sim.addLuminaire('spot-7w', { x: 1, z: -1 });
+ * sim.undo();
+ * ```
+ */
+export class Simulator {
+  readonly #catalog: Catalog;
+  readonly #listeners = new Set<SceneListener>();
+  #scene: Scene;
+  #history = history.emptyHistory<Scene>();
+
+  constructor({ catalog, scene }: SimulatorOptions) {
+    const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [] };
+    assertRoom(initial.room);
+    initial.luminaires.forEach(assertLuminaire);
+    this.#catalog = catalog;
+    this.#scene = initial;
+  }
+
   /** Current scene snapshot. Never mutate it; it is replaced on every change. */
-  readonly scene: Scene;
-  setRoomSize(size: Partial<RoomSize>, options?: EditOptions): void;
-  setSurface(name: SurfaceName, patch: Partial<Surface>, options?: EditOptions): void;
+  get scene(): Scene {
+    return this.#scene;
+  }
+
+  setRoomSize(size: Partial<RoomSize>, options?: EditOptions): void {
+    this.#commit(resizeRoom(this.#scene, size, this.#catalog), options);
+  }
+
+  setSurface(name: SurfaceName, patch: Partial<Surface>, options?: EditOptions): void {
+    this.#commit(setSurface(this.#scene, name, patch), options);
+  }
+
   /** Adds a luminaire and returns its id. Throws if the product isn't in the catalog. */
-  addLuminaire(productId: string, at?: FloorPoint): string;
-  updateLuminaire(id: string, patch: LuminairePatch, options?: EditOptions): void;
-  removeLuminaires(ids: readonly string[]): void;
+  addLuminaire(productId: string, at?: FloorPoint): string {
+    const id = crypto.randomUUID();
+    this.#commit(addLuminaire(this.#scene, this.#product(productId), id, at));
+    return id;
+  }
+
+  updateLuminaire(id: string, patch: LuminairePatch, options?: EditOptions): void {
+    this.#commit(updateLuminaire(this.#scene, id, patch, this.#catalog), options);
+  }
+
+  removeLuminaires(ids: readonly string[]): void {
+    this.#commit(removeLuminaires(this.#scene, ids));
+  }
+
   /** Copies luminaires and returns the new ids, in the same order. */
-  duplicateLuminaires(ids: readonly string[]): string[];
-  undo(): void;
-  redo(): void;
-  canUndo(): boolean;
-  canRedo(): boolean;
-  /** Returns an unsubscribe function. */
-  subscribe(listener: SceneListener): () => void;
-}
-
-export function createSimulator({ catalog, scene: initial }: SimulatorOptions): Simulator {
-  let scene: Scene = initial ?? { room: DEFAULT_ROOM, luminaires: [] };
-  assertRoom(scene.room);
-  scene.luminaires.forEach(assertLuminaire);
-
-  let past = history.emptyHistory<Scene>();
-  const listeners = new Set<SceneListener>();
-
-  function show(next: Scene) {
-    const previous = scene;
-    scene = next;
-    listeners.forEach((listener) => listener(scene, previous));
+  duplicateLuminaires(ids: readonly string[]): string[] {
+    const newIds = ids.map(() => crypto.randomUUID());
+    this.#commit(duplicateLuminaires(this.#scene, ids, newIds, this.#catalog));
+    return newIds;
   }
 
-  function commit(next: Scene, options?: EditOptions) {
-    past = history.record(past, scene, options?.mergeKey);
-    show(next);
+  undo(): void {
+    this.#travel(history.undo);
   }
 
-  function product(id: string): Product {
-    const found = catalog.get(id);
+  redo(): void {
+    this.#travel(history.redo);
+  }
+
+  canUndo(): boolean {
+    return this.#history.past.length > 0;
+  }
+
+  canRedo(): boolean {
+    return this.#history.future.length > 0;
+  }
+
+  /** Calls `listener` after every change. Returns an unsubscribe function. */
+  subscribe(listener: SceneListener): () => void {
+    this.#listeners.add(listener);
+    return () => this.#listeners.delete(listener);
+  }
+
+  #commit(next: Scene, options?: EditOptions): void {
+    this.#history = history.record(this.#history, this.#scene, options?.mergeKey);
+    this.#show(next);
+  }
+
+  #travel(step: typeof history.undo): void {
+    const result = step(this.#history, this.#scene);
+    if (!result) return;
+    this.#history = result.history;
+    this.#show(result.state);
+  }
+
+  #show(next: Scene): void {
+    const previous = this.#scene;
+    this.#scene = next;
+    this.#listeners.forEach((listener) => listener(next, previous));
+  }
+
+  #product(id: string): Product {
+    const found = this.#catalog.get(id);
     if (!found) throw new Error(`Product "${id}" is not in the catalog`);
     assertProduct(found);
     return found;
   }
-
-  function travel(step: typeof history.undo) {
-    const result = step(past, scene);
-    if (!result) return;
-    past = result.history;
-    show(result.state);
-  }
-
-  return {
-    get scene() {
-      return scene;
-    },
-    setRoomSize: (size, options) => commit(resizeRoom(scene, size, catalog), options),
-    setSurface: (name, patch, options) => commit(setSurface(scene, name, patch), options),
-    addLuminaire(productId, at) {
-      const id = crypto.randomUUID();
-      commit(addLuminaire(scene, product(productId), id, at));
-      return id;
-    },
-    updateLuminaire: (id, patch, options) =>
-      commit(updateLuminaire(scene, id, patch, catalog), options),
-    removeLuminaires: (ids) => commit(removeLuminaires(scene, ids)),
-    duplicateLuminaires(ids) {
-      const newIds = ids.map(() => crypto.randomUUID());
-      commit(duplicateLuminaires(scene, ids, newIds, catalog));
-      return newIds;
-    },
-    undo: () => travel(history.undo),
-    redo: () => travel(history.redo),
-    canUndo: () => past.past.length > 0,
-    canRedo: () => past.future.length > 0,
-    subscribe(listener) {
-      listeners.add(listener);
-      return () => listeners.delete(listener);
-    },
-  };
 }

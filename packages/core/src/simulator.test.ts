@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createSimulator } from './simulator';
+import { Simulator } from './simulator';
 import { catalog } from './test-fixtures';
 
-const create = () => createSimulator({ catalog });
+const create = () => new Simulator({ catalog });
 
-describe('createSimulator', () => {
+describe('Simulator', () => {
   it('starts with an empty default room', () => {
     const sim = create();
     expect(sim.scene.luminaires).toEqual([]);
@@ -14,7 +14,7 @@ describe('createSimulator', () => {
 
   it('rejects an invalid starting scene', () => {
     const scene = { room: { ...create().scene.room, width: -1 }, luminaires: [] };
-    expect(() => createSimulator({ catalog, scene })).toThrow(/room.width/);
+    expect(() => new Simulator({ catalog, scene })).toThrow(/room.width/);
   });
 
   it('adds luminaires with unique ids and rejects unknown products', () => {

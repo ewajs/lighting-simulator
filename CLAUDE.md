@@ -72,8 +72,10 @@ them locally before opening one.
   extension points or configurability for needs we don't have yet.
 - Abstractions earn their place: duplicate first, extract on the third real
   use. Any new shared abstraction needs approval.
-- Prefer plain functions and data. Use classes only to own a lifecycle
-  (three.js resources with `dispose()`, Lit elements).
+- Stateless logic is plain functions over plain data. Stateful objects are
+  classes with `#private` fields and ordinary methods, used with `new`, the
+  same way three.js works. Callers pass methods as callbacks with an arrow
+  wrapper (`() => sim.undo()`).
 - No clever code: no metaprogramming, no inheritance beyond extending
   framework base classes (LitElement, three.js types).
 - Measure before optimizing.
