@@ -1,4 +1,4 @@
-import { summarizeScene, type Catalog, type Scene } from '@luxstudio/core';
+import { LONG_PRESS_MS, summarizeScene, type Catalog, type Scene } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -7,7 +7,7 @@ import { formatNumber } from './format';
 import { mountIcon } from './icons';
 import { sharedStyles } from './styles';
 
-/** Detail of `lxs-select`: a luminaire chosen in a list, with Shift/⌘ held for `toggle`. */
+/** Detail of `lxs-select`: a luminaire chosen in a list; `toggle` for Shift/⌘-click or a long press. */
 export interface SelectDetail {
   readonly luminaireId: string;
   readonly toggle: boolean;
@@ -65,7 +65,7 @@ export class LxsScenePanel extends LitElement {
         align-items: center;
         gap: var(--lxs-sp-2);
         width: 100%;
-        height: 32px;
+        min-height: var(--lxs-control-h);
         padding: 0 var(--lxs-sp-2) 0 var(--lxs-sp-3);
         border: 0;
         border-radius: var(--lxs-r-sm);
@@ -91,6 +91,12 @@ export class LxsScenePanel extends LitElement {
       .row-meta {
         color: var(--lxs-text-faint);
         font: var(--lxs-fs-xs) var(--lxs-font-mono);
+      }
+      .row {
+        /* Long press is a gesture here: no text selection or callout menu. */
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
       }
       .off .row-name {
         opacity: 0.45;
@@ -142,8 +148,15 @@ export class LxsScenePanel extends LitElement {
         type="button"
         role="option"
         aria-selected=${this.selection.includes(luminaire.id)}
-        @click=${(event: MouseEvent) =>
-          this.#select(luminaire.id, event.shiftKey || event.metaKey || event.ctrlKey)}
+        @pointerdown=${(event: PointerEvent) => this.#startLongPress(event, luminaire.id)}
+        @pointerup=${this.#cancelLongPress}
+        @pointercancel=${this.#cancelLongPress}
+        @pointerleave=${this.#cancelLongPress}
+        @click=${(event: MouseEvent) => {
+          // The long press already toggled this row; ignore the click that follows it.
+          if (this.#longPressed) this.#longPressed = false;
+          else this.#select(luminaire.id, event.shiftKey || event.metaKey || event.ctrlKey);
+        }}
       >
         ${mountIcon(product?.mount)}
         <span class="row-name">${names.get(luminaire.id)}</span>
@@ -169,6 +182,25 @@ export class LxsScenePanel extends LitElement {
       </button>
     </div>`;
   }
+
+  #longPressTimer: number | undefined;
+  #longPressed = false;
+
+  /** Touch and pen: holding a row for LONG_PRESS_MS toggles it, like Shift-click. */
+  #startLongPress(event: PointerEvent, luminaireId: string): void {
+    this.#cancelLongPress();
+    this.#longPressed = false;
+    if (event.pointerType === 'mouse') return;
+    this.#longPressTimer = window.setTimeout(() => {
+      this.#longPressed = true;
+      this.#select(luminaireId, true);
+    }, LONG_PRESS_MS);
+  }
+
+  #cancelLongPress = (): void => {
+    window.clearTimeout(this.#longPressTimer);
+    this.#longPressTimer = undefined;
+  };
 
   #select(luminaireId: string, toggle: boolean): void {
     this.dispatchEvent(
