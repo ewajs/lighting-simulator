@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es-AR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,24 +10,11 @@
       body {
         margin: 0;
         height: 100%;
-        background: #121417;
-      }
-      #viewport {
-        position: fixed;
-        inset: 0;
-      }
-      #viewport.error {
-        display: grid;
-        place-content: center;
-        color: #a0a5ad;
-        font:
-          14px system-ui,
-          sans-serif;
+        background: var(--lsim-bg);
       }
     </style>
   </head>
   <body>
-    <main id="viewport" aria-label="3D viewport"></main>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

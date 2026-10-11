@@ -1,2 +1,4 @@
-/** Package version. Placeholder export until the first real API lands (roadmap 0.3+). */
-export const VERSION = '0.0.0';
+export { LsimApp } from './lsim-app';
+export { LsimViewport } from './lsim-viewport';
+export { DEFAULT_LOCALE, getLocale, setLocale } from './localization';
+export type { Locale } from './localization';

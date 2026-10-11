@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="es-AR" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s1f1750c1bc916638">
+  <source>Catalog</source>
+  <target>Catálogo</target>
+</trans-unit>
+<trans-unit id="s5f1dcc2e38de612e">
+  <source>Inspector</source>
+  <target>Propiedades</target>
+</trans-unit>
+<trans-unit id="s1a4d393d083de02a">
+  <source>Luminaires: <x id="0" equiv-text="${total}"/></source>
+  <target>Luminarias: <x id="0" equiv-text="${total}"/></target>
+</trans-unit>
+<trans-unit id="sd3dd3e07af92d400">
+  <source>Selected: <x id="0" equiv-text="${selected}"/></source>
+  <target>Seleccionadas: <x id="0" equiv-text="${selected}"/></target>
+</trans-unit>
+<trans-unit id="s52194781b1fd4c64">
+  <source>This browser cannot start WebGPU or WebGL 2.</source>
+  <target>Este navegador no puede iniciar WebGPU ni WebGL 2.</target>
+</trans-unit>
+</body>
+</file>
+</xliff>

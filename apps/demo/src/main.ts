@@ -1,18 +1,14 @@
-import { Simulator, Viewport } from '@lighting-sim/core';
+import { Simulator } from '@lighting-sim/core';
+import '@lighting-sim/ui';
+import '@lighting-sim/ui/theme.css';
 import { sampleCatalog } from './sample-catalog';
 
-const container = document.querySelector<HTMLElement>('#viewport')!;
 const simulator = new Simulator({ catalog: sampleCatalog });
 addStarterLayout(simulator);
 
-const viewport = new Viewport({ simulator, container });
-viewport.onPick(({ luminaireId }) => viewport.setHighlighted(luminaireId ? [luminaireId] : []));
-
-viewport.init().catch((error: unknown) => {
-  console.error(error);
-  container.textContent = 'This browser cannot start WebGPU or WebGL 2.';
-  container.classList.add('error');
-});
+const app = document.createElement('lsim-app');
+app.simulator = simulator;
+document.body.append(app);
 
 /** A small lit room: a pendant over the centre, downlights, a tilted track spot, a wall light and a floor lamp. */
 function addStarterLayout(sim: Simulator): void {

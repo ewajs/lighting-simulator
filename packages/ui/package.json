@@ -4,13 +4,19 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./theme.css": "./src/theme.css"
   },
   "scripts": {
     "typecheck": "tsc -p .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "i18n:extract": "lit-localize extract",
+    "i18n:build": "lit-localize build",
+    "i18n:check": "lit-localize extract && lit-localize build 2>&1 | tee /dev/stderr | (! grep -q 'is missing')"
   },
   "dependencies": {
-    "@lighting-sim/core": "0.0.0"
+    "@lighting-sim/core": "0.0.0",
+    "@lit/localize": "0.12.2",
+    "lit": "3.3.3"
   }
 }

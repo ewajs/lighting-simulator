@@ -17,10 +17,14 @@
     "test": "npm run test --workspaces --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:e2e": "playwright test -c apps/demo"
+    "test:e2e": "playwright test -c apps/demo",
+    "i18n:extract": "npm run i18n:extract -w packages/ui",
+    "i18n:build": "npm run i18n:build -w packages/ui",
+    "i18n:check": "npm run i18n:check -w packages/ui"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@lit/localize-tools": "0.8.2",
     "@playwright/test": "1.64.0",
     "eslint": "10.12.0",
     "eslint-config-prettier": "10.1.8",
