@@ -1,4 +1,4 @@
-# Lighting Simulator (working name)
+# Lux Studio
 
 A client-agnostic library for building 3D lighting simulators on the web,
 using [three.js](https://threejs.org) (WebGPU with a WebGL 2 fallback).

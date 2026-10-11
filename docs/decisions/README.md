@@ -10,7 +10,7 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0004 | [UI built as Web Components with Lit](0004-ui-web-components-lit.md) | Accepted |
 | 0005 | [TypeScript](0005-typescript.md) | Accepted |
 | 0006 | [npm workspaces monorepo](0006-npm-workspaces-monorepo.md) | Accepted |
-| 0007 | [Placeholder package names](0007-placeholder-package-names.md) | Accepted |
+| 0007 | [Placeholder package names](0007-placeholder-package-names.md) | Superseded by 0027 |
 | 0008 | [A branch and a PR per step](0008-branch-and-pr-per-step.md) | Accepted |
 | 0009 | [What Claude may do without asking](0009-claude-autonomy-boundaries.md) | Accepted |
 | 0010 | [Testing with Vitest and Playwright](0010-testing-vitest-playwright.md) | Accepted |
@@ -30,3 +30,5 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0024 | [Display catalog references core product ids](0024-display-catalog.md) | Accepted |
 | 0025 | [Elements edit the Simulator directly; events are for UI state](0025-elements-edit-simulator-directly.md) | Accepted |
 | 0026 | [App shell API: brand slot, locale event, app-owned view state](0026-app-shell-api.md) | Accepted |
+| 0027 | [Product name: Lux Studio](0027-product-name-lux-studio.md) | Accepted |
+| 0028 | [Illuminance includes inter-reflections (room radiosity)](0028-indirect-illuminance-radiosity.md) | Accepted |
