@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_ROOM, type Luminaire } from '@luxstudio/core';
-import { filterItems, luminaireNames, type CatalogItem } from './display-catalog';
+import { DEFAULT_ROOM, type Catalog, type Luminaire, type Product } from '@luxstudio/core';
+import {
+  catalogFacets,
+  filterItems,
+  luminaireNames,
+  NO_FILTER,
+  type CatalogItem,
+} from './display-catalog';
 
 const items: CatalogItem[] = [
   { productId: 'a', name: 'Lámpara de pie', categoryId: 'floor' },
@@ -8,18 +14,54 @@ const items: CatalogItem[] = [
   { productId: 'c', name: 'Downlight 12 W', categoryId: 'recessed' },
 ];
 
+const product = (id: string, mount: Product['mount'], cct: number) =>
+  ({ id, mount, cct, power: 1, flux: 1, beamDeg: 36 }) as Product;
+const PRODUCTS: Record<string, Product> = {
+  a: product('a', 'floor', 2700),
+  b: product('b', 'recessed', 3000),
+  c: product('c', 'recessed', 4000),
+};
+const products: Catalog = { get: (id) => PRODUCTS[id] };
+const ids = (list: readonly CatalogItem[]) => list.map((i) => i.productId);
+
 describe('filterItems', () => {
-  it('matches without accents or case', () => {
-    expect(filterItems(items, 'LAMPARA', null).map((i) => i.productId)).toEqual(['a']);
+  it('matches the query without accents or case', () => {
+    expect(ids(filterItems(items, { ...NO_FILTER, query: 'LAMPARA' }, products))).toEqual(['a']);
   });
 
-  it('filters by category and query together', () => {
-    expect(filterItems(items, '12', 'recessed').map((i) => i.productId)).toEqual(['c']);
-    expect(filterItems(items, '', 'recessed')).toHaveLength(2);
+  it('combines query and category', () => {
+    const filter = { ...NO_FILTER, query: '12', categoryId: 'recessed' };
+    expect(ids(filterItems(items, filter, products))).toEqual(['c']);
   });
 
-  it('returns everything for an empty query and no category', () => {
-    expect(filterItems(items, '  ', null)).toHaveLength(3);
+  it('filters by mount and by colour temperature', () => {
+    expect(ids(filterItems(items, { ...NO_FILTER, mount: 'recessed' }, products))).toEqual([
+      'b',
+      'c',
+    ]);
+    expect(
+      ids(filterItems(items, { ...NO_FILTER, mount: 'recessed', cct: 4000 }, products)),
+    ).toEqual(['c']);
+    expect(ids(filterItems(items, { ...NO_FILTER, cct: 2700 }, products))).toEqual(['a']);
+  });
+
+  it('returns everything without a filter', () => {
+    expect(filterItems(items, { ...NO_FILTER, query: '  ' }, products)).toHaveLength(3);
+  });
+
+  it('never matches mount or CCT filters for products missing from the catalog', () => {
+    const orphan = [{ productId: 'zzz', name: 'Orphan', categoryId: 'x' }];
+    expect(filterItems(orphan, NO_FILTER, products)).toHaveLength(1);
+    expect(filterItems(orphan, { ...NO_FILTER, cct: 2700 }, products)).toHaveLength(0);
+  });
+});
+
+describe('catalogFacets', () => {
+  it('lists mounts in a fixed order and colour temperatures ascending', () => {
+    expect(catalogFacets(items, products)).toEqual({
+      mounts: ['recessed', 'floor'],
+      ccts: [2700, 3000, 4000],
+    });
   });
 });
 

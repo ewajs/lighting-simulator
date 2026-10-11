@@ -47,7 +47,9 @@ npm run i18n:check    fail if any UI string lacks a translation
 CI runs `format:check`, lint, typecheck, test and build on every PR. Run
 them locally before opening one, plus `test:e2e` (CI doesn't run it, ADR 0015).
 When rendering changes on purpose, refresh the screenshot baselines with
-`npm run test:e2e -- --update-snapshots` and review the new images in the PR.
+`npm run test:e2e -- --update-snapshots=all` (plain `--update-snapshots` skips
+images within the tolerance, which can leave stale baselines) and review the
+new images in the PR. Run `npm run i18n:build` first if translations changed.
 
 ## Data boundary
 

@@ -68,6 +68,16 @@ export class LxsViewport extends LitElement {
     this.#viewport?.setView(view);
   }
 
+  /**
+   * A PNG of the scene as shown, without selection outlines, on the
+   * viewport's background colour (--lxs-viewport-bg).
+   */
+  screenshot(): Promise<Blob> {
+    if (!this.#viewport) return Promise.reject(new Error('The viewport has not started'));
+    const background = getComputedStyle(this).getPropertyValue('--lxs-viewport-bg').trim();
+    return this.#viewport.screenshot(background ? { background } : {});
+  }
+
   /** Centres the camera on these luminaires. */
   frame(ids: readonly string[]): void {
     this.#viewport?.frame(ids);

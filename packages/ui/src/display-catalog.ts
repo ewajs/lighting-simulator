@@ -2,7 +2,7 @@
 // Catalog, which stays the single source of simulation data. Names and labels
 // arrive already in the active language.
 
-import type { Scene } from '@luxstudio/core';
+import type { Catalog, MountType, Scene } from '@luxstudio/core';
 
 export interface CatalogCategory {
   readonly id: string;
@@ -26,19 +26,67 @@ export interface DisplayCatalog {
 
 export const EMPTY_DISPLAY_CATALOG: DisplayCatalog = { categories: [], items: [] };
 
-/** Items matching a search query (accent- and case-insensitive) and an optional category. */
+/** What the catalog is filtered by. `null` means "any". */
+export interface CatalogFilter {
+  readonly query: string;
+  readonly categoryId: string | null;
+  readonly mount: MountType | null;
+  readonly cct: number | null;
+}
+
+export const NO_FILTER: CatalogFilter = { query: '', categoryId: null, mount: null, cct: null };
+
+/**
+ * Items matching every part of the filter. The query is accent- and
+ * case-insensitive. Mount and CCT come from the products in core's catalog;
+ * items whose product is missing never match those two.
+ */
 export function filterItems(
   items: readonly CatalogItem[],
-  query: string,
-  categoryId: string | null,
+  filter: CatalogFilter,
+  products: Catalog,
 ): readonly CatalogItem[] {
-  const needle = normalize(query.trim());
-  return items.filter(
-    (item) =>
-      (categoryId === null || item.categoryId === categoryId) &&
-      normalize(item.name).includes(needle),
-  );
+  const needle = normalize(filter.query.trim());
+  return items.filter((item) => {
+    if (filter.categoryId !== null && item.categoryId !== filter.categoryId) return false;
+    if (!normalize(item.name).includes(needle)) return false;
+    if (filter.mount === null && filter.cct === null) return true;
+    const product = products.get(item.productId);
+    return (
+      !!product &&
+      (filter.mount === null || product.mount === filter.mount) &&
+      (filter.cct === null || product.cct === filter.cct)
+    );
+  });
 }
+
+/** The mount types and colour temperatures present in the catalog, sorted, for the filter menus. */
+export function catalogFacets(
+  items: readonly CatalogItem[],
+  products: Catalog,
+): { mounts: readonly MountType[]; ccts: readonly number[] } {
+  const mounts = new Set<MountType>();
+  const ccts = new Set<number>();
+  for (const item of items) {
+    const product = products.get(item.productId);
+    if (!product) continue;
+    mounts.add(product.mount);
+    ccts.add(product.cct);
+  }
+  return {
+    mounts: MOUNT_ORDER.filter((m) => mounts.has(m)),
+    ccts: [...ccts].sort((a, b) => a - b),
+  };
+}
+
+const MOUNT_ORDER: readonly MountType[] = [
+  'recessed',
+  'pendant',
+  'track',
+  'wall',
+  'floor',
+  'table',
+];
 
 /**
  * A readable name per luminaire: the product's display name plus a number

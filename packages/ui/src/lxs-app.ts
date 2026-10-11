@@ -4,6 +4,7 @@ import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { newMergeKey } from './field-change';
+import { screenshotFileName } from './format';
 import { DEFAULT_LOCALE, setLocale, type Locale } from './localization';
 import './lxs-inspector';
 import './lxs-library';
@@ -30,6 +31,8 @@ import { isTyping, shortcutAction, type ShortcutAction } from './shortcuts';
  * ```
  *
  * @slot brand - The host's logo or name, shown in the top bar.
+ * @fires lxs-screenshot - cancelable, `detail: ScreenshotDetail`. Unless the host calls
+ *   `preventDefault()`, the PNG is downloaded.
  * @fires lxs-locale-change - after the UI language changed: `detail: { locale }`.
  *   Hosts update `catalog` names in response.
  */
@@ -161,6 +164,7 @@ export class LxsApp extends LitElement {
         .inspectorOpen=${!this.inspectorCollapsed}
         @lxs-theme-change=${({ detail }: CustomEvent<{ theme: Theme }>) => (this.theme = detail.theme)}
         @lxs-locale-request=${({ detail }: CustomEvent<{ locale: Locale }>) => (this.locale = detail.locale)}
+        @lxs-screenshot-request=${() => void this.#takeScreenshot()}
         @lxs-panel-toggle=${({ detail }: CustomEvent<{ panel: PanelName }>) => this.#togglePanel(detail.panel)}
       >
         <slot name="brand" slot="brand"></slot>
@@ -256,6 +260,30 @@ export class LxsApp extends LitElement {
     });
   }
 
+  /** Captures the viewport and, unless a host cancels `lxs-screenshot`, downloads it. */
+  async #takeScreenshot(): Promise<void> {
+    let png: Blob;
+    try {
+      png = await this.viewport.screenshot();
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+    // A neutral, translated base name: hosts ship this under their own brand.
+    const fileName = screenshotFileName(msg('scene'), new Date());
+    const event = new CustomEvent<ScreenshotDetail>('lxs-screenshot', {
+      detail: { png, fileName },
+      cancelable: true,
+      bubbles: true,
+      composed: true,
+    });
+    if (!this.dispatchEvent(event)) return;
+    const url = URL.createObjectURL(png);
+    const link = Object.assign(document.createElement('a'), { href: url, download: fileName });
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
   #togglePanel(panel: PanelName): void {
     if (panel === 'library') this.libraryCollapsed = !this.libraryCollapsed;
     else this.inspectorCollapsed = !this.inspectorCollapsed;
@@ -328,11 +356,19 @@ export class LxsApp extends LitElement {
   }
 }
 
+/** Detail of `lxs-screenshot`. */
+export interface ScreenshotDetail {
+  readonly png: Blob;
+  /** Suggested file name, e.g. "escena-2026-10-11-1432.png". */
+  readonly fileName: string;
+}
+
 declare global {
   interface HTMLElementTagNameMap {
     'lxs-app': LxsApp;
   }
   interface HTMLElementEventMap {
     'lxs-locale-change': CustomEvent<{ locale: Locale }>;
+    'lxs-screenshot': CustomEvent<ScreenshotDetail>;
   }
 }

@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 
 // Screen points at the fixed 1280×800 viewport (playwright.config.ts) with the
 // default perspective view. If the layout or camera changes, update these and
-// refresh the baselines with `npm run test:e2e -- --update-snapshots`.
+// refresh the baselines with `npm run test:e2e -- --update-snapshots=all`.
 const PENDANT = { x: 641, y: 379 };
 const FLOOR_LAMP = { x: 422, y: 420 };
 const EMPTY_SPACE = { x: 380, y: 150 };
@@ -196,4 +196,77 @@ test('theme, language, collapsed panels and the plan view', async ({ page }) => 
   await page.getByRole('button', { name: 'Plan', exact: true }).click();
   await expect(page).toHaveScreenshot('light-en-collapsed-plan.png');
   expect(errors).toEqual([]);
+});
+
+test('screenshot downloads with a neutral, localised file name', async ({ page }) => {
+  await openDemo(page);
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', { name: 'Captura' }).click(),
+  ]);
+  expect(download.suggestedFilename()).toMatch(/^escena-\d{4}-\d{2}-\d{2}-\d{4}\.png$/);
+});
+
+test('screenshots are PNGs of the canvas without the outline, and hosts can cancel the download', async ({
+  page,
+}) => {
+  await openDemo(page);
+  let downloads = 0;
+  page.on('download', () => downloads++);
+
+  /** Takes a screenshot through the UI, cancelling the download like a host would, and describes the PNG. */
+  const capture = async () => {
+    const result = page.evaluate(
+      () =>
+        new Promise<{ type: string; width: number; height: number; sha256: string }>((resolve) => {
+          document.querySelector('lxs-app')!.addEventListener(
+            'lxs-screenshot',
+            (event) => {
+              event.preventDefault();
+              const { png } = (event as CustomEvent<{ png: Blob }>).detail;
+              void Promise.all([createImageBitmap(png), png.arrayBuffer()]).then(
+                async ([bitmap, bytes]) => {
+                  const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+                  const sha256 = Array.from(digest, (b) => b.toString(16).padStart(2, '0')).join(
+                    '',
+                  );
+                  resolve({ type: png.type, width: bitmap.width, height: bitmap.height, sha256 });
+                },
+              );
+            },
+            { once: true },
+          );
+        }),
+    );
+    await page.getByRole('button', { name: 'Captura' }).click();
+    return result;
+  };
+
+  const plain = await capture();
+  const canvas = await page
+    .locator('lxs-viewport canvas')
+    .evaluate((c: HTMLCanvasElement) => [c.width, c.height]);
+  expect(plain.type).toBe('image/png');
+  expect([plain.width, plain.height]).toEqual(canvas);
+
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+  // Renders are deterministic, so without the outline the two PNGs are byte-identical.
+  expect((await capture()).sha256).toBe(plain.sha256);
+  expect(downloads).toBe(0);
+});
+
+test('the catalog filters by mount type and colour temperature', async ({ page }) => {
+  await openDemo(page);
+  const cards = page.locator('lxs-catalog-panel .card');
+  await page.getByRole('combobox', { name: 'Tipo de montaje' }).selectOption({ label: 'Colgante' });
+  await expect(cards).toHaveCount(1);
+  await page.getByRole('combobox', { name: 'Tipo de montaje' }).selectOption({ label: 'Montaje' });
+  await page
+    .getByRole('combobox', { name: 'Temperatura de color' })
+    .selectOption({ label: '2700 K' });
+  // Wall light, floor lamp and table lamp are 2700 K.
+  await expect(cards).toHaveCount(3);
+  await page.getByRole('combobox', { name: 'Tipo de montaje' }).selectOption({ label: 'Colgante' });
+  await expect(page.getByText('Ningún producto coincide con la búsqueda.')).toBeVisible();
 });

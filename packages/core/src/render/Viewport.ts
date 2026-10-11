@@ -18,6 +18,18 @@ const VIEW_TRANSITION_MS = 450;
 /** Camera distance when framing a selection, in m. */
 const FRAME_DISTANCE = 3;
 
+/** Options for `Viewport.screenshot()`. */
+export interface ScreenshotOptions {
+  /** CSS colour painted behind the scene; without it, empty areas are transparent. */
+  readonly background?: string;
+}
+
+interface PendingCapture {
+  readonly options: ScreenshotOptions;
+  readonly resolve: (png: Blob) => void;
+  readonly reject: (error: unknown) => void;
+}
+
 export interface ViewportOptions {
   readonly simulator: Simulator;
   /** Element the canvas is added to. The viewport fills it and follows its size. */
@@ -62,6 +74,8 @@ export class Viewport {
   #highlighted: readonly string[] = [];
   #transition: ((now: number) => void) | undefined;
   #pointerDown: { x: number; y: number } | undefined;
+  #captures: PendingCapture[] = [];
+  #started = false;
 
   constructor({ simulator, container }: ViewportOptions) {
     this.#simulator = simulator;
@@ -100,8 +114,10 @@ export class Viewport {
     await renderer.setAnimationLoop((now) => {
       this.#transition?.(now);
       this.#controls.update();
-      renderer.render(this.#scene, this.#camera);
+      if (this.#captures.length > 0) this.#renderCaptures();
+      else renderer.render(this.#scene, this.#camera);
     });
+    this.#started = true;
   }
 
   /** Which backend three.js picked. Available after init(). */
@@ -128,6 +144,16 @@ export class Viewport {
   set exposureEv(ev: number) {
     this.#exposureEv = ev;
     this.#renderer.toneMappingExposure = toneMappingExposure(ev);
+  }
+
+  /**
+   * A PNG of the next frame at the canvas resolution, without highlight
+   * outlines (they're an editing aid, not part of the scene).
+   */
+  screenshot(options: ScreenshotOptions = {}): Promise<Blob> {
+    if (!this.#started)
+      return Promise.reject(new Error('Viewport.screenshot() called before init()'));
+    return new Promise((resolve, reject) => this.#captures.push({ options, resolve, reject }));
   }
 
   /** Moves the camera to a preset view of the room. */
@@ -193,6 +219,8 @@ export class Viewport {
   dispose(): void {
     // Both return promises only to wait for init(), which has already happened.
     void this.#renderer.setAnimationLoop(null);
+    for (const { reject } of this.#captures) reject(new Error('Viewport disposed'));
+    this.#captures = [];
     this.#unsubscribe?.();
     this.#resizeObserver.disconnect();
     this.#controls.dispose();
@@ -200,6 +228,39 @@ export class Viewport {
     this.#luminaires.dispose();
     this.#renderer.domElement.remove();
     void this.#renderer.dispose();
+  }
+
+  /**
+   * Renders one frame without outlines and copies it for each pending capture.
+   * The copy must happen in the same task as the render: a WebGPU canvas's
+   * contents are only readable until the frame is presented.
+   */
+  #renderCaptures(): void {
+    const captures = this.#captures;
+    this.#captures = [];
+    const source = this.#renderer.domElement;
+    this.#luminaires.setOutlinesVisible(false);
+    this.#renderer.render(this.#scene, this.#camera);
+    for (const { options, resolve, reject } of captures) {
+      const copy = document.createElement('canvas');
+      copy.width = source.width;
+      copy.height = source.height;
+      const context = copy.getContext('2d');
+      if (!context) {
+        reject(new Error('2D canvas unavailable for screenshot'));
+        continue;
+      }
+      if (options.background) {
+        context.fillStyle = options.background;
+        context.fillRect(0, 0, copy.width, copy.height);
+      }
+      context.drawImage(source, 0, 0);
+      copy.toBlob(
+        (png) => (png ? resolve(png) : reject(new Error('PNG encoding failed'))),
+        'image/png',
+      );
+    }
+    this.#luminaires.setOutlinesVisible(true);
   }
 
   #sync(scene: Scene, previous: Scene | undefined): void {
