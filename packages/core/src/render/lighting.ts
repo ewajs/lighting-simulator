@@ -1,0 +1,86 @@
+// Pure lighting and camera maths for the viewport. No three.js, so it can be
+// unit-tested in Node. See SPEC §6, "Lighting model before IES".
+
+import type { Product, Room, Vec3 } from '../types';
+
+/** Products with a wider beam than this are lit as isotropic point lights. */
+export const WIDE_BEAM_DEG = 120;
+
+/**
+ * Display exposure at 0 EV. Scenes are lit in real units, so a white wall at
+ * 100 lx has a radiance of ~25. This maps typical interiors (100–500 lx) into
+ * the tone mapper's range.
+ */
+export const BASE_EXPOSURE = 0.025;
+
+/** Small constant fill, in lx, so unlit areas are never pure black. */
+export const MIN_FILL_LUX = 1.5;
+
+/** Whether a product is drawn as a spotlight (true) or an isotropic point light. */
+export function isSpot(product: Product): boolean {
+  return product.beamDeg <= WIDE_BEAM_DEG;
+}
+
+/**
+ * Luminous intensity in cd. A spot spreads all its flux evenly over its beam
+ * cone (solid angle 2π(1 − cos(beam/2))); a wide product over the full sphere (4π).
+ */
+export function candela(product: Product): number {
+  if (!isSpot(product)) return product.flux / (4 * Math.PI);
+  const halfAngle = ((product.beamDeg / 2) * Math.PI) / 180;
+  return product.flux / (2 * Math.PI * (1 - Math.cos(halfAngle)));
+}
+
+/** sRGB colour of a blackbody at `kelvin` (Tanner Helland fit), brightest channel = 1. */
+export function kelvinToRgb(kelvin: number): { r: number; g: number; b: number } {
+  const t = Math.min(40000, Math.max(1000, kelvin)) / 100;
+  const r = t <= 66 ? 255 : 329.698727446 * Math.pow(t - 60, -0.1332047592);
+  const g =
+    t <= 66
+      ? 99.4708025861 * Math.log(t) - 161.1195681661
+      : 288.1221695283 * Math.pow(t - 60, -0.0755148492);
+  const b = t >= 66 ? 255 : t <= 19 ? 0 : 138.5177312231 * Math.log(t - 10) - 305.0447927307;
+  const [cr, cg, cb] = [r, g, b].map((v) => Math.min(255, Math.max(0, v)));
+  const max = Math.max(cr!, cg!, cb!);
+  return { r: cr! / max, g: cg! / max, b: cb! / max };
+}
+
+/**
+ * Uniform indirect illuminance in lx from the integrating-sphere formula
+ * E = Φ·ρ̄ / (A·(1 − ρ̄)), where ρ̄ is the area-weighted mean reflectance.
+ */
+export function indirectIlluminance(flux: number, room: Room): number {
+  const floorArea = room.width * room.depth;
+  const wallArea = 2 * (room.width + room.depth) * room.height;
+  const area = 2 * floorArea + wallArea;
+  const { floor, ceiling, walls } = room.surfaces;
+  const rho =
+    (floorArea * (floor.reflectance + ceiling.reflectance) + wallArea * walls.reflectance) / area;
+  return (flux * rho) / (area * (1 - rho));
+}
+
+/** Tone-mapping exposure for a user exposure in EV stops. */
+export function toneMappingExposure(ev: number): number {
+  return BASE_EXPOSURE * Math.pow(2, ev);
+}
+
+/** Preset camera views. */
+export type ViewName = 'perspective' | 'top' | 'front' | 'side';
+
+/** Camera position and look-at target for a preset view of `room`. */
+export function viewPose(view: ViewName, room: Room): { position: Vec3; target: Vec3 } {
+  const { width, depth, height } = room;
+  const size = Math.max(width, depth);
+  const target = { x: 0, y: height * 0.4, z: 0 };
+  switch (view) {
+    case 'top':
+      // A tiny z offset keeps OrbitControls' up vector well defined.
+      return { position: { x: 0, y: size * 2.4, z: 0.001 }, target: { x: 0, y: 0, z: 0 } };
+    case 'front':
+      return { position: { x: 0, y: height * 0.55, z: depth / 2 + size * 1.6 }, target };
+    case 'side':
+      return { position: { x: width / 2 + size * 1.6, y: height * 0.55, z: 0 }, target };
+    case 'perspective':
+      return { position: { x: width * 0.85, y: height * 1.9, z: depth * 1.35 + 1 }, target };
+  }
+}

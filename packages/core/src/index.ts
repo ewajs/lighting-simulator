@@ -1,5 +1,9 @@
 export { Simulator } from './simulator';
 export type { EditOptions, SceneListener, SimulatorOptions } from './simulator';
+export { Viewport } from './render/Viewport';
+export type { PickEvent, ViewportOptions } from './render/Viewport';
+export type { ViewName } from './render/lighting';
+export type { RenderMode } from './render/RoomMeshes';
 export { DEFAULT_ROOM } from './room';
 export type { RoomSize } from './room';
 export type { LuminairePatch } from './luminaires';

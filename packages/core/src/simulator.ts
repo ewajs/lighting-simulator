@@ -53,6 +53,11 @@ export class Simulator {
     this.#scene = initial;
   }
 
+  /** The product lookup this simulator was created with. */
+  get catalog(): Catalog {
+    return this.#catalog;
+  }
+
   /** Current scene snapshot. Never mutate it; it is replaced on every change. */
   get scene(): Scene {
     return this.#scene;
