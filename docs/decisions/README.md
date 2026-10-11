@@ -26,3 +26,5 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0020 | [UI translations with @lit/localize](0020-i18n-lit-localize.md) | Accepted |
 | 0021 | [UI state: props down, events up](0021-props-down-events-up.md) | Accepted |
 | 0022 | [Legacy TypeScript decorators for Lit](0022-legacy-typescript-decorators.md) | Accepted |
+| 0023 | [Icons from the lucide package](0023-lucide-icons.md) | Accepted |
+| 0024 | [Display catalog references core product ids](0024-display-catalog.md) | Accepted |

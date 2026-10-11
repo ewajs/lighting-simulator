@@ -1,7 +1,7 @@
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { Simulator } from '../simulator';
-import type { Scene } from '../types';
+import type { FloorPoint, Scene } from '../types';
 import {
   indirectIlluminance,
   MIN_FILL_LUX,
@@ -156,6 +156,23 @@ export class Viewport {
     this.#flyTo(center.clone().add(offset), center, true);
   }
 
+  /**
+   * Where a screen point (e.g. a drop) lands on the floor, clamped to the room.
+   * Returns null when the point is above the horizon.
+   */
+  pointOnFloor(clientX: number, clientY: number): FloorPoint | null {
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(this.#pointer(clientX, clientY), this.#camera);
+    const floor = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    const hit = raycaster.ray.intersectPlane(floor, new THREE.Vector3());
+    if (!hit) return null;
+    const { width, depth } = this.#simulator.scene.room;
+    return {
+      x: THREE.MathUtils.clamp(hit.x, -width / 2, width / 2),
+      z: THREE.MathUtils.clamp(hit.z, -depth / 2, depth / 2),
+    };
+  }
+
   /** Outlines these luminaires (e.g. the host's selection). */
   setHighlighted(ids: readonly string[]): void {
     this.#highlighted = ids;
@@ -216,6 +233,15 @@ export class Viewport {
     };
   }
 
+  /** Screen coordinates → normalised device coordinates (−1…1). */
+  #pointer(clientX: number, clientY: number): THREE.Vector2 {
+    const rect = this.#renderer.domElement.getBoundingClientRect();
+    return new THREE.Vector2(
+      ((clientX - rect.left) / rect.width) * 2 - 1,
+      -((clientY - rect.top) / rect.height) * 2 + 1,
+    );
+  }
+
   readonly #onPointerDown = (event: PointerEvent): void => {
     this.#pointerDown = { x: event.clientX, y: event.clientY };
   };
@@ -224,13 +250,8 @@ export class Viewport {
     const down = this.#pointerDown;
     if (!down || Math.hypot(event.clientX - down.x, event.clientY - down.y) > CLICK_TOLERANCE_PX)
       return;
-    const rect = this.#renderer.domElement.getBoundingClientRect();
-    const pointer = new THREE.Vector2(
-      ((event.clientX - rect.left) / rect.width) * 2 - 1,
-      -((event.clientY - rect.top) / rect.height) * 2 + 1,
-    );
     const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(pointer, this.#camera);
+    raycaster.setFromCamera(this.#pointer(event.clientX, event.clientY), this.#camera);
     // Nearest hit that belongs to a fixture; outlines and other helpers are skipped.
     const hits = raycaster.intersectObject(this.#luminaires.group, true);
     const luminaireId =

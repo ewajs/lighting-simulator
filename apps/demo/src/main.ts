@@ -2,12 +2,15 @@ import { Simulator } from '@lighting-sim/core';
 import '@lighting-sim/ui';
 import '@lighting-sim/ui/theme.css';
 import { sampleCatalog } from './sample-catalog';
+import { sampleDisplay } from './sample-display';
 
 const simulator = new Simulator({ catalog: sampleCatalog });
 addStarterLayout(simulator);
 
 const app = document.createElement('lsim-app');
 app.simulator = simulator;
+// Spanish to match the default UI locale. Switching language arrives with the toggle in 0.6d.
+app.catalog = sampleDisplay('es-AR');
 document.body.append(app);
 
 /** A small lit room: a pendant over the centre, downlights, a tilted track spot, a wall light and a floor lamp. */
