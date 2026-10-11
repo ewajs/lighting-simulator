@@ -65,12 +65,17 @@ Scene
  └─ View            camera bookmarks, exposure, render mode
 ```
 
-**Product** (catalog entry, supplied by the host): id, name, category,
-finish, power (W), luminous flux (lm), CCT (K), CRI, beam angle, mount
-type(s), dimensions, 3D model (glTF), photometry (IES LM-63), thumbnail.
-Categories are defined by the host's catalog, not by the library. The
-library only needs the **mount type** (recessed, pendant, track, wall,
-floor, table) to know where a product can go.
+**Product** comes from the host's catalog and has two halves:
+
+- **Simulation data**, which core needs: id, mount type (recessed, pendant,
+  track, wall, floor, table), power (W), luminous flux (lm), CCT (K), beam
+  angle, pendant suspension. Later also photometry (IES LM-63) and a 3D
+  model (glTF).
+- **Display data**, which only the UI or host needs: name, category, finish,
+  CRI, dimensions, thumbnail. Categories are defined by the host, not by
+  the library.
+
+Core's `Product` type covers only the first half ([ADR 0018](./decisions/0018-core-api-shape.md)).
 
 **Units**: SI throughout. Metres for geometry, lumens / candelas / lux for
 light, kelvin for CCT. One three.js world unit = 1 m, Y-up.
