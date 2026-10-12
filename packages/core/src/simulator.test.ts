@@ -92,4 +92,23 @@ describe('Simulator', () => {
   it('has no photometry without a provider', () => {
     expect(create().photometry('test-recessed')).toBeUndefined();
   });
+
+  it('logs each undo step once, at debug level', () => {
+    const logger = { debug: vi.fn(), info: vi.fn(), warn: vi.fn(), error: vi.fn() };
+    const sim = new Simulator({ catalog, logger });
+    const id = sim.addLuminaire('test-recessed');
+    // One slider drag: three edits, one undo step, one line.
+    for (const dimming of [0.8, 0.6, 0.4])
+      sim.updateLuminaire(id, { dimming }, { mergeKey: 'drag' });
+    sim.undo();
+    const lines = logger.debug.mock.calls.map(([message]) => message as string);
+    expect(lines).toEqual([
+      expect.stringMatching(/^\[scene\] Started/),
+      '[scene] Add',
+      '[scene] Update',
+      '[scene] Undo: 1 steps back, 1 forward',
+    ]);
+    expect(logger.debug).toHaveBeenCalledWith('[scene] Update', { id, dimming: 0.8 });
+    expect(logger.warn).not.toHaveBeenCalled();
+  });
 });

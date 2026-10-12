@@ -21,7 +21,7 @@ async function openDemo(page: Page): Promise<string[]> {
   const problems: string[] = [];
   page.on('pageerror', (error) => problems.push(error.message));
   page.on('console', (message) => {
-    if (message.type() === 'error' || /Photometry/.test(message.text())) {
+    if (message.type() === 'error' || /photometry/i.test(message.text())) {
       problems.push(message.text());
     }
   });

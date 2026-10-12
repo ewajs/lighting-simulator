@@ -1,4 +1,4 @@
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 
 /** Project-level options for the e2e suite (set in playwright.config.ts). */
 export interface SuiteOptions {
@@ -9,9 +9,26 @@ export interface SuiteOptions {
   readonly disableWebGPU: boolean;
 }
 
-export const test = base.extend<SuiteOptions>({
+/** Per-test fixtures. */
+export interface TestFixtures {
+  /**
+   * Console warnings and errors this test causes on purpose. Every test fails
+   * on any other page error, console error or console warning, so problems the
+   * test didn't look for still surface.
+   */
+  readonly allowConsole: RegExp[];
+}
+
+/** Messages any page may print: three.js saying it fell back to WebGL 2. */
+const ALWAYS_ALLOWED = [/WebGPU is not available/, /Failed to create WebGPU Context Provider/];
+
+export const test = base.extend<SuiteOptions & TestFixtures>({
   disableWebGPU: [false, { option: true }],
-  page: async ({ page, disableWebGPU }, use) => {
+  // eslint-disable-next-line no-empty-pattern -- Playwright requires the destructuring form.
+  allowConsole: async ({}, use) => {
+    await use([]);
+  },
+  page: async ({ page, disableWebGPU, allowConsole }, use) => {
     if (disableWebGPU) {
       await page.addInitScript(() => {
         Object.defineProperty(Navigator.prototype, 'gpu', {
@@ -20,7 +37,20 @@ export const test = base.extend<SuiteOptions>({
         });
       });
     }
+    const problems: string[] = [];
+    page.on('pageerror', (error) => problems.push(`page error: ${error.message}`));
+    page.on('console', (message) => {
+      const type = message.type();
+      if (type === 'error' || type === 'warning') problems.push(`${type}: ${message.text()}`);
+    });
+
     await use(page);
+
+    const allowed = [...ALWAYS_ALLOWED, ...allowConsole];
+    const unexpected = problems.filter(
+      (problem) => !allowed.some((pattern) => pattern.test(problem)),
+    );
+    expect(unexpected, 'unexpected page errors or console warnings').toEqual([]);
   },
 });
 

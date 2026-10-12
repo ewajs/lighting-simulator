@@ -1,5 +1,6 @@
 import * as THREE from 'three/webgpu';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import type { Logger } from '../logger';
 
 /**
  * Anything bigger is almost certainly not in metres (a model in centimetres
@@ -15,14 +16,14 @@ export const MAX_MODEL_SIZE_M = 6;
 export class FixtureModels {
   readonly #loader = new GLTFLoader();
   readonly #onReady: () => void;
-  readonly #warn: (message: string) => void;
+  readonly #logger: Logger;
   /** Parsed templates by file, or null for a file that couldn't be used. */
   readonly #templates = new Map<ArrayBuffer, THREE.Object3D | null>();
   #disposed = false;
 
-  constructor(onReady: () => void, warn: (message: string) => void) {
+  constructor(onReady: () => void, logger: Logger) {
     this.#onReady = onReady;
-    this.#warn = warn;
+    this.#logger = logger;
   }
 
   /** The template for a product's model file, once parsed. The first call starts parsing. */
@@ -51,9 +52,10 @@ export class FixtureModels {
         throw new Error(`it is ${largest.toFixed(1)} m across; models must be in metres`);
       }
       template = scene;
+      this.#logger.debug(`[models] "${productId}" parsed: ${describe(scene, size)}`);
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error);
-      this.#warn(`Model for product "${productId}" can't be used, using a placeholder: ${reason}`);
+      this.#logger.warn(`[models] "${productId}" can't be used, using a placeholder: ${reason}`);
     }
     if (this.#disposed) {
       template?.traverse(disposeMesh);
@@ -69,4 +71,23 @@ function disposeMesh(object: THREE.Object3D): void {
   const mesh = object as THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>;
   mesh.geometry.dispose();
   for (const material of [mesh.material].flat()) material.dispose();
+}
+
+/** Size and the named parts found (ADR 0043), e.g. for the log. */
+function describe(scene: THREE.Object3D, size: THREE.Vector3): string {
+  const names: string[] = [];
+  const emissive = new Set<string>();
+  scene.traverse((object) => {
+    names.push(object.name);
+    if (object instanceof THREE.Mesh) {
+      const materials = [object.material as THREE.Material | THREE.Material[]].flat();
+      for (const material of materials) {
+        if (material.name.startsWith('emissive')) emissive.add(material.uuid);
+      }
+    }
+  });
+  const has = (name: string) => (names.includes(name) ? name : `no ${name}`);
+  const cords = names.filter((name) => name.startsWith('cord')).length;
+  const metres = [size.x, size.y, size.z].map((value) => value.toFixed(2)).join(' × ');
+  return `${metres} m; ${has('light')}, ${has('head')}, ${cords} cord anchors, ${emissive.size} emissive materials`;
 }

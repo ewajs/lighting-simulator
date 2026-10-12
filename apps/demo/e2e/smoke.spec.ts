@@ -76,7 +76,7 @@ test('IES products load their real photometry', async ({ page }) => {
   });
   const photometryWarnings: string[] = [];
   page.on('console', (message) => {
-    if (message.type() === 'warning' && /Photometry/.test(message.text())) {
+    if (message.type() === 'warning' && /photometry/i.test(message.text())) {
       photometryWarnings.push(message.text());
     }
   });
@@ -348,4 +348,29 @@ test('renders with the backend this project targets', async ({ page, browserName
   // WebKit (Safari) has no WebGPU here, so it falls back like the chrome-webgl2 project.
   const expected = testInfo.project.name === 'chrome' ? 'WebGPU' : 'WebGL 2';
   expect(backend, `${testInfo.project.name} on ${browserName}`).toBe(expected);
+});
+
+test('?debug logs each step and shows diagnostics', async ({ page }) => {
+  const debugLines: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'debug') debugLines.push(message.text());
+  });
+  await page.goto('/?debug');
+  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await expect(page.locator('lxs-viewport .diagnostics')).toContainText(/\d+ fps/);
+  await expect(page.locator('lxs-viewport .diagnostics')).toContainText('5 luces');
+  await expect.poll(() => debugLines).toContainEqual(expect.stringMatching(/^\[scene\] Started/));
+  await expect
+    .poll(() => debugLines)
+    .toContainEqual(expect.stringMatching(/^\[photometry\] "ies-track-spot" in \d+ ms: Palco/));
+});
+
+test('without ?debug, nothing extra is shown', async ({ page }) => {
+  const debugLines: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'debug') debugLines.push(message.text());
+  });
+  await openDemo(page);
+  await expect(page.locator('lxs-viewport .diagnostics')).toHaveCount(0);
+  expect(debugLines).toEqual([]);
 });

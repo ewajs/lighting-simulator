@@ -439,6 +439,18 @@
   <source>Magnet</source>
   <target>Imán</target>
 </trans-unit>
+<trans-unit id="sf8b97d8a1eca105a">
+  <source><x id="0" equiv-text="${Math.round(fps)}"/> fps</source>
+  <target><x id="0" equiv-text="${Math.round(fps)}"/> fps</target>
+</trans-unit>
+<trans-unit id="s29b9f5668df6c3d5">
+  <source><x id="0" equiv-text="${luminaires}"/> lights, <x id="1" equiv-text="${shadowCasters}"/> with shadows</source>
+  <target><x id="0" equiv-text="${luminaires}"/> luces, <x id="1" equiv-text="${shadowCasters}"/> con sombras</target>
+</trans-unit>
+<trans-unit id="s0b469a141eba61b2">
+  <source><x id="0" equiv-text="${drawCalls}"/> draw calls, <x id="1" equiv-text="${thousands}"/>k triangles</source>
+  <target><x id="0" equiv-text="${drawCalls}"/> llamadas de dibujo, <x id="1" equiv-text="${thousands}"/> mil triángulos</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

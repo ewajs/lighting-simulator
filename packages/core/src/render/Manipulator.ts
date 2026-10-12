@@ -69,6 +69,8 @@ export class Manipulator {
   readonly #moveStartListeners = new Set<(start: MoveStartEvent) => void>();
   #highlighted: readonly string[] = [];
   #mode: HandleMode = 'none';
+  /** Whether a drag is in progress, so its end is logged once. */
+  #dragging = false;
   /** Whether drags snap (ADR 0041). Holding Alt during a drag moves freely. */
   snapping = true;
 
@@ -156,6 +158,8 @@ export class Manipulator {
     this.#moveHandle.setActive(target?.kind === 'move-axis' ? target.axis : null);
     this.#aimHandle.setActive(target?.kind === 'aim' ? target.part : null);
     if (target) return;
+    if (this.#dragging) this.#options.simulator.logger.debug('[drag] Ended');
+    this.#dragging = false;
     this.#guides.show([], 0, this.#options.simulator.scene.room);
     this.#showDimensions([]);
   }
@@ -193,6 +197,11 @@ export class Manipulator {
       return undefined;
     }
     this.hover(target);
+    this.#dragging = true;
+    simulator.logger.debug(`[drag] ${describeTarget(target)}`, {
+      highlighted: this.#highlighted.length,
+      snapping: this.snapping,
+    });
     // Where the drag is measured: the grabbed luminaire, or the handle's centre.
     const anchorId = target.kind === 'luminaire' ? target.luminaireId : undefined;
     return (event) => {
@@ -251,5 +260,17 @@ export class Manipulator {
 
   #rayAt(event: PointerEvent): Ray {
     return this.#options.raycasterAt(event.clientX, event.clientY).ray;
+  }
+}
+
+/** What a drag grabbed, for the log. */
+function describeTarget(target: PressTarget): string {
+  switch (target.kind) {
+    case 'luminaire':
+      return `Moving luminaire ${target.luminaireId}`;
+    case 'move-axis':
+      return `Sliding along ${target.axis}`;
+    case 'aim':
+      return target.part === 'point' ? 'Aiming at a point' : 'Turning pan';
   }
 }

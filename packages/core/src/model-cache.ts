@@ -3,6 +3,7 @@
 // undefined until the file arrives and are notified when it does. Core only
 // checks the bytes here; the renderer parses them. See ADR 0043.
 
+import type { Logger } from './logger';
 import type { ModelProvider } from './types';
 
 /** Called when a product's model has loaded. */
@@ -19,15 +20,15 @@ export function isGlb(bytes: ArrayBuffer): boolean {
 /** Lazily loaded model files per product. Used by Simulator. */
 export class ModelCache {
   readonly #provider: ModelProvider | undefined;
-  readonly #warn: (message: string) => void;
+  readonly #logger: Logger;
   /** Settled lookups: the file, or null for no model or a failed load. */
   readonly #settled = new Map<string, ArrayBuffer | null>();
   readonly #pending = new Set<string>();
   readonly #listeners = new Set<ModelListener>();
 
-  constructor(provider: ModelProvider | undefined, warn: (message: string) => void) {
+  constructor(provider: ModelProvider | undefined, logger: Logger) {
     this.#provider = provider;
-    this.#warn = warn;
+    this.#logger = logger;
   }
 
   /** The product's model file if loaded. The first call starts loading it. */
@@ -46,14 +47,21 @@ export class ModelCache {
 
   async #load(productId: string): Promise<void> {
     this.#pending.add(productId);
+    const started = performance.now();
     let model: ArrayBuffer | null = null;
     try {
       const bytes = await this.#provider!.load(productId);
       if (bytes !== undefined && !isGlb(bytes)) throw new Error('not a binary glTF (.glb) file');
       model = bytes ?? null;
+      const ms = Math.round(performance.now() - started);
+      this.#logger.debug(
+        model
+          ? `[models] "${productId}": ${model.byteLength} bytes in ${ms} ms`
+          : `[models] "${productId}" has no model`,
+      );
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error);
-      this.#warn(`Model for product "${productId}" failed to load, using a placeholder: ${reason}`);
+      this.#logger.warn(`[models] "${productId}" failed to load, using a placeholder: ${reason}`);
     }
     this.#pending.delete(productId);
     this.#settled.set(productId, model);
