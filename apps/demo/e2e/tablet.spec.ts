@@ -20,8 +20,8 @@ const selectedCount = (page: Page) => page.getByText(/^Seleccionadas: \d+$/);
 
 test.describe('landscape tablet (1024 × 768, touch)', () => {
   test.use({ viewport: { width: 1024, height: 768 }, hasTouch: true });
-  const PENDANT = { x: 385, y: 363 };
-  const FLOOR_LAMP = { x: 167, y: 405 };
+  const PENDANT = { x: 387, y: 340 };
+  const WALL_LIGHT = { x: 589, y: 419 };
 
   test('starts with the library collapsed and touch-sized controls', async ({ page }) => {
     await openDemo(page);
@@ -38,7 +38,7 @@ test.describe('landscape tablet (1024 × 768, touch)', () => {
     await openDemo(page);
     await page.touchscreen.tap(PENDANT.x, PENDANT.y);
     await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
-    await longPress(page, FLOOR_LAMP.x, FLOOR_LAMP.y);
+    await longPress(page, WALL_LIGHT.x, WALL_LIGHT.y);
     await expect(selectedCount(page)).toHaveText('Seleccionadas: 2');
     await expect(page.getByText('2 luminarias seleccionadas')).toBeVisible();
   });
@@ -53,11 +53,13 @@ test.describe('landscape tablet (1024 × 768, touch)', () => {
     await openDemo(page);
     await page.getByRole('tab', { name: 'Catálogo' }).tap();
     await page.getByRole('button', { name: /Lámpara de mesa 5 W/ }).tap();
-    await expect(page.getByText('Luminarias: 8')).toBeVisible();
+    await expect(page.getByText('Luminarias: 6')).toBeVisible();
     await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
 
     await page.getByRole('tab', { name: 'Escena' }).tap();
-    const row = page.getByRole('option', { name: /Colgante 48 W 1/ });
+    const row = page.getByRole('option', {
+      name: /Colgante lineal directo\/indirecto 47 W \(IES\) 1/,
+    });
     const box = (await row.boundingBox())!;
     await longPress(page, box.x + box.width / 2, box.y + box.height / 2);
     await expect(row).toHaveAttribute('aria-selected', 'true');
@@ -67,7 +69,7 @@ test.describe('landscape tablet (1024 × 768, touch)', () => {
 
 test.describe('portrait tablet (820 × 1180, touch)', () => {
   test.use({ viewport: { width: 820, height: 1180 }, hasTouch: true });
-  const PENDANT = { x: 434, y: 564 };
+  const PENDANT = { x: 434, y: 536 };
   const EMPTY_SPACE = { x: 420, y: 250 };
 
   test('the inspector sheet starts folded, opens on selection and folds when cleared', async ({

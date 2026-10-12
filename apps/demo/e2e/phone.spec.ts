@@ -2,7 +2,7 @@ import { expect, test, type Page } from './fixtures';
 
 // Portrait phone (390 × 844) with touch. Screen points are for the default view.
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
-const PENDANT = { x: 195, y: 399 };
+const PENDANT = { x: 195, y: 387 };
 const EMPTY_SPACE = { x: 195, y: 150 };
 
 async function openDemo(page: Page): Promise<void> {
@@ -39,9 +39,11 @@ test('tabs open sheets; the active tab, ✕ and the size toggle behave', async (
 test('adding from the catalog switches to the new luminaire’s properties', async ({ page }) => {
   await openDemo(page);
   await page.getByRole('tab', { name: 'Catálogo' }).tap();
-  await page.getByRole('button', { name: /Colgante 48 W/ }).tap();
+  await page.getByRole('button', { name: /Colgante lineal/ }).tap();
   await expect(sheetHeading(page, 'Propiedades')).toBeVisible();
-  await expect(page.getByText('Colgante 48 W 2', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Colgante lineal directo/indirecto 47 W (IES) 2', { exact: true }),
+  ).toBeVisible();
   await expect(page.getByRole('slider', { name: 'Atenuación' })).toBeVisible();
   await expect(page).toHaveScreenshot('phone-properties.png');
 });
@@ -52,7 +54,9 @@ test('tapping a fixture opens its properties; tapping empty space closes them', 
   await openDemo(page);
   await page.touchscreen.tap(PENDANT.x, PENDANT.y);
   await expect(sheetHeading(page, 'Propiedades')).toBeVisible();
-  await expect(page.getByText('Colgante 48 W 1', { exact: true })).toBeVisible();
+  await expect(
+    page.getByText('Colgante lineal directo/indirecto 47 W (IES) 1', { exact: true }),
+  ).toBeVisible();
   await page.touchscreen.tap(EMPTY_SPACE.x, EMPTY_SPACE.y);
   await expect(page.locator('lxs-sheet')).toHaveCount(0);
 });
@@ -69,7 +73,7 @@ test('the ⋯ menu switches language and theme', async ({ page }) => {
 
 test.describe('landscape phone (844 × 390)', () => {
   test.use({ viewport: { width: 844, height: 390 }, hasTouch: true, isMobile: true });
-  const PENDANT = { x: 458, y: 204 };
+  const PENDANT = { x: 458, y: 194 };
 
   test('the tab bar becomes a left rail', async ({ page }) => {
     await openDemo(page);

@@ -39,3 +39,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0033 | [IES support scope](0033-ies-support-scope.md) | Accepted |
 | 0034 | [Photometry provider: async IES text, cached in core](0034-photometry-provider.md) | Accepted |
 | 0035 | [Sample IES files from real manufacturers](0035-sample-ies-sources.md) | Accepted |
+| 0036 | [Full-sphere IES light](0036-ies-light.md) | Accepted |
