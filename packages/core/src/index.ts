@@ -1,6 +1,7 @@
 export { Simulator } from './simulator';
 export type { EditOptions, SceneListener, SimulatorOptions } from './simulator';
 export type { PhotometryListener } from './photometry/cache';
+export type { ModelListener } from './model-cache';
 export { Viewport } from './render/Viewport';
 export { LONG_PRESS_MS } from './render/PointerGestures';
 export type { Measurement, PickEvent, ScreenshotOptions, ViewportOptions } from './render/Viewport';
@@ -19,6 +20,7 @@ export type {
   Catalog,
   FloorPoint,
   Luminaire,
+  ModelProvider,
   MountType,
   Photometry,
   PhotometryProvider,

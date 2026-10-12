@@ -69,8 +69,8 @@ Scene
 
 - **Simulation data**, which core needs: id, mount type (recessed, pendant,
   track, wall, floor, table), power (W), luminous flux (lm), CCT (K), beam
-  angle, pendant suspension. Later also photometry (IES LM-63) and a 3D
-  model (glTF).
+  angle, pendant suspension. Photometry (IES LM-63) and a 3D model (glTF)
+  come through providers, keyed by product id.
 - **Display data**, which only the UI or host needs: name, category, finish,
   CRI, dimensions, thumbnail. Categories are defined by the host, not by
   the library.
@@ -246,6 +246,7 @@ needs it:
 |---|---|---|
 | Catalog | products and categories | port (0.3 / 0.5) |
 | Photometry | IES files for a product ([ADR 0034](./decisions/0034-photometry-provider.md)) | M1 |
+| Model | a product's 3D model, binary glTF ([ADR 0043](./decisions/0043-fixture-models.md)) | M3 |
 | Storage | save / load / share scenes | M4 |
 
 **Data flow** is one-way. UI or host calls core operations → core updates

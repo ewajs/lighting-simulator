@@ -124,3 +124,14 @@ export interface PhotometryProvider {
    */
   load(productId: string): Promise<string | undefined>;
 }
+
+/**
+ * Supplies products' 3D models, e.g. from a backend's download links.
+ * Injected by the host; core never fetches anything itself. Models follow the
+ * conventions in ADR 0043: binary glTF, metres, Y up, origin at the mounting
+ * point, front towards +Z.
+ */
+export interface ModelProvider {
+  /** The product's model as a binary glTF (.glb) file, or undefined if it has none. */
+  load(productId: string): Promise<ArrayBuffer | undefined>;
+}

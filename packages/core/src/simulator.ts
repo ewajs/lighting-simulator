@@ -1,4 +1,5 @@
 import * as history from './history';
+import { ModelCache, type ModelListener } from './model-cache';
 import { PhotometryCache, type PhotometryListener } from './photometry/cache';
 import {
   addLuminaire,
@@ -13,6 +14,7 @@ import { assertRoom, DEFAULT_ROOM, resizeRoom, setSurface, type RoomSize } from 
 import type {
   Catalog,
   FloorPoint,
+  ModelProvider,
   Photometry,
   PhotometryProvider,
   Product,
@@ -43,6 +45,11 @@ export interface SimulatorOptions {
    * no file for, light is estimated from the product's flux and beam angle.
    */
   readonly photometry?: PhotometryProvider;
+  /**
+   * 3D models (binary glTF) for products that have them. Without it, or for
+   * products it has no model for, luminaires are drawn as simple placeholders.
+   */
+  readonly models?: ModelProvider;
 }
 
 /**
@@ -57,16 +64,18 @@ export interface SimulatorOptions {
 export class Simulator {
   readonly #catalog: Catalog;
   readonly #photometry: PhotometryCache;
+  readonly #models: ModelCache;
   readonly #listeners = new Set<SceneListener>();
   #scene: Scene;
   #history = history.emptyHistory<Scene>();
 
-  constructor({ catalog, scene, photometry }: SimulatorOptions) {
+  constructor({ catalog, scene, photometry, models }: SimulatorOptions) {
     const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [] };
     assertRoom(initial.room);
     initial.luminaires.forEach(assertLuminaire);
     this.#catalog = catalog;
     this.#photometry = new PhotometryCache(photometry, (message) => console.warn(message));
+    this.#models = new ModelCache(models, (message) => console.warn(message));
     this.#scene = initial;
   }
 
@@ -88,6 +97,21 @@ export class Simulator {
   /** Calls `listener` when a product's photometry loads. Returns an unsubscribe function. */
   onPhotometry(listener: PhotometryListener): () => void {
     return this.#photometry.subscribe(listener);
+  }
+
+  /**
+   * The product's 3D model file (binary glTF), or undefined while it loads or
+   * if it has none. The first call starts loading it; `onModel` reports when it
+   * arrives. A file that fails to load or isn't a .glb is reported with
+   * `console.warn` and treated as missing.
+   */
+  model(productId: string): ArrayBuffer | undefined {
+    return this.#models.get(productId);
+  }
+
+  /** Calls `listener` when a product's model loads. Returns an unsubscribe function. */
+  onModel(listener: ModelListener): () => void {
+    return this.#models.subscribe(listener);
   }
 
   /** Current scene snapshot. Never mutate it; it is replaced on every change. */
