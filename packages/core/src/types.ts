@@ -110,6 +110,7 @@ export interface Photometry {
 
 /** Synchronous product lookup supplied by the host. */
 export interface Catalog {
+  /** The product with this id, or undefined if the catalog doesn't have it. */
   get(productId: string): Product | undefined;
 }
 

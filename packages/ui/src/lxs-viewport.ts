@@ -16,6 +16,9 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { formatFixed } from './format';
 import { PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
 
+/** How often the diagnostics overlay refreshes, in ms. */
+const STATS_INTERVAL_MS = 500;
+
 /**
  * The 3D viewport: wraps core's Viewport (ADR 0019). It highlights what it is
  * given and reports clicks as `lxs-pick` events; it keeps no selection itself.
@@ -27,9 +30,6 @@ import { PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
  *   MoveStartEvent: `{ luminaireId, event }`. The drag itself edits the Simulator.
  * @fires lxs-drop-product - a catalog card was dropped: `detail: { productId, at }`.
  */
-/** How often the diagnostics overlay refreshes, in ms. */
-const STATS_INTERVAL_MS = 500;
-
 @customElement('lxs-viewport')
 @localized()
 export class LxsViewport extends LitElement {

@@ -20,7 +20,8 @@
     "test:e2e": "playwright test -c apps/demo",
     "i18n:extract": "npm run i18n:extract -w packages/ui",
     "i18n:build": "npm run i18n:build -w packages/ui",
-    "i18n:check": "npm run i18n:check -w packages/ui"
+    "i18n:check": "npm run i18n:check -w packages/ui",
+    "docs": "typedoc"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -29,6 +30,7 @@
     "eslint": "10.12.0",
     "eslint-config-prettier": "10.1.8",
     "prettier": "3.9.10",
+    "typedoc": "0.28.20",
     "typescript": "6.0.3",
     "typescript-eslint": "8.71.1",
     "vite": "8.3.4",

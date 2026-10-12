@@ -4,11 +4,13 @@
 
 import type { Catalog, MountType, Scene } from '@luxstudio/core';
 
+/** A catalog section, e.g. "Downlights". Defined by the host; `label` is in the active language. */
 export interface CatalogCategory {
   readonly id: string;
   readonly label: string;
 }
 
+/** How a product appears in the catalog: its name, section and thumbnail (ADR 0024). */
 export interface CatalogItem {
   /** Id of the product in core's Catalog. */
   readonly productId: string;

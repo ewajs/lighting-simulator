@@ -2,8 +2,8 @@
 
 Status: **Draft v0.3** · Last updated: 2026-10-11
 
-Working rules are in [CLAUDE.md](../CLAUDE.md), the reasoning behind
-decisions is in [decisions/](./decisions/), and the delivery order is in
+Working rules are in [CLAUDE.md](https://github.com/ewajs/lighting-simulator/blob/master/CLAUDE.md), the reasoning behind
+decisions is in [decisions/](./decisions/README.md), and the delivery order is in
 [ROADMAP.md](./ROADMAP.md). This document describes **what** we are
 building.
 
@@ -225,7 +225,7 @@ Key interaction rules:
 
 ## 6. Architecture
 
-Structure and rules are in [CLAUDE.md](../CLAUDE.md). In short:
+Structure and rules are in [CLAUDE.md](https://github.com/ewajs/lighting-simulator/blob/master/CLAUDE.md). In short:
 
 - **`@luxstudio/core`** (TypeScript, depends on three.js): scene model
   and its operations, undo/redo history, photometry (IES parsing,

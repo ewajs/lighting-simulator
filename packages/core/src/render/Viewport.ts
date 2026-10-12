@@ -37,7 +37,9 @@ interface PendingCapture {
   readonly reject: (error: unknown) => void;
 }
 
+/** What a Viewport is created with. */
 export interface ViewportOptions {
+  /** The scene to draw, and where edits from dragging go. */
   readonly simulator: Simulator;
   /** Element the canvas is added to. The viewport fills it and follows its size. */
   readonly container: HTMLElement;
@@ -223,10 +225,12 @@ export class Viewport {
       : 'WebGL 2';
   }
 
+  /** How surfaces are drawn: `realistic` colours, or neutral `clay` that shows light only. */
   get renderMode(): RenderMode {
     return this.#renderMode;
   }
 
+  /** Switches the render mode and redraws. */
   set renderMode(mode: RenderMode) {
     this.#renderMode = mode;
     this.#sync(this.#simulator.scene, undefined);
@@ -237,6 +241,7 @@ export class Viewport {
     return this.#exposureEv;
   }
 
+  /** Sets the user exposure, in EV stops. */
   set exposureEv(ev: number) {
     this.#exposureEv = ev;
     this.#renderer.toneMappingExposure = toneMappingExposure(ev);
@@ -317,6 +322,7 @@ export class Viewport {
     return this.#manipulator.mode;
   }
 
+  /** Switches the handle shown on the highlighted luminaires. */
   set handle(mode: HandleMode) {
     this.#manipulator.mode = mode;
   }
@@ -330,6 +336,7 @@ export class Viewport {
     return this.#manipulator.snapping;
   }
 
+  /** Switches snapping for the next drags. */
   set snapping(on: boolean) {
     this.#manipulator.snapping = on;
   }
