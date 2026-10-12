@@ -1,16 +1,23 @@
 // Direct manipulation in the viewport: the move and aim handles on the
 // highlighted luminaires, what a press lands on, and the drags that follow.
-// Kept apart from Viewport so that one stays about drawing (ADRs 0038–0041).
+// Kept apart from Viewport so that one stays about drawing (ADRs 0038–0042).
 
 import * as THREE from 'three/webgpu';
 import { AimPointDrag, beamHit, isAimable, PanDrag } from '../aim';
 import { LuminaireDrag } from '../drag';
+import {
+  groupDimensions,
+  luminaireDimensions,
+  type Dimension,
+  type MeasuredLuminaire,
+} from '../measure';
 import { AxisDrag, groupAxes, groupCenter } from '../move-handle';
 import type { Ray } from '../placement';
 import type { Simulator } from '../simulator';
 import type { Guide, SnapOptions } from '../snap';
 import type { Vec3 } from '../types';
 import { AimHandle } from './AimHandle';
+import { DimensionLines } from './DimensionLines';
 import { MoveHandle } from './MoveHandle';
 import { worldPerPixel } from './overlay';
 import type { PressTarget } from './PointerGestures';
@@ -57,6 +64,8 @@ export class Manipulator {
   readonly #moveHandle = new MoveHandle();
   readonly #aimHandle = new AimHandle();
   readonly #guides = new SnapGuides();
+  readonly #dimensionLines = new DimensionLines();
+  #dimensions: readonly Dimension[] = [];
   readonly #moveStartListeners = new Set<(start: MoveStartEvent) => void>();
   #highlighted: readonly string[] = [];
   #mode: HandleMode = 'none';
@@ -65,7 +74,17 @@ export class Manipulator {
 
   constructor(options: ManipulatorOptions) {
     this.#options = options;
-    this.group.add(this.#moveHandle.group, this.#aimHandle.group, this.#guides.group);
+    this.group.add(
+      this.#moveHandle.group,
+      this.#aimHandle.group,
+      this.#guides.group,
+      this.#dimensionLines.object,
+    );
+  }
+
+  /** Distances from what is being moved to the walls and floor; empty when nothing is (ADR 0042). */
+  get dimensions(): readonly Dimension[] {
+    return this.#dimensions;
   }
 
   get mode(): HandleMode {
@@ -131,12 +150,14 @@ export class Manipulator {
 
   /**
    * Highlights the handle part under the mouse or being dragged. Null clears
-   * it, and the snap guides: it's also called when a drag ends.
+   * it, the snap guides and the dimensions: it's also called when a drag ends.
    */
   hover(target: PressTarget | null): void {
     this.#moveHandle.setActive(target?.kind === 'move-axis' ? target.axis : null);
     this.#aimHandle.setActive(target?.kind === 'aim' ? target.part : null);
-    if (!target) this.#guides.show([], 0, this.#options.simulator.scene.room);
+    if (target) return;
+    this.#guides.show([], 0, this.#options.simulator.scene.room);
+    this.#showDimensions([]);
   }
 
   /**
@@ -180,7 +201,30 @@ export class Manipulator {
         this.snapping && !event.altKey && anchor ? { toleranceM: this.#toleranceAt(anchor) } : null;
       const guides = drag.moveTo(this.#rayAt(event), snap) ?? [];
       this.#guides.show(guides, this.#anchor(anchorId)?.y ?? 0, simulator.scene.room);
+      this.#showDimensions(this.#measure(target));
     };
+  }
+
+  /** What a drag measures: the grabbed luminaire, or the group moved by an arrow. Aiming measures nothing. */
+  #measure(target: PressTarget): Dimension[] {
+    const { scene, catalog } = this.#options.simulator;
+    const ids = target.kind === 'luminaire' ? [target.luminaireId] : this.#highlighted;
+    const measured: MeasuredLuminaire[] = [];
+    for (const { id, productId, position } of scene.luminaires) {
+      const mount = ids.includes(id) ? catalog.get(productId)?.mount : undefined;
+      if (mount) measured.push({ position, mount });
+    }
+    if (target.kind === 'luminaire' && measured[0]) {
+      return luminaireDimensions(measured[0], scene.room, false);
+    }
+    if (target.kind === 'move-axis')
+      return groupDimensions(measured, scene.room, target.axis === 'y');
+    return [];
+  }
+
+  #showDimensions(dimensions: readonly Dimension[]): void {
+    this.#dimensions = dimensions;
+    this.#dimensionLines.show(dimensions);
   }
 
   /** The grabbed luminaire's position, or the centre of the highlighted ones. */
@@ -202,6 +246,7 @@ export class Manipulator {
     this.#moveHandle.dispose();
     this.#aimHandle.dispose();
     this.#guides.dispose();
+    this.#dimensionLines.dispose();
   }
 
   #rayAt(event: PointerEvent): Ray {

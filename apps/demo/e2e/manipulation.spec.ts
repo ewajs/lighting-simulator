@@ -223,3 +223,44 @@ test('a dragged luminaire lines up with another, shown by a guide', async ({ pag
   await page.mouse.up();
   expect(await positionField(page, 'X')).toBe(-1.2);
 });
+
+const byValue = (a: number, b: number) => a - b;
+
+/** The distance labels shown while moving, as numbers, sorted. */
+async function distanceLabels(page: Page): Promise<number[]> {
+  const texts = await page.locator('lxs-viewport .measure').allInnerTexts();
+  return texts.map((text) => Number(text.replace(' m', '').replace(',', '.'))).sort(byValue);
+}
+
+test('moving shows distances to the walls, gone on release', async ({ page }) => {
+  const errors = await openDemo(page);
+  await page.mouse.move(PENDANT.x, PENDANT.y);
+  await page.mouse.down();
+  await page.mouse.move(PENDANT.x + 160, PENDANT.y, { steps: 10 });
+  await expect(page.locator('lxs-viewport .measure')).toHaveCount(2);
+  const during = await distanceLabels(page);
+  await expect(page).toHaveScreenshot('distances.png');
+  await page.mouse.up();
+  await expect(page.locator('lxs-viewport .measure')).toHaveCount(0);
+
+  // To the right wall (x = 2.5) and the back wall (z = −2).
+  const x = await positionField(page, 'X');
+  const z = await positionField(page, 'Z');
+  expect(during).toEqual([2.5 - x, z + 2].map((d) => Math.round(d * 100) / 100).sort(byValue));
+  expect(errors).toEqual([]);
+});
+
+test('a wall light shows its distance along the wall and its height', async ({ page }) => {
+  await openDemo(page);
+  await page.mouse.move(WALL_LIGHT.x, WALL_LIGHT.y);
+  await page.mouse.down();
+  await page.mouse.move(WALL_LIGHT.x - 40, WALL_LIGHT.y - 30, { steps: 10 });
+  await expect(page.locator('lxs-viewport .measure')).toHaveCount(2);
+  const during = await distanceLabels(page);
+  await page.mouse.up();
+
+  // On the right wall: to the front corner (z = 2), and down to the floor.
+  const height = await positionField(page, 'Altura');
+  const z = await positionField(page, 'Z');
+  expect(during).toEqual([2 - z, height].map((d) => Math.round(d * 100) / 100).sort(byValue));
+});

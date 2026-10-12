@@ -114,7 +114,9 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
   the ring ([ADR 0040](./decisions/0040-aim-handle.md)). Drags snap to a 10 cm
   grid and line up with other luminaires, and the ring turns in 15° steps.
   Alt or the magnet toggle moves freely
-  ([ADR 0041](./decisions/0041-snapping.md)).
+  ([ADR 0041](./decisions/0041-snapping.md)). While moving, dimension lines
+  show the distances to the walls and floor
+  ([ADR 0042](./decisions/0042-distances-while-moving.md)).
 - P0: Per-instance dimming and on/off.
 - P1: Array tool: grid placement (rows × cols, spacing) on the ceiling.
 - P1: Track systems with heads that snap along a rail.
