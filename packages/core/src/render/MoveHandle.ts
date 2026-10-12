@@ -1,7 +1,8 @@
 import * as THREE from 'three/webgpu';
-import { toneMappingExposure, uniform } from 'three/tsl';
+import { uniform } from 'three/tsl';
 import type { MoveAxis } from '../move-handle';
 import type { Vec3 } from '../types';
+import { overlayColor, worldPerPixel } from './overlay';
 
 // Sizes are in CSS px on screen: the handle is rescaled every frame so it
 // keeps the same size however far away it is.
@@ -92,12 +93,7 @@ export class MoveHandle {
   /** Keeps a constant size on screen. Call before each render. */
   update(camera: THREE.PerspectiveCamera, viewportHeightPx: number): void {
     if (!this.group.visible || viewportHeightPx === 0) return;
-    const forward = camera.getWorldDirection(new THREE.Vector3());
-    const depth = this.group.position.clone().sub(camera.position).dot(forward);
-    const worldPerPx =
-      (2 * Math.max(depth, camera.near) * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) /
-      viewportHeightPx;
-    this.group.scale.setScalar(worldPerPx);
+    this.group.scale.setScalar(worldPerPixel(camera, this.group.position, viewportHeightPx));
     this.group.updateMatrixWorld(true);
   }
 
@@ -111,9 +107,7 @@ export class MoveHandle {
   #arrow(axis: MoveAxis): Arrow {
     const color = uniform(new THREE.Color(AXIS_COLORS[axis]));
     const material = new THREE.MeshBasicNodeMaterial({ depthTest: false, depthWrite: false });
-    // The whole frame is exposed for real light levels; divide that back out so the colour
-    // reads as itself. The typings don't see the renderer reference as a float node.
-    material.colorNode = color.div(toneMappingExposure as unknown as THREE.Node<'float'>);
+    material.colorNode = overlayColor(color);
     const shaftLength = ARROW_LENGTH_PX - HEAD_LENGTH_PX;
     const shaft = this.#geometry(
       new THREE.CylinderGeometry(SHAFT_RADIUS_PX, SHAFT_RADIUS_PX, shaftLength, RADIAL_SEGMENTS),

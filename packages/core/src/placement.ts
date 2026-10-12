@@ -85,7 +85,7 @@ export function mountSurfaceHit(
 ): Vec3 | null {
   if (product.mount === 'wall') {
     const floor = horizontalHit(ray, 0);
-    return wallHit(ray, position, room) ?? (floor && { ...floor, y: position.y });
+    return wallHit(ray, room, position) ?? (floor && { ...floor, y: position.y });
   }
   return horizontalHit(ray, slideHeight(product.mount, position, room));
 }
@@ -138,13 +138,37 @@ function nearestWall(point: Vec3, walls: readonly Wall[]): Wall {
 }
 
 /**
- * The nearest point where the ray reaches a wall from inside the room, or the
- * wall of `position` from either side: a fixture on a near wall the camera has
- * cut away still slides under the pointer.
+ * The point on the room's surfaces the ray reaches first from inside: the
+ * floor, a wall or the ceiling, as the camera shows them (surfaces it has cut
+ * away are skipped). Null if it reaches none, e.g. passing beside the room.
  */
-function wallHit({ origin, direction }: Ray, position: Vec3, room: Room): Vec3 | null {
+export function roomSurfaceHit(ray: Ray, room: Room): Vec3 | null {
+  const { origin, direction } = ray;
+  const halfWidth = room.width / 2;
+  const halfDepth = room.depth / 2;
+  const insideFootprint = (point: Vec3) =>
+    Math.abs(point.x) <= halfWidth + EDGE_EPSILON && Math.abs(point.z) <= halfDepth + EDGE_EPSILON;
+  // Seen from inside, the floor is reached going down and the ceiling going up.
+  const candidates = [
+    wallHit(ray, room, null),
+    direction.y < 0 ? horizontalHit(ray, 0) : horizontalHit(ray, room.height),
+  ].filter((point): point is Vec3 => point !== null && insideFootprint(point));
+  const distance = (point: Vec3) =>
+    Math.hypot(point.x - origin.x, point.y - origin.y, point.z - origin.z);
+  return candidates.reduce<Vec3 | null>(
+    (best, point) => (best === null || distance(point) < distance(best) ? point : best),
+    null,
+  );
+}
+
+/**
+ * The nearest point where the ray reaches a wall from inside the room, or,
+ * given `position`, the wall nearest it from either side: a fixture on a near
+ * wall the camera has cut away still slides under the pointer.
+ */
+function wallHit({ origin, direction }: Ray, room: Room, position: Vec3 | null): Vec3 | null {
   const walls = wallsOf(room);
-  const own = nearestWall(position, walls);
+  const own = position && nearestWall(position, walls);
   let nearest: { t: number; point: Vec3 } | null = null;
   for (const wall of walls) {
     const { axis, at, inward } = wall;

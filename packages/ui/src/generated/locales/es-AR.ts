@@ -28,6 +28,7 @@
 's3044b819bfaea412': `Roble`,
 's3231d0dc6fe30d4a': `Profundidad`,
 's36234b9e971fd695': `Apertura del haz`,
+'s379c18aec5654894': `Mover`,
 's392f667420703599': `Próximamente`,
 's3ac6d6bc5baddf30': `Tema oscuro`,
 's3daa88e60196c5c5': `Mostrar propiedades`,
@@ -76,6 +77,7 @@
 's93670069199e8dda': `Tema claro`,
 's96baa1b0bc4d0eef': `Media altura`,
 's9e85800d3700e31c': `De riel`,
+'sa39bbc5d72ec92ed': `Herramienta de edición`,
 'sab4293ff8faeef8e': `Flujo luminoso`,
 'sad81e40380c383b0': `Modo de visualización`,
 'sb67f5c0accf1eb1d': `Piso`,
@@ -112,5 +114,6 @@
 'sfd43de85073c7122': `Flujo`,
 'sfd77270c3f54f664': `Emisión`,
 'sffdadf0a576fd802': `Altura`,
+'tool-aim': `Orientar`,
     };
   

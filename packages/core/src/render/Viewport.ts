@@ -1,8 +1,9 @@
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { AimPointDrag, beamHit, isAimable, PanDrag } from '../aim';
 import { LuminaireDrag } from '../drag';
 import { AxisDrag, groupAxes, groupCenter } from '../move-handle';
-import { constrainPosition, defaultPosition, mountSurfaceHit } from '../placement';
+import { constrainPosition, defaultPosition, mountSurfaceHit, type Ray } from '../placement';
 import type { Simulator } from '../simulator';
 import type { FloorPoint, Scene } from '../types';
 import {
@@ -12,6 +13,7 @@ import {
   viewPose,
   type ViewName,
 } from './lighting';
+import { AimHandle } from './AimHandle';
 import { IesLight, IesLightNode } from './IesLight';
 import { LuminaireMeshes } from './LuminaireMeshes';
 import { MoveHandle } from './MoveHandle';
@@ -40,8 +42,11 @@ export interface ViewportOptions {
   readonly container: HTMLElement;
 }
 
-/** Which handle the viewport shows on highlighted luminaires. */
-export type HandleMode = 'move' | 'none';
+/**
+ * Which handle the viewport shows on highlighted luminaires: arrows to move
+ * them, or the aim point and rotation ring for one aimable luminaire.
+ */
+export type HandleMode = 'move' | 'aim' | 'none';
 
 /** A click in the viewport. `luminaireId` is null when no fixture was hit. */
 export interface PickEvent {
@@ -97,6 +102,9 @@ export class Viewport {
   #exposureEv = 0;
   #highlighted: readonly string[] = [];
   readonly #moveHandle = new MoveHandle();
+  readonly #aimHandle = new AimHandle();
+  /** Both handles, hidden together for screenshots. */
+  readonly #handles = new THREE.Group();
   #handleMode: HandleMode = 'none';
   #transition: ((now: number) => void) | undefined;
   #gestures: PointerGestures | undefined;
@@ -115,7 +123,8 @@ export class Viewport {
     this.#controls.enableDamping = true;
     this.#controls.maxPolarAngle = Math.PI * 0.495; // Stay above the floor.
     this.#controls.maxDistance = 40;
-    this.#scene.add(this.#room.group, this.#luminaires.group, this.#moveHandle.group, this.#bounce);
+    this.#handles.add(this.#moveHandle.group, this.#aimHandle.group);
+    this.#scene.add(this.#room.group, this.#luminaires.group, this.#handles, this.#bounce);
   }
 
   /** Starts the renderer (WebGPU, or WebGL 2 as fallback) and begins drawing. */
@@ -133,7 +142,7 @@ export class Viewport {
     canvas.style.touchAction = 'none';
     this.#gestures = new PointerGestures(canvas, this.#container, this.#controls, {
       targetAt: (x, y) => this.#targetAt(x, y),
-      hover: (target) => this.#moveHandle.setActive(target?.kind === 'handle' ? target.axis : null),
+      hover: (target) => this.#setActiveHandlePart(target),
       pick: (event, longPress) => this.#pick(event, longPress),
       startDrag: (target, press, move) => this.#startDrag(target, press, move),
     });
@@ -152,7 +161,7 @@ export class Viewport {
     await renderer.setAnimationLoop((now) => {
       this.#transition?.(now);
       this.#controls.update();
-      this.#moveHandle.update(this.#camera, this.#container.clientHeight);
+      this.#updateHandleSizes();
       if (this.#captures.length > 0) this.#renderCaptures();
       else renderer.render(this.#scene, this.#camera);
     });
@@ -252,7 +261,9 @@ export class Viewport {
 
   /**
    * The handle shown on the highlighted luminaires. `'move'` shows arrows for
-   * the axes they can slide along (ADR 0039). Default `'none'`.
+   * the axes they can slide along (ADR 0039). `'aim'` shows the aim point and
+   * rotation ring, for a single recessed or track luminaire (ADR 0040).
+   * Default `'none'`.
    */
   get handle(): HandleMode {
     return this.#handleMode;
@@ -289,6 +300,7 @@ export class Viewport {
     this.#room.dispose();
     this.#luminaires.dispose();
     this.#moveHandle.dispose();
+    this.#aimHandle.dispose();
     this.#renderer.domElement.remove();
     void this.#renderer.dispose();
   }
@@ -303,8 +315,7 @@ export class Viewport {
     this.#captures = [];
     const source = this.#renderer.domElement;
     this.#luminaires.setOutlinesVisible(false);
-    const handleVisible = this.#moveHandle.group.visible;
-    this.#moveHandle.group.visible = false;
+    this.#handles.visible = false;
     this.#renderer.render(this.#scene, this.#camera);
     for (const { options, resolve, reject } of captures) {
       const copy = document.createElement('canvas');
@@ -326,7 +337,7 @@ export class Viewport {
       );
     }
     this.#luminaires.setOutlinesVisible(true);
-    this.#moveHandle.group.visible = handleVisible;
+    this.#handles.visible = true;
   }
 
   #sync(scene: Scene, previous: Scene | undefined): void {
@@ -338,17 +349,37 @@ export class Viewport {
     this.#showHandle();
   }
 
-  /** Puts the move handle on the highlighted luminaires, with the axes they share. */
+  /** Puts the handle of the current mode on the highlighted luminaires. */
   #showHandle(): void {
     const { luminaires, room } = this.#simulator.scene;
     const selected = luminaires.filter((l) => this.#highlighted.includes(l.id));
-    if (this.#handleMode !== 'move' || selected.length === 0) {
-      return this.#moveHandle.show(null, []);
+    const product = (id: string) => this.#simulator.catalog.get(id);
+
+    const moving = this.#handleMode === 'move' && selected.length > 0;
+    if (moving) this.#moveHandle.show(groupCenter(selected), groupAxes(selected, product, room));
+    else this.#moveHandle.show(null, []);
+
+    const aimed = this.#handleMode === 'aim' && selected.length === 1 ? selected[0] : undefined;
+    const aimedProduct = aimed && product(aimed.productId);
+    if (aimed && aimedProduct && isAimable(aimedProduct)) {
+      this.#aimHandle.show(aimed.position, beamHit(aimed.position, aimed.aim, room));
+    } else {
+      this.#aimHandle.show(null);
     }
-    const axes = groupAxes(selected, (id) => this.#simulator.catalog.get(id), room);
-    this.#moveHandle.show(groupCenter(selected), axes);
-    // Sized now, not on the next frame, so it can be grabbed straight away.
-    this.#moveHandle.update(this.#camera, this.#container.clientHeight);
+    // Sized now, not on the next frame, so they can be grabbed straight away.
+    this.#updateHandleSizes();
+  }
+
+  #updateHandleSizes(): void {
+    const heightPx = this.#container.clientHeight;
+    this.#moveHandle.update(this.#camera, heightPx);
+    this.#aimHandle.update(this.#camera, heightPx);
+  }
+
+  /** Highlights the handle part under the mouse or being dragged; null clears it. */
+  #setActiveHandlePart(target: PressTarget | null): void {
+    this.#moveHandle.setActive(target?.kind === 'move-axis' ? target.axis : null);
+    this.#aimHandle.setActive(target?.kind === 'aim' ? target.part : null);
   }
 
   #resize(): void {
@@ -405,8 +436,9 @@ export class Viewport {
 
   /**
    * Starts a drag. A fixture moves with the other highlighted ones if it is
-   * highlighted, otherwise alone (ADR 0038); a handle slides all highlighted
-   * ones along its axis (ADR 0039). Returns how to follow the pointer.
+   * highlighted, otherwise alone (ADR 0038). A move arrow slides all
+   * highlighted ones along its axis (ADR 0039). The aim point and ring turn
+   * the one highlighted luminaire (ADR 0040). Returns how to follow the pointer.
    */
   #startDrag(
     target: PressTarget,
@@ -414,26 +446,36 @@ export class Viewport {
     move: PointerEvent,
   ): ((move: PointerEvent) => void) | undefined {
     const grabbed = this.#raycasterAt(press.clientX, press.clientY).ray;
-    let drag: LuminaireDrag | AxisDrag;
-    if (target.kind === 'handle') {
+    const [highlighted] = this.#highlighted;
+    let drag: { moveTo(ray: Ray): void };
+    if (target.kind === 'move-axis') {
       drag = new AxisDrag(this.#simulator, this.#highlighted, target.axis, grabbed);
-      this.#moveHandle.setActive(target.axis);
-    } else {
+    } else if (target.kind === 'aim' && highlighted) {
+      drag =
+        target.part === 'point'
+          ? new AimPointDrag(this.#simulator, highlighted)
+          : new PanDrag(this.#simulator, highlighted, grabbed);
+    } else if (target.kind === 'luminaire') {
       const { luminaireId } = target;
       // Undo or delete may have removed it since the press.
       if (!this.#simulator.scene.luminaires.some((l) => l.id === luminaireId)) return undefined;
       const group = this.#highlighted.includes(luminaireId) ? this.#highlighted : [luminaireId];
       drag = new LuminaireDrag(this.#simulator, luminaireId, group, grabbed);
       this.#moveStartListeners.forEach((listener) => listener({ luminaireId, event: move }));
+    } else {
+      return undefined;
     }
+    this.#setActiveHandlePart(target);
     return (event) => drag.moveTo(this.#raycasterAt(event.clientX, event.clientY).ray);
   }
 
-  /** The handle arrow or fixture under a screen point. The handle is drawn on top, so it wins. */
+  /** The handle part or fixture under a screen point. Handles are drawn on top, so they win. */
   #targetAt(clientX: number, clientY: number): PressTarget | null {
     const raycaster = this.#raycasterAt(clientX, clientY);
     const axis = this.#moveHandle.axisAt(raycaster);
-    if (axis) return { kind: 'handle', axis };
+    if (axis) return { kind: 'move-axis', axis };
+    const part = this.#aimHandle.partAt(raycaster);
+    if (part) return { kind: 'aim', part };
     const luminaireId = this.#luminaireAt(raycaster);
     return luminaireId ? { kind: 'luminaire', luminaireId } : null;
   }

@@ -64,7 +64,7 @@ test('tapping a fixture opens its properties; tapping empty space closes them', 
 test('the ⋯ menu switches language and theme', async ({ page }) => {
   await openDemo(page);
   await page.getByRole('button', { name: 'Más opciones' }).tap();
-  await page.getByRole('radio', { name: 'EN' }).tap();
+  await page.getByRole('radio', { name: 'EN', exact: true }).tap();
   await expect(page.getByRole('tab', { name: 'Properties' })).toBeVisible();
   await page.getByRole('button', { name: 'More options' }).tap();
   await page.getByRole('menuitem', { name: 'Light theme' }).tap();

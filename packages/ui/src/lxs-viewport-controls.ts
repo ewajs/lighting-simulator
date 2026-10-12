@@ -2,21 +2,23 @@ import type { RenderMode, ViewName } from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Scan } from 'lucide';
+import { Crosshair, Move, Scan } from 'lucide';
 import type { FieldChange } from './field-change';
 import { formatFixed } from './format';
 import { icon } from './icons';
 import './lxs-slider-field';
+import type { EditTool } from './shortcuts';
 import { segmentedStyles, sharedStyles } from './styles';
 
 /** Exposure range offered, in EV stops. */
 const EXPOSURE_RANGE = { min: -3, max: 3, step: 0.1 };
 
 /**
- * Render mode, preset views, framing and exposure. As an `overlay` (default)
+ * Edit tool, render mode, preset views, framing and exposure. As an `overlay` (default)
  * they float over the viewport; as a `panel` they stack in normal flow, e.g.
  * inside a phone sheet. Pure UI: reports choices as events for the host to apply.
  *
+ * @fires lxs-tool-change - `detail: { tool }`: move or aim handle
  * @fires lxs-render-mode-change - `detail: { mode }`
  * @fires lxs-view-request - `detail: { view }`
  * @fires lxs-frame-request
@@ -50,9 +52,20 @@ export class LxsViewportControls extends LitElement {
         transform: translateX(-50%);
         padding: 3px;
       }
-      .modes .segmented {
+      .modes .segmented,
+      .tools .segmented {
         border: 0;
         background: transparent;
+      }
+      .tools {
+        top: var(--lxs-sp-3);
+        left: var(--lxs-sp-3);
+        padding: 3px;
+      }
+      .tools button {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
       }
       .views {
         top: var(--lxs-sp-3);
@@ -127,6 +140,7 @@ export class LxsViewportControls extends LitElement {
   ];
 
   @property({ reflect: true }) variant: 'overlay' | 'panel' = 'overlay';
+  @property() tool: EditTool = 'move';
   @property() renderMode: RenderMode = 'realistic';
   @property({ attribute: false }) view: ViewName = 'perspective';
   @property({ type: Number }) exposureEv = 0;
@@ -142,7 +156,32 @@ export class LxsViewportControls extends LitElement {
       ['realistic', msg('Realistic')],
       ['clay', msg('Clay')],
     ];
+    const tools: [EditTool, string, typeof Move, string][] = [
+      ['move', msg('Move'), Move, 'W'],
+      [
+        'aim',
+        msg('Aim', { id: 'tool-aim', desc: 'Edit tool that aims a luminaire' }),
+        Crosshair,
+        'E',
+      ],
+    ];
     return html`
+      <div class="glass tools">
+        <div class="segmented" role="radiogroup" aria-label=${msg('Edit tool')}>
+          ${tools.map(
+            ([tool, label, glyph, key]) =>
+              html`<button
+                type="button"
+                role="radio"
+                aria-checked=${this.tool === tool}
+                title=${`${label} (${key})`}
+                @click=${() => this.#emit('lxs-tool-change', { tool })}
+              >
+                ${icon(glyph)} ${label}
+              </button>`,
+          )}
+        </div>
+      </div>
       <div class="glass modes">
         <div class="segmented" role="radiogroup" aria-label=${msg('Render mode')}>
           ${modes.map(
@@ -216,6 +255,7 @@ declare global {
     'lxs-viewport-controls': LxsViewportControls;
   }
   interface HTMLElementEventMap {
+    'lxs-tool-change': CustomEvent<{ tool: EditTool }>;
     'lxs-render-mode-change': CustomEvent<{ mode: RenderMode }>;
     'lxs-view-request': CustomEvent<{ view: ViewName }>;
     'lxs-frame-request': CustomEvent<object>;

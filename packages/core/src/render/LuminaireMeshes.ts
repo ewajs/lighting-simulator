@@ -1,10 +1,11 @@
 import * as THREE from 'three/webgpu';
-import { color, toneMappingExposure } from 'three/tsl';
+import { color } from 'three/tsl';
 import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../types';
 import { candelaGrid } from '../photometry/grid';
 import { buildFixture, disposeFixture, type Fixture } from './fixtures';
 import { IesLight, profileTexture } from './IesLight';
 import { candela, kelvinToRgb, lightingProduct } from './lighting';
+import { overlayColor } from './overlay';
 import type { RenderMode } from './RoomMeshes';
 
 /** Only the brightest few lights cast shadows; the rest still light the scene. */
@@ -211,16 +212,9 @@ function yawAwayFromWall({ position }: Luminaire, room: Room): number {
   return distances.reduce((best, next) => (next[0] < best[0] ? next : best))[1];
 }
 
-/**
- * The outline's line material: drawn through other objects, in a colour that
- * reads as itself whatever the exposure (the frame is exposed for real light
- * levels, so plain colours would come out nearly black).
- */
+/** The outline's line material: drawn through other objects, in a colour that reads as itself. */
 function outlineMaterial(): THREE.LineBasicNodeMaterial {
   const material = new THREE.LineBasicNodeMaterial({ depthTest: false });
-  // The typings don't see the renderer reference as a float node.
-  material.colorNode = color(HIGHLIGHT_COLOR).div(
-    toneMappingExposure as unknown as THREE.Node<'float'>,
-  );
+  material.colorNode = overlayColor(color(HIGHLIGHT_COLOR));
   return material;
 }

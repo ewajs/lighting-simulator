@@ -414,6 +414,19 @@
   <source>Couldn't read <x id="0" equiv-text="${file.name}"/>.</source>
   <target>No se pudo leer <x id="0" equiv-text="${file.name}"/>.</target>
 </trans-unit>
+<trans-unit id="s379c18aec5654894">
+  <source>Move</source>
+  <target>Mover</target>
+</trans-unit>
+<trans-unit id="sa39bbc5d72ec92ed">
+  <source>Edit tool</source>
+  <target>Herramienta de edición</target>
+</trans-unit>
+<trans-unit id="tool-aim">
+  <source>Aim</source>
+  <target>Orientar</target>
+  <note from="lit-localize">Edit tool that aims a luminaire</note>
+</trans-unit>
 </body>
 </file>
 </xliff>
