@@ -2,6 +2,7 @@ import {
   Viewport,
   type FloorPoint,
   type HandleMode,
+  type Measurement,
   type MoveStartEvent,
   type PickEvent,
   type RenderMode,
@@ -11,11 +12,13 @@ import {
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
+import { formatFixed } from './format';
 import { PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
 
 /**
  * The 3D viewport: wraps core's Viewport (ADR 0019). It highlights what it is
  * given and reports clicks as `lxs-pick` events; it keeps no selection itself.
+ * While luminaires are moved it labels their distances to the walls (ADR 0042).
  *
  * @fires lxs-pick - `detail` is core's PickEvent: `{ luminaireId, event }`.
  * @fires lxs-move-start - dragging a luminaire started; `detail` is core's
@@ -35,6 +38,18 @@ export class LxsViewport extends LitElement {
     .canvas {
       position: absolute;
       inset: 0;
+    }
+    .measure {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      padding: 2px 6px;
+      border-radius: var(--lxs-r-sm);
+      background: var(--lxs-overlay);
+      color: var(--lxs-text);
+      font: 600 var(--lxs-fs-xs) var(--lxs-font-ui);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      pointer-events: none;
     }
     .error {
       position: absolute;
@@ -58,12 +73,19 @@ export class LxsViewport extends LitElement {
   @property({ attribute: false }) snapping = true;
 
   @state() private failed = false;
+  @state() private measurements: readonly Measurement[] = [];
   #viewport: Viewport | undefined;
 
   override render() {
     return this.failed
       ? html`<p class="error">${msg('This browser cannot start WebGPU or WebGL 2.')}</p>`
-      : html`<div class="canvas" @dragover=${this.#onDragOver} @drop=${this.#onDrop}></div>`;
+      : html`<div class="canvas" @dragover=${this.#onDragOver} @drop=${this.#onDrop}></div>
+          ${this.measurements.map(
+            ({ lengthM, x, y }) =>
+              html`<span class="measure" style="left: ${x}px; top: ${y}px"
+                >${formatFixed(lengthM, 2)} m</span
+              >`,
+          )}`;
   }
 
   protected override updated(changed: PropertyValues<this>): void {
@@ -115,6 +137,7 @@ export class LxsViewport extends LitElement {
     this.#viewport = viewport;
     viewport.onPick((pick) => this.#emit('lxs-pick', pick));
     viewport.onMoveStart((start) => this.#emit('lxs-move-start', start));
+    viewport.onMeasure((measurements) => (this.measurements = measurements));
     try {
       await viewport.init();
     } catch (error) {

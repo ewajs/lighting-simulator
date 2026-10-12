@@ -38,6 +38,14 @@ export interface ViewportOptions {
   readonly container: HTMLElement;
 }
 
+/** A distance shown while moving luminaires, and where to label it (ADR 0042). */
+export interface Measurement {
+  readonly lengthM: number;
+  /** The label's place, the dimension's midpoint, in CSS px from the container's top left. */
+  readonly x: number;
+  readonly y: number;
+}
+
 /** A click in the viewport. `luminaireId` is null when no fixture was hit. */
 export interface PickEvent {
   readonly luminaireId: string | null;
@@ -77,6 +85,9 @@ export class Viewport {
   // Uniform stand-in for inter-reflections (SPEC §6).
   readonly #bounce = new THREE.HemisphereLight(0xffffff, 0xffffff, 0);
   readonly #pickListeners = new Set<(pick: PickEvent) => void>();
+  readonly #measureListeners = new Set<(measurements: readonly Measurement[]) => void>();
+  /** What was last reported to measure listeners, to report only changes. */
+  #lastMeasurements = '[]';
   readonly #resizeObserver = new ResizeObserver(() => this.#resize());
   #unsubscribe: (() => void) | undefined;
   #unsubscribePhotometry: (() => void) | undefined;
@@ -147,6 +158,7 @@ export class Viewport {
       this.#transition?.(now);
       this.#controls.update();
       this.#manipulator.updateSizes();
+      this.#reportMeasurements();
       if (this.#captures.length > 0) this.#renderCaptures();
       else renderer.render(this.#scene, this.#camera);
     });
@@ -271,6 +283,17 @@ export class Viewport {
     this.#manipulator.snapping = on;
   }
 
+  /**
+   * Calls `listener` with the distances to the walls and floor while
+   * luminaires are moved, as they change, and with an empty list when the
+   * move ends. The viewport draws the lines; labelling them is up to the
+   * host, e.g. in its own number format. Returns an unsubscribe function.
+   */
+  onMeasure(listener: (measurements: readonly Measurement[]) => void): () => void {
+    this.#measureListeners.add(listener);
+    return () => this.#measureListeners.delete(listener);
+  }
+
   /** Calls `listener` on every click in the viewport. Returns an unsubscribe function. */
   onPick(listener: (pick: PickEvent) => void): () => void {
     this.#pickListeners.add(listener);
@@ -342,6 +365,29 @@ export class Viewport {
       indirectIlluminance(this.#luminaires.totalFlux(), scene.room) + MIN_FILL_LUX;
     this.#renderer.toneMappingExposure = toneMappingExposure(this.#exposureEv);
     this.#manipulator.refresh();
+  }
+
+  /** Projects the dimensions' midpoints to the screen and reports them if anything changed. */
+  #reportMeasurements(): void {
+    const { clientWidth: width, clientHeight: height } = this.#container;
+    const measurements: Measurement[] = [];
+    for (const { from, to, lengthM } of this.#manipulator.dimensions) {
+      const middle = new THREE.Vector3(
+        (from.x + to.x) / 2,
+        (from.y + to.y) / 2,
+        (from.z + to.z) / 2,
+      ).project(this.#camera);
+      if (middle.z > 1) continue; // Behind the camera.
+      measurements.push({
+        lengthM,
+        x: Math.round(((middle.x + 1) / 2) * width),
+        y: Math.round(((1 - middle.y) / 2) * height),
+      });
+    }
+    const serialized = JSON.stringify(measurements);
+    if (serialized === this.#lastMeasurements) return;
+    this.#lastMeasurements = serialized;
+    this.#measureListeners.forEach((listener) => listener(measurements));
   }
 
   #resize(): void {

@@ -45,3 +45,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0039 | [Move handle: our own arrows, shown on the selection](0039-move-handle.md) | Accepted |
 | 0040 | [Aim handle: aim point and rotation ring](0040-aim-handle.md) | Accepted |
 | 0041 | [Snapping: grid, alignment, pan steps](0041-snapping.md) | Accepted |
+| 0042 | [Distances to the walls while moving](0042-distances-while-moving.md) | Accepted |
