@@ -258,6 +258,19 @@ export class Viewport {
     this.#manipulator.mode = mode;
   }
 
+  /**
+   * Whether drags snap: to a 10 cm grid from the room centre, into line with
+   * other luminaires and the centre lines, and pan in 15° steps (ADR 0041).
+   * Holding Alt during a drag moves freely. Default true.
+   */
+  get snapping(): boolean {
+    return this.#manipulator.snapping;
+  }
+
+  set snapping(on: boolean) {
+    this.#manipulator.snapping = on;
+  }
+
   /** Calls `listener` on every click in the viewport. Returns an unsubscribe function. */
   onPick(listener: (pick: PickEvent) => void): () => void {
     this.#pickListeners.add(listener);

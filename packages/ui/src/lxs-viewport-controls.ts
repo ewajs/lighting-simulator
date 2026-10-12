@@ -2,7 +2,7 @@ import type { RenderMode, ViewName } from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { Crosshair, Move, Scan } from 'lucide';
+import { Crosshair, Magnet, Move, Scan } from 'lucide';
 import type { FieldChange } from './field-change';
 import { formatFixed } from './format';
 import { icon } from './icons';
@@ -19,6 +19,7 @@ const EXPOSURE_RANGE = { min: -3, max: 3, step: 0.1 };
  * inside a phone sheet. Pure UI: reports choices as events for the host to apply.
  *
  * @fires lxs-tool-change - `detail: { tool }`: move or aim handle
+ * @fires lxs-snapping-change - `detail: { snapping }`
  * @fires lxs-render-mode-change - `detail: { mode }`
  * @fires lxs-view-request - `detail: { view }`
  * @fires lxs-frame-request
@@ -52,20 +53,47 @@ export class LxsViewportControls extends LitElement {
         transform: translateX(-50%);
         padding: 3px;
       }
-      .modes .segmented,
-      .tools .segmented {
+      .modes .segmented {
         border: 0;
         background: transparent;
       }
       .tools {
         top: var(--lxs-sp-3);
         left: var(--lxs-sp-3);
+        display: grid;
+        gap: 2px;
         padding: 3px;
       }
+      /* A column in the overlay, clear of the render modes at the top centre. */
+      .tools .segmented {
+        display: grid;
+        padding: 0;
+        border: 0;
+        background: transparent;
+      }
       .tools button {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 6px;
+        width: 100%;
+      }
+      .snap {
+        height: var(--lxs-segment-h);
+        padding: 0 var(--lxs-sp-3);
+        border: 0;
+        border-top: 1px solid var(--lxs-line);
+        border-radius: 0 0 var(--lxs-r-sm) var(--lxs-r-sm);
+        background: transparent;
+        color: var(--lxs-text-muted);
+        font-size: var(--lxs-fs-sm);
+        font-weight: 500;
+        cursor: pointer;
+      }
+      .snap:hover {
+        color: var(--lxs-text);
+      }
+      .snap[aria-pressed='true'] {
+        color: var(--lxs-accent);
       }
       .views {
         top: var(--lxs-sp-3);
@@ -122,6 +150,18 @@ export class LxsViewportControls extends LitElement {
       :host([variant='panel']) .views {
         display: flex;
       }
+      :host([variant='panel']) .tools,
+      :host([variant='panel']) .tools .segmented {
+        display: flex;
+      }
+      :host([variant='panel']) .tools button {
+        width: auto;
+      }
+      :host([variant='panel']) .snap {
+        border-top: 0;
+        border-left: 1px solid var(--lxs-line);
+        border-radius: 0 var(--lxs-r-sm) var(--lxs-r-sm) 0;
+      }
       :host([variant='panel']) .views button {
         flex: 1;
         width: auto;
@@ -141,6 +181,7 @@ export class LxsViewportControls extends LitElement {
 
   @property({ reflect: true }) variant: 'overlay' | 'panel' = 'overlay';
   @property() tool: EditTool = 'move';
+  @property({ type: Boolean }) snapping = true;
   @property() renderMode: RenderMode = 'realistic';
   @property({ attribute: false }) view: ViewName = 'perspective';
   @property({ type: Number }) exposureEv = 0;
@@ -181,6 +222,16 @@ export class LxsViewportControls extends LitElement {
               </button>`,
           )}
         </div>
+        <button
+          class="snap"
+          type="button"
+          aria-pressed=${this.snapping}
+          aria-label=${msg('Snapping')}
+          title=${msg('Snapping (hold Alt to move freely)')}
+          @click=${() => this.#emit('lxs-snapping-change', { snapping: !this.snapping })}
+        >
+          ${icon(Magnet)} ${msg('Magnet')}
+        </button>
       </div>
       <div class="glass modes">
         <div class="segmented" role="radiogroup" aria-label=${msg('Render mode')}>
@@ -256,6 +307,7 @@ declare global {
   }
   interface HTMLElementEventMap {
     'lxs-tool-change': CustomEvent<{ tool: EditTool }>;
+    'lxs-snapping-change': CustomEvent<{ snapping: boolean }>;
     'lxs-render-mode-change': CustomEvent<{ mode: RenderMode }>;
     'lxs-view-request': CustomEvent<{ view: ViewName }>;
     'lxs-frame-request': CustomEvent<object>;

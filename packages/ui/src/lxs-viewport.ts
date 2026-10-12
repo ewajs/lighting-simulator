@@ -54,6 +54,8 @@ export class LxsViewport extends LitElement {
   @property({ type: Number, attribute: 'exposure-ev' }) exposureEv = 0;
   /** Handle on the highlighted luminaires: `move` shows arrows to slide them along an axis. */
   @property() handle: HandleMode = 'none';
+  /** Whether drags snap to the grid and line up with other luminaires (ADR 0041). */
+  @property({ attribute: false }) snapping = true;
 
   @state() private failed = false;
   #viewport: Viewport | undefined;
@@ -136,6 +138,7 @@ export class LxsViewport extends LitElement {
     this.#viewport.renderMode = this.renderMode;
     this.#viewport.exposureEv = this.exposureEv;
     this.#viewport.handle = this.handle;
+    this.#viewport.snapping = this.snapping;
   }
 
   #onDragOver = (event: DragEvent): void => {

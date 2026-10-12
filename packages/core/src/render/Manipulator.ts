@@ -1,6 +1,6 @@
 // Direct manipulation in the viewport: the move and aim handles on the
 // highlighted luminaires, what a press lands on, and the drags that follow.
-// Kept apart from Viewport so that one stays about drawing (ADRs 0038–0040).
+// Kept apart from Viewport so that one stays about drawing (ADRs 0038–0041).
 
 import * as THREE from 'three/webgpu';
 import { AimPointDrag, beamHit, isAimable, PanDrag } from '../aim';
@@ -8,9 +8,21 @@ import { LuminaireDrag } from '../drag';
 import { AxisDrag, groupAxes, groupCenter } from '../move-handle';
 import type { Ray } from '../placement';
 import type { Simulator } from '../simulator';
+import type { Guide, SnapOptions } from '../snap';
+import type { Vec3 } from '../types';
 import { AimHandle } from './AimHandle';
 import { MoveHandle } from './MoveHandle';
+import { worldPerPixel } from './overlay';
 import type { PressTarget } from './PointerGestures';
+import { SnapGuides } from './SnapGuides';
+
+/** How close on screen counts as lined up with another luminaire, in CSS px. */
+const ALIGN_TOLERANCE_PX = 8;
+
+/** A drag in progress: follows the pointer and reports what it lined up with. */
+interface Drag {
+  moveTo(ray: Ray, snap: SnapOptions | null): readonly Guide[] | void;
+}
 
 /**
  * Which handle the viewport shows on highlighted luminaires: arrows to move
@@ -44,13 +56,16 @@ export class Manipulator {
   readonly #options: ManipulatorOptions;
   readonly #moveHandle = new MoveHandle();
   readonly #aimHandle = new AimHandle();
+  readonly #guides = new SnapGuides();
   readonly #moveStartListeners = new Set<(start: MoveStartEvent) => void>();
   #highlighted: readonly string[] = [];
   #mode: HandleMode = 'none';
+  /** Whether drags snap (ADR 0041). Holding Alt during a drag moves freely. */
+  snapping = true;
 
   constructor(options: ManipulatorOptions) {
     this.#options = options;
-    this.group.add(this.#moveHandle.group, this.#aimHandle.group);
+    this.group.add(this.#moveHandle.group, this.#aimHandle.group, this.#guides.group);
   }
 
   get mode(): HandleMode {
@@ -114,10 +129,14 @@ export class Manipulator {
     return luminaireId ? { kind: 'luminaire', luminaireId } : null;
   }
 
-  /** Highlights the handle part under the mouse or being dragged; null clears it. */
+  /**
+   * Highlights the handle part under the mouse or being dragged. Null clears
+   * it, and the snap guides: it's also called when a drag ends.
+   */
   hover(target: PressTarget | null): void {
     this.#moveHandle.setActive(target?.kind === 'move-axis' ? target.axis : null);
     this.#aimHandle.setActive(target?.kind === 'aim' ? target.part : null);
+    if (!target) this.#guides.show([], 0, this.#options.simulator.scene.room);
   }
 
   /**
@@ -134,7 +153,7 @@ export class Manipulator {
     const { simulator } = this.#options;
     const grabbed = this.#rayAt(press);
     const [highlighted] = this.#highlighted;
-    let drag: { moveTo(ray: Ray): void };
+    let drag: Drag;
     if (target.kind === 'move-axis') {
       drag = new AxisDrag(simulator, this.#highlighted, target.axis, grabbed);
     } else if (target.kind === 'aim' && highlighted) {
@@ -153,12 +172,36 @@ export class Manipulator {
       return undefined;
     }
     this.hover(target);
-    return (event) => drag.moveTo(this.#rayAt(event));
+    // Where the drag is measured: the grabbed luminaire, or the handle's centre.
+    const anchorId = target.kind === 'luminaire' ? target.luminaireId : undefined;
+    return (event) => {
+      const anchor = this.#anchor(anchorId);
+      const snap =
+        this.snapping && !event.altKey && anchor ? { toleranceM: this.#toleranceAt(anchor) } : null;
+      const guides = drag.moveTo(this.#rayAt(event), snap) ?? [];
+      this.#guides.show(guides, this.#anchor(anchorId)?.y ?? 0, simulator.scene.room);
+    };
+  }
+
+  /** The grabbed luminaire's position, or the centre of the highlighted ones. */
+  #anchor(luminaireId: string | undefined): Vec3 | undefined {
+    const { luminaires } = this.#options.simulator.scene;
+    if (luminaireId) return luminaires.find((l) => l.id === luminaireId)?.position;
+    const selected = luminaires.filter((l) => this.#highlighted.includes(l.id));
+    return selected.length > 0 ? groupCenter(selected) : undefined;
+  }
+
+  /** ALIGN_TOLERANCE_PX in metres at `point`'s distance from the camera. */
+  #toleranceAt(point: Vec3): number {
+    const at = new THREE.Vector3(point.x, point.y, point.z);
+    const heightPx = this.#options.viewportHeightPx();
+    return ALIGN_TOLERANCE_PX * worldPerPixel(this.#options.camera, at, heightPx);
   }
 
   dispose(): void {
     this.#moveHandle.dispose();
     this.#aimHandle.dispose();
+    this.#guides.dispose();
   }
 
   #rayAt(event: PointerEvent): Ray {

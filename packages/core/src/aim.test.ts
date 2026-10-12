@@ -147,4 +147,13 @@ describe('PanDrag', () => {
     expect(luminaireOf(sim, id).aim.tiltDeg).toBe(30);
     expect(luminaireOf(sim, id).aim.panDeg).toBeCloseTo(-170);
   });
+
+  it('turns in 15° steps when snapping', () => {
+    const sim = new Simulator({ catalog });
+    const id = sim.addLuminaire('test-recessed');
+    sim.updateLuminaire(id, { aim: { tiltDeg: 30, panDeg: 100 } });
+    // A free quarter turn gives −170°; the nearest step is −165°.
+    new PanDrag(sim, id, downOnto(0, 1)).moveTo(downOnto(1, 0), { toleranceM: 0.05 });
+    expect(luminaireOf(sim, id).aim.panDeg).toBe(-165);
+  });
 });

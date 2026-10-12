@@ -76,4 +76,34 @@ describe('LuminaireDrag', () => {
     const sim = new Simulator({ catalog });
     expect(() => new LuminaireDrag(sim, 'missing', [], downAt(0, 0))).toThrow(/missing/);
   });
+
+  it('snaps to the grid, or lines up with luminaires outside the group', () => {
+    const sim = new Simulator({ catalog });
+    const id = sim.addLuminaire('test-recessed');
+    const snap = { toleranceM: 0.05 };
+    const guides = new LuminaireDrag(sim, id, [id], downAt(0, 0)).moveTo(downAt(1.234, 0.47), snap);
+    expect(positionOf(sim, id)).toEqual({ x: 1.2, y: 2.7, z: 0.5 });
+    expect(guides).toEqual([]);
+
+    const other = sim.addLuminaire('test-floor', { x: 1.27, z: -1.5 });
+    const aligned = new LuminaireDrag(sim, id, [id], downAt(1.2, 0.5)).moveTo(
+      downAt(1.3, 0.5),
+      snap,
+    );
+    expect(positionOf(sim, id).x).toBe(positionOf(sim, other).x);
+    expect(aligned).toEqual([{ axis: 'x', value: 1.27 }]);
+  });
+
+  it('keeps a pendant’s height when snapping', () => {
+    const sim = new Simulator({ catalog });
+    const id = sim.addLuminaire('test-pendant');
+    sim.updateLuminaire(id, { position: { x: 0, y: 2.03, z: 0 } });
+    // Level with the pendant, so the ray meets its plane: grabbed from the side.
+    const level = (x: number): Ray => ({
+      origin: { x, y: 4.03, z: 2 },
+      direction: { x: 0, y: -1, z: -1 },
+    });
+    new LuminaireDrag(sim, id, [id], level(0)).moveTo(level(0.52), { toleranceM: 0.01 });
+    expect(positionOf(sim, id)).toEqual({ x: 0.5, y: 2.03, z: 0 });
+  });
 });

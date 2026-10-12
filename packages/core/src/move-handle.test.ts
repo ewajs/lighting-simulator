@@ -114,4 +114,12 @@ describe('AxisDrag', () => {
     expect(positionOf(sim, a)).toEqual({ x: 0.5, y: 2.7, z: 0 });
     expect(positionOf(sim, b)).toEqual({ x: 2.5, y: 2.7, z: 1 });
   });
+
+  it('snaps the group centre to the grid', () => {
+    const sim = new Simulator({ catalog });
+    const id = sim.addLuminaire('test-pendant'); // At (0, 2, 0).
+    const drag = new AxisDrag(sim, [id], 'y', towards(0.3, 2.1));
+    drag.moveTo(towards(0.3, 1.63), { toleranceM: 0.05 });
+    expect(positionOf(sim, id).y).toBe(1.5);
+  });
 });
