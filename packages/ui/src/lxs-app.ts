@@ -1,4 +1,11 @@
-import type { PickEvent, RenderMode, Scene, Simulator, ViewName } from '@luxstudio/core';
+import type {
+  MoveStartEvent,
+  PickEvent,
+  RenderMode,
+  Scene,
+  Simulator,
+  ViewName,
+} from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { html, LitElement, nothing, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
@@ -22,7 +29,7 @@ import type { PanelName, Theme } from './lxs-top-bar';
 import './lxs-viewport';
 import type { DropProductDetail, LxsViewport } from './lxs-viewport';
 import './lxs-viewport-controls';
-import { pruneSelection, selectionAfterPick } from './selection';
+import { pruneSelection, selectionAfterPick, selectionForMove } from './selection';
 import { isTyping, shortcutAction, type ShortcutAction } from './shortcuts';
 
 /** Below this width the library starts collapsed, leaving the viewport room (landscape tablets). */
@@ -215,6 +222,8 @@ export class LxsApp extends LitElement {
       .renderMode=${this.renderMode}
       .exposureEv=${this.exposureEv}
       @lxs-pick=${this.#onPick}
+      @lxs-move-start=${({ detail }: CustomEvent<MoveStartEvent>) =>
+        (this.selection = selectionForMove(this.selection, detail.luminaireId))}
       @lxs-drop-product=${this.#onDropProduct}
     ></lxs-viewport>`;
   }

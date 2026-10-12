@@ -11,6 +11,25 @@ async function longPress(page: Page, x: number, y: number): Promise<void> {
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
 }
 
+/** Drags one finger from `from` to `to` in small steps. Playwright has no touch-drag API. */
+async function touchDrag(
+  page: Page,
+  from: { x: number; y: number },
+  to: { x: number; y: number },
+): Promise<void> {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [from] });
+  const steps = 10;
+  for (let i = 1; i <= steps; i++) {
+    const point = {
+      x: from.x + ((to.x - from.x) * i) / steps,
+      y: from.y + ((to.y - from.y) * i) / steps,
+    };
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [point] });
+  }
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+}
+
 async function openDemo(page: Page): Promise<void> {
   await page.goto('/');
   await expect(page.locator('lxs-viewport canvas')).toBeVisible();
@@ -41,6 +60,25 @@ test.describe('landscape tablet (1024 × 768, touch)', () => {
     await longPress(page, WALL_LIGHT.x, WALL_LIGHT.y);
     await expect(selectedCount(page)).toHaveText('Seleccionadas: 2');
     await expect(page.getByText('2 luminarias seleccionadas')).toBeVisible();
+  });
+
+  test('a finger on a fixture moves it instead of orbiting', async ({ page, browserName }) => {
+    // Touch drags are driven through Chrome's DevTools protocol, which WebKit doesn't have.
+    test.skip(browserName !== 'chromium', 'needs CDP touch events');
+
+    await openDemo(page);
+    await page.touchscreen.tap(PENDANT.x, PENDANT.y);
+    const x = page.getByRole('textbox', { name: 'X' });
+    await expect(x).toHaveValue('0,00');
+    await expect(page).toHaveScreenshot('tablet-pendant-selected.png');
+
+    await touchDrag(page, PENDANT, { x: PENDANT.x + 120, y: PENDANT.y });
+    await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+    await expect(x).not.toHaveValue('0,00');
+    // Undo restores the same image: the camera stayed where it was.
+    await page.getByRole('button', { name: 'Deshacer' }).tap();
+    await expect(x).toHaveValue('0,00');
+    await expect(page).toHaveScreenshot('tablet-pendant-selected.png');
   });
 
   test('tapping a product adds it; long press on a list row toggles it', async ({

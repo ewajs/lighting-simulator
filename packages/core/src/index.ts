@@ -1,8 +1,14 @@
 export { Simulator } from './simulator';
 export type { EditOptions, SceneListener, SimulatorOptions } from './simulator';
 export type { PhotometryListener } from './photometry/cache';
-export { LONG_PRESS_MS, Viewport } from './render/Viewport';
-export type { PickEvent, ScreenshotOptions, ViewportOptions } from './render/Viewport';
+export { Viewport } from './render/Viewport';
+export { LONG_PRESS_MS } from './render/PointerGestures';
+export type {
+  MoveStartEvent,
+  PickEvent,
+  ScreenshotOptions,
+  ViewportOptions,
+} from './render/Viewport';
 export type { ViewName } from './render/lighting';
 export type { RenderMode } from './render/RoomMeshes';
 export { parseIes } from './photometry/ies';

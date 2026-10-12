@@ -106,6 +106,8 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
   (recessed and pendant on the ceiling, wall-mounted on walls, floor and
   table lamps on the floor).
 - P0: Select, move, aim, duplicate, delete. Undo/redo for every scene edit.
+  Dragging a luminaire moves it along its mount surface, together with the
+  rest of the selection ([ADR 0038](./decisions/0038-drag-to-move.md)).
 - P0: Per-instance dimming and on/off.
 - P1: Array tool: grid placement (rows × cols, spacing) on the ceiling.
 - P1: Track systems with heads that snap along a rail.
@@ -209,7 +211,7 @@ Key interaction rules:
   `Esc` deselect, `1/2` render modes (`3` for illuminance in M5), `0/7/8/9` perspective / top / front
   / side, and `W/E` move/aim once handles exist.
 - Touch: tap = click, long press = Shift-click (add to or remove from the
-  selection). On tablets the library starts collapsed and the inspector
+  selection), one finger on a fixture drags it. On tablets the library starts collapsed and the inspector
   becomes a foldable sheet ([ADR 0030](./decisions/0030-touch-and-tablet.md)).
 
 ## 6. Architecture
