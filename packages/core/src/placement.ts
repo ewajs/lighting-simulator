@@ -169,6 +169,14 @@ function wallHit({ origin, direction }: Ray, position: Vec3, room: Room): Vec3 |
   return nearest?.point ?? null;
 }
 
+/**
+ * The axis perpendicular to the wall nearest `position`: `'z'` for the back
+ * and front walls, `'x'` for the side walls.
+ */
+export function wallNormalAxis(position: Vec3, room: Room): 'x' | 'z' {
+  return nearestWall(position, wallsOf(room)).axis;
+}
+
 /** Moves a point onto the closest wall. Ties go to the back wall, then front, left, right. */
 function snapToNearestWall(point: Vec3, room: Room): Vec3 {
   const { axis, at } = nearestWall(point, wallsOf(room));

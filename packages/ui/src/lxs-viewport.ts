@@ -1,6 +1,7 @@
 import {
   Viewport,
   type FloorPoint,
+  type HandleMode,
   type MoveStartEvent,
   type PickEvent,
   type RenderMode,
@@ -51,6 +52,8 @@ export class LxsViewport extends LitElement {
   @property({ attribute: 'render-mode' }) renderMode: RenderMode = 'realistic';
   /** Exposure in EV stops; 0 is the calibrated default. */
   @property({ type: Number, attribute: 'exposure-ev' }) exposureEv = 0;
+  /** Handle on the highlighted luminaires: `move` shows arrows to slide them along an axis. */
+  @property() handle: HandleMode = 'none';
 
   @state() private failed = false;
   #viewport: Viewport | undefined;
@@ -132,6 +135,7 @@ export class LxsViewport extends LitElement {
     this.#viewport.setHighlighted(this.highlighted);
     this.#viewport.renderMode = this.renderMode;
     this.#viewport.exposureEv = this.exposureEv;
+    this.#viewport.handle = this.handle;
   }
 
   #onDragOver = (event: DragEvent): void => {

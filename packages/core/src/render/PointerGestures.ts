@@ -2,6 +2,7 @@
 // drags of fixtures. Kept apart from Viewport so that one stays about drawing.
 
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import type { MoveAxis } from '../move-handle';
 
 /** Pointer movement allowed for a press to still count as a click or tap, in px. Fingers wobble more than mice. */
 const TAP_TOLERANCE_PX = { mouse: 4, other: 10 };
@@ -10,18 +11,25 @@ const MAIN_BUTTON = 0;
 /** How long a touch or pen must stay still to count as a long press, in ms. */
 export const LONG_PRESS_MS = 500;
 
+/** Something under the pointer that can be dragged. */
+export type PressTarget =
+  | { readonly kind: 'luminaire'; readonly luminaireId: string }
+  | { readonly kind: 'handle'; readonly axis: MoveAxis };
+
 /** What the gestures do, supplied by the Viewport. */
 export interface GestureActions {
-  /** The fixture under a screen point, if any. */
-  luminaireAt(clientX: number, clientY: number): string | null;
+  /** What is under a screen point, if anything can be dragged there. */
+  targetAt(clientX: number, clientY: number): PressTarget | null;
+  /** The mouse is over `target`, or over nothing draggable (null). Also called when a drag ends. */
+  hover(target: PressTarget | null): void;
   /** A click or tap, or a long press (touch and pen) while the finger is still down. */
   pick(event: PointerEvent, longPress: boolean): void;
   /**
-   * A press on a fixture moved past the tap tolerance. Returns what to call
+   * A press on a target moved past the tap tolerance. Returns what to call
    * with each pointer move from then on, or undefined to drop the press.
    */
   startDrag(
-    luminaireId: string,
+    target: PressTarget,
     press: PointerEvent,
     move: PointerEvent,
   ): ((move: PointerEvent) => void) | undefined;
@@ -31,16 +39,16 @@ export interface GestureActions {
 interface Press {
   readonly event: PointerEvent;
   readonly timer: number | undefined;
-  /** The fixture under the pointer when pressed, if any. */
-  readonly luminaireId: string | null;
+  /** What was under the pointer when pressed, if anything. */
+  readonly target: PressTarget | null;
   longPressed: boolean;
   dragTo?: (move: PointerEvent) => void;
 }
 
 /**
- * Turns pointer events on the canvas into picks, long presses and fixture
- * drags. A press on a fixture switches OrbitControls off until it ends, so
- * dragging a fixture never turns the camera.
+ * Turns pointer events on the canvas into picks, long presses, and drags of
+ * fixtures and handles. A press on either switches OrbitControls off until it
+ * ends, so dragging them never turns the camera.
  */
 export class PointerGestures {
   readonly #canvas: HTMLCanvasElement;
@@ -77,26 +85,27 @@ export class PointerGestures {
 
   /**
    * A press becomes a pick (on release), a long press (after LONG_PRESS_MS,
-   * touch and pen only) or, if it started on a fixture and moves, a drag.
+   * touch and pen only) or, if it started on a fixture or handle and moves, a
+   * drag. Presses on a handle are never picks.
    */
   readonly #onPointerDown = (event: PointerEvent): void => {
     if (event.target !== this.#canvas) return;
     this.#endPress();
     // A second finger means pinch or two-finger pan, never a pick.
     if (!event.isPrimary) return;
-    const luminaireId =
-      event.button === MAIN_BUTTON ? this.#actions.luminaireAt(event.clientX, event.clientY) : null;
-    // Decided before OrbitControls sees the press: on a fixture the camera stays put.
-    this.#controls.enabled = luminaireId === null;
+    const target =
+      event.button === MAIN_BUTTON ? this.#actions.targetAt(event.clientX, event.clientY) : null;
+    // Decided before OrbitControls sees the press: on a fixture or handle the camera stays put.
+    this.#controls.enabled = target === null;
     const timer =
-      event.pointerType === 'mouse'
+      event.pointerType === 'mouse' || target?.kind === 'handle'
         ? undefined
         : window.setTimeout(() => {
             if (!this.#press) return;
             this.#press.longPressed = true;
             this.#actions.pick(event, true);
           }, LONG_PRESS_MS);
-    this.#press = { event, timer, luminaireId, longPressed: false };
+    this.#press = { event, timer, target, longPressed: false };
   };
 
   readonly #onPointerMove = (event: PointerEvent): void => {
@@ -108,7 +117,7 @@ export class PointerGestures {
     if (event.pointerId !== press.event.pointerId) return;
     if (press.dragTo) return press.dragTo(event);
     if (!this.#movedTooFar(press.event, event)) return;
-    if (press.luminaireId && !press.longPressed) this.#startDrag(press, press.luminaireId, event);
+    if (press.target && !press.longPressed) this.#startDrag(press, press.target, event);
     else this.#endPress();
   };
 
@@ -116,22 +125,24 @@ export class PointerGestures {
     const press = this.#press;
     if (press && event.pointerId !== press.event.pointerId) return;
     this.#endPress();
-    if (!press || press.dragTo || press.longPressed || this.#movedTooFar(press.event, event)) {
-      return;
-    }
+    if (!press || press.dragTo || press.longPressed || press.target?.kind === 'handle') return;
+    if (this.#movedTooFar(press.event, event)) return;
     this.#actions.pick(event, false);
   };
 
   readonly #endPress = (): void => {
     window.clearTimeout(this.#press?.timer);
-    if (this.#press?.dragTo) this.#canvas.style.cursor = '';
+    if (this.#press?.dragTo) {
+      this.#canvas.style.cursor = '';
+      this.#actions.hover(null);
+    }
     this.#press = undefined;
     this.#controls.enabled = true;
   };
 
-  #startDrag(press: Press, luminaireId: string, event: PointerEvent): void {
+  #startDrag(press: Press, target: PressTarget, event: PointerEvent): void {
     window.clearTimeout(press.timer);
-    const dragTo = this.#actions.startDrag(luminaireId, press.event, event);
+    const dragTo = this.#actions.startDrag(target, press.event, event);
     if (!dragTo) return this.#endPress();
     press.dragTo = dragTo;
     // Keep receiving moves when the pointer leaves the canvas.
@@ -140,10 +151,11 @@ export class PointerGestures {
     dragTo(event);
   }
 
-  /** With a mouse, fixtures show they can be grabbed. */
+  /** With a mouse, fixtures and handles show they can be grabbed. */
   #showHover(event: PointerEvent): void {
-    const over = this.#actions.luminaireAt(event.clientX, event.clientY) !== null;
-    this.#canvas.style.cursor = over ? 'grab' : '';
+    const target = this.#actions.targetAt(event.clientX, event.clientY);
+    this.#canvas.style.cursor = target ? 'grab' : '';
+    this.#actions.hover(target);
   }
 
   #movedTooFar(from: PointerEvent, to: PointerEvent): boolean {

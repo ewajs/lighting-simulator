@@ -42,3 +42,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0036 | [Full-sphere IES light](0036-ies-light.md) | Accepted |
 | 0037 | [Try your own IES file](0037-ies-import.md) | Accepted |
 | 0038 | [Drag to move, built into the Viewport](0038-drag-to-move.md) | Accepted |
+| 0039 | [Move handle: our own arrows, shown on the selection](0039-move-handle.md) | Accepted |

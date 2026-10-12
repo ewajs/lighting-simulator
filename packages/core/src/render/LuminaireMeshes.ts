@@ -1,4 +1,5 @@
 import * as THREE from 'three/webgpu';
+import { color, toneMappingExposure } from 'three/tsl';
 import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../types';
 import { candelaGrid } from '../photometry/grid';
 import { buildFixture, disposeFixture, type Fixture } from './fixtures';
@@ -159,8 +160,9 @@ export class LuminaireMeshes {
 
   #outline(item: Item, on: boolean): void {
     if (on && !item.outline) {
-      item.outline = new THREE.Box3Helper(new THREE.Box3(), HIGHLIGHT_COLOR);
-      (item.outline.material as THREE.Material).depthTest = false;
+      item.outline = new THREE.Box3Helper(new THREE.Box3());
+      (item.outline.material as THREE.Material).dispose();
+      item.outline.material = outlineMaterial();
       item.outline.renderOrder = 1;
       this.group.add(item.outline);
     } else if (!on && item.outline) {
@@ -207,4 +209,18 @@ function yawAwayFromWall({ position }: Luminaire, room: Room): number {
     [room.width / 2 - position.x, -Math.PI / 2],
   ];
   return distances.reduce((best, next) => (next[0] < best[0] ? next : best))[1];
+}
+
+/**
+ * The outline's line material: drawn through other objects, in a colour that
+ * reads as itself whatever the exposure (the frame is exposed for real light
+ * levels, so plain colours would come out nearly black).
+ */
+function outlineMaterial(): THREE.LineBasicNodeMaterial {
+  const material = new THREE.LineBasicNodeMaterial({ depthTest: false });
+  // The typings don't see the renderer reference as a float node.
+  material.colorNode = color(HIGHLIGHT_COLOR).div(
+    toneMappingExposure as unknown as THREE.Node<'float'>,
+  );
+  return material;
 }

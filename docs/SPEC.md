@@ -108,6 +108,8 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
 - P0: Select, move, aim, duplicate, delete. Undo/redo for every scene edit.
   Dragging a luminaire moves it along its mount surface, together with the
   rest of the selection ([ADR 0038](./decisions/0038-drag-to-move.md)).
+  The move handle on the selection slides it along one axis at a time
+  ([ADR 0039](./decisions/0039-move-handle.md)).
 - P0: Per-instance dimming and on/off.
 - P1: Array tool: grid placement (rows × cols, spacing) on the ceiling.
 - P1: Track systems with heads that snap along a rail.
