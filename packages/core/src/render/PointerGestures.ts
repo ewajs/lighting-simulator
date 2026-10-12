@@ -3,6 +3,7 @@
 
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { MoveAxis } from '../move-handle';
+import type { AimPart } from './AimHandle';
 
 /** Pointer movement allowed for a press to still count as a click or tap, in px. Fingers wobble more than mice. */
 const TAP_TOLERANCE_PX = { mouse: 4, other: 10 };
@@ -11,10 +12,11 @@ const MAIN_BUTTON = 0;
 /** How long a touch or pen must stay still to count as a long press, in ms. */
 export const LONG_PRESS_MS = 500;
 
-/** Something under the pointer that can be dragged. */
+/** Something under the pointer that can be dragged: a fixture, or part of a handle. */
 export type PressTarget =
   | { readonly kind: 'luminaire'; readonly luminaireId: string }
-  | { readonly kind: 'handle'; readonly axis: MoveAxis };
+  | { readonly kind: 'move-axis'; readonly axis: MoveAxis }
+  | { readonly kind: 'aim'; readonly part: AimPart };
 
 /** What the gestures do, supplied by the Viewport. */
 export interface GestureActions {
@@ -98,7 +100,7 @@ export class PointerGestures {
     // Decided before OrbitControls sees the press: on a fixture or handle the camera stays put.
     this.#controls.enabled = target === null;
     const timer =
-      event.pointerType === 'mouse' || target?.kind === 'handle'
+      event.pointerType === 'mouse' || isHandle(target)
         ? undefined
         : window.setTimeout(() => {
             if (!this.#press) return;
@@ -125,7 +127,7 @@ export class PointerGestures {
     const press = this.#press;
     if (press && event.pointerId !== press.event.pointerId) return;
     this.#endPress();
-    if (!press || press.dragTo || press.longPressed || press.target?.kind === 'handle') return;
+    if (!press || press.dragTo || press.longPressed || isHandle(press.target)) return;
     if (this.#movedTooFar(press.event, event)) return;
     this.#actions.pick(event, false);
   };
@@ -163,4 +165,8 @@ export class PointerGestures {
       from.pointerType === 'mouse' ? TAP_TOLERANCE_PX.mouse : TAP_TOLERANCE_PX.other;
     return Math.hypot(to.clientX - from.clientX, to.clientY - from.clientY) > tolerance;
   }
+}
+
+function isHandle(target: PressTarget | null): boolean {
+  return target !== null && target.kind !== 'luminaire';
 }

@@ -109,7 +109,9 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
   Dragging a luminaire moves it along its mount surface, together with the
   rest of the selection ([ADR 0038](./decisions/0038-drag-to-move.md)).
   The move handle on the selection slides it along one axis at a time
-  ([ADR 0039](./decisions/0039-move-handle.md)).
+  ([ADR 0039](./decisions/0039-move-handle.md)). The aim handle sets where a
+  recessed or track head points: drag the beam's landing point, or turn
+  the ring ([ADR 0040](./decisions/0040-aim-handle.md)).
 - P0: Per-instance dimming and on/off.
 - P1: Array tool: grid placement (rows × cols, spacing) on the ceiling.
 - P1: Track systems with heads that snap along a rail.
@@ -211,7 +213,7 @@ Key interaction rules:
 - Keyboard: `⌘/Ctrl+Z` undo, `⇧⌘Z` / `Ctrl+Y` redo, `⌘/Ctrl+D` duplicate,
   `⌘/Ctrl+A` select all, `Del` delete, `H` on/off, `F` frame selection,
   `Esc` deselect, `1/2` render modes (`3` for illuminance in M5), `0/7/8/9` perspective / top / front
-  / side, and `W/E` move/aim once handles exist.
+  / side, `W/E` move/aim handles.
 - Touch: tap = click, long press = Shift-click (add to or remove from the
   selection), one finger on a fixture drags it. On tablets the library starts collapsed and the inspector
   becomes a foldable sheet ([ADR 0030](./decisions/0030-touch-and-tablet.md)).

@@ -4,6 +4,7 @@ import {
   DEFAULT_SUSPENSION,
   defaultPosition,
   mountSurfaceHit,
+  roomSurfaceHit,
   WALL_MOUNT_HEIGHT,
 } from './placement';
 import { product, room } from './test-fixtures';
@@ -151,5 +152,24 @@ describe('mountSurfaceHit', () => {
   it('misses wall fixtures when the ray goes over the walls and away from the floor', () => {
     const overTheTop = { origin: { x: 0, y: 1.5, z: 0 }, direction: { x: 0, y: 1, z: -0.1 } };
     expect(mountSurfaceHit(overTheTop, product('wall'), anywhere, room)).toBeNull();
+  });
+});
+
+describe('roomSurfaceHit', () => {
+  it('finds the floor, a wall or the ceiling as seen from inside', () => {
+    const toFloor = { origin: { x: 1, y: 4.7, z: 3 }, direction: { x: 0, y: -1, z: -1 } };
+    const floor = roomSurfaceHit(toFloor, room);
+    expect(floor?.y).toBe(0);
+    expect(floor?.z).toBeCloseTo(-1.7);
+    // Through the front wall's back face to the back wall.
+    const level = { origin: { x: 0.5, y: 1.5, z: 6 }, direction: { x: 0, y: 0, z: -1 } };
+    expect(roomSurfaceHit(level, room)).toEqual({ x: 0.5, y: 1.5, z: -2 });
+    const up = { origin: { x: 0, y: 1, z: 0 }, direction: { x: 0, y: 1, z: 0 } };
+    expect(roomSurfaceHit(up, room)).toEqual({ x: 0, y: 2.7, z: 0 });
+  });
+
+  it('misses rays that pass beside the room', () => {
+    const beside = { origin: { x: 9, y: 5, z: 0 }, direction: { x: 0, y: -1, z: 0 } };
+    expect(roomSurfaceHit(beside, room)).toBeNull();
   });
 });

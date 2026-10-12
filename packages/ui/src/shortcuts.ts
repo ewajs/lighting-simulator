@@ -1,16 +1,21 @@
-import type { RenderMode, ViewName } from '@luxstudio/core';
+import type { HandleMode, RenderMode, ViewName } from '@luxstudio/core';
+
+/** The handles the app switches between; `none` is only for hosts that want no handle. */
+export type EditTool = Exclude<HandleMode, 'none'>;
 
 /** What a keyboard shortcut asks the app to do. */
 export type ShortcutAction =
   | { readonly type: 'undo' | 'redo' | 'delete' | 'duplicate' | 'select-all' | 'deselect' }
   | { readonly type: 'toggle-on' | 'frame' }
   | { readonly type: 'render-mode'; readonly mode: RenderMode }
+  | { readonly type: 'tool'; readonly tool: EditTool }
   | { readonly type: 'view'; readonly view: ViewName };
 
 /** The parts of a KeyboardEvent the mapping looks at. */
 export type KeyPress = Pick<KeyboardEvent, 'key' | 'metaKey' | 'ctrlKey' | 'shiftKey' | 'altKey'>;
 
 const RENDER_MODE_KEYS: Record<string, RenderMode> = { '1': 'realistic', '2': 'clay' };
+const TOOL_KEYS: Record<string, EditTool> = { w: 'move', e: 'aim' };
 const VIEW_KEYS: Record<string, ViewName> = {
   '0': 'perspective',
   '7': 'top',
@@ -42,6 +47,8 @@ export function shortcutAction({
   if (k === 'escape') return { type: 'deselect' };
   if (k === 'h') return { type: 'toggle-on' };
   if (k === 'f') return { type: 'frame' };
+  const tool = TOOL_KEYS[k];
+  if (tool) return { type: 'tool', tool };
   const mode = RENDER_MODE_KEYS[k];
   if (mode) return { type: 'render-mode', mode };
   const view = VIEW_KEYS[k];

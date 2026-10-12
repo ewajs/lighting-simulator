@@ -8,6 +8,10 @@ const WALL_LIGHT = { x: 845, y: 437 };
 /** With the pendant selected: the right arm of its x (red) arrow, and the upper arm of its height (green) arrow. */
 const PENDANT_X_ARROW = { x: 675, y: 362 };
 const PENDANT_HEIGHT_ARROW = { x: 642, y: 312 };
+/** The track spot on the ceiling, aimed at the left wall; in aim mode, its beam marker and the right of its ring. */
+const TRACK_SPOT = { x: 523, y: 312 };
+const SPOT_AIM_POINT = { x: 434, y: 391 };
+const SPOT_RING_RIGHT = { x: 569, y: 306 };
 
 async function openDemo(page: Page): Promise<string[]> {
   const errors: string[] = [];
@@ -28,8 +32,11 @@ async function drag(page: Page, from: { x: number; y: number }, to: { x: number;
   await page.mouse.up();
 }
 
-/** The inspector's position field with this label, as a number (es-AR uses a decimal comma). */
-async function positionField(page: Page, label: 'X' | 'Altura' | 'Z'): Promise<number> {
+/** The inspector's number field with this label, as a number (es-AR uses a decimal comma). */
+async function positionField(
+  page: Page,
+  label: 'X' | 'Altura' | 'Z' | 'Inclinación' | 'Giro',
+): Promise<number> {
   const value = await page.getByRole('textbox', { name: label, exact: false }).inputValue();
   return Number(value.replace(',', '.'));
 }
@@ -126,4 +133,53 @@ test('clicking the handle keeps the selection', async ({ page }) => {
   await page.mouse.click(PENDANT_X_ARROW.x, PENDANT_X_ARROW.y);
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
   expect(await positionField(page, 'X')).toBe(0);
+});
+
+test('E switches to the aim handle: drag the beam’s landing point to re-aim', async ({ page }) => {
+  const errors = await openDemo(page);
+  await page.mouse.click(TRACK_SPOT.x, TRACK_SPOT.y);
+  await page.keyboard.press('e');
+  await expect(page.getByRole('radio', { name: 'Orientar' })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+  await expect(page).toHaveScreenshot('aim-handle.png');
+
+  // From the left wall to the floor in front: less tilt, turned towards the front right.
+  await drag(page, SPOT_AIM_POINT, { x: 600, y: 600 });
+  expect(await positionField(page, 'Inclinación')).toBeLessThan(45);
+  expect(await positionField(page, 'Giro')).toBeGreaterThan(0);
+  await expect(page).toHaveScreenshot('spot-re-aimed.png');
+
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect.poll(() => positionField(page, 'Giro')).toBe(-90);
+  expect(await positionField(page, 'Inclinación')).toBe(45);
+  expect(errors).toEqual([]);
+});
+
+test('the rotation ring turns pan only', async ({ page }) => {
+  await openDemo(page);
+  await page.mouse.click(TRACK_SPOT.x, TRACK_SPOT.y);
+  await page.getByRole('radio', { name: 'Orientar' }).click();
+  // A quarter turn, from the right of the ring to its front.
+  await drag(page, SPOT_RING_RIGHT, { x: TRACK_SPOT.x, y: 330 });
+  expect(await positionField(page, 'Giro')).not.toBe(-90);
+  expect(await positionField(page, 'Inclinación')).toBe(45);
+  // Position untouched, selection kept.
+  expect(await positionField(page, 'X')).toBe(-1);
+  await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+});
+
+test('W and the toolbar switch back to moving', async ({ page }) => {
+  await openDemo(page);
+  const move = page.getByRole('radio', { name: 'Mover' });
+  const aim = page.getByRole('radio', { name: 'Orientar' });
+  await expect(move).toHaveAttribute('aria-checked', 'true');
+  await aim.click();
+  await expect(aim).toHaveAttribute('aria-checked', 'true');
+  await page.keyboard.press('w');
+  await expect(move).toHaveAttribute('aria-checked', 'true');
+  await aim.click();
+  await move.click();
+  await expect(move).toHaveAttribute('aria-checked', 'true');
 });

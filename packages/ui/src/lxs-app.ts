@@ -30,7 +30,7 @@ import './lxs-viewport';
 import type { DropProductDetail, LxsViewport } from './lxs-viewport';
 import './lxs-viewport-controls';
 import { pruneSelection, selectionAfterPick, selectionForMove } from './selection';
-import { isTyping, shortcutAction, type ShortcutAction } from './shortcuts';
+import { isTyping, shortcutAction, type EditTool, type ShortcutAction } from './shortcuts';
 
 /** Below this width the library starts collapsed, leaving the viewport room (landscape tablets). */
 const AUTO_COLLAPSE_LIBRARY_BELOW_PX = 1200;
@@ -85,6 +85,8 @@ export class LxsApp extends LitElement {
 
   @state() private selection: readonly string[] = [];
   @state() private scene: Scene | undefined;
+  /** Which handle the selection shows: arrows to move it, or the aim handle. */
+  @state() private tool: EditTool = 'move';
   @state() private renderMode: RenderMode = 'realistic';
   @state() private exposureEv = 0;
   @state() private view: ViewName = 'perspective';
@@ -219,7 +221,7 @@ export class LxsApp extends LitElement {
     return html`<lxs-viewport
       .simulator=${this.simulator}
       .highlighted=${this.selection}
-      handle="move"
+      handle=${this.tool}
       .renderMode=${this.renderMode}
       .exposureEv=${this.exposureEv}
       @lxs-pick=${this.#onPick}
@@ -232,9 +234,11 @@ export class LxsApp extends LitElement {
   #controls(variant: 'overlay' | 'panel') {
     return html`<lxs-viewport-controls
       variant=${variant}
+      .tool=${this.tool}
       .renderMode=${this.renderMode}
       .view=${this.view}
       .exposureEv=${this.exposureEv}
+      @lxs-tool-change=${({ detail }: CustomEvent<{ tool: EditTool }>) => (this.tool = detail.tool)}
       @lxs-render-mode-change=${({ detail }: CustomEvent<{ mode: RenderMode }>) => (this.renderMode = detail.mode)}
       @lxs-exposure-change=${({ detail }: CustomEvent<{ ev: number }>) => (this.exposureEv = detail.ev)}
       @lxs-view-request=${({ detail }: CustomEvent<{ view: ViewName }>) => this.#setView(detail.view)}
@@ -450,6 +454,9 @@ export class LxsApp extends LitElement {
         return this.viewport.frame(this.selection);
       case 'render-mode':
         this.renderMode = action.mode;
+        return;
+      case 'tool':
+        this.tool = action.tool;
         return;
       case 'view':
         return this.#setView(action.view);

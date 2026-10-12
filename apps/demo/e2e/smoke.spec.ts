@@ -238,7 +238,7 @@ test('theme, language, collapsed panels and the plan view', async ({ page }) => 
   await page.getByRole('button', { name: 'Tema claro' }).click();
   await expect(page.locator('lxs-app')).toHaveAttribute('data-lxs-theme', 'light');
 
-  await page.getByRole('radio', { name: 'EN' }).click();
+  await page.getByRole('radio', { name: 'EN', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Catalog' })).toBeVisible();
   // The host swaps product names on lxs-locale-change.
   await expect(page.getByRole('button', { name: /Pendant 48 W/ })).toBeVisible();

@@ -27,6 +27,11 @@ describe('shortcutAction', () => {
     expect(shortcutAction(press('f'))).toEqual({ type: 'frame' });
   });
 
+  it('maps W and E to the move and aim tools', () => {
+    expect(shortcutAction(press('w'))).toEqual({ type: 'tool', tool: 'move' });
+    expect(shortcutAction(press('E'))).toEqual({ type: 'tool', tool: 'aim' });
+  });
+
   it('maps render modes and views', () => {
     expect(shortcutAction(press('2'))).toEqual({ type: 'render-mode', mode: 'clay' });
     expect(shortcutAction(press('7'))).toEqual({ type: 'view', view: 'top' });
