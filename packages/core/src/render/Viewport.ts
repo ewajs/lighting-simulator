@@ -77,6 +77,7 @@ export class Viewport {
   readonly #pickListeners = new Set<(pick: PickEvent) => void>();
   readonly #resizeObserver = new ResizeObserver(() => this.#resize());
   #unsubscribe: (() => void) | undefined;
+  #unsubscribePhotometry: (() => void) | undefined;
   #renderMode: RenderMode = 'realistic';
   #exposureEv = 0;
   #highlighted: readonly string[] = [];
@@ -90,7 +91,9 @@ export class Viewport {
   constructor({ simulator, container }: ViewportOptions) {
     this.#simulator = simulator;
     this.#container = container;
-    this.#luminaires = new LuminaireMeshes(simulator.catalog);
+    this.#luminaires = new LuminaireMeshes(simulator.catalog, (productId) =>
+      simulator.photometry(productId),
+    );
     this.#controls = new OrbitControls(this.#camera, this.#renderer.domElement);
     this.#controls.enableDamping = true;
     this.#controls.maxPolarAngle = Math.PI * 0.495; // Stay above the floor.
@@ -120,6 +123,10 @@ export class Viewport {
     this.#resize();
 
     this.#unsubscribe = this.#simulator.subscribe((scene, previous) => this.#sync(scene, previous));
+    // Fixtures are rebuilt from a product's photometry once its file arrives.
+    this.#unsubscribePhotometry = this.#simulator.onPhotometry(() =>
+      this.#sync(this.#simulator.scene, undefined),
+    );
     this.#sync(this.#simulator.scene, undefined);
     this.setView('perspective', { animate: false });
 
@@ -235,6 +242,7 @@ export class Viewport {
     for (const { reject } of this.#captures) reject(new Error('Viewport disposed'));
     this.#captures = [];
     this.#unsubscribe?.();
+    this.#unsubscribePhotometry?.();
     this.#resizeObserver.disconnect();
     this.#controls.dispose();
     this.#room.dispose();

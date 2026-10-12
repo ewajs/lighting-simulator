@@ -3,8 +3,9 @@ import '@luxstudio/ui';
 import '@luxstudio/ui/theme.css';
 import { sampleCatalog } from './sample-catalog';
 import { sampleDisplay } from './sample-display';
+import { samplePhotometry } from './sample-photometry';
 
-const simulator = new Simulator({ catalog: sampleCatalog });
+const simulator = new Simulator({ catalog: sampleCatalog, photometry: samplePhotometry });
 addStarterLayout(simulator);
 
 const app = document.createElement('lxs-app');

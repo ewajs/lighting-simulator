@@ -232,7 +232,7 @@ needs it:
 | Provider | Supplies | Needed in |
 |---|---|---|
 | Catalog | products and categories | port (0.3 / 0.5) |
-| Photometry | IES data for a product | M1 |
+| Photometry | IES files for a product ([ADR 0034](./decisions/0034-photometry-provider.md)) | M1 |
 | Storage | save / load / share scenes | M4 |
 
 **Data flow** is one-way. UI or host calls core operations → core updates

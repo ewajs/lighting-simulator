@@ -1,7 +1,8 @@
 // Pure lighting and camera maths for the viewport. No three.js, so it can be
 // unit-tested in Node. See SPEC §6, "Lighting model before IES".
 
-import type { Product, Room, Vec3 } from '../types';
+import { beamAngleDeg, totalFlux } from '../photometry/distribution';
+import type { Photometry, Product, Room, Vec3 } from '../types';
 
 /** Products with a wider beam than this are lit as isotropic point lights. */
 export const WIDE_BEAM_DEG = 120;
@@ -15,6 +16,26 @@ export const BASE_EXPOSURE = 0.025;
 
 /** Small constant fill, in lx, so unlit areas are never pure black. */
 export const MIN_FILL_LUX = 1.5;
+
+/** Beam angle that makes a product an isotropic point light. */
+const FULL_SPHERE_DEG = 360;
+
+/**
+ * The product as the renderer should light it: when it has photometry, flux
+ * and beam angle come from the IES file, which is the source of truth (ADR 0033).
+ * A spotlight only points down, so a file with any upward light is lit as a
+ * point light instead.
+ */
+export function lightingProduct(product: Product, photometry: Photometry | undefined): Product {
+  if (!photometry) return product;
+  const { verticalDeg, candela } = photometry;
+  const emitsUpward = candela.some((row) => row.some((cd, i) => cd > 0 && verticalDeg[i]! > 90));
+  return {
+    ...product,
+    flux: totalFlux(photometry),
+    beamDeg: emitsUpward ? FULL_SPHERE_DEG : beamAngleDeg(photometry),
+  };
+}
 
 /** Whether a product is drawn as a spotlight (true) or an isotropic point light. */
 export function isSpot(product: Product): boolean {

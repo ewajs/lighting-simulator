@@ -1,4 +1,5 @@
 import * as history from './history';
+import { PhotometryCache, type PhotometryListener } from './photometry/cache';
 import {
   addLuminaire,
   assertLuminaire,
@@ -9,7 +10,16 @@ import {
   type LuminairePatch,
 } from './luminaires';
 import { assertRoom, DEFAULT_ROOM, resizeRoom, setSurface, type RoomSize } from './room';
-import type { Catalog, FloorPoint, Product, Scene, Surface, SurfaceName } from './types';
+import type {
+  Catalog,
+  FloorPoint,
+  Photometry,
+  PhotometryProvider,
+  Product,
+  Scene,
+  Surface,
+  SurfaceName,
+} from './types';
 
 /** Options for edits that can be merged into one undo step. */
 export interface EditOptions {
@@ -28,6 +38,11 @@ export interface SimulatorOptions {
   readonly catalog: Catalog;
   /** Starting scene. Defaults to an empty DEFAULT_ROOM. */
   readonly scene?: Scene;
+  /**
+   * IES files for products that have them. Without it, or for products it has
+   * no file for, light is estimated from the product's flux and beam angle.
+   */
+  readonly photometry?: PhotometryProvider;
 }
 
 /**
@@ -41,21 +56,38 @@ export interface SimulatorOptions {
  */
 export class Simulator {
   readonly #catalog: Catalog;
+  readonly #photometry: PhotometryCache;
   readonly #listeners = new Set<SceneListener>();
   #scene: Scene;
   #history = history.emptyHistory<Scene>();
 
-  constructor({ catalog, scene }: SimulatorOptions) {
+  constructor({ catalog, scene, photometry }: SimulatorOptions) {
     const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [] };
     assertRoom(initial.room);
     initial.luminaires.forEach(assertLuminaire);
     this.#catalog = catalog;
+    this.#photometry = new PhotometryCache(photometry, (message) => console.warn(message));
     this.#scene = initial;
   }
 
   /** The product lookup this simulator was created with. */
   get catalog(): Catalog {
     return this.#catalog;
+  }
+
+  /**
+   * The product's parsed IES photometry, or undefined while it loads or if it
+   * has none. The first call for a product starts loading it from the provider;
+   * `onPhotometry` reports when it arrives. A file that fails to load or parse
+   * is reported with `console.warn` and treated as missing.
+   */
+  photometry(productId: string): Photometry | undefined {
+    return this.#photometry.get(productId);
+  }
+
+  /** Calls `listener` when a product's photometry loads. Returns an unsubscribe function. */
+  onPhotometry(listener: PhotometryListener): () => void {
+    return this.#photometry.subscribe(listener);
   }
 
   /** Current scene snapshot. Never mutate it; it is replaced on every change. */

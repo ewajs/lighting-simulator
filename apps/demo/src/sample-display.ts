@@ -41,6 +41,34 @@ const ITEMS: { productId: string; categoryId: string; name: Labels }[] = [
     categoryId: 'floor',
     name: { 'es-AR': 'Lámpara de mesa 5 W', en: 'Table lamp 5 W' },
   },
+  {
+    productId: 'ies-downlight',
+    categoryId: 'recessed',
+    name: { 'es-AR': 'Downlight 16 W (IES)', en: 'Downlight 16 W (IES)' },
+  },
+  {
+    productId: 'ies-wall-washer',
+    categoryId: 'recessed',
+    name: { 'es-AR': 'Bañador de pared 14 W (IES)', en: 'Wall washer 14 W (IES)' },
+  },
+  {
+    productId: 'ies-linear-pendant',
+    categoryId: 'pendant',
+    name: {
+      'es-AR': 'Colgante lineal directo/indirecto 47 W (IES)',
+      en: 'Linear pendant, direct/indirect 47 W (IES)',
+    },
+  },
+  {
+    productId: 'ies-track-spot',
+    categoryId: 'track',
+    name: { 'es-AR': 'Spot de riel 18° 40 W (IES)', en: 'Track spot 18° 40 W (IES)' },
+  },
+  {
+    productId: 'ies-wall-up-down',
+    categoryId: 'wall',
+    name: { 'es-AR': 'Aplique arriba/abajo 18 W (IES)', en: 'Up/down wall light 18 W (IES)' },
+  },
 ];
 
 /** Display data for the sample products, in the given language. */

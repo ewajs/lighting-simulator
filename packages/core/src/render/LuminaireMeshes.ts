@@ -1,7 +1,7 @@
 import * as THREE from 'three/webgpu';
-import type { Catalog, Luminaire, Room, Scene } from '../types';
+import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../types';
 import { buildFixture, disposeFixture, type Fixture } from './fixtures';
-import { candela, kelvinToRgb } from './lighting';
+import { candela, kelvinToRgb, lightingProduct } from './lighting';
 import type { RenderMode } from './RoomMeshes';
 
 /** Only the brightest few lights cast shadows; the rest still light the scene. */
@@ -15,6 +15,10 @@ const DEG = Math.PI / 180;
 
 interface Item {
   readonly productId: string;
+  /** The photometry the fixture was built with; a new arrival rebuilds it. */
+  readonly photometry: Photometry | undefined;
+  /** The product as lit, with flux and beam from its photometry if any. */
+  readonly product: Product;
   readonly fixture: Fixture;
   /** Luminous flux currently emitted, in lm (0 when off). */
   flux: number;
@@ -26,9 +30,11 @@ export class LuminaireMeshes {
   readonly group = new THREE.Group();
   readonly #items = new Map<string, Item>();
   readonly #catalog: Catalog;
+  readonly #photometry: (productId: string) => Photometry | undefined;
 
-  constructor(catalog: Catalog) {
+  constructor(catalog: Catalog, photometry: (productId: string) => Photometry | undefined) {
     this.#catalog = catalog;
+    this.#photometry = photometry;
   }
 
   sync(scene: Scene, highlighted: readonly string[], mode: RenderMode): void {
@@ -72,18 +78,28 @@ export class LuminaireMeshes {
 
   #itemFor(luminaire: Luminaire): Item | undefined {
     const existing = this.#items.get(luminaire.id);
-    if (existing?.productId === luminaire.productId) return existing;
+    const photometry = this.#photometry(luminaire.productId);
+    if (existing?.productId === luminaire.productId && existing.photometry === photometry) {
+      return existing;
+    }
     if (existing) this.#remove(luminaire.id);
-    const product = this.#catalog.get(luminaire.productId);
-    if (!product) return undefined; // Unknown products are skipped, not drawn.
-    const item: Item = { productId: product.id, fixture: buildFixture(product), flux: 0 };
+    const catalogProduct = this.#catalog.get(luminaire.productId);
+    if (!catalogProduct) return undefined; // Unknown products are skipped, not drawn.
+    const product = lightingProduct(catalogProduct, photometry);
+    const item: Item = {
+      productId: product.id,
+      photometry,
+      product,
+      fixture: buildFixture(product),
+      flux: 0,
+    };
     this.group.add(item.fixture.root);
     this.#items.set(luminaire.id, item);
     return item;
   }
 
   #update(item: Item, luminaire: Luminaire, room: Room, mode: RenderMode): void {
-    const product = this.#catalog.get(luminaire.productId)!;
+    const { product } = item;
     const { root, light, lightOrigin, emissive, head, cord } = item.fixture;
     const { x, y, z } = luminaire.position;
     root.position.set(x, y, z);

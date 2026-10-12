@@ -112,3 +112,15 @@ export interface Photometry {
 export interface Catalog {
   get(productId: string): Product | undefined;
 }
+
+/**
+ * Supplies products' IES files, e.g. from a backend's download links.
+ * Injected by the host; core never fetches anything itself.
+ */
+export interface PhotometryProvider {
+  /**
+   * The text of the product's IES LM-63 file, or undefined if it has none.
+   * Decoding the bytes is up to the host (IES files are usually ASCII or Latin-1).
+   */
+  load(productId: string): Promise<string | undefined>;
+}

@@ -75,4 +75,21 @@ describe('Simulator', () => {
     sim.redo();
     expect(listener).toHaveBeenCalledTimes(2);
   });
+
+  it('loads photometry through the provider and reports its arrival', async () => {
+    const ies = 'IESNA:LM-63-2002\nTILT=NONE\n1 -1 1 2 1 1 2 0 0 0\n1 1 10\n0 90\n0\n100 0\n';
+    const load = vi.fn((productId: string) =>
+      Promise.resolve(productId === 'test-recessed' ? ies : undefined),
+    );
+    const sim = new Simulator({ catalog, photometry: { load } });
+    const arrived = new Promise((resolve) => sim.onPhotometry(resolve));
+    expect(sim.photometry('test-recessed')).toBeUndefined();
+    await arrived;
+    expect(sim.photometry('test-recessed')?.candela).toEqual([[100, 0]]);
+    expect(load).toHaveBeenCalledExactlyOnceWith('test-recessed');
+  });
+
+  it('has no photometry without a provider', () => {
+    expect(create().photometry('test-recessed')).toBeUndefined();
+  });
 });
