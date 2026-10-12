@@ -105,11 +105,25 @@ new images in the PR. Run `npm run i18n:build` first if translations changed.
 - Core logic changes come with unit tests. Physics functions are tested
   against hand-calculated reference values.
 - Every bug fix comes with a test that failed before the fix.
+- Every e2e test fails on an unexpected page error, console error or
+  warning. A test that causes one on purpose declares it with `allowConsole`
+  ([ADR 0044](docs/decisions/0044-logging-and-loud-failures.md)).
 
 ### Types and errors
 - TypeScript strict. No `any` without a comment saying why. Public types are exported.
 - Validate at the boundaries (injected data, IES files, user input) and fail
   with clear messages. Trust internal code.
+
+### Logging
+- Log through the injected `Logger` (`simulator.logger`), never `console`
+  directly ([ADR 0044](docs/decisions/0044-logging-and-loud-failures.md)).
+- Start messages with their area in brackets: `[scene]`, `[photometry]`,
+  `[models]`, `[render]`, `[drag]`, `[ui]`.
+- `debug` for each step at the edges (edits, loads, parses, budget
+  changes), once per gesture, not per frame or pointer move. `info` for rare,
+  notable events. `warn` when something is skipped but the library carries
+  on, `error` when something fails.
+- The demo's `?debug` URL switch shows debug logs and the diagnostics overlay.
 
 ### Dependencies
 - Allowed runtime deps: **core → three**, **ui → core + lit + @lit/localize +
@@ -149,6 +163,11 @@ Build, lint and tests pass, and UI changes are checked in a real browser
 ## Git
 
 - A feature branch and a PR per step, into `master`. The owner reviews and merges.
-- Open PRs with `gh`.
+- Open PRs with `gh`. Each PR description has, besides what changed and how
+  it was verified:
+  - **Where to look:** the few files with the real logic, versus wiring and tests.
+  - **What could break:** an honest list of the risks.
+  - **Try it yourself:** a short manual checklist for the owner to run in the
+    browser (`npm run dev`, or the deployed demo after merge), including `?debug`.
 - Commit and push only as part of an agreed step.
 - GitHub Pages deploys the demo from `master` (`.github/workflows/pages.yml`).

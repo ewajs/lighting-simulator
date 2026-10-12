@@ -1,5 +1,6 @@
 import * as THREE from 'three/webgpu';
 import { color } from 'three/tsl';
+import type { Logger } from '../logger';
 import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../types';
 import { candelaGrid } from '../photometry/grid';
 import { buildFixture, type Fixture } from './fixtures';
@@ -46,16 +47,31 @@ export class LuminaireMeshes {
   readonly #catalog: Catalog;
   readonly #photometry: (productId: string) => Photometry | undefined;
   readonly #model: (productId: string) => THREE.Object3D | undefined;
+  readonly #logger: Logger;
+  /** How many lights cast shadows, as last logged. */
+  #shadowCasters = 0;
 
   /** `photometry` and `model` look up what a product has loaded so far. */
-  constructor(
-    catalog: Catalog,
-    photometry: (productId: string) => Photometry | undefined,
-    model: (productId: string) => THREE.Object3D | undefined,
-  ) {
+  constructor({
+    catalog,
+    photometry,
+    model,
+    logger,
+  }: {
+    readonly catalog: Catalog;
+    readonly photometry: (productId: string) => Photometry | undefined;
+    readonly model: (productId: string) => THREE.Object3D | undefined;
+    readonly logger: Logger;
+  }) {
     this.#catalog = catalog;
     this.#photometry = photometry;
     this.#model = model;
+    this.#logger = logger;
+  }
+
+  /** How many lights cast shadows now, at most SHADOW_BUDGET. */
+  get shadowCasters(): number {
+    return this.#shadowCasters;
   }
 
   sync(scene: Scene, highlighted: readonly string[], mode: RenderMode): void {
@@ -70,10 +86,19 @@ export class LuminaireMeshes {
     scene.luminaires.forEach(show);
     for (const id of this.#items.keys()) if (!present.has(id)) this.#remove(id);
     // Rebuilt fixtures start without a shadow, which is what they lost.
-    for (const id of this.#assignShadows()) {
+    const losing = this.#assignShadows();
+    for (const id of losing) {
       this.#remove(id);
       const luminaire = scene.luminaires.find((l) => l.id === id);
       if (luminaire) show(luminaire);
+    }
+    const casters = [...this.#items.values()].filter((item) => item.fixture.light.castShadow);
+    if (casters.length !== this.#shadowCasters || losing.length > 0) {
+      this.#shadowCasters = casters.length;
+      const rebuilt = losing.length > 0 ? `; rebuilt ${losing.length} that lost theirs` : '';
+      this.#logger.debug(
+        `[render] Shadows from ${casters.length} of ${this.#items.size} lights (budget ${SHADOW_BUDGET})${rebuilt}`,
+      );
     }
   }
 

@@ -1,4 +1,4 @@
-import { Simulator, type Catalog, type PhotometryProvider } from '@luxstudio/core';
+import { consoleLogger, Simulator, type Catalog, type PhotometryProvider } from '@luxstudio/core';
 import '@luxstudio/ui';
 import '@luxstudio/ui/theme.css';
 import { ImportedProducts } from './imported-products';
@@ -17,12 +17,21 @@ const photometry: PhotometryProvider = {
   },
 };
 
-const simulator = new Simulator({ catalog, photometry, models: sampleModels });
+// `?debug` in the URL logs every step to the console and shows frame rate and draw counts.
+const debug = new URLSearchParams(location.search).has('debug');
+
+const simulator = new Simulator({
+  catalog,
+  photometry,
+  models: sampleModels,
+  logger: consoleLogger(debug ? 'debug' : 'warn'),
+});
 addStarterLayout(simulator);
 
 const app = document.createElement('lxs-app');
 app.simulator = simulator;
 app.iesImport = true;
+app.diagnostics = debug;
 app.catalog = sampleDisplay('es-AR'); // Matches the default UI locale.
 // Product names come from the host, so swap them when the user changes language.
 app.addEventListener(

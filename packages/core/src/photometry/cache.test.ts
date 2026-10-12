@@ -17,7 +17,8 @@ const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 function setup(load: PhotometryProvider['load']) {
   const provider = { load: vi.fn(load) };
   const warn = vi.fn();
-  const cache = new PhotometryCache(provider, warn);
+  const logger = { debug: vi.fn(), info: vi.fn(), warn, error: vi.fn() };
+  const cache = new PhotometryCache(provider, logger);
   const loaded = vi.fn();
   cache.subscribe(loaded);
   return { provider, warn, cache, loaded };
@@ -62,7 +63,12 @@ describe('PhotometryCache', () => {
   });
 
   it('does nothing without a provider', () => {
-    const cache = new PhotometryCache(undefined, vi.fn());
+    const cache = new PhotometryCache(undefined, {
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+    });
     expect(cache.get('a')).toBeUndefined();
   });
 

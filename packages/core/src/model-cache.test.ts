@@ -11,7 +11,8 @@ const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 function setup(load: ModelProvider['load']) {
   const provider = { load: vi.fn(load) };
   const warn = vi.fn();
-  const cache = new ModelCache(provider, warn);
+  const logger = { debug: vi.fn(), info: vi.fn(), warn, error: vi.fn() };
+  const cache = new ModelCache(provider, logger);
   const loaded = vi.fn();
   cache.subscribe(loaded);
   return { provider, warn, cache, loaded };
@@ -61,6 +62,13 @@ describe('ModelCache', () => {
   });
 
   it('does nothing without a provider', () => {
-    expect(new ModelCache(undefined, vi.fn()).get('a')).toBeUndefined();
+    expect(
+      new ModelCache(undefined, {
+        debug: vi.fn(),
+        info: vi.fn(),
+        warn: vi.fn(),
+        error: vi.fn(),
+      }).get('a'),
+    ).toBeUndefined();
   });
 });

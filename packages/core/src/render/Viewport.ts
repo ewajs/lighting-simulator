@@ -18,6 +18,8 @@ import { PointerGestures } from './PointerGestures';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
 
 const VIEW_TRANSITION_MS = 450;
+/** Weight of each new frame in the smoothed frame time: about a second's memory at 60 fps. */
+const FRAME_SMOOTHING = 0.05;
 /** A click this close to a fixture on screen still picks it: thin fixtures, fingers. In px. */
 const PICK_SLOP_PX = 10;
 /** Camera distance when framing a selection, in m. */
@@ -47,6 +49,20 @@ export interface Measurement {
   /** The label's place, the dimension's midpoint, in CSS px from the container's top left. */
   readonly x: number;
   readonly y: number;
+}
+
+/** How the viewport is doing, e.g. for a debug overlay. Read with `Viewport.diagnostics()`. */
+export interface Diagnostics {
+  readonly backend: 'WebGPU' | 'WebGL 2';
+  /** Frames per second, smoothed over the last second or so. */
+  readonly fps: number;
+  readonly luminaires: number;
+  /** Lights casting shadows, at most the shadow budget. */
+  readonly shadowCasters: number;
+  /** Draw calls in the last frame, shadow passes included. */
+  readonly drawCalls: number;
+  /** Triangles drawn in the last frame, shadow passes included. */
+  readonly triangles: number;
 }
 
 /** A click in the viewport. `luminaireId` is null when no fixture was hit. */
@@ -101,6 +117,9 @@ export class Viewport {
   #highlighted: readonly string[] = [];
   readonly #manipulator: Manipulator;
   #transition: ((now: number) => void) | undefined;
+  /** Smoothed time between frames, in ms; 0 until two frames have been drawn. */
+  #frameMs = 0;
+  #lastFrame: number | undefined;
   #gestures: PointerGestures | undefined;
   #captures: PendingCapture[] = [];
   #started = false;
@@ -111,13 +130,14 @@ export class Viewport {
     // A parsed model swaps placeholders for the real thing on the next sync.
     this.#models = new FixtureModels(
       () => this.#sync(this.#simulator.scene, undefined),
-      (message) => console.warn(message),
+      simulator.logger,
     );
-    this.#luminaires = new LuminaireMeshes(
-      simulator.catalog,
-      (productId) => simulator.photometry(productId),
-      (productId) => this.#models.get(productId, simulator.model(productId)),
-    );
+    this.#luminaires = new LuminaireMeshes({
+      catalog: simulator.catalog,
+      photometry: (productId) => simulator.photometry(productId),
+      model: (productId) => this.#models.get(productId, simulator.model(productId)),
+      logger: simulator.logger,
+    });
     // three.js picks each light's shader by its class; teach it ours.
     this.#renderer.library.addLight(IesLightNode, IesLight);
     this.#controls = new OrbitControls(this.#camera, this.#renderer.domElement);
@@ -170,7 +190,9 @@ export class Viewport {
     this.#sync(this.#simulator.scene, undefined);
     this.setView('perspective', { animate: false });
 
+    this.#simulator.logger.info(`[render] Drawing with ${this.backend}`);
     await renderer.setAnimationLoop((now) => {
+      this.#measureFrame(now);
       this.#transition?.(now);
       this.#controls.update();
       this.#manipulator.updateSizes();
@@ -179,6 +201,19 @@ export class Viewport {
       else renderer.render(this.#scene, this.#camera);
     });
     this.#started = true;
+  }
+
+  /** Frame rate, lights, shadows and draw calls right now. Meaningful after init(). */
+  diagnostics(): Diagnostics {
+    const { drawCalls, triangles } = this.#renderer.info.render;
+    return {
+      backend: this.backend,
+      fps: this.#frameMs > 0 ? 1000 / this.#frameMs : 0,
+      luminaires: this.#simulator.scene.luminaires.length,
+      shadowCasters: this.#luminaires.shadowCasters,
+      drawCalls,
+      triangles,
+    };
   }
 
   /** Which backend three.js picked. Available after init(). */
@@ -406,6 +441,16 @@ export class Viewport {
     if (serialized === this.#lastMeasurements) return;
     this.#lastMeasurements = serialized;
     this.#measureListeners.forEach((listener) => listener(measurements));
+  }
+
+  /** Updates the smoothed frame time with the frame starting at `now` (ms). */
+  #measureFrame(now: number): void {
+    if (this.#lastFrame !== undefined) {
+      const ms = now - this.#lastFrame;
+      this.#frameMs =
+        this.#frameMs === 0 ? ms : this.#frameMs + (ms - this.#frameMs) * FRAME_SMOOTHING;
+    }
+    this.#lastFrame = now;
   }
 
   #resize(): void {

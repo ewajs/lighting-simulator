@@ -49,7 +49,9 @@ test('the linear pendant hangs from two cables, close up', async ({ page }) => {
 
 test('a model that isn’t a .glb falls back to the placeholder, with a warning', async ({
   page,
+  allowConsole,
 }) => {
+  allowConsole.push(/\[models\] "ies-linear-pendant"/);
   await page.route('**/models/ies-linear-pendant.glb', (route) =>
     route.fulfill({ status: 200, body: 'not a model' }),
   );
@@ -60,7 +62,7 @@ test('a model that isn’t a .glb falls back to the placeholder, with a warning'
   await openDemo(page);
   await expect
     .poll(() => warnings)
-    .toContainEqual(expect.stringMatching(/Model for product "ies-linear-pendant".*glTF/));
+    .toContainEqual(expect.stringMatching(/\[models\] "ies-linear-pendant".*glTF/));
   // Still there and selectable, drawn as the placeholder.
   await page.mouse.click(PENDANT.x, PENDANT.y);
   await expect(page.getByText(/^Seleccionadas: 1$/)).toBeVisible();

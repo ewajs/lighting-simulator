@@ -1,4 +1,5 @@
 import type {
+  Logger,
   MoveStartEvent,
   PickEvent,
   RenderMode,
@@ -74,6 +75,8 @@ export class LxsApp extends LitElement {
   @property({ attribute: false }) catalog: DisplayCatalog = EMPTY_DISPLAY_CATALOG;
   /** Lets the user load their own IES file from the catalog panel (ADR 0037). */
   @property({ type: Boolean, attribute: 'ies-import' }) iesImport = false;
+  /** Shows frame rate, backend, shadows and draw counts over the viewport, for debugging (ADR 0044). */
+  @property({ type: Boolean }) diagnostics = false;
   /** UI language for the whole page. */
   @property() locale: Locale = DEFAULT_LOCALE;
   /** Colour theme; reflected so the theme tokens apply to this subtree. */
@@ -225,6 +228,7 @@ export class LxsApp extends LitElement {
       .highlighted=${this.selection}
       handle=${this.tool}
       .snapping=${this.snapping}
+      .diagnostics=${this.diagnostics}
       .renderMode=${this.renderMode}
       .exposureEv=${this.exposureEv}
       @lxs-pick=${this.#onPick}
@@ -330,7 +334,7 @@ export class LxsApp extends LitElement {
     try {
       await setLocale(locale);
     } catch (error) {
-      console.error(error);
+      this.#logger.error(`[ui] Couldn't switch the language to ${locale}`, error);
       return;
     }
     if (announce) {
@@ -342,6 +346,11 @@ export class LxsApp extends LitElement {
         }),
       );
     }
+  }
+
+  /** The library's logger, or the console before a simulator is set. */
+  get #logger(): Pick<Logger, 'error'> {
+    return this.simulator?.logger ?? console;
   }
 
   #watch(simulator: Simulator | undefined): void {
@@ -360,7 +369,7 @@ export class LxsApp extends LitElement {
     try {
       png = await this.viewport.screenshot();
     } catch (error) {
-      console.error(error);
+      this.#logger.error("[ui] Couldn't take the screenshot", error);
       return;
     }
     // A neutral, translated base name: hosts ship this under their own brand.

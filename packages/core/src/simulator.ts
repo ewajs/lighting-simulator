@@ -1,4 +1,5 @@
 import * as history from './history';
+import { consoleLogger, type Logger } from './logger';
 import { ModelCache, type ModelListener } from './model-cache';
 import { PhotometryCache, type PhotometryListener } from './photometry/cache';
 import {
@@ -50,6 +51,12 @@ export interface SimulatorOptions {
    * products it has no model for, luminaires are drawn as simple placeholders.
    */
   readonly models?: ModelProvider;
+  /**
+   * Where the library reports what it does (ADR 0044). Defaults to the
+   * console, warnings and errors only; `consoleLogger('debug')` shows every
+   * step. The viewport logs through the same one.
+   */
+  readonly logger?: Logger;
 }
 
 /**
@@ -65,18 +72,29 @@ export class Simulator {
   readonly #catalog: Catalog;
   readonly #photometry: PhotometryCache;
   readonly #models: ModelCache;
+  readonly #logger: Logger;
   readonly #listeners = new Set<SceneListener>();
   #scene: Scene;
   #history = history.emptyHistory<Scene>();
 
-  constructor({ catalog, scene, photometry, models }: SimulatorOptions) {
+  constructor({ catalog, scene, photometry, models, logger }: SimulatorOptions) {
     const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [] };
     assertRoom(initial.room);
     initial.luminaires.forEach(assertLuminaire);
     this.#catalog = catalog;
-    this.#photometry = new PhotometryCache(photometry, (message) => console.warn(message));
-    this.#models = new ModelCache(models, (message) => console.warn(message));
+    this.#logger = logger ?? consoleLogger();
+    this.#photometry = new PhotometryCache(photometry, this.#logger);
+    this.#models = new ModelCache(models, this.#logger);
     this.#scene = initial;
+    const { width, depth, height } = initial.room;
+    this.#logger.debug(
+      `[scene] Started: ${width} × ${depth} × ${height} m room, ${initial.luminaires.length} luminaires`,
+    );
+  }
+
+  /** Where the library reports what it does; see `SimulatorOptions.logger`. */
+  get logger(): Logger {
+    return this.#logger;
   }
 
   /** The product lookup this simulator was created with. */
@@ -88,7 +106,7 @@ export class Simulator {
    * The product's parsed IES photometry, or undefined while it loads or if it
    * has none. The first call for a product starts loading it from the provider;
    * `onPhotometry` reports when it arrives. A file that fails to load or parse
-   * is reported with `console.warn` and treated as missing.
+   * is reported as a warning to the logger and treated as missing.
    */
   photometry(productId: string): Photometry | undefined {
     return this.#photometry.get(productId);
@@ -102,8 +120,8 @@ export class Simulator {
   /**
    * The product's 3D model file (binary glTF), or undefined while it loads or
    * if it has none. The first call starts loading it; `onModel` reports when it
-   * arrives. A file that fails to load or isn't a .glb is reported with
-   * `console.warn` and treated as missing.
+   * arrives. A file that fails to load or isn't a .glb is reported as a
+   * warning to the logger and treated as missing.
    */
   model(productId: string): ArrayBuffer | undefined {
     return this.#models.get(productId);
@@ -120,41 +138,56 @@ export class Simulator {
   }
 
   setRoomSize(size: Partial<RoomSize>, options?: EditOptions): void {
-    this.#commit(resizeRoom(this.#scene, size, this.#catalog), options);
+    this.#commit(resizeRoom(this.#scene, size, this.#catalog), options, 'Resize room', size);
   }
 
   setSurface(name: SurfaceName, patch: Partial<Surface>, options?: EditOptions): void {
-    this.#commit(setSurface(this.#scene, name, patch), options);
+    this.#commit(setSurface(this.#scene, name, patch), options, `Finish ${name}`, patch);
   }
 
   /** Adds a luminaire and returns its id. Throws if the product isn't in the catalog. */
   addLuminaire(productId: string, at?: FloorPoint): string {
     const id = crypto.randomUUID();
-    this.#commit(addLuminaire(this.#scene, this.#product(productId), id, at));
+    this.#commit(addLuminaire(this.#scene, this.#product(productId), id, at), undefined, 'Add', {
+      productId,
+      id,
+      at,
+    });
     return id;
   }
 
   updateLuminaire(id: string, patch: LuminairePatch, options?: EditOptions): void {
-    this.#commit(updateLuminaire(this.#scene, id, patch, this.#catalog), options);
+    this.#commit(updateLuminaire(this.#scene, id, patch, this.#catalog), options, 'Update', {
+      id,
+      ...patch,
+    });
   }
 
   removeLuminaires(ids: readonly string[]): void {
-    this.#commit(removeLuminaires(this.#scene, ids));
+    this.#commit(removeLuminaires(this.#scene, ids), undefined, 'Remove', ids);
   }
 
   /** Copies luminaires and returns the new ids, in the same order. */
   duplicateLuminaires(ids: readonly string[]): string[] {
     const newIds = ids.map(() => crypto.randomUUID());
-    this.#commit(duplicateLuminaires(this.#scene, ids, newIds, this.#catalog));
+    this.#commit(
+      duplicateLuminaires(this.#scene, ids, newIds, this.#catalog),
+      undefined,
+      'Duplicate',
+      {
+        ids,
+        newIds,
+      },
+    );
     return newIds;
   }
 
   undo(): void {
-    this.#travel(history.undo);
+    this.#travel(history.undo, 'Undo');
   }
 
   redo(): void {
-    this.#travel(history.redo);
+    this.#travel(history.redo, 'Redo');
   }
 
   canUndo(): boolean {
@@ -171,15 +204,26 @@ export class Simulator {
     return () => this.#listeners.delete(listener);
   }
 
-  #commit(next: Scene, options?: EditOptions): void {
-    this.#history = history.record(this.#history, this.#scene, options?.mergeKey);
+  /**
+   * Applies an edit and records the previous scene for undo. `what` and
+   * `details` describe it for the log, once per undo step: edits merged into
+   * the step before (one slider or pointer drag) aren't logged again.
+   */
+  #commit(next: Scene, options: EditOptions | undefined, what: string, details: unknown): void {
+    const mergeKey = options?.mergeKey;
+    if (mergeKey === undefined || mergeKey !== this.#history.lastMergeKey) {
+      this.#logger.debug(`[scene] ${what}`, details);
+    }
+    this.#history = history.record(this.#history, this.#scene, mergeKey);
     this.#show(next);
   }
 
-  #travel(step: typeof history.undo): void {
+  #travel(step: typeof history.undo, what: string): void {
     const result = step(this.#history, this.#scene);
     if (!result) return;
     this.#history = result.history;
+    const { past, future } = result.history;
+    this.#logger.debug(`[scene] ${what}: ${past.length} steps back, ${future.length} forward`);
     this.#show(result.state);
   }
 

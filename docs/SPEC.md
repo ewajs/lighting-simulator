@@ -248,6 +248,7 @@ needs it:
 | Photometry | IES files for a product ([ADR 0034](./decisions/0034-photometry-provider.md)) | M1 |
 | Model | a product's 3D model, binary glTF ([ADR 0043](./decisions/0043-fixture-models.md)) | M3 |
 | Storage | save / load / share scenes | M4 |
+| Logger | where the library's log messages go ([ADR 0044](./decisions/0044-logging-and-loud-failures.md)) | Q.1 |
 
 **Data flow** is one-way. UI or host calls core operations → core updates
 the scene (recording history) and notifies → the renderer and UI update
