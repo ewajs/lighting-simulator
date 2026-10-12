@@ -85,6 +85,29 @@ export interface Scene {
   readonly luminaires: readonly Luminaire[];
 }
 
+/**
+ * A luminaire's measured light distribution, from an IES LM-63 file
+ * (Type C photometry). Angles follow LM-63: vertical 0° points straight down
+ * (nadir) and 180° straight up; horizontal 0° runs along the luminaire's
+ * length and increases anticlockwise seen from above. The range of the
+ * horizontal angles says which symmetry the file assumes.
+ */
+export interface Photometry {
+  /** Vertical angles in degrees, strictly ascending, within 0–180. */
+  readonly verticalDeg: readonly number[];
+  /** Horizontal angles in degrees, strictly ascending, as measured. */
+  readonly horizontalDeg: readonly number[];
+  /**
+   * Luminous intensity in cd: one row per horizontal angle, one value per
+   * vertical angle. Already scaled by the file's multiplier and ballast factors.
+   */
+  readonly candela: readonly (readonly number[])[];
+  /** Input power in W, as stated in the file. */
+  readonly power: number;
+  /** Header keywords without brackets, e.g. `LUMINAIRE` or `LUMCAT`. */
+  readonly keywords: Readonly<Record<string, string>>;
+}
+
 /** Synchronous product lookup supplied by the host. */
 export interface Catalog {
   get(productId: string): Product | undefined;

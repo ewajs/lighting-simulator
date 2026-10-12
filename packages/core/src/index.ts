@@ -4,6 +4,8 @@ export { LONG_PRESS_MS, Viewport } from './render/Viewport';
 export type { PickEvent, ScreenshotOptions, ViewportOptions } from './render/Viewport';
 export type { ViewName } from './render/lighting';
 export type { RenderMode } from './render/RoomMeshes';
+export { parseIes } from './photometry/ies';
+export { beamAngleDeg, candelaAt, totalFlux } from './photometry/distribution';
 export { DEFAULT_ROOM } from './room';
 export { summarizeScene } from './summary';
 export type { SceneSummary } from './summary';
@@ -15,6 +17,7 @@ export type {
   FloorPoint,
   Luminaire,
   MountType,
+  Photometry,
   Product,
   Room,
   Scene,

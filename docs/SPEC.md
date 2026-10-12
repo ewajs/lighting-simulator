@@ -113,8 +113,9 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
 
 ### 4.3 Photometry & lighting
 
-- P0: Parse IES LM-63-2002/2019 files and use them as the light's intensity
-  distribution (three.js `IESSpotLight` / IES profile).
+- P0: Parse IES LM-63 files (every edition, Type C;
+  [ADR 0033](./decisions/0033-ies-support-scope.md)) and use them as the
+  light's full intensity distribution, including asymmetric and upward light.
 - P0: Light colour comes from CCT (blackbody approximation). Intensity comes
   from the IES candela values, scaled by dimming.
 - P0: Physically based units: candela on lights, AgX tone mapping, user
