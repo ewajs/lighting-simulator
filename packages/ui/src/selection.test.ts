@@ -1,6 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_ROOM, type Luminaire } from '@luxstudio/core';
-import { pruneSelection, selectionAfterPick } from './selection';
+import { pruneSelection, selectionAfterPick, selectionForMove } from './selection';
+
+describe('selectionForMove', () => {
+  it('keeps the selection when moving a selected luminaire', () => {
+    const current = ['a', 'b'];
+    expect(selectionForMove(current, 'b')).toBe(current);
+  });
+
+  it('selects only an unselected luminaire that starts moving', () => {
+    expect(selectionForMove(['a', 'b'], 'c')).toEqual(['c']);
+  });
+});
 
 describe('selectionAfterPick', () => {
   it('replaces the selection on a plain click', () => {

@@ -20,6 +20,17 @@ export function selectionAfterPick(
     : [...current, luminaireId];
 }
 
+/**
+ * Selection when dragging a luminaire starts: a selected one moves with the
+ * rest of the selection, an unselected one becomes the only selection.
+ */
+export function selectionForMove(
+  current: readonly string[],
+  luminaireId: string,
+): readonly string[] {
+  return current.includes(luminaireId) ? current : [luminaireId];
+}
+
 /** Drops ids that are no longer in the scene (after delete or undo). Keeps the same array if nothing changed. */
 export function pruneSelection(selection: readonly string[], scene: Scene): readonly string[] {
   const kept = selection.filter((id) => scene.luminaires.some((l) => l.id === id));

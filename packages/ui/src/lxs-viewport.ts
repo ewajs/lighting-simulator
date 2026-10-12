@@ -1,6 +1,7 @@
 import {
   Viewport,
   type FloorPoint,
+  type MoveStartEvent,
   type PickEvent,
   type RenderMode,
   type Simulator,
@@ -16,6 +17,8 @@ import { PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
  * given and reports clicks as `lxs-pick` events; it keeps no selection itself.
  *
  * @fires lxs-pick - `detail` is core's PickEvent: `{ luminaireId, event }`.
+ * @fires lxs-move-start - dragging a luminaire started; `detail` is core's
+ *   MoveStartEvent: `{ luminaireId, event }`. The drag itself edits the Simulator.
  * @fires lxs-drop-product - a catalog card was dropped: `detail: { productId, at }`.
  */
 @customElement('lxs-viewport')
@@ -105,7 +108,8 @@ export class LxsViewport extends LitElement {
     if (!this.simulator || !container) return;
     const viewport = new Viewport({ simulator: this.simulator, container });
     this.#viewport = viewport;
-    viewport.onPick((pick) => this.#emitPick(pick));
+    viewport.onPick((pick) => this.#emit('lxs-pick', pick));
+    viewport.onMoveStart((start) => this.#emit('lxs-move-start', start));
     try {
       await viewport.init();
     } catch (error) {
@@ -138,7 +142,7 @@ export class LxsViewport extends LitElement {
 
   #onDrop = (event: DragEvent): void => {
     const productId = event.dataTransfer?.getData(PRODUCT_DRAG_TYPE);
-    const at = this.#viewport?.pointOnFloor(event.clientX, event.clientY);
+    const at = productId && this.#viewport?.dropPoint(productId, event.clientX, event.clientY);
     if (!productId || !at) return;
     event.preventDefault();
     this.dispatchEvent(
@@ -150,10 +154,8 @@ export class LxsViewport extends LitElement {
     );
   };
 
-  #emitPick(pick: PickEvent): void {
-    this.dispatchEvent(
-      new CustomEvent<PickEvent>('lxs-pick', { detail: pick, bubbles: true, composed: true }),
-    );
+  #emit<T>(type: string, detail: T): void {
+    this.dispatchEvent(new CustomEvent<T>(type, { detail, bubbles: true, composed: true }));
   }
 }
 
@@ -169,6 +171,7 @@ declare global {
   }
   interface HTMLElementEventMap {
     'lxs-pick': CustomEvent<PickEvent>;
+    'lxs-move-start': CustomEvent<MoveStartEvent>;
     'lxs-drop-product': CustomEvent<DropProductDetail>;
   }
 }
