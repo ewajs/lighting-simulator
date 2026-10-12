@@ -67,10 +67,36 @@ test('adds products from the catalog by click and by drag and drop', async ({ pa
   expect(errors).toEqual([]);
 });
 
+test('IES products load their real photometry', async ({ page }) => {
+  const errors = await openDemo(page);
+  const photometryWarnings: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'warning' && /Photometry/.test(message.text())) {
+      photometryWarnings.push(message.text());
+    }
+  });
+  // Each file is requested when its product is first placed.
+  for (const [name, file] of [
+    [/Downlight 16 W \(IES\)/, 'LX6C15D010-EX6C159030-6LBMH.ies'],
+    [/Bañador de pared 14 W \(IES\)/, 'C3L10935NZ10U-C3RLWCC.ies'],
+    [/Colgante lineal directo\/indirecto 47 W \(IES\)/, 'HP-2-ID-4ft-H-B-835-ITL85132.008.ies'],
+    [/Spot de riel 18° 40 W \(IES\)/, 'qg63_b35q.ies'],
+    [/Aplique arriba\/abajo 18 W \(IES\)/, 'CB3326-L35K-H.ies'],
+  ] as const) {
+    const loaded = page.waitForResponse((response) => response.url().endsWith(`/ies/${file}`));
+    await page.getByRole('button', { name }).click();
+    expect((await loaded).ok()).toBe(true);
+  }
+  await expect(page.getByText('Luminarias: 12')).toBeVisible();
+  await expect(page).toHaveScreenshot('ies-products-added.png');
+  expect(photometryWarnings).toEqual([]);
+  expect(errors).toEqual([]);
+});
+
 test('search filters the catalog, ignoring accents', async ({ page }) => {
   await openDemo(page);
   const cards = page.locator('lxs-catalog-panel .card');
-  await expect(cards).toHaveCount(6);
+  await expect(cards).toHaveCount(11);
   await page.getByPlaceholder('Buscar productos').fill('lampara');
   await expect(cards).toHaveCount(2);
   await page.getByPlaceholder('Buscar productos').fill('zzz');
@@ -260,7 +286,8 @@ test('the catalog filters by mount type and colour temperature', async ({ page }
   await openDemo(page);
   const cards = page.locator('lxs-catalog-panel .card');
   await page.getByRole('combobox', { name: 'Tipo de montaje' }).selectOption({ label: 'Colgante' });
-  await expect(cards).toHaveCount(1);
+  // The generic pendant and the IES linear pendant.
+  await expect(cards).toHaveCount(2);
   await page.getByRole('combobox', { name: 'Tipo de montaje' }).selectOption({ label: 'Montaje' });
   await page
     .getByRole('combobox', { name: 'Temperatura de color' })

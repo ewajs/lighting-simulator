@@ -1,6 +1,6 @@
 # 0014. Sample IES sources
 
-- **Status:** Accepted
+- **Status:** Superseded by [0035](0035-sample-ies-sources.md)
 - **Date:** 2026-10-11
 
 ## Context

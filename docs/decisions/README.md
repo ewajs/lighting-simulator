@@ -17,7 +17,7 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0011 | [ESLint and Prettier](0011-eslint-prettier.md) | Accepted |
 | 0012 | [Language and i18n](0012-language-and-i18n.md) | Accepted |
 | 0013 | [WebGPURenderer with WebGL 2 fallback](0013-webgpu-renderer.md) | Accepted |
-| 0014 | [Sample IES sources](0014-sample-ies-sources.md) | Accepted |
+| 0014 | [Sample IES sources](0014-sample-ies-sources.md) | Superseded by 0035 |
 | 0015 | [CI checks on PRs, Playwright local only](0015-ci-without-playwright.md) | Accepted |
 | 0016 | [Undo/redo lives in core](0016-undo-redo-in-core.md) | Accepted |
 | 0017 | [Packages consumed from source, not published to npm](0017-consume-packages-from-source.md) | Accepted |
@@ -37,3 +37,5 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0031 | [Supported browsers, and full phone support](0031-supported-browsers-and-phones.md) | Accepted |
 | 0032 | [E2E runs on Chrome (WebGPU), Chrome (WebGL 2) and WebKit](0032-e2e-browser-projects.md) | Accepted |
 | 0033 | [IES support scope](0033-ies-support-scope.md) | Accepted |
+| 0034 | [Photometry provider: async IES text, cached in core](0034-photometry-provider.md) | Accepted |
+| 0035 | [Sample IES files from real manufacturers](0035-sample-ies-sources.md) | Accepted |

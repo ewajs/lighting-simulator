@@ -7,6 +7,7 @@ import {
   indirectIlluminance,
   isSpot,
   kelvinToRgb,
+  lightingProduct,
   toneMappingExposure,
   viewPose,
   WIDE_BEAM_DEG,
@@ -26,6 +27,39 @@ describe('candela', () => {
   it('switches at WIDE_BEAM_DEG', () => {
     expect(isSpot(product('recessed', { beamDeg: WIDE_BEAM_DEG }))).toBe(true);
     expect(isSpot(product('recessed', { beamDeg: WIDE_BEAM_DEG + 1 }))).toBe(false);
+  });
+});
+
+describe('lightingProduct', () => {
+  it('keeps the catalog values without photometry', () => {
+    const catalogProduct = product('recessed');
+    expect(lightingProduct(catalogProduct, undefined)).toBe(catalogProduct);
+  });
+
+  it('takes flux and beam angle from the photometry', () => {
+    // 100 cd at nadir falling linearly to 0 at 90°: 200π − 400 lm, 50 % at 45° → 90° beam.
+    const photometry = {
+      verticalDeg: [0, 90],
+      horizontalDeg: [0],
+      candela: [[100, 0]],
+      power: 10,
+      keywords: {},
+    };
+    const lit = lightingProduct(product('recessed', { flux: 5000, beamDeg: 10 }), photometry);
+    expect(lit.flux).toBeCloseTo(200 * Math.PI - 400, 9);
+    expect(lit.beamDeg).toBeCloseTo(90, 9);
+    expect(lit.mount).toBe('recessed');
+  });
+
+  it('lights a file with upward light as a point light', () => {
+    const photometry = {
+      verticalDeg: [0, 90, 180],
+      horizontalDeg: [0],
+      candela: [[100, 0, 1]],
+      power: 10,
+      keywords: {},
+    };
+    expect(isSpot(lightingProduct(product('pendant'), photometry))).toBe(false);
   });
 });
 
