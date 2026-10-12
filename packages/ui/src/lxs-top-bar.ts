@@ -7,7 +7,9 @@ import { icon } from './icons';
 import type { Locale } from './localization';
 import { segmentedStyles, sharedStyles } from './styles';
 
+/** The UI colour theme. */
 export type Theme = 'dark' | 'light';
+/** A side panel the top bar can show or hide. */
 export type PanelName = 'library' | 'inspector';
 
 /**

@@ -18,6 +18,8 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      # The docs site: fails on an undocumented export or a broken link.
+      - run: npm run docs
       # Every UI string translated, and committed translations/generated code up to date.
       - run: npm run i18n:check
       - run: git diff --exit-code

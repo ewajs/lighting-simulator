@@ -40,12 +40,14 @@ npm test              Vitest in every workspace
 npm run test:e2e      Playwright e2e on chrome, chrome-webgl2 and webkit (local only;
                       add `-- --project chrome` for a quick run; ADR 0032)
 npm run format        Prettier (Markdown is excluded)
+npm run docs          docs site (TypeDoc) → apps/demo/dist/docs; fails on an
+                      undocumented export or a broken link
 npm run i18n:extract  collect msg() strings into packages/ui/xliff/
 npm run i18n:build    regenerate locale modules after editing the XLIFF
 npm run i18n:check    fail if any UI string lacks a translation
 ```
 
-CI runs `format:check`, lint, typecheck, test and build on every PR. Run
+CI runs `format:check`, lint, typecheck, test, build and docs on every PR. Run
 them locally before opening one, plus `test:e2e` (CI doesn't run it, ADR 0015).
 When rendering changes on purpose, refresh the screenshot baselines with
 `npm run test:e2e -- --update-snapshots=all` (plain `--update-snapshots` skips

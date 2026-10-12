@@ -1,7 +1,7 @@
 # Roadmap
 
 What we build and in what order. [SPEC.md](./SPEC.md) describes the
-features, and [decisions/](./decisions/) records why.
+features, and [decisions/](./decisions/README.md) records why.
 
 **How each step runs:** Claude posts a short plan for the step → the owner
 approves it → the work happens on a feature branch → PR → the owner reviews
@@ -33,7 +33,7 @@ Order reviewed on 2026-10-11: what makes the best demo first (IES light, direct 
 | **P Polish** ✅ | Close the Phase 0 gaps: rename to **Lux Studio** (P.1 ✅), PNG screenshot and catalog filters (P.2 ✅), touch and tablet support (P.3 ✅), full phone layout: portrait (P.4a ✅) and landscape (P.4b ✅), then WebKit (iOS/macOS Safari) and WebGL 2 fallback checks (P.5 ✅). Firefox is not supported (ADR 0031). |
 | **M1 Photometry** ✅ | Work with arbitrary IES files: IES LM-63 parser and candela lookup in core (M1.1 ✅, ADR 0033), a photometry provider and five real manufacturer IES files in the demo (M1.2 ✅, ADRs 0034–0035), a full-sphere IES light that draws asymmetric and upward light (M1.3 ✅, ADR 0036), and a demo option to try your own IES file (M1.4 ✅, ADR 0037). |
 | **M2 Manipulation** ✅ | Drag to move along the mount surface (M2.1 ✅, ADR 0038), a move handle (M2.2 ✅, ADR 0039), an aim handle with `W`/`E` switching (M2.3 ✅, ADR 0040), then snapping to a grid, to other luminaires and in 15° pan steps (M2.4 ✅, ADR 0041), and distances to the walls while moving (M2.5 ✅, ADR 0042). |
-| **Q Quality** | Before M3.2, at the owner's request: loud failures (Q.1: an injected logger, a `?debug` switch with diagnostics, every e2e test failing on unexpected console warnings, ADR 0044) and a browsable docs site (Q.2). |
+| **Q Quality** | Before M3.2, at the owner's request: loud failures (Q.1: an injected logger, a `?debug` switch with diagnostics, every e2e test failing on unexpected console warnings, ADR 0044) and a browsable docs site (Q.2: TypeDoc API reference with guides, at `/docs`). |
 | **M3 Visual quality** | Fixture models through a model provider (M3.1 ✅, ADR 0043), simple parametric furniture and props (M3.2), surface textures (M3.3). Bounce light stays the uniform estimate until M5. |
 | **M4 Persistence** | Versioned scene schema, import/export, local autosave, storage provider interface for backends, room templates (starter scenes). |
 | **M5 Analysis** | Direct illuminance plus inter-reflections from a room radiosity solve, in a Web Worker (ADR 0028). Lux probe, false-colour heatmap and legend, plane stats (avg / min / max / U₀). Finally, the radiosity solution drives the rendered bounce light, replacing the uniform estimate. |

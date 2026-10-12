@@ -1,0 +1,29 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Lux Studio",
+  "entryPointStrategy": "packages",
+  "entryPoints": ["packages/core", "packages/ui"],
+  "out": "apps/demo/dist/docs",
+  "readme": "README.md",
+  "projectDocuments": [
+    "docs/guides/how-it-works.md",
+    "docs/guides/integrating.md",
+    "docs/guides/demo.md",
+    "docs/guides/working-on-it.md",
+    "docs/SPEC.md",
+    "docs/ROADMAP.md",
+    "docs/DESIGN.md",
+    "docs/decisions/README.md",
+    "docs/decisions/0*.md"
+  ],
+  "plugin": ["./docs/typedoc/hide-lit-members.js"],
+  "gitRevision": "master",
+  "sourceLinkTemplate": "https://github.com/ewajs/lighting-simulator/blob/{gitRevision}/{path}#L{line}",
+  "searchInDocuments": true,
+  "searchInComments": true,
+  "navigationLinks": {
+    "Demo": "https://ewajs.github.io/lighting-simulator/",
+    "GitHub": "https://github.com/ewajs/lighting-simulator"
+  },
+  "treatWarningsAsErrors": true
+}

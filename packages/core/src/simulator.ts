@@ -36,6 +36,7 @@ export interface EditOptions {
 /** Called after every scene change, including undo and redo. */
 export type SceneListener = (scene: Scene, previous: Scene) => void;
 
+/** What a Simulator is created with: the host's data and, optionally, a starting scene. */
 export interface SimulatorOptions {
   /** Product lookup. Every luminaire's productId should resolve here. */
   readonly catalog: Catalog;
@@ -137,10 +138,12 @@ export class Simulator {
     return this.#scene;
   }
 
+  /** Resizes the room. Luminaires outside the new walls are moved back inside, mount by mount. */
   setRoomSize(size: Partial<RoomSize>, options?: EditOptions): void {
     this.#commit(resizeRoom(this.#scene, size, this.#catalog), options, 'Resize room', size);
   }
 
+  /** Changes a room surface's colour and/or reflectance. */
   setSurface(name: SurfaceName, patch: Partial<Surface>, options?: EditOptions): void {
     this.#commit(setSurface(this.#scene, name, patch), options, `Finish ${name}`, patch);
   }
@@ -156,6 +159,11 @@ export class Simulator {
     return id;
   }
 
+  /**
+   * Changes a luminaire's position, aim, dimming, on/off or colour
+   * temperature. A new position is moved to where its mount type allows.
+   * Throws for an unknown id or an invalid value.
+   */
   updateLuminaire(id: string, patch: LuminairePatch, options?: EditOptions): void {
     this.#commit(updateLuminaire(this.#scene, id, patch, this.#catalog), options, 'Update', {
       id,
@@ -163,6 +171,7 @@ export class Simulator {
     });
   }
 
+  /** Removes these luminaires, as one undo step. Throws for an unknown id. */
   removeLuminaires(ids: readonly string[]): void {
     this.#commit(removeLuminaires(this.#scene, ids), undefined, 'Remove', ids);
   }
@@ -182,18 +191,22 @@ export class Simulator {
     return newIds;
   }
 
+  /** Goes back one undo step. Does nothing when there is none. */
   undo(): void {
     this.#travel(history.undo, 'Undo');
   }
 
+  /** Goes forward again after an undo. Does nothing when there is nothing to redo. */
   redo(): void {
     this.#travel(history.redo, 'Redo');
   }
 
+  /** Whether there is an edit to undo. */
   canUndo(): boolean {
     return this.#history.past.length > 0;
   }
 
+  /** Whether there is an undone edit to redo. */
   canRedo(): boolean {
     return this.#history.future.length > 0;
   }

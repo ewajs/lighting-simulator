@@ -1,0 +1,23 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts"],
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "excludeExternals": true,
+  "validation": {
+    "notExported": true,
+    "invalidLink": true,
+    "notDocumented": true
+  },
+  "requiredToBeDocumented": [
+    "Enum",
+    "Variable",
+    "Function",
+    "Class",
+    "Interface",
+    "TypeAlias",
+    "Method",
+    "Accessor"
+  ],
+  "treatWarningsAsErrors": true
+}
