@@ -382,6 +382,38 @@
   <source>Full width</source>
   <target>Ancho completo</target>
 </trans-unit>
+<trans-unit id="s63ac6666c9a46ffb">
+  <source>Try your own IES file: drop it here or</source>
+  <target>Probá tu propio archivo IES: soltalo acá o</target>
+</trans-unit>
+<trans-unit id="s455b7fcc8494acae">
+  <source>Load IES file…</source>
+  <target>Cargar archivo IES…</target>
+</trans-unit>
+<trans-unit id="s79dad700238ac6d6">
+  <source>IES file</source>
+  <target>Archivo IES</target>
+</trans-unit>
+<trans-unit id="sdbe2cb3f2550332d">
+  <source>File: <x id="0" equiv-text="${draft.fileName}"/></source>
+  <target>Archivo: <x id="0" equiv-text="${draft.fileName}"/></target>
+</trans-unit>
+<trans-unit id="sef49aec68fd1dc66">
+  <source>Name</source>
+  <target>Nombre</target>
+</trans-unit>
+<trans-unit id="s2ceb11be2290bb1b">
+  <source>Cancel</source>
+  <target>Cancelar</target>
+</trans-unit>
+<trans-unit id="s50d623e80bf0b792">
+  <source>Add to catalog</source>
+  <target>Agregar al catálogo</target>
+</trans-unit>
+<trans-unit id="sb9f62cc487f8eab3">
+  <source>Couldn't read <x id="0" equiv-text="${file.name}"/>.</source>
+  <target>No se pudo leer <x id="0" equiv-text="${file.name}"/>.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

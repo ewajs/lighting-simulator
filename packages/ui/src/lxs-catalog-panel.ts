@@ -15,6 +15,7 @@ import {
 import { formatKelvin, formatNumber } from './format';
 import { mountLabel } from './labels';
 import { icon, mountIcon } from './icons';
+import './lxs-ies-import';
 import { sharedStyles } from './styles';
 
 /** dataTransfer type carrying a productId while a product card is dragged. */
@@ -23,8 +24,10 @@ export const PRODUCT_DRAG_TYPE = 'application/x-lxs-product';
 /**
  * Browse, search and filter the host's catalog. Clicking a product (or
  * pressing Enter on it) asks to add it; cards can also be dragged into the viewport.
+ * With `iesImport`, a footer lets the user load their own IES file.
  *
  * @fires lxs-add-product - `detail: { productId }`
+ * @fires lxs-import-ies - from the IES import footer, `detail: ImportIesDetail`
  */
 @customElement('lxs-catalog-panel')
 @localized()
@@ -181,6 +184,8 @@ export class LxsCatalogPanel extends LitElement {
   @property({ attribute: false }) display: DisplayCatalog = EMPTY_DISPLAY_CATALOG;
   /** Simulation data, for the spec line on each card. */
   @property({ attribute: false }) products: Catalog | undefined;
+  /** Shows the "try your own IES file" footer (ADR 0037). */
+  @property({ type: Boolean, attribute: 'ies-import' }) iesImport = false;
 
   @state() private filter: CatalogFilter = NO_FILTER;
 
@@ -255,6 +260,7 @@ export class LxsCatalogPanel extends LitElement {
               })
         }
       </div>
+      ${this.iesImport ? html`<lxs-ies-import></lxs-ies-import>` : nothing}
     `;
   }
 

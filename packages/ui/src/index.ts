@@ -4,6 +4,8 @@ export { LxsViewport } from './lxs-viewport';
 export type { DropProductDetail } from './lxs-viewport';
 export { LxsLibrary } from './lxs-library';
 export { LxsCatalogPanel, PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
+export { LxsIesImport } from './lxs-ies-import';
+export type { ImportIesDetail } from './lxs-ies-import';
 export { LxsScenePanel } from './lxs-scene-panel';
 export type { SelectDetail } from './lxs-scene-panel';
 export type { CatalogCategory, CatalogItem, DisplayCatalog } from './display-catalog';
