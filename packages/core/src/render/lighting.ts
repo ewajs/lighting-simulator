@@ -17,24 +17,26 @@ export const BASE_EXPOSURE = 0.025;
 /** Small constant fill, in lx, so unlit areas are never pure black. */
 export const MIN_FILL_LUX = 1.5;
 
-/** Beam angle that makes a product an isotropic point light. */
-const FULL_SPHERE_DEG = 360;
-
 /**
  * The product as the renderer should light it: when it has photometry, flux
  * and beam angle come from the IES file, which is the source of truth (ADR 0033).
- * A spotlight only points down, so a file with any upward light is lit as a
- * point light instead.
  */
 export function lightingProduct(product: Product, photometry: Photometry | undefined): Product {
   if (!photometry) return product;
-  const { verticalDeg, candela } = photometry;
-  const emitsUpward = candela.some((row) => row.some((cd, i) => cd > 0 && verticalDeg[i]! > 90));
-  return {
-    ...product,
-    flux: totalFlux(photometry),
-    beamDeg: emitsUpward ? FULL_SPHERE_DEG : beamAngleDeg(photometry),
-  };
+  return { ...product, flux: totalFlux(photometry), beamDeg: beamAngleDeg(photometry) };
+}
+
+/**
+ * Type C angles of a direction in the luminaire's own frame (ADR 0036): −y is
+ * the aim (vertical 0°), +z the forward direction (horizontal 0°) and +x
+ * horizontal 90°, anticlockwise seen from above. The IES light's shader
+ * computes the same mapping on the GPU.
+ */
+export function typeCAngles(direction: Vec3): { verticalDeg: number; horizontalDeg: number } {
+  const length = Math.hypot(direction.x, direction.y, direction.z);
+  const verticalDeg = (Math.acos(-direction.y / length) * 180) / Math.PI;
+  const horizontalDeg = (Math.atan2(direction.x, direction.z) * 180) / Math.PI;
+  return { verticalDeg, horizontalDeg: (horizontalDeg + 360) % 360 };
 }
 
 /** Whether a product is drawn as a spotlight (true) or an isotropic point light. */

@@ -1,5 +1,6 @@
 import * as THREE from 'three/webgpu';
 import type { Product } from '../types';
+import { IesLight } from './IesLight';
 import { isSpot } from './lighting';
 
 /** Default height of a floor or table lamp when the product doesn't say, in m. */
@@ -21,7 +22,7 @@ const SPOT_PENUMBRA = 0.45;
 /** The three.js objects that make up one placed luminaire. */
 export interface Fixture {
   readonly root: THREE.Group;
-  readonly light: THREE.SpotLight | THREE.PointLight;
+  readonly light: THREE.SpotLight | THREE.PointLight | IesLight;
   /** Light position in the root's frame, before aiming. */
   readonly lightOrigin: THREE.Vector3;
   /** Glowing surfaces (lens, diffuser, shade). */
@@ -34,10 +35,11 @@ export interface Fixture {
 
 /**
  * Builds simple placeholder geometry for a product's mount type, plus its
- * light. Real fixture models (glTF) come later. Units are metres; the root's
- * origin is the luminaire position.
+ * light: an IES light when a profile is given, otherwise a spot or point light
+ * estimated from flux and beam. Real fixture models (glTF) come later. Units
+ * are metres; the root's origin is the luminaire position.
  */
-export function buildFixture(product: Product): Fixture {
+export function buildFixture(product: Product, profile?: THREE.DataTexture): Fixture {
   const root = new THREE.Group();
   const body = new THREE.MeshStandardMaterial({
     color: BODY_COLOR,
@@ -112,7 +114,7 @@ export function buildFixture(product: Product): Fixture {
     }
   }
 
-  const light = isSpot(product) ? new THREE.SpotLight() : new THREE.PointLight();
+  const light = createLight(product, profile);
   light.decay = 2;
   light.shadow.bias = -0.0004;
   light.shadow.normalBias = 0.02;
@@ -133,7 +135,16 @@ export function buildFixture(product: Product): Fixture {
   return { root, light, lightOrigin, emissive, ...(head && { head }), ...(cord && { cord }) };
 }
 
-/** Disposes every geometry and material under the fixture. */
+function createLight(product: Product, profile: THREE.DataTexture | undefined): Fixture['light'] {
+  if (profile) {
+    const light = new IesLight();
+    light.profile = profile;
+    return light;
+  }
+  return isSpot(product) ? new THREE.SpotLight() : new THREE.PointLight();
+}
+
+/** Disposes every geometry and material under the fixture. The IES profile is shared and kept. */
 export function disposeFixture(fixture: Fixture): void {
   fixture.light.dispose();
   fixture.root.traverse((object) => {

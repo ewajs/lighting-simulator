@@ -3,8 +3,8 @@ import { expect, test, type Page } from './fixtures';
 // Screen points at the fixed 1280×800 viewport (playwright.config.ts) with the
 // default perspective view. If the layout or camera changes, update these and
 // refresh the baselines with `npm run test:e2e -- --update-snapshots=all`.
-const PENDANT = { x: 641, y: 379 };
-const FLOOR_LAMP = { x: 422, y: 420 };
+const PENDANT = { x: 642, y: 356 };
+const WALL_LIGHT = { x: 845, y: 437 };
 const EMPTY_SPACE = { x: 380, y: 150 };
 
 /** Opens the demo and returns the page and console errors seen so far (and from now on). */
@@ -25,7 +25,7 @@ const selectedCount = (page: Page) => page.getByText(/^Seleccionadas: \d+$/);
 test('renders the shell in Spanish with the starter scene', async ({ page }) => {
   const errors = await openDemo(page);
   await expect(page.getByRole('heading', { name: 'Catálogo' })).toBeVisible();
-  await expect(page.getByText('Luminarias: 7')).toBeVisible();
+  await expect(page.getByText('Luminarias: 5')).toBeVisible();
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 0');
   await expect(page).toHaveScreenshot('starter-scene.png');
   expect(errors).toEqual([]);
@@ -39,7 +39,7 @@ test('click selects, Shift-click adds, empty space and Esc clear', async ({ page
   await expect(page).toHaveScreenshot('pendant-highlighted.png');
 
   await page.keyboard.down('Shift');
-  await page.mouse.click(FLOOR_LAMP.x, FLOOR_LAMP.y);
+  await page.mouse.click(WALL_LIGHT.x, WALL_LIGHT.y);
   await page.keyboard.up('Shift');
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 2');
 
@@ -57,37 +57,50 @@ test('adds products from the catalog by click and by drag and drop', async ({ pa
   const errors = await openDemo(page);
 
   await page.getByRole('button', { name: /Lámpara de mesa 5 W/ }).click();
-  await expect(page.getByText('Luminarias: 8')).toBeVisible();
+  await expect(page.getByText('Luminarias: 6')).toBeVisible();
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
 
   await page
     .getByRole('button', { name: /Colgante 48 W/ })
     .dragTo(page.locator('lxs-viewport'), { targetPosition: { x: 200, y: 600 } });
-  await expect(page.getByText('Luminarias: 9')).toBeVisible();
+  await expect(page.getByText('Luminarias: 7')).toBeVisible();
   expect(errors).toEqual([]);
 });
 
 test('IES products load their real photometry', async ({ page }) => {
-  const errors = await openDemo(page);
+  // Status of every IES file request, from page load on: the starter scene uses four of them.
+  const iesStatus = new Map<string, number>();
+  page.on('response', (response) => {
+    const file = /\/ies\/([^/]+\.ies)$/.exec(response.url())?.[1];
+    if (file) iesStatus.set(file, response.status());
+  });
   const photometryWarnings: string[] = [];
   page.on('console', (message) => {
     if (message.type() === 'warning' && /Photometry/.test(message.text())) {
       photometryWarnings.push(message.text());
     }
   });
-  // Each file is requested when its product is first placed.
-  for (const [name, file] of [
-    [/Downlight 16 W \(IES\)/, 'LX6C15D010-EX6C159030-6LBMH.ies'],
-    [/Bañador de pared 14 W \(IES\)/, 'C3L10935NZ10U-C3RLWCC.ies'],
-    [/Colgante lineal directo\/indirecto 47 W \(IES\)/, 'HP-2-ID-4ft-H-B-835-ITL85132.008.ies'],
-    [/Spot de riel 18° 40 W \(IES\)/, 'qg63_b35q.ies'],
-    [/Aplique arriba\/abajo 18 W \(IES\)/, 'CB3326-L35K-H.ies'],
-  ] as const) {
-    const loaded = page.waitForResponse((response) => response.url().endsWith(`/ies/${file}`));
+  const errors = await openDemo(page);
+  for (const name of [
+    /Downlight 16 W \(IES\)/,
+    /Bañador de pared 14 W \(IES\)/,
+    /Colgante lineal directo\/indirecto 47 W \(IES\)/,
+    /Spot de riel 18° 40 W \(IES\)/,
+    /Aplique arriba\/abajo 18 W \(IES\)/,
+  ]) {
     await page.getByRole('button', { name }).click();
-    expect((await loaded).ok()).toBe(true);
   }
-  await expect(page.getByText('Luminarias: 12')).toBeVisible();
+  await expect(page.getByText('Luminarias: 10')).toBeVisible();
+  // Each file is requested once, however many luminaires use it.
+  await expect
+    .poll(() => Object.fromEntries(iesStatus))
+    .toEqual({
+      'LX6C15D010-EX6C159030-6LBMH.ies': 200,
+      'C3L10935NZ10U-C3RLWCC.ies': 200,
+      'HP-2-ID-4ft-H-B-835-ITL85132.008.ies': 200,
+      'qg63_b35q.ies': 200,
+      'CB3326-L35K-H.ies': 200,
+    });
   await expect(page).toHaveScreenshot('ies-products-added.png');
   expect(photometryWarnings).toEqual([]);
   expect(errors).toEqual([]);
@@ -106,11 +119,13 @@ test('search filters the catalog, ignoring accents', async ({ page }) => {
 test('the scene tab shows totals and selects from the list', async ({ page }) => {
   await openDemo(page);
   await page.getByRole('tab', { name: 'Escena' }).click();
-  // Starter layout: 48 + 3 × 7 + 12 + 6 + 9 = 96 W and 4200 + 3 × 560 + 1000 + 420 + 806 = 8106 lm.
-  await expect(page.locator('lxs-scene-panel .stat', { hasText: 'Potencia' })).toContainText('96');
-  await expect(page.locator('lxs-scene-panel .stat', { hasText: 'Flujo' })).toContainText('8.106');
+  // Starter layout: 46.7 + 2 × 14 + 40.2 + 18.2 = 133.1 W and 4599 + 2 × 777 + 2913 + 1648 = 10,714 lm.
+  await expect(page.locator('lxs-scene-panel .stat', { hasText: 'Potencia' })).toContainText('133');
+  await expect(page.locator('lxs-scene-panel .stat', { hasText: 'Flujo' })).toContainText('10.714');
 
-  const row = page.getByRole('option', { name: /Colgante 48 W 1/ });
+  const row = page.getByRole('option', {
+    name: /Colgante lineal directo\/indirecto 47 W \(IES\) 1/,
+  });
   await row.click();
   await expect(row).toHaveAttribute('aria-selected', 'true');
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
@@ -138,18 +153,19 @@ test('the inspector edits, duplicates and deletes the selected luminaire', async
 
   await page.getByRole('slider', { name: 'Atenuación' }).fill('0.5');
   await page.getByRole('tab', { name: 'Escena' }).click();
-  await expect(page.getByRole('option', { name: /Colgante 48 W 1/ })).toContainText('50%');
+  await expect(
+    page.getByRole('option', { name: /Colgante lineal directo\/indirecto 47 W \(IES\) 1/ }),
+  ).toContainText('50%');
   await expect(page).toHaveScreenshot('inspector-pendant-dimmed.png');
 
   await page.getByRole('button', { name: 'Duplicar' }).click();
-  await expect(page.getByText('Luminarias: 8')).toBeVisible();
-  await expect(page.getByRole('option', { name: /Colgante 48 W 2/ })).toHaveAttribute(
-    'aria-selected',
-    'true',
-  );
+  await expect(page.getByText('Luminarias: 6')).toBeVisible();
+  await expect(
+    page.getByRole('option', { name: /Colgante lineal directo\/indirecto 47 W \(IES\) 2/ }),
+  ).toHaveAttribute('aria-selected', 'true');
 
   await page.getByRole('button', { name: 'Eliminar' }).click();
-  await expect(page.getByText('Luminarias: 7')).toBeVisible();
+  await expect(page.getByText('Luminarias: 5')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Ambiente', exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });
@@ -158,13 +174,17 @@ test('several selected luminaires share one inspector', async ({ page }) => {
   await openDemo(page);
   await page.mouse.click(PENDANT.x, PENDANT.y);
   await page.keyboard.down('Shift');
-  await page.mouse.click(FLOOR_LAMP.x, FLOOR_LAMP.y);
+  await page.mouse.click(WALL_LIGHT.x, WALL_LIGHT.y);
   await page.keyboard.up('Shift');
   await expect(page.getByText('2 luminarias seleccionadas')).toBeVisible();
   await page.getByRole('button', { name: 'Apagar' }).click();
   await page.getByRole('tab', { name: 'Escena' }).click();
-  await expect(page.getByRole('option', { name: /Lámpara de pie 9 W 1/ })).toContainText('apagada');
-  await expect(page.getByRole('option', { name: /Colgante 48 W 1/ })).toContainText('apagada');
+  await expect(
+    page.getByRole('option', { name: /Aplique arriba\/abajo 18 W \(IES\) 1/ }),
+  ).toContainText('apagada');
+  await expect(
+    page.getByRole('option', { name: /Colgante lineal directo\/indirecto 47 W \(IES\) 1/ }),
+  ).toContainText('apagada');
 });
 
 test('undo and redo, with one slider drag as one undo step', async ({ page }) => {
@@ -179,7 +199,9 @@ test('undo and redo, with one slider drag as one undo step', async ({ page }) =>
   await page.mouse.up();
 
   await page.getByRole('tab', { name: 'Escena' }).click();
-  const row = page.getByRole('option', { name: /Colgante 48 W 1/ });
+  const row = page.getByRole('option', {
+    name: /Colgante lineal directo\/indirecto 47 W \(IES\) 1/,
+  });
   await expect(row).not.toContainText('100%');
 
   await page.keyboard.press('ControlOrMeta+z');
@@ -194,17 +216,21 @@ test('keyboard shortcuts delete, undo, duplicate and switch off', async ({ page 
   await openDemo(page);
   await page.mouse.click(PENDANT.x, PENDANT.y);
   await page.keyboard.press('Delete');
-  await expect(page.getByText('Luminarias: 6')).toBeVisible();
+  await expect(page.getByText('Luminarias: 4')).toBeVisible();
   await page.keyboard.press('ControlOrMeta+z');
-  await expect(page.getByText('Luminarias: 7')).toBeVisible();
+  await expect(page.getByText('Luminarias: 5')).toBeVisible();
 
   await page.mouse.click(PENDANT.x, PENDANT.y);
   await page.keyboard.press('ControlOrMeta+d');
-  await expect(page.getByText('Luminarias: 8')).toBeVisible();
+  await expect(page.getByText('Luminarias: 6')).toBeVisible();
   await page.keyboard.press('h');
   await page.getByRole('tab', { name: 'Escena' }).click();
-  await expect(page.getByRole('option', { name: /Colgante 48 W 2/ })).toContainText('apagada');
-  await expect(page.getByRole('option', { name: /Colgante 48 W 1/ })).toContainText('100%');
+  await expect(
+    page.getByRole('option', { name: /Colgante lineal directo\/indirecto 47 W \(IES\) 2/ }),
+  ).toContainText('apagada');
+  await expect(
+    page.getByRole('option', { name: /Colgante lineal directo\/indirecto 47 W \(IES\) 1/ }),
+  ).toContainText('100%');
 });
 
 test('theme, language, collapsed panels and the plan view', async ({ page }) => {

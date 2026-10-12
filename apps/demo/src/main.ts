@@ -23,18 +23,20 @@ brand.textContent = 'Lux Studio';
 app.append(brand);
 document.body.append(app);
 
-/** A small lit room: a pendant over the centre, downlights, a tilted track spot, a wall light and a floor lamp. */
+/**
+ * A small room lit by the real IES products: a linear direct/indirect pendant
+ * over the centre, two wall washers on the back wall, a track spot aimed at
+ * the left wall and an up/down light on the right wall.
+ */
 function addStarterLayout(sim: Simulator): void {
-  sim.addLuminaire('pendant-48w');
-  for (const [x, z] of [
-    [-1.5, -1.1],
-    [1.5, -1.1],
-    [-1.5, 1.1],
-  ] as const) {
-    sim.addLuminaire('downlight-7w', { x, z });
+  sim.addLuminaire('ies-linear-pendant');
+  // Pan 180° turns their forward throw (C0, local +z) towards the back wall at z = −2.
+  for (const x of [-1.2, 1.2]) {
+    const washer = sim.addLuminaire('ies-wall-washer', { x, z: -1.5 });
+    sim.updateLuminaire(washer, { aim: { tiltDeg: 0, panDeg: 180 } });
   }
-  const spot = sim.addLuminaire('track-spot-12w', { x: 1.5, z: 1.1 });
-  sim.updateLuminaire(spot, { aim: { tiltDeg: 35, panDeg: 0 } });
-  sim.addLuminaire('wall-light-6w', { x: 2.4, z: 0 });
-  sim.addLuminaire('floor-lamp-9w', { x: -2, z: 1.5 });
+  // Pan −90° tilts the spot towards the left wall at x = −2.5.
+  const spot = sim.addLuminaire('ies-track-spot', { x: -1, z: 0.8 });
+  sim.updateLuminaire(spot, { aim: { tiltDeg: 45, panDeg: -90 } });
+  sim.addLuminaire('ies-wall-up-down', { x: 2.4, z: 0 });
 }

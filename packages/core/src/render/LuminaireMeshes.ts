@@ -1,6 +1,8 @@
 import * as THREE from 'three/webgpu';
 import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../types';
+import { candelaGrid } from '../photometry/grid';
 import { buildFixture, disposeFixture, type Fixture } from './fixtures';
+import { IesLight, profileTexture } from './IesLight';
 import { candela, kelvinToRgb, lightingProduct } from './lighting';
 import type { RenderMode } from './RoomMeshes';
 
@@ -12,6 +14,13 @@ const HIGHLIGHT_COLOR = 0xf5b544;
 /** Gap between a highlighted fixture and its outline, in m. */
 const HIGHLIGHT_MARGIN = 0.04;
 const DEG = Math.PI / 180;
+
+/** An IES distribution ready for the GPU, shared by every luminaire of a product. */
+interface Profile {
+  readonly texture: THREE.DataTexture;
+  /** Peak intensity in cd; the texture holds values relative to it. */
+  readonly peak: number;
+}
 
 interface Item {
   readonly productId: string;
@@ -29,6 +38,7 @@ interface Item {
 export class LuminaireMeshes {
   readonly group = new THREE.Group();
   readonly #items = new Map<string, Item>();
+  readonly #profiles = new Map<Photometry, Profile>();
   readonly #catalog: Catalog;
   readonly #photometry: (productId: string) => Photometry | undefined;
 
@@ -74,6 +84,8 @@ export class LuminaireMeshes {
 
   dispose(): void {
     for (const id of [...this.#items.keys()]) this.#remove(id);
+    for (const profile of this.#profiles.values()) profile.texture.dispose();
+    this.#profiles.clear();
   }
 
   #itemFor(luminaire: Luminaire): Item | undefined {
@@ -90,7 +102,7 @@ export class LuminaireMeshes {
       productId: product.id,
       photometry,
       product,
-      fixture: buildFixture(product),
+      fixture: buildFixture(product, photometry && this.#profile(photometry).texture),
       flux: 0,
     };
     this.group.add(item.fixture.root);
@@ -109,6 +121,8 @@ export class LuminaireMeshes {
     const tilt = luminaire.aim.tiltDeg * DEG;
     const pan = luminaire.aim.panDeg * DEG;
     if (head) head.rotation.set(-tilt, pan, 0, 'YXZ');
+    // An IES light turns with the aim; its frame's −y is the aim, +z forward (ADR 0036).
+    if (light instanceof IesLight) light.rotation.set(-tilt, pan, 0, 'YXZ');
     if (light instanceof THREE.SpotLight) {
       const direction = new THREE.Vector3(0, -1, 0).applyEuler(
         new THREE.Euler(-tilt, pan, 0, 'YXZ'),
@@ -124,12 +138,23 @@ export class LuminaireMeshes {
     const level = luminaire.on ? luminaire.dimming : 0;
     const { r, g, b } = kelvinToRgb(luminaire.cct);
     light.color.setRGB(r, g, b, THREE.SRGBColorSpace);
-    light.intensity = candela(product) * level;
+    const peak = item.photometry ? this.#profile(item.photometry).peak : candela(product);
+    light.intensity = peak * level;
     item.flux = product.flux * level;
     for (const material of emissive) {
       material.emissive.copy(light.color);
       material.emissiveIntensity = mode === 'clay' ? 0 : level * EMISSIVE_GAIN;
     }
+  }
+
+  #profile(photometry: Photometry): Profile {
+    let profile = this.#profiles.get(photometry);
+    if (!profile) {
+      const grid = candelaGrid(photometry);
+      profile = { texture: profileTexture(grid), peak: grid.peak };
+      this.#profiles.set(photometry, profile);
+    }
+    return profile;
   }
 
   #outline(item: Item, on: boolean): void {

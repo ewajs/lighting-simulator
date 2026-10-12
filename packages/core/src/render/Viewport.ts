@@ -9,6 +9,7 @@ import {
   viewPose,
   type ViewName,
 } from './lighting';
+import { IesLight, IesLightNode } from './IesLight';
 import { LuminaireMeshes } from './LuminaireMeshes';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
 
@@ -94,6 +95,8 @@ export class Viewport {
     this.#luminaires = new LuminaireMeshes(simulator.catalog, (productId) =>
       simulator.photometry(productId),
     );
+    // three.js picks each light's shader by its class; teach it ours.
+    this.#renderer.library.addLight(IesLightNode, IesLight);
     this.#controls = new OrbitControls(this.#camera, this.#renderer.domElement);
     this.#controls.enableDamping = true;
     this.#controls.maxPolarAngle = Math.PI * 0.495; // Stay above the floor.
