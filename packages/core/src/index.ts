@@ -4,6 +4,7 @@ export type { PhotometryListener } from './photometry/cache';
 export { Viewport } from './render/Viewport';
 export { LONG_PRESS_MS } from './render/PointerGestures';
 export type {
+  HandleMode,
   MoveStartEvent,
   PickEvent,
   ScreenshotOptions,

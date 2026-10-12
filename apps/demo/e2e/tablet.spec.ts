@@ -41,6 +41,8 @@ test.describe('landscape tablet (1024 × 768, touch)', () => {
   test.use({ viewport: { width: 1024, height: 768 }, hasTouch: true });
   const PENDANT = { x: 387, y: 340 };
   const WALL_LIGHT = { x: 589, y: 419 };
+  /** With the pendant selected: the right arm of its x (red) arrow. */
+  const PENDANT_X_ARROW = { x: 420, y: 346 };
 
   test('starts with the library collapsed and touch-sized controls', async ({ page }) => {
     await openDemo(page);
@@ -79,6 +81,18 @@ test.describe('landscape tablet (1024 × 768, touch)', () => {
     await page.getByRole('button', { name: 'Deshacer' }).tap();
     await expect(x).toHaveValue('0,00');
     await expect(page).toHaveScreenshot('tablet-pendant-selected.png');
+  });
+
+  test('a finger slides the move handle', async ({ page, browserName }) => {
+    // Touch drags are driven through Chrome's DevTools protocol, which WebKit doesn't have.
+    test.skip(browserName !== 'chromium', 'needs CDP touch events');
+
+    await openDemo(page);
+    await page.touchscreen.tap(PENDANT.x, PENDANT.y);
+    await touchDrag(page, PENDANT_X_ARROW, { x: PENDANT_X_ARROW.x + 80, y: PENDANT_X_ARROW.y });
+    await expect(page.getByRole('textbox', { name: 'X' })).not.toHaveValue('0,00');
+    await expect(page.getByRole('textbox', { name: 'Z' })).toHaveValue('0,00');
+    await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
   });
 
   test('tapping a product adds it; long press on a list row toggles it', async ({

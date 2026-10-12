@@ -219,6 +219,7 @@ export class LxsApp extends LitElement {
     return html`<lxs-viewport
       .simulator=${this.simulator}
       .highlighted=${this.selection}
+      handle="move"
       .renderMode=${this.renderMode}
       .exposureEv=${this.exposureEv}
       @lxs-pick=${this.#onPick}

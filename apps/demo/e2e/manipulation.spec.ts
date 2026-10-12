@@ -1,9 +1,13 @@
 import { expect, test, type Page } from './fixtures';
 
-// Moving luminaires by dragging them (ADR 0038). Screen points are for the
-// default view at 1280×800, as in smoke.spec.ts.
+// Moving luminaires by dragging them (ADR 0038) and with the move handle
+// (ADR 0039). Screen points are for the default view at 1280×800, as in
+// smoke.spec.ts.
 const PENDANT = { x: 642, y: 356 };
 const WALL_LIGHT = { x: 845, y: 437 };
+/** With the pendant selected: the right arm of its x (red) arrow, and the upper arm of its height (green) arrow. */
+const PENDANT_X_ARROW = { x: 675, y: 362 };
+const PENDANT_HEIGHT_ARROW = { x: 642, y: 312 };
 
 async function openDemo(page: Page): Promise<string[]> {
   const errors: string[] = [];
@@ -92,4 +96,34 @@ test('dragging an unselected wall light selects it and slides it along its wall'
   expect(await positionField(page, 'Altura')).toBeGreaterThan(1.9);
   expect(await positionField(page, 'Z')).toBeGreaterThan(0.1);
   await expect(page).toHaveScreenshot('wall-light-dragged.png');
+});
+
+test('the move handle slides the selection along one axis at a time', async ({ page }) => {
+  const errors = await openDemo(page);
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  await expect(page).toHaveScreenshot('move-handle.png');
+
+  // Pointer motion off the axis is ignored: only x changes.
+  await drag(page, PENDANT_X_ARROW, { x: PENDANT_X_ARROW.x + 90, y: PENDANT_X_ARROW.y + 40 });
+  expect(await positionField(page, 'X')).toBeGreaterThan(0.5);
+  expect(await positionField(page, 'Altura')).toBe(2.1);
+  expect(await positionField(page, 'Z')).toBe(0);
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect.poll(() => positionField(page, 'X')).toBe(0);
+
+  // Pendants also get height.
+  await drag(page, PENDANT_HEIGHT_ARROW, { x: PENDANT_HEIGHT_ARROW.x + 30, y: 360 });
+  expect(await positionField(page, 'Altura')).toBeLessThan(1.8);
+  expect(await positionField(page, 'X')).toBe(0);
+  expect(await positionField(page, 'Z')).toBe(0);
+  await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+  expect(errors).toEqual([]);
+});
+
+test('clicking the handle keeps the selection', async ({ page }) => {
+  await openDemo(page);
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  await page.mouse.click(PENDANT_X_ARROW.x, PENDANT_X_ARROW.y);
+  await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+  expect(await positionField(page, 'X')).toBe(0);
 });
