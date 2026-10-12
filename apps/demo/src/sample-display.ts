@@ -1,4 +1,5 @@
 import type { DisplayCatalog } from '@luxstudio/ui';
+import type { ImportedItem } from './imported-products';
 
 type Labels = Record<'es-AR' | 'en', string>;
 
@@ -71,14 +72,33 @@ const ITEMS: { productId: string; categoryId: string; name: Labels }[] = [
   },
 ];
 
-/** Display data for the sample products, in the given language. */
-export function sampleDisplay(locale: keyof Labels): DisplayCatalog {
+/** Category for the visitor's own IES files (see imported-products.ts). */
+const IMPORTED_CATEGORY = {
+  id: 'imported',
+  label: { 'es-AR': 'Tus archivos IES', en: 'Your IES files' },
+};
+
+/**
+ * Display data for the sample products, in the given language, plus any IES
+ * files the visitor imported (listed first, under their own category).
+ */
+export function sampleDisplay(
+  locale: keyof Labels,
+  imported: readonly ImportedItem[] = [],
+): DisplayCatalog {
+  const importedCategory = imported.length > 0 ? [IMPORTED_CATEGORY] : [];
   return {
-    categories: CATEGORIES.map(({ id, label }) => ({ id, label: label[locale] })),
-    items: ITEMS.map(({ productId, categoryId, name }) => ({
-      productId,
-      categoryId,
-      name: name[locale],
+    categories: [...importedCategory, ...CATEGORIES].map(({ id, label }) => ({
+      id,
+      label: label[locale],
     })),
+    items: [
+      ...imported.map(({ productId, name }) => ({ productId, categoryId: 'imported', name })),
+      ...ITEMS.map(({ productId, categoryId, name }) => ({
+        productId,
+        categoryId,
+        name: name[locale],
+      })),
+    ],
   };
 }

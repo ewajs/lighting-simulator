@@ -52,6 +52,8 @@ export class LxsLibrary extends LitElement {
   @property({ attribute: false }) products: Catalog | undefined;
   @property({ attribute: false }) scene: Scene | undefined;
   @property({ attribute: false }) selection: readonly string[] = [];
+  /** Passed to the catalog panel: lets the user load their own IES file. */
+  @property({ type: Boolean, attribute: 'ies-import' }) iesImport = false;
 
   @property({ type: Boolean, reflect: true }) collapsed = false;
 
@@ -71,6 +73,7 @@ export class LxsLibrary extends LitElement {
                 role="tabpanel"
                 .display=${this.display}
                 .products=${this.products}
+                .iesImport=${this.iesImport}
               ></lxs-catalog-panel>`
             : html`<lxs-scene-panel
                 role="tabpanel"

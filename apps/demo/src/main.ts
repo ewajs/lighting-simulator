@@ -1,21 +1,37 @@
-import { Simulator } from '@luxstudio/core';
+import { Simulator, type Catalog, type PhotometryProvider } from '@luxstudio/core';
 import '@luxstudio/ui';
 import '@luxstudio/ui/theme.css';
+import { ImportedProducts } from './imported-products';
 import { sampleCatalog } from './sample-catalog';
 import { sampleDisplay } from './sample-display';
 import { samplePhotometry } from './sample-photometry';
 
-const simulator = new Simulator({ catalog: sampleCatalog, photometry: samplePhotometry });
+// Visitors can try their own IES files; they join the sample catalog for this visit.
+const imported = new ImportedProducts();
+const catalog: Catalog = { get: (id) => sampleCatalog.get(id) ?? imported.get(id) };
+const photometry: PhotometryProvider = {
+  load: (id) => {
+    const text = imported.text(id);
+    return text === undefined ? samplePhotometry.load(id) : Promise.resolve(text);
+  },
+};
+
+const simulator = new Simulator({ catalog, photometry });
 addStarterLayout(simulator);
 
 const app = document.createElement('lxs-app');
 app.simulator = simulator;
+app.iesImport = true;
 app.catalog = sampleDisplay('es-AR'); // Matches the default UI locale.
 // Product names come from the host, so swap them when the user changes language.
 app.addEventListener(
   'lxs-locale-change',
-  ({ detail }) => (app.catalog = sampleDisplay(detail.locale)),
+  ({ detail }) => (app.catalog = sampleDisplay(detail.locale, imported.items)),
 );
+app.addEventListener('lxs-import-ies', ({ detail }) => {
+  imported.add(detail);
+  app.catalog = sampleDisplay(app.locale, imported.items);
+});
 
 const brand = document.createElement('span');
 brand.slot = 'brand';

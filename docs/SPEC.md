@@ -121,6 +121,8 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
 - P0: Physically based units: candela on lights, AgX tone mapping, user
   exposure control.
 - P0: Shadows from luminaires, with a shadow budget (see §7).
+- P1: Try your own IES file: an opt-in UI to load one as a temporary product
+  ([ADR 0037](./decisions/0037-ies-import.md)).
 - P0: Fallback for products without IES: a generic distribution derived
   from flux and beam angle.
 - P1: Better indirect light (bounce). Options to evaluate: light probes /

@@ -54,6 +54,8 @@ type PhoneTab = 'catalog' | 'scene' | 'properties' | 'view';
  *   `preventDefault()`, the PNG is downloaded.
  * @fires lxs-locale-change - after the UI language changed: `detail: { locale }`.
  *   Hosts update `catalog` names in response.
+ * @fires lxs-import-ies - with `ies-import` set, when the user adds their own IES file:
+ *   `detail: ImportIesDetail`. Hosts add the product to their catalogs (ADR 0037).
  */
 @customElement('lxs-app')
 @localized()
@@ -63,6 +65,8 @@ export class LxsApp extends LitElement {
   @property({ attribute: false }) simulator: Simulator | undefined;
   /** Product names, categories and thumbnails, in the active language. */
   @property({ attribute: false }) catalog: DisplayCatalog = EMPTY_DISPLAY_CATALOG;
+  /** Lets the user load their own IES file from the catalog panel (ADR 0037). */
+  @property({ type: Boolean, attribute: 'ies-import' }) iesImport = false;
   /** UI language for the whole page. */
   @property() locale: Locale = DEFAULT_LOCALE;
   /** Colour theme; reflected so the theme tokens apply to this subtree. */
@@ -110,6 +114,7 @@ export class LxsApp extends LitElement {
         .scene=${this.scene}
         .selection=${this.selection}
         .collapsed=${this.libraryCollapsed}
+        .iesImport=${this.iesImport}
         @lxs-add-product=${this.#onAddProduct}
         @lxs-select=${this.#onSelect}
         @lxs-collapse-request=${({ detail }: CustomEvent<{ collapsed: boolean }>) =>
@@ -166,6 +171,7 @@ export class LxsApp extends LitElement {
         return html`<lxs-catalog-panel
           .display=${this.catalog}
           .products=${this.simulator?.catalog}
+          .iesImport=${this.iesImport}
           @lxs-add-product=${this.#onAddProduct}
         ></lxs-catalog-panel>`;
       case 'scene':
