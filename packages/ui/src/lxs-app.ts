@@ -87,6 +87,8 @@ export class LxsApp extends LitElement {
   @state() private scene: Scene | undefined;
   /** Which handle the selection shows: arrows to move it, or the aim handle. */
   @state() private tool: EditTool = 'move';
+  /** Whether drags snap to the grid and line up with other luminaires. */
+  @state() private snapping = true;
   @state() private renderMode: RenderMode = 'realistic';
   @state() private exposureEv = 0;
   @state() private view: ViewName = 'perspective';
@@ -222,6 +224,7 @@ export class LxsApp extends LitElement {
       .simulator=${this.simulator}
       .highlighted=${this.selection}
       handle=${this.tool}
+      .snapping=${this.snapping}
       .renderMode=${this.renderMode}
       .exposureEv=${this.exposureEv}
       @lxs-pick=${this.#onPick}
@@ -235,10 +238,13 @@ export class LxsApp extends LitElement {
     return html`<lxs-viewport-controls
       variant=${variant}
       .tool=${this.tool}
+      .snapping=${this.snapping}
       .renderMode=${this.renderMode}
       .view=${this.view}
       .exposureEv=${this.exposureEv}
       @lxs-tool-change=${({ detail }: CustomEvent<{ tool: EditTool }>) => (this.tool = detail.tool)}
+      @lxs-snapping-change=${({ detail }: CustomEvent<{ snapping: boolean }>) =>
+        (this.snapping = detail.snapping)}
       @lxs-render-mode-change=${({ detail }: CustomEvent<{ mode: RenderMode }>) => (this.renderMode = detail.mode)}
       @lxs-exposure-change=${({ detail }: CustomEvent<{ ev: number }>) => (this.exposureEv = detail.ev)}
       @lxs-view-request=${({ detail }: CustomEvent<{ view: ViewName }>) => this.#setView(detail.view)}

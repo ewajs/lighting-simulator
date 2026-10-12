@@ -11,6 +11,7 @@
     export const templates = {
       's037caef1307c29f0': `Ancho completo`,
 's053eb89714fe5c46': `Potencia`,
+'s066b0883816157a1': `Ajuste magnético`,
 's07ff5207b4bfba92': `3D`,
 's0f46657bfb26f224': `Encuadrar selección`,
 's126219b722a3c643': `Temperatura de color`,
@@ -62,6 +63,7 @@
 's6b7d7afabc24ff1c': `Propiedades`,
 's6bb329b249dd1ee7': `Encender`,
 's71ddb19f3752ec52': `Reflectancia ρ`,
+'s73d3b80684e12439': `Ajuste magnético (mantené Alt para mover libremente)`,
 's7417792bbe720149': `Rehacer`,
 's789a8b24e7a5f41e': `Lateral`,
 's79b58eeef7164dfe': `Hormigón`,
@@ -107,6 +109,7 @@
 'sf1a326ef265bbdc3': `Embutida`,
 'sf21fb4f4b9e8911f': `Ancho`,
 'sf29819a1c2d62d38': `Ningún producto coincide con la búsqueda.`,
+'sf5220fdb358ab55f': `Imán`,
 'sf923dd8943afb475': str`${0} luminarias seleccionadas`,
 'sf993bb199fefbe04': `Todos`,
 'sf9a3e0199ffcbd16': `Orientación`,

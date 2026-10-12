@@ -3,6 +3,7 @@
 // See ADR 0039.
 
 import { wallNormalAxis, type Ray } from './placement';
+import { snapPosition, type Guide, type SnapOptions } from './snap';
 import type { Simulator } from './simulator';
 import type { Luminaire, Product, Room, Vec3 } from './types';
 
@@ -94,7 +95,9 @@ export function axisOffset(ray: Ray, origin: Vec3, axis: MoveAxis): number | nul
 /**
  * One drag of a move handle: every luminaire in the group slides by the same
  * distance along one axis, as one undo step. The distance is limited so all
- * of them stay inside the room, which keeps the group's shape.
+ * of them stay inside the room, which keeps the group's shape. With
+ * snapping, the group's centre snaps to the grid or lines up with
+ * luminaires outside the group.
  */
 export class AxisDrag {
   readonly #simulator: Simulator;
@@ -116,17 +119,36 @@ export class AxisDrag {
     this.#grabbed = axisOffset(ray, this.#origin, axis);
   }
 
-  /** Slides the group to where `ray` points along the axis. Rays it can't follow are ignored. */
-  moveTo(ray: Ray): void {
+  /**
+   * Slides the group to where `ray` points along the axis, snapping unless
+   * `snap` is null. Returns the alignments found. Rays it can't follow are ignored.
+   */
+  moveTo(ray: Ray, snap: SnapOptions | null = null): readonly Guide[] {
     const offset = axisOffset(ray, this.#origin, this.#axis);
-    if (offset === null || this.#grabbed === null) return;
-    const distance = this.#withinRoom(offset - this.#grabbed);
+    if (offset === null || this.#grabbed === null) return [];
+    let distance = offset - this.#grabbed;
+    let guides: readonly Guide[] = [];
+    if (snap) {
+      const center = { ...this.#origin, [this.#axis]: this.#origin[this.#axis] + distance };
+      const snapped = snapPosition(center, [this.#axis], this.#others(), snap);
+      distance = snapped.position[this.#axis] - this.#origin[this.#axis];
+      guides = snapped.guides;
+    }
+    distance = this.#withinRoom(distance);
     const options = { mergeKey: this.#mergeKey };
     for (const [id, start] of this.#start) {
       if (!this.#simulator.scene.luminaires.some((l) => l.id === id)) continue;
       const position = { ...start, [this.#axis]: start[this.#axis] + distance };
       this.#simulator.updateLuminaire(id, { position }, options);
     }
+    return guides;
+  }
+
+  /** Positions of the luminaires not being moved, to line up with. */
+  #others(): Vec3[] {
+    return this.#simulator.scene.luminaires
+      .filter((l) => !this.#start.has(l.id))
+      .map((l) => l.position);
   }
 
   /** The distance limited so every luminaire stays inside the room. */

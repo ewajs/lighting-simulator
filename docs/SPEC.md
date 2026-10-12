@@ -111,7 +111,10 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
   The move handle on the selection slides it along one axis at a time
   ([ADR 0039](./decisions/0039-move-handle.md)). The aim handle sets where a
   recessed or track head points: drag the beam's landing point, or turn
-  the ring ([ADR 0040](./decisions/0040-aim-handle.md)).
+  the ring ([ADR 0040](./decisions/0040-aim-handle.md)). Drags snap to a 10 cm
+  grid and line up with other luminaires, and the ring turns in 15° steps.
+  Alt or the magnet toggle moves freely
+  ([ADR 0041](./decisions/0041-snapping.md)).
 - P0: Per-instance dimming and on/off.
 - P1: Array tool: grid placement (rows × cols, spacing) on the ceiling.
 - P1: Track systems with heads that snap along a rail.

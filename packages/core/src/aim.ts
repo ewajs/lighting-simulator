@@ -5,6 +5,7 @@
 import type { Ray } from './placement';
 import { roomSurfaceHit } from './placement';
 import type { Simulator } from './simulator';
+import { snapPan, type SnapOptions } from './snap';
 import type { Aim, Luminaire, MountType, Product, Room, Vec3 } from './types';
 
 /** Mounts with an adjustable head, which the aim handle can turn. */
@@ -116,7 +117,7 @@ export class AimPointDrag {
   }
 }
 
-/** One drag around the rotation ring: pan follows the pointer's turn, tilt stays. */
+/** One drag around the rotation ring: pan follows the pointer's turn, tilt stays. Snaps to PAN_STEP_DEG. */
 export class PanDrag {
   readonly #simulator: Simulator;
   readonly #id: string;
@@ -134,14 +135,18 @@ export class PanDrag {
     this.#grabbedDeg = luminaire ? bearingAround(ray, luminaire.position) : null;
   }
 
-  /** Turns by as much as the pointer has turned around the luminaire since the grab. */
-  moveTo(ray: Ray): void {
+  /**
+   * Turns by as much as the pointer has turned around the luminaire since the
+   * grab, in PAN_STEP_DEG steps unless `snap` is null.
+   */
+  moveTo(ray: Ray, snap: SnapOptions | null = null): void {
     const luminaire = findLuminaire(this.#simulator, this.#id);
     const bearing = luminaire && bearingAround(ray, luminaire.position);
     if (!luminaire || bearing === null || bearing === undefined || this.#grabbedDeg === null) {
       return;
     }
-    const panDeg = wrapDeg(this.#startPanDeg + bearing - this.#grabbedDeg);
+    const freePanDeg = wrapDeg(this.#startPanDeg + bearing - this.#grabbedDeg);
+    const panDeg = snap ? snapPan(freePanDeg) : freePanDeg;
     this.#simulator.updateLuminaire(
       this.#id,
       { aim: { ...luminaire.aim, panDeg } },

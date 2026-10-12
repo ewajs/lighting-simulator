@@ -157,13 +157,15 @@ test('E switches to the aim handle: drag the beam’s landing point to re-aim', 
   expect(errors).toEqual([]);
 });
 
-test('the rotation ring turns pan only', async ({ page }) => {
+test('the rotation ring turns pan only, in 15° steps', async ({ page }) => {
   await openDemo(page);
   await page.mouse.click(TRACK_SPOT.x, TRACK_SPOT.y);
   await page.getByRole('radio', { name: 'Orientar' }).click();
   // A quarter turn, from the right of the ring to its front.
   await drag(page, SPOT_RING_RIGHT, { x: TRACK_SPOT.x, y: 330 });
-  expect(await positionField(page, 'Giro')).not.toBe(-90);
+  const pan = await positionField(page, 'Giro');
+  expect(pan).not.toBe(-90);
+  expect(Math.abs(pan % 15)).toBe(0); // abs: −180 % 15 is −0.
   expect(await positionField(page, 'Inclinación')).toBe(45);
   // Position untouched, selection kept.
   expect(await positionField(page, 'X')).toBe(-1);
@@ -182,4 +184,42 @@ test('W and the toolbar switch back to moving', async ({ page }) => {
   await aim.click();
   await move.click();
   await expect(move).toHaveAttribute('aria-checked', 'true');
+});
+
+/** Whether a field value sits on the 10 cm grid. */
+const onGrid = (value: number) => Math.abs(value * 10 - Math.round(value * 10)) < 1e-6;
+
+test('drags snap to the 10 cm grid; Alt or the magnet move freely', async ({ page }) => {
+  await openDemo(page);
+  const across = { x: PENDANT.x + 160, y: PENDANT.y };
+  await drag(page, PENDANT, across);
+  expect(onGrid(await positionField(page, 'X'))).toBe(true);
+  expect(onGrid(await positionField(page, 'Z'))).toBe(true);
+
+  // The same drag with Alt held lands off the grid.
+  await page.keyboard.press('ControlOrMeta+z');
+  await page.keyboard.down('Alt');
+  await drag(page, PENDANT, across);
+  await page.keyboard.up('Alt');
+  expect(onGrid(await positionField(page, 'Z'))).toBe(false);
+
+  // So does it with the magnet off.
+  await page.keyboard.press('ControlOrMeta+z');
+  const magnet = page.getByRole('button', { name: 'Ajuste magnético' });
+  await expect(magnet).toHaveAttribute('aria-pressed', 'true');
+  await magnet.click();
+  await expect(magnet).toHaveAttribute('aria-pressed', 'false');
+  await drag(page, PENDANT, across);
+  expect(onGrid(await positionField(page, 'Z'))).toBe(false);
+});
+
+test('a dragged luminaire lines up with another, shown by a guide', async ({ page }) => {
+  await openDemo(page);
+  // A little left: the spot lines up with the wall washer behind it at x = −1.2.
+  await page.mouse.move(TRACK_SPOT.x, TRACK_SPOT.y);
+  await page.mouse.down();
+  await page.mouse.move(TRACK_SPOT.x - 16, TRACK_SPOT.y, { steps: 6 });
+  await expect(page).toHaveScreenshot('alignment-guide.png');
+  await page.mouse.up();
+  expect(await positionField(page, 'X')).toBe(-1.2);
 });

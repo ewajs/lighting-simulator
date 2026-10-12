@@ -1,7 +1,9 @@
 // Moving luminaires by dragging them in the viewport. Rays are plain data, so
-// this runs without three.js and is unit-tested in Node. See ADR 0038.
+// this runs without three.js and is unit-tested in Node. See ADRs 0038, 0041.
 
-import { mountSurfaceHit, type Ray } from './placement';
+import { luminaireAxes, type MoveAxis } from './move-handle';
+import { constrainPosition, mountSurfaceHit, type Ray } from './placement';
+import { snapPosition, type Guide, type SnapOptions } from './snap';
 import type { Simulator } from './simulator';
 import type { Product, Vec3 } from './types';
 
@@ -12,6 +14,8 @@ const NO_OFFSET: Vec3 = { x: 0, y: 0, z: 0 };
  * surface it's mounted on, keeping the offset from the point first grabbed so
  * it doesn't jump to the pointer. The rest of the group moves by the same
  * horizontal offset. All the moves of one drag are a single undo step.
+ * With snapping, the grabbed luminaire snaps to the grid or lines up with
+ * luminaires outside the group.
  */
 export class LuminaireDrag {
   readonly #simulator: Simulator;
@@ -43,14 +47,27 @@ export class LuminaireDrag {
     this.#grabOffset = grabbedPoint ? subtract(grabbed.position, grabbedPoint) : NO_OFFSET;
   }
 
-  /** Moves the group to where `ray` points. A ray that misses the mount surface is ignored. */
-  moveTo(ray: Ray): void {
+  /**
+   * Moves the group to where `ray` points, snapping unless `snap` is null.
+   * Returns the alignments found. A ray that misses the mount surface is ignored.
+   */
+  moveTo(ray: Ray, snap: SnapOptions | null = null): readonly Guide[] {
     const simulator = this.#simulator;
+    const { room } = simulator.scene;
     const from = this.#start.get(this.#grabbedId)!;
-    const hit = mountSurfaceHit(ray, this.#product, from, simulator.scene.room);
-    if (!hit || !this.#exists(this.#grabbedId)) return;
+    const hit = mountSurfaceHit(ray, this.#product, from, room);
+    if (!hit || !this.#exists(this.#grabbedId)) return [];
+    let target = constrainPosition(add(hit, this.#grabOffset), this.#product, room);
+    let guides: readonly Guide[] = [];
+    if (snap)
+      ({ position: target, guides } = snapPosition(
+        target,
+        this.#dragAxes(target),
+        this.#others(),
+        snap,
+      ));
     const options = { mergeKey: this.#mergeKey };
-    simulator.updateLuminaire(this.#grabbedId, { position: add(hit, this.#grabOffset) }, options);
+    simulator.updateLuminaire(this.#grabbedId, { position: target }, options);
 
     // Others follow where the grabbed one actually went, after its mount constraints.
     const moved = this.#position(this.#grabbedId)!;
@@ -61,6 +78,20 @@ export class LuminaireDrag {
       const position = { x: start.x + dx, y: start.y, z: start.z + dz };
       simulator.updateLuminaire(id, { position }, options);
     }
+    return guides;
+  }
+
+  /** The coordinates a drag changes: a pendant keeps its height. */
+  #dragAxes(position: Vec3): MoveAxis[] {
+    const axes = luminaireAxes(this.#product, position, this.#simulator.scene.room);
+    return this.#product.mount === 'pendant' ? axes.filter((axis) => axis !== 'y') : axes;
+  }
+
+  /** Positions of the luminaires not being moved, to line up with. */
+  #others(): Vec3[] {
+    return this.#simulator.scene.luminaires
+      .filter((l) => !this.#start.has(l.id))
+      .map((l) => l.position);
   }
 
   /** Undo or a delete during the drag can remove luminaires; they're skipped. */

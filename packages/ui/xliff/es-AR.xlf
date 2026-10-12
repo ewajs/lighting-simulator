@@ -427,6 +427,18 @@
   <target>Orientar</target>
   <note from="lit-localize">Edit tool that aims a luminaire</note>
 </trans-unit>
+<trans-unit id="s066b0883816157a1">
+  <source>Snapping</source>
+  <target>Ajuste magnético</target>
+</trans-unit>
+<trans-unit id="s73d3b80684e12439">
+  <source>Snapping (hold Alt to move freely)</source>
+  <target>Ajuste magnético (mantené Alt para mover libremente)</target>
+</trans-unit>
+<trans-unit id="sf5220fdb358ab55f">
+  <source>Magnet</source>
+  <target>Imán</target>
+</trans-unit>
 </body>
 </file>
 </xliff>
