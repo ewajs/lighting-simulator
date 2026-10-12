@@ -50,8 +50,8 @@ export interface ManipulatorOptions {
   readonly camera: THREE.PerspectiveCamera;
   /** A ray through a screen point, with world matrices up to date. */
   raycasterAt(clientX: number, clientY: number): THREE.Raycaster;
-  /** The fixture a ray hits first, if any. */
-  luminaireAt(raycaster: THREE.Raycaster): string | null;
+  /** The fixture under a screen point, if any. */
+  luminaireAt(clientX: number, clientY: number): string | null;
   /** The viewport's height in CSS px, for handles that keep their size on screen. */
   viewportHeightPx(): number;
 }
@@ -144,7 +144,7 @@ export class Manipulator {
     if (axis) return { kind: 'move-axis', axis };
     const part = this.#aimHandle.partAt(raycaster);
     if (part) return { kind: 'aim', part };
-    const luminaireId = this.#options.luminaireAt(raycaster);
+    const luminaireId = this.#options.luminaireAt(clientX, clientY);
     return luminaireId ? { kind: 'luminaire', luminaireId } : null;
   }
 

@@ -4,6 +4,7 @@ import '@luxstudio/ui/theme.css';
 import { ImportedProducts } from './imported-products';
 import { sampleCatalog } from './sample-catalog';
 import { sampleDisplay } from './sample-display';
+import { sampleModels } from './sample-models';
 import { samplePhotometry } from './sample-photometry';
 
 // Visitors can try their own IES files; they join the sample catalog for this visit.
@@ -16,7 +17,7 @@ const photometry: PhotometryProvider = {
   },
 };
 
-const simulator = new Simulator({ catalog, photometry });
+const simulator = new Simulator({ catalog, photometry, models: sampleModels });
 addStarterLayout(simulator);
 
 const app = document.createElement('lxs-app');

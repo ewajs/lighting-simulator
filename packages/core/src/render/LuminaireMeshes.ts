@@ -2,7 +2,7 @@ import * as THREE from 'three/webgpu';
 import { color } from 'three/tsl';
 import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../types';
 import { candelaGrid } from '../photometry/grid';
-import { buildFixture, disposeFixture, type Fixture } from './fixtures';
+import { buildFixture, type Fixture } from './fixtures';
 import { IesLight, profileTexture } from './IesLight';
 import { candela, kelvinToRgb, lightingProduct } from './lighting';
 import { overlayColor } from './overlay';
@@ -28,6 +28,8 @@ interface Item {
   readonly productId: string;
   /** The photometry the fixture was built with; a new arrival rebuilds it. */
   readonly photometry: Photometry | undefined;
+  /** The model template it was built from; one that arrives later rebuilds it. */
+  readonly model: THREE.Object3D | undefined;
   /** The product as lit, with flux and beam from its photometry if any. */
   readonly product: Product;
   readonly fixture: Fixture;
@@ -43,10 +45,17 @@ export class LuminaireMeshes {
   readonly #profiles = new Map<Photometry, Profile>();
   readonly #catalog: Catalog;
   readonly #photometry: (productId: string) => Photometry | undefined;
+  readonly #model: (productId: string) => THREE.Object3D | undefined;
 
-  constructor(catalog: Catalog, photometry: (productId: string) => Photometry | undefined) {
+  /** `photometry` and `model` look up what a product has loaded so far. */
+  constructor(
+    catalog: Catalog,
+    photometry: (productId: string) => Photometry | undefined,
+    model: (productId: string) => THREE.Object3D | undefined,
+  ) {
     this.#catalog = catalog;
     this.#photometry = photometry;
+    this.#model = model;
   }
 
   sync(scene: Scene, highlighted: readonly string[], mode: RenderMode): void {
@@ -79,6 +88,35 @@ export class LuminaireMeshes {
     return undefined;
   }
 
+  /**
+   * The luminaire whose body comes nearest a screen point, within `slopPx`:
+   * the distance to its bounding rectangle on screen, pendant cords left out.
+   * For thin fixtures, such as a linear pendant, and for fingers.
+   */
+  nearestOnScreen(
+    camera: THREE.Camera,
+    pointerPx: THREE.Vector2,
+    viewportPx: THREE.Vector2,
+    slopPx: number,
+  ): string | undefined {
+    let nearest: { id: string; distance: number } | undefined;
+    for (const [id, { fixture }] of this.#items) {
+      const cords = new Set<THREE.Object3D>(fixture.cords.map((cord) => cord.mesh));
+      const box = new THREE.Box3();
+      for (const part of fixture.root.children)
+        if (!cords.has(part)) box.expandByObject(part, true);
+      const rect = screenRect(box, camera, viewportPx);
+      if (!rect) continue;
+      const dx = Math.max(rect.min.x - pointerPx.x, 0, pointerPx.x - rect.max.x);
+      const dy = Math.max(rect.min.y - pointerPx.y, 0, pointerPx.y - rect.max.y);
+      const distance = Math.hypot(dx, dy);
+      if (distance <= slopPx && (!nearest || distance < nearest.distance)) {
+        nearest = { id, distance };
+      }
+    }
+    return nearest?.id;
+  }
+
   /** Shows or hides all highlight outlines without changing which are highlighted. */
   setOutlinesVisible(visible: boolean): void {
     for (const item of this.#items.values()) if (item.outline) item.outline.visible = visible;
@@ -93,9 +131,12 @@ export class LuminaireMeshes {
   #itemFor(luminaire: Luminaire): Item | undefined {
     const existing = this.#items.get(luminaire.id);
     const photometry = this.#photometry(luminaire.productId);
-    if (existing?.productId === luminaire.productId && existing.photometry === photometry) {
-      return existing;
-    }
+    const model = this.#model(luminaire.productId);
+    const unchanged =
+      existing?.productId === luminaire.productId &&
+      existing.photometry === photometry &&
+      existing.model === model;
+    if (existing && unchanged) return existing;
     if (existing) this.#remove(luminaire.id);
     const catalogProduct = this.#catalog.get(luminaire.productId);
     if (!catalogProduct) return undefined; // Unknown products are skipped, not drawn.
@@ -103,8 +144,9 @@ export class LuminaireMeshes {
     const item: Item = {
       productId: product.id,
       photometry,
+      model,
       product,
-      fixture: buildFixture(product, photometry && this.#profile(photometry).texture),
+      fixture: buildFixture(product, photometry && this.#profile(photometry).texture, model),
       flux: 0,
     };
     this.group.add(item.fixture.root);
@@ -114,27 +156,32 @@ export class LuminaireMeshes {
 
   #update(item: Item, luminaire: Luminaire, room: Room, mode: RenderMode): void {
     const { product } = item;
-    const { root, light, lightOrigin, emissive, head, cord } = item.fixture;
+    const { root, light, lightOrigin, emissive, head, cords } = item.fixture;
     const { x, y, z } = luminaire.position;
     root.position.set(x, y, z);
-    root.rotation.set(0, product.mount === 'wall' ? yawAwayFromWall(luminaire, room) : 0, 0);
 
     // Aim: tilt from straight down towards local +z, then pan around the vertical.
+    // A head (track) turns on its own. Without one, pan turns the whole fixture,
+    // its installed orientation, so a model's asymmetric parts follow its light
+    // (ADR 0043); tilt is then the light's alone.
     const tilt = luminaire.aim.tiltDeg * DEG;
     const pan = luminaire.aim.panDeg * DEG;
+    const wallYaw = product.mount === 'wall' ? yawAwayFromWall(luminaire, room) : 0;
+    root.rotation.set(0, wallYaw + (head ? 0 : pan), 0);
+    const lightPan = head ? pan : 0;
     if (head) head.rotation.set(-tilt, pan, 0, 'YXZ');
     // An IES light turns with the aim; its frame's −y is the aim, +z forward (ADR 0036).
-    if (light instanceof IesLight) light.rotation.set(-tilt, pan, 0, 'YXZ');
+    if (light instanceof IesLight) light.rotation.set(-tilt, lightPan, 0, 'YXZ');
     if (light instanceof THREE.SpotLight) {
       const direction = new THREE.Vector3(0, -1, 0).applyEuler(
-        new THREE.Euler(-tilt, pan, 0, 'YXZ'),
+        new THREE.Euler(-tilt, lightPan, 0, 'YXZ'),
       );
       light.target.position.copy(lightOrigin).add(direction);
     }
-    if (cord) {
-      const length = Math.max(0.01, room.height - y);
-      cord.scale.y = length;
-      cord.position.y = length / 2;
+    for (const { mesh, anchor } of cords) {
+      const length = Math.max(0.01, room.height - y - anchor.y);
+      mesh.scale.y = length;
+      mesh.position.set(anchor.x, anchor.y + length / 2, anchor.z);
     }
 
     const level = luminaire.on ? luminaire.dimming : 0;
@@ -196,7 +243,7 @@ export class LuminaireMeshes {
     if (!item) return;
     this.#removeOutline(item);
     this.group.remove(item.fixture.root);
-    disposeFixture(item.fixture);
+    item.fixture.dispose();
     this.#items.delete(id);
   }
 }
@@ -217,4 +264,29 @@ function outlineMaterial(): THREE.LineBasicNodeMaterial {
   const material = new THREE.LineBasicNodeMaterial({ depthTest: false });
   material.colorNode = overlayColor(color(HIGHLIGHT_COLOR));
   return material;
+}
+
+/** A box's bounding rectangle on screen, in px; null if empty or partly behind the camera. */
+function screenRect(
+  box: THREE.Box3,
+  camera: THREE.Camera,
+  viewportPx: THREE.Vector2,
+): THREE.Box2 | null {
+  if (box.isEmpty()) return null;
+  const rect = new THREE.Box2();
+  for (const x of [box.min.x, box.max.x]) {
+    for (const y of [box.min.y, box.max.y]) {
+      for (const z of [box.min.z, box.max.z]) {
+        const corner = new THREE.Vector3(x, y, z).project(camera);
+        if (corner.z > 1) return null;
+        rect.expandByPoint(
+          new THREE.Vector2(
+            ((corner.x + 1) / 2) * viewportPx.x,
+            ((1 - corner.y) / 2) * viewportPx.y,
+          ),
+        );
+      }
+    }
+  }
+  return rect;
 }

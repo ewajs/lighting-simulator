@@ -10,6 +10,7 @@ import {
   viewPose,
   type ViewName,
 } from './lighting';
+import { FixtureModels } from './FixtureModels';
 import { IesLight, IesLightNode } from './IesLight';
 import { LuminaireMeshes } from './LuminaireMeshes';
 import { Manipulator, type HandleMode, type MoveStartEvent } from './Manipulator';
@@ -17,6 +18,8 @@ import { PointerGestures } from './PointerGestures';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
 
 const VIEW_TRANSITION_MS = 450;
+/** A click this close to a fixture on screen still picks it: thin fixtures, fingers. In px. */
+const PICK_SLOP_PX = 10;
 /** Camera distance when framing a selection, in m. */
 const FRAME_DISTANCE = 3;
 
@@ -82,6 +85,7 @@ export class Viewport {
   readonly #controls: OrbitControls;
   readonly #room = new RoomMeshes();
   readonly #luminaires: LuminaireMeshes;
+  readonly #models: FixtureModels;
   // Uniform stand-in for inter-reflections (SPEC §6).
   readonly #bounce = new THREE.HemisphereLight(0xffffff, 0xffffff, 0);
   readonly #pickListeners = new Set<(pick: PickEvent) => void>();
@@ -91,6 +95,7 @@ export class Viewport {
   readonly #resizeObserver = new ResizeObserver(() => this.#resize());
   #unsubscribe: (() => void) | undefined;
   #unsubscribePhotometry: (() => void) | undefined;
+  #unsubscribeModels: (() => void) | undefined;
   #renderMode: RenderMode = 'realistic';
   #exposureEv = 0;
   #highlighted: readonly string[] = [];
@@ -103,8 +108,15 @@ export class Viewport {
   constructor({ simulator, container }: ViewportOptions) {
     this.#simulator = simulator;
     this.#container = container;
-    this.#luminaires = new LuminaireMeshes(simulator.catalog, (productId) =>
-      simulator.photometry(productId),
+    // A parsed model swaps placeholders for the real thing on the next sync.
+    this.#models = new FixtureModels(
+      () => this.#sync(this.#simulator.scene, undefined),
+      (message) => console.warn(message),
+    );
+    this.#luminaires = new LuminaireMeshes(
+      simulator.catalog,
+      (productId) => simulator.photometry(productId),
+      (productId) => this.#models.get(productId, simulator.model(productId)),
     );
     // three.js picks each light's shader by its class; teach it ours.
     this.#renderer.library.addLight(IesLightNode, IesLight);
@@ -116,7 +128,7 @@ export class Viewport {
       simulator,
       camera: this.#camera,
       raycasterAt: (x, y) => this.#raycasterAt(x, y),
-      luminaireAt: (raycaster) => this.#luminaireAt(raycaster),
+      luminaireAt: (x, y) => this.#luminaireAt(x, y),
       viewportHeightPx: () => this.#container.clientHeight,
     });
     const manipulator = this.#manipulator.group;
@@ -149,6 +161,10 @@ export class Viewport {
     this.#unsubscribe = this.#simulator.subscribe((scene, previous) => this.#sync(scene, previous));
     // Fixtures are rebuilt from a product's photometry once its file arrives.
     this.#unsubscribePhotometry = this.#simulator.onPhotometry(() =>
+      this.#sync(this.#simulator.scene, undefined),
+    );
+    // A model file that arrives is parsed on the next sync, then swapped in.
+    this.#unsubscribeModels = this.#simulator.onModel(() =>
       this.#sync(this.#simulator.scene, undefined),
     );
     this.#sync(this.#simulator.scene, undefined);
@@ -314,10 +330,12 @@ export class Viewport {
     this.#captures = [];
     this.#unsubscribe?.();
     this.#unsubscribePhotometry?.();
+    this.#unsubscribeModels?.();
     this.#resizeObserver.disconnect();
     this.#controls.dispose();
     this.#room.dispose();
     this.#luminaires.dispose();
+    this.#models.dispose();
     this.#manipulator.dispose();
     this.#renderer.domElement.remove();
     void this.#renderer.dispose();
@@ -443,13 +461,22 @@ export class Viewport {
   }
 
   #pick(event: PointerEvent, longPress: boolean): void {
-    const luminaireId = this.#luminaireAt(this.#raycasterAt(event.clientX, event.clientY));
+    const luminaireId = this.#luminaireAt(event.clientX, event.clientY);
     this.#pickListeners.forEach((listener) => listener({ luminaireId, event, longPress }));
   }
 
-  /** The fixture a ray hits first. Outlines and other helpers are skipped. */
-  #luminaireAt(raycaster: THREE.Raycaster): string | null {
+  /**
+   * The fixture under a screen point: the one the ray hits first (outlines
+   * and other helpers skipped), else the nearest within PICK_SLOP_PX.
+   */
+  #luminaireAt(clientX: number, clientY: number): string | null {
+    const raycaster = this.#raycasterAt(clientX, clientY);
     const hits = raycaster.intersectObject(this.#luminaires.group, true);
-    return hits.map((hit) => this.#luminaires.luminaireIdOf(hit.object)).find(Boolean) ?? null;
+    const hit = hits.map((h) => this.#luminaires.luminaireIdOf(h.object)).find(Boolean);
+    if (hit) return hit;
+    const rect = this.#renderer.domElement.getBoundingClientRect();
+    const pointer = new THREE.Vector2(clientX - rect.left, clientY - rect.top);
+    const size = new THREE.Vector2(rect.width, rect.height);
+    return this.#luminaires.nearestOnScreen(this.#camera, pointer, size, PICK_SLOP_PX) ?? null;
   }
 }
