@@ -60,15 +60,21 @@ export class LuminaireMeshes {
 
   sync(scene: Scene, highlighted: readonly string[], mode: RenderMode): void {
     const present = new Set<string>();
-    for (const luminaire of scene.luminaires) {
+    const show = (luminaire: Luminaire) => {
       const item = this.#itemFor(luminaire);
-      if (!item) continue;
+      if (!item) return;
       present.add(luminaire.id);
       this.#update(item, luminaire, scene.room, mode);
       this.#outline(item, highlighted.includes(luminaire.id));
-    }
+    };
+    scene.luminaires.forEach(show);
     for (const id of this.#items.keys()) if (!present.has(id)) this.#remove(id);
-    this.#assignShadows();
+    // Rebuilt fixtures start without a shadow, which is what they lost.
+    for (const id of this.#assignShadows()) {
+      this.#remove(id);
+      const luminaire = scene.luminaires.find((l) => l.id === id);
+      if (luminaire) show(luminaire);
+    }
   }
 
   /** Total flux currently emitted, in lm. */
@@ -222,13 +228,27 @@ export class LuminaireMeshes {
     }
   }
 
-  #assignShadows(): void {
-    const ranked = [...this.#items.values()].sort((a, b) => b.flux - a.flux);
-    ranked.forEach((item, rank) => {
+  /**
+   * Gives shadows to the brightest lit luminaires, up to SHADOW_BUDGET.
+   * Returns the ids of those that must lose theirs. Switching `castShadow`
+   * off in place breaks three's WebGPURenderer: materials compiled earlier
+   * keep updating the disposed shadow and throw every frame. So those
+   * fixtures are rebuilt instead.
+   */
+  #assignShadows(): string[] {
+    const ranked = [...this.#items].sort(([, a], [, b]) => b.flux - a.flux);
+    const losing: string[] = [];
+    ranked.forEach(([id, item], rank) => {
       const { light } = item.fixture;
-      light.castShadow = rank < SHADOW_BUDGET && item.flux > 0;
-      light.shadow.needsUpdate = true;
+      const casts = rank < SHADOW_BUDGET && item.flux > 0;
+      if (casts) {
+        light.castShadow = true;
+        light.shadow.needsUpdate = true;
+      } else if (light.castShadow) {
+        losing.push(id);
+      }
     });
+    return losing;
   }
 
   #removeOutline(item: Item): void {

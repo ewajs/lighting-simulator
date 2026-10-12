@@ -187,6 +187,22 @@ test('several selected luminaires share one inspector', async ({ page }) => {
   ).toContainText('apagada');
 });
 
+test('dimming to zero, or switching off, and back keeps rendering', async ({ page }) => {
+  // Regression: a light losing its shadow made three.js throw every frame.
+  const errors = await openDemo(page);
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  const slider = page.getByRole('slider', { name: 'Atenuación' });
+  await slider.fill('0');
+  await expect(page).not.toHaveScreenshot('pendant-highlighted.png');
+  await slider.fill('1');
+  await slider.blur(); // The focus ring isn't part of what's compared.
+  await page.keyboard.press('h');
+  await page.keyboard.press('h');
+  // Back to full output: the same image as before.
+  await expect(page).toHaveScreenshot('pendant-highlighted.png');
+  expect(errors).toEqual([]);
+});
+
 test('undo and redo, with one slider drag as one undo step', async ({ page }) => {
   await openDemo(page);
   await page.mouse.click(PENDANT.x, PENDANT.y);

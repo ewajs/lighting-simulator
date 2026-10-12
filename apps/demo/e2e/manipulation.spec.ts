@@ -264,3 +264,21 @@ test('a wall light shows its distance along the wall and its height', async ({ p
   const z = await positionField(page, 'Z');
   expect(during).toEqual([2 - z, height].map((d) => Math.round(d * 100) / 100).sort(byValue));
 });
+
+test('a drag with more dimensions than the last one draws them all', async ({ page }) => {
+  // Regression: dimension lines reused a buffer too small for a third line.
+  const warnings: string[] = [];
+  page.on('console', (message) => {
+    if (message.type() === 'warning') warnings.push(message.text());
+  });
+  await openDemo(page);
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  await drag(page, PENDANT, { x: PENDANT.x + 40, y: PENDANT.y }); // Two dimensions.
+  await page.keyboard.press('ControlOrMeta+z');
+  await page.mouse.move(PENDANT_HEIGHT_ARROW.x, PENDANT_HEIGHT_ARROW.y);
+  await page.mouse.down();
+  await page.mouse.move(PENDANT_HEIGHT_ARROW.x, PENDANT_HEIGHT_ARROW.y + 30, { steps: 6 });
+  await expect(page.locator('lxs-viewport .measure')).toHaveCount(3); // Plus height.
+  await page.mouse.up();
+  expect(warnings.filter((text) => /BufferGeometry/.test(text))).toEqual([]);
+});

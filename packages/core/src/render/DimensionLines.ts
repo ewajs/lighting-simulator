@@ -48,7 +48,10 @@ export class DimensionLines {
         points.push(point.clone().sub(half), point.clone().add(half));
       }
     }
-    this.#lines.geometry.setFromPoints(points);
+    // A new geometry each time: three can't grow an existing one's buffer, and
+    // the number of lines changes between drags.
+    this.#lines.geometry.dispose();
+    this.#lines.geometry = new THREE.BufferGeometry().setFromPoints(points);
   }
 
   dispose(): void {
