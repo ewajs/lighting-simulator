@@ -2,6 +2,7 @@ import {
   Viewport,
   type Diagnostics,
   type FloorPoint,
+  type FurnitureKind,
   type HandleMode,
   type Measurement,
   type MoveStartEvent,
@@ -15,6 +16,7 @@ import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { formatFixed } from './format';
 import { PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
+import { FURNITURE_DRAG_TYPE } from './lxs-furniture-list';
 
 /** How often the diagnostics overlay refreshes, in ms. */
 const STATS_INTERVAL_MS = 500;
@@ -23,12 +25,14 @@ const STATS_INTERVAL_MS = 500;
  * The 3D viewport: wraps core's Viewport (ADR 0019). It highlights what it is
  * given and reports clicks as `lxs-pick` events; it keeps no selection itself.
  * While luminaires are moved it labels their distances to the walls (ADR 0042).
+ * Furniture is picked, dragged and dropped like luminaires (ADR 0047).
  * With `diagnostics`, it shows frame rate, backend and draw counts (ADR 0044).
  *
- * @fires lxs-pick - `detail` is core's PickEvent: `{ luminaireId, event }`.
- * @fires lxs-move-start - dragging a luminaire started; `detail` is core's
- *   MoveStartEvent: `{ luminaireId, event }`. The drag itself edits the Simulator.
+ * @fires lxs-pick - `detail` is core's PickEvent: `{ target, event, longPress }`.
+ * @fires lxs-move-start - dragging a luminaire or piece started; `detail` is core's
+ *   MoveStartEvent: `{ target, event }`. The drag itself edits the Simulator.
  * @fires lxs-drop-product - a catalog card was dropped: `detail: { productId, at }`.
+ * @fires lxs-drop-furniture - a furniture card was dropped: `detail: { kind, at }`.
  */
 @customElement('lxs-viewport')
 @localized()
@@ -83,7 +87,7 @@ export class LxsViewport extends LitElement {
   `;
 
   @property({ attribute: false }) simulator: Simulator | undefined;
-  /** Luminaire ids to outline. */
+  /** Luminaire and furniture ids to outline. */
   @property({ attribute: false }) highlighted: readonly string[] = [];
   @property({ attribute: 'render-mode' }) renderMode: RenderMode = 'realistic';
   /** Exposure in EV stops; 0 is the calibrated default. */
@@ -160,7 +164,7 @@ export class LxsViewport extends LitElement {
     return this.#viewport.screenshot(background ? { background } : {});
   }
 
-  /** Centres the camera on these luminaires. */
+  /** Centres the camera on these luminaires or pieces of furniture. */
   frame(ids: readonly string[]): void {
     this.#viewport?.frame(ids);
   }
@@ -214,12 +218,17 @@ export class LxsViewport extends LitElement {
   }
 
   #onDragOver = (event: DragEvent): void => {
-    if (!event.dataTransfer?.types.includes(PRODUCT_DRAG_TYPE)) return;
+    const transfer = event.dataTransfer;
+    const types = transfer?.types ?? [];
+    if (!transfer || (!types.includes(PRODUCT_DRAG_TYPE) && !types.includes(FURNITURE_DRAG_TYPE)))
+      return;
     event.preventDefault(); // Allows the drop.
-    event.dataTransfer.dropEffect = 'copy';
+    transfer.dropEffect = 'copy';
   };
 
   #onDrop = (event: DragEvent): void => {
+    const kind = event.dataTransfer?.getData(FURNITURE_DRAG_TYPE) as FurnitureKind | undefined;
+    if (kind) return this.#onDropFurniture(event, kind);
     const productId = event.dataTransfer?.getData(PRODUCT_DRAG_TYPE);
     const at = productId && this.#viewport?.dropPoint(productId, event.clientX, event.clientY);
     if (!productId || !at) return;
@@ -233,6 +242,13 @@ export class LxsViewport extends LitElement {
     );
   };
 
+  #onDropFurniture(event: DragEvent, kind: FurnitureKind): void {
+    const at = this.#viewport?.furnitureDropPoint(event.clientX, event.clientY);
+    if (!at) return;
+    event.preventDefault();
+    this.#emit<DropFurnitureDetail>('lxs-drop-furniture', { kind, at });
+  }
+
   #emit<T>(type: string, detail: T): void {
     this.dispatchEvent(new CustomEvent<T>(type, { detail, bubbles: true, composed: true }));
   }
@@ -244,6 +260,12 @@ export interface DropProductDetail {
   readonly at: FloorPoint;
 }
 
+/** Detail of `lxs-drop-furniture`: which piece, and where on the floor it was dropped. */
+export interface DropFurnitureDetail {
+  readonly kind: FurnitureKind;
+  readonly at: FloorPoint;
+}
+
 declare global {
   interface HTMLElementTagNameMap {
     'lxs-viewport': LxsViewport;
@@ -252,5 +274,6 @@ declare global {
     'lxs-pick': CustomEvent<PickEvent>;
     'lxs-move-start': CustomEvent<MoveStartEvent>;
     'lxs-drop-product': CustomEvent<DropProductDetail>;
+    'lxs-drop-furniture': CustomEvent<DropFurnitureDetail>;
   }
 }

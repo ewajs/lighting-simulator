@@ -83,11 +83,19 @@ export function mountSurfaceHit(
   position: Vec3,
   room: Room,
 ): Vec3 | null {
-  if (product.mount === 'wall') {
-    const floor = horizontalHit(ray, 0);
-    return wallHit(ray, room, position) ?? (floor && { ...floor, y: position.y });
-  }
+  if (product.mount === 'wall') return wallSlideHit(ray, position, room);
   return horizontalHit(ray, slideHeight(product.mount, position, room));
+}
+
+/**
+ * Where `ray` meets the walls for something on a wall at `position` (a wall
+ * fixture, a picture) being dragged: over the walls whose inside faces it, and
+ * over its own wall from either side. Pointing at the floor gives the point
+ * above it at the current height, for the caller to move onto the nearest wall.
+ */
+export function wallSlideHit(ray: Ray, position: Vec3, room: Room): Vec3 | null {
+  const floor = horizontalHit(ray, 0);
+  return wallHit(ray, room, position) ?? (floor && { ...floor, y: position.y });
 }
 
 /** Height of the horizontal plane a luminaire slides on. */
@@ -105,7 +113,7 @@ function slideHeight(mount: Exclude<MountType, 'wall'>, position: Vec3, room: Ro
 }
 
 /** Where the ray meets the horizontal plane at height `y`, if ahead of its origin. */
-function horizontalHit({ origin, direction }: Ray, y: number): Vec3 | null {
+export function horizontalHit({ origin, direction }: Ray, y: number): Vec3 | null {
   if (Math.abs(direction.y) < PARALLEL_EPSILON) return null;
   const t = (y - origin.y) / direction.y;
   if (t <= 0) return null;

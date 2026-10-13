@@ -79,10 +79,74 @@ export interface Luminaire {
   readonly cct: number;
 }
 
+/** The built-in furniture pieces (ADR 0047). */
+export type FurnitureKind =
+  | 'sofa'
+  | 'armchair'
+  | 'coffee-table'
+  | 'tv-unit'
+  | 'plant'
+  | 'dining-table'
+  | 'chair'
+  | 'desk'
+  | 'office-chair'
+  | 'bookcase'
+  | 'bed'
+  | 'kitchen-island'
+  | 'display-plinth'
+  | 'artwork';
+
+/** The furniture palette's finishes; `FINISHES` has their colours and reflectances. */
+export type FinishName =
+  | 'oak'
+  | 'walnut'
+  | 'white'
+  | 'charcoal'
+  | 'metal'
+  | 'linen'
+  | 'slate'
+  | 'concrete'
+  | 'terracotta'
+  | 'leaf'
+  | 'leafLight'
+  | 'soil';
+
+/** A piece's outer size: width along its x, depth along its z (front to back), height up. */
+export interface FurnitureSize {
+  readonly width: number;
+  readonly depth: number;
+  readonly height: number;
+}
+
+/** A piece's two finishes. What each covers depends on the piece, e.g. a sofa's upholstery and legs. */
+export interface FurnitureFinish {
+  readonly main: FinishName;
+  readonly accent: FinishName;
+}
+
+/** A placed piece of furniture. It shapes the room and catches light, but gives none. */
+export interface Furniture {
+  readonly id: string;
+  readonly kind: FurnitureKind;
+  /**
+   * On the floor: the centre of the piece's footprint, so y = 0. On a wall
+   * (artwork): the centre of its back, on the wall.
+   */
+  readonly position: Vec3;
+  /**
+   * Turn around the vertical in degrees, in [−180, 180). At 0 the piece's
+   * front faces +z; 90 turns it to face +x. Wall pieces face away from their wall.
+   */
+  readonly rotationDeg: number;
+  readonly size: FurnitureSize;
+  readonly finish: FurnitureFinish;
+}
+
 /** The editable document: everything that is saved and undoable. */
 export interface Scene {
   readonly room: Room;
   readonly luminaires: readonly Luminaire[];
+  readonly furniture: readonly Furniture[];
 }
 
 /**

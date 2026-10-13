@@ -1,4 +1,4 @@
-import type { Catalog, MountType } from '@luxstudio/core';
+import { FURNITURE_KINDS, type Catalog, type MountType } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -15,18 +15,24 @@ import {
 import { formatKelvin, formatNumber } from './format';
 import { mountLabel } from './labels';
 import { icon, mountIcon } from './icons';
+import './lxs-furniture-list';
 import './lxs-ies-import';
-import { sharedStyles } from './styles';
+import { segmentedStyles, sharedStyles } from './styles';
 
 /** dataTransfer type carrying a productId while a product card is dragged. */
 export const PRODUCT_DRAG_TYPE = 'application/x-lxs-product';
 
+/** The catalog's two halves, switched at its top. */
+type CatalogSection = 'luminaires' | 'furniture';
+
 /**
- * Browse, search and filter the host's catalog. Clicking a product (or
- * pressing Enter on it) asks to add it; cards can also be dragged into the viewport.
- * With `iesImport`, a footer lets the user load their own IES file.
+ * Browse, search and filter the host's catalog, or switch to the built-in
+ * furniture (ADR 0047). Clicking a product (or pressing Enter on it) asks to
+ * add it; cards can also be dragged into the viewport. With `iesImport`, a
+ * footer lets the user load their own IES file.
  *
  * @fires lxs-add-product - `detail: { productId }`
+ * @fires lxs-add-furniture - from the furniture list, `detail: { kind }`
  * @fires lxs-import-ies - from the IES import footer, `detail: ImportIesDetail`
  */
 @customElement('lxs-catalog-panel')
@@ -34,11 +40,26 @@ export const PRODUCT_DRAG_TYPE = 'application/x-lxs-product';
 export class LxsCatalogPanel extends LitElement {
   static override styles = [
     sharedStyles,
+    segmentedStyles,
     css`
       :host {
         display: flex;
         flex-direction: column;
         min-height: 0;
+      }
+      .switch {
+        padding: var(--lxs-sp-3) var(--lxs-sp-3) 0;
+      }
+      .switch .segmented {
+        display: flex;
+      }
+      .switch button {
+        flex: 1;
+      }
+      lxs-furniture-list {
+        flex: 1;
+        min-height: 0;
+        padding-top: var(--lxs-sp-2);
       }
       .tools {
         display: grid;
@@ -188,17 +209,48 @@ export class LxsCatalogPanel extends LitElement {
   @property({ type: Boolean, attribute: 'ies-import' }) iesImport = false;
 
   @state() private filter: CatalogFilter = NO_FILTER;
+  @state() private section: CatalogSection = 'luminaires';
 
   override render() {
+    const furniture = this.section === 'furniture';
+    return html`
+      <div class="panel-header" part="header">
+        <h2>${msg('Catalog')}</h2>
+        <span class="meta"
+          >${
+            furniture
+              ? msg(str`${FURNITURE_KINDS.length} pieces`)
+              : msg(str`${this.display.items.length} products`)
+          }</span
+        >
+      </div>
+      <div class="switch">
+        <div class="segmented" role="radiogroup" aria-label=${msg('Catalog section')}>
+          ${this.#sectionButton('luminaires', msg('Luminaires'))}
+          ${this.#sectionButton('furniture', msg('Furniture'))}
+        </div>
+      </div>
+      ${furniture ? html`<lxs-furniture-list></lxs-furniture-list>` : this.#luminaires()}
+    `;
+  }
+
+  #sectionButton(section: CatalogSection, label: string) {
+    return html`<button
+      type="button"
+      role="radio"
+      aria-checked=${this.section === section}
+      @click=${() => (this.section = section)}
+    >
+      ${label}
+    </button>`;
+  }
+
+  #luminaires() {
     const empty: Catalog = { get: () => undefined };
     const products = this.products ?? empty;
     const matches = filterItems(this.display.items, this.filter, products);
     const facets = catalogFacets(this.display.items, products);
     return html`
-      <div class="panel-header" part="header">
-        <h2>${msg('Catalog')}</h2>
-        <span class="meta">${msg(str`${this.display.items.length} products`)}</span>
-      </div>
       <div class="tools">
         <label class="search">
           ${icon(Search)}

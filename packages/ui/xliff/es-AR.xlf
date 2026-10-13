@@ -74,10 +74,6 @@
   <source>off</source>
   <target>apagada</target>
 </trans-unit>
-<trans-unit id="se4db0cd00918347a">
-  <source>No luminaires yet. Add one from the catalog.</source>
-  <target>Todavía no hay luminarias. Agregá una desde el catálogo.</target>
-</trans-unit>
 <trans-unit id="sc2bea9976d81ad86">
   <source>Open catalog</source>
   <target>Abrir catálogo</target>
@@ -558,6 +554,218 @@
 <trans-unit id="s352719d86112de9a">
   <source>Help</source>
   <target>Ayuda</target>
+</trans-unit>
+<trans-unit id="s8aa4c924f2117626">
+  <source>Sofa</source>
+  <target>Sofá</target>
+</trans-unit>
+<trans-unit id="seefafd134250edba">
+  <source>Armchair</source>
+  <target>Sillón</target>
+</trans-unit>
+<trans-unit id="sb3a182cd009a91d5">
+  <source>Coffee table</source>
+  <target>Mesa ratona</target>
+</trans-unit>
+<trans-unit id="sd74cb2809c2ba31f">
+  <source>TV unit</source>
+  <target>Mueble de TV</target>
+</trans-unit>
+<trans-unit id="s13a2e8afa077a3d2">
+  <source>Plant</source>
+  <target>Planta</target>
+</trans-unit>
+<trans-unit id="sc6a462e6f0bc987c">
+  <source>Dining table</source>
+  <target>Mesa de comedor</target>
+</trans-unit>
+<trans-unit id="s670373dcbe2f7bea">
+  <source>Chair</source>
+  <target>Silla</target>
+</trans-unit>
+<trans-unit id="sd078f87343ed28f8">
+  <source>Desk</source>
+  <target>Escritorio</target>
+</trans-unit>
+<trans-unit id="sf20809c9336229ec">
+  <source>Office chair</source>
+  <target>Silla de oficina</target>
+</trans-unit>
+<trans-unit id="sf05b818439611524">
+  <source>Bookcase</source>
+  <target>Biblioteca</target>
+</trans-unit>
+<trans-unit id="s16342e19b0e5d48c">
+  <source>Bed</source>
+  <target>Cama</target>
+</trans-unit>
+<trans-unit id="sd9191c8f9b74d374">
+  <source>Kitchen island</source>
+  <target>Isla de cocina</target>
+</trans-unit>
+<trans-unit id="se2b8b91857911cdc">
+  <source>Display plinth</source>
+  <target>Pedestal de exhibición</target>
+</trans-unit>
+<trans-unit id="s74bec541bd25310f">
+  <source>Artwork</source>
+  <target>Cuadro</target>
+</trans-unit>
+<trans-unit id="s0c84e3dbbb772a0e">
+  <source>Walnut</source>
+  <target>Nogal</target>
+</trans-unit>
+<trans-unit id="s8e985aeeca6a8166">
+  <source>White</source>
+  <target>Blanco</target>
+</trans-unit>
+<trans-unit id="sfbf33b2e7780fc1c">
+  <source>Metal</source>
+  <target>Metal</target>
+</trans-unit>
+<trans-unit id="s787bcdb5462d50cb">
+  <source>Linen</source>
+  <target>Lino</target>
+</trans-unit>
+<trans-unit id="s2f3231cd581a8b6e">
+  <source>Slate</source>
+  <target>Pizarra</target>
+</trans-unit>
+<trans-unit id="se3a1d44a4df01d82">
+  <source>Terracotta</source>
+  <target>Terracota</target>
+</trans-unit>
+<trans-unit id="scf00d78fd5953f1c">
+  <source>Green</source>
+  <target>Verde</target>
+</trans-unit>
+<trans-unit id="s269ff1b34a30f2f4">
+  <source>Light green</source>
+  <target>Verde claro</target>
+</trans-unit>
+<trans-unit id="s8ad0f424f236fa22">
+  <source>Soil</source>
+  <target>Tierra</target>
+</trans-unit>
+<trans-unit id="s8e7a4862aeb198de">
+  <source>Upholstery</source>
+  <target>Tapizado</target>
+</trans-unit>
+<trans-unit id="sa5c678b4bb78274c">
+  <source>Legs</source>
+  <target>Patas</target>
+</trans-unit>
+<trans-unit id="s6d02dc19e21eb49c">
+  <source>Top</source>
+  <target>Tapa</target>
+</trans-unit>
+<trans-unit id="s0ce8e4af9aa0b323">
+  <source>Shelf</source>
+  <target>Estante</target>
+</trans-unit>
+<trans-unit id="sc72fa6c6b33a66f3">
+  <source>Cabinet</source>
+  <target>Mueble</target>
+</trans-unit>
+<trans-unit id="s8da37c19f4068f7c">
+  <source>Pot</source>
+  <target>Maceta</target>
+</trans-unit>
+<trans-unit id="s9b0c180237f7fb88">
+  <source>Wood</source>
+  <target>Madera</target>
+</trans-unit>
+<trans-unit id="s5795f224d567f4c8">
+  <source>Seat</source>
+  <target>Asiento</target>
+</trans-unit>
+<trans-unit id="sc1a4e2a7a8e20d58">
+  <source>Base</source>
+  <target>Base</target>
+</trans-unit>
+<trans-unit id="sf2686e7d594dbf63">
+  <source>Shelves</source>
+  <target>Estantes</target>
+</trans-unit>
+<trans-unit id="se00deed179b0d890">
+  <source>Bedding</source>
+  <target>Ropa de cama</target>
+</trans-unit>
+<trans-unit id="s8c7116be54de3f9b">
+  <source>Worktop</source>
+  <target>Mesada</target>
+</trans-unit>
+<trans-unit id="s89bd1c2c8164da06">
+  <source>Plinth</source>
+  <target>Pedestal</target>
+</trans-unit>
+<trans-unit id="s791b4d1f722f7b94">
+  <source>Sculpture</source>
+  <target>Escultura</target>
+</trans-unit>
+<trans-unit id="sef191ab7b2c9f986">
+  <source>Frame</source>
+  <target>Marco</target>
+</trans-unit>
+<trans-unit id="s9ffe1bbe64712bf1">
+  <source>Canvas</source>
+  <target>Lienzo</target>
+</trans-unit>
+<trans-unit id="s3116757bdf2c28c0">
+  <source><x id="0" equiv-text="${FURNITURE_KINDS.length}"/> pieces</source>
+  <target><x id="0" equiv-text="${FURNITURE_KINDS.length}"/> muebles</target>
+</trans-unit>
+<trans-unit id="s0cd7ba7852d9097f">
+  <source>Catalog section</source>
+  <target>Sección del catálogo</target>
+</trans-unit>
+<trans-unit id="s790f28096e087365">
+  <source>Furniture</source>
+  <target>Mobiliario</target>
+</trans-unit>
+<trans-unit id="s78789724e789221c">
+  <source>Size</source>
+  <target>Tamaño</target>
+</trans-unit>
+<trans-unit id="scde2e53f46beac7f">
+  <source>Rotation</source>
+  <target>Rotación</target>
+</trans-unit>
+<trans-unit id="sad59707375956ad2">
+  <source>Finish</source>
+  <target>Terminación</target>
+</trans-unit>
+<trans-unit id="s8d702591ace7b7c9">
+  <source><x id="0" equiv-text="${selected.length}"/> pieces selected</source>
+  <target><x id="0" equiv-text="${selected.length}"/> muebles seleccionados</target>
+</trans-unit>
+<trans-unit id="s7d8c91d3c8904b5b">
+  <source>Living room</source>
+  <target>Living</target>
+</trans-unit>
+<trans-unit id="sf0b24c7018e92668">
+  <source>Dining</source>
+  <target>Comedor</target>
+</trans-unit>
+<trans-unit id="s30b4e6b54a651371">
+  <source>Office</source>
+  <target>Oficina</target>
+</trans-unit>
+<trans-unit id="sda1bcb8a251d7117">
+  <source>Bedroom</source>
+  <target>Dormitorio</target>
+</trans-unit>
+<trans-unit id="s149c3aeba7e0d6ef">
+  <source>Kitchen</source>
+  <target>Cocina</target>
+</trans-unit>
+<trans-unit id="s5a372c1389c63b6d">
+  <source>Display and decor</source>
+  <target>Exhibición y decoración</target>
+</trans-unit>
+<trans-unit id="se800522d994c53ef">
+  <source>Nothing here yet. Add luminaires or furniture from the catalog.</source>
+  <target>Todavía no hay nada. Agregá luminarias o muebles desde el catálogo.</target>
 </trans-unit>
 </body>
 </file>

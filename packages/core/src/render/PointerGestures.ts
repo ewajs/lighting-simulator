@@ -1,5 +1,6 @@
 // Pointer input on the viewport's canvas: clicks and taps, long presses, and
-// drags of fixtures. Kept apart from Viewport so that one stays about drawing.
+// drags of fixtures and furniture. Kept apart from Viewport so that one stays
+// about drawing.
 
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { MoveAxis } from '../move-handle';
@@ -12,9 +13,14 @@ const MAIN_BUTTON = 0;
 /** How long a touch or pen must stay still to count as a long press, in ms. */
 export const LONG_PRESS_MS = 500;
 
-/** Something under the pointer that can be dragged: a fixture, or part of a handle. */
+/** A luminaire or a piece of furniture, as picked in the viewport. */
+export type PickTarget =
+  | { readonly kind: 'luminaire'; readonly id: string }
+  | { readonly kind: 'furniture'; readonly id: string };
+
+/** Something under the pointer that can be dragged: a fixture, a piece of furniture, or part of a handle. */
 export type PressTarget =
-  | { readonly kind: 'luminaire'; readonly luminaireId: string }
+  | PickTarget
   | { readonly kind: 'move-axis'; readonly axis: MoveAxis }
   | { readonly kind: 'aim'; readonly part: AimPart };
 
@@ -37,7 +43,7 @@ export interface GestureActions {
   ): ((move: PointerEvent) => void) | undefined;
 }
 
-/** A press in progress: a click or tap until it moves too far, then a drag if it started on a fixture. */
+/** A press in progress: a click or tap until it moves too far, then a drag if it started on something draggable. */
 interface Press {
   readonly event: PointerEvent;
   readonly timer: number | undefined;
@@ -49,8 +55,8 @@ interface Press {
 
 /**
  * Turns pointer events on the canvas into picks, long presses, and drags of
- * fixtures and handles. A press on either switches OrbitControls off until it
- * ends, so dragging them never turns the camera.
+ * fixtures, furniture and handles. A press on any of them switches
+ * OrbitControls off until it ends, so dragging them never turns the camera.
  */
 export class PointerGestures {
   readonly #canvas: HTMLCanvasElement;
@@ -87,8 +93,8 @@ export class PointerGestures {
 
   /**
    * A press becomes a pick (on release), a long press (after LONG_PRESS_MS,
-   * touch and pen only) or, if it started on a fixture or handle and moves, a
-   * drag. Presses on a handle are never picks.
+   * touch and pen only) or, if it started on a fixture, piece or handle and
+   * moves, a drag. Presses on a handle are never picks.
    */
   readonly #onPointerDown = (event: PointerEvent): void => {
     if (event.target !== this.#canvas) return;
@@ -97,7 +103,7 @@ export class PointerGestures {
     if (!event.isPrimary) return;
     const target =
       event.button === MAIN_BUTTON ? this.#actions.targetAt(event.clientX, event.clientY) : null;
-    // Decided before OrbitControls sees the press: on a fixture or handle the camera stays put.
+    // Decided before OrbitControls sees the press: on anything draggable the camera stays put.
     this.#controls.enabled = target === null;
     const timer =
       event.pointerType === 'mouse' || isHandle(target)
@@ -153,7 +159,7 @@ export class PointerGestures {
     dragTo(event);
   }
 
-  /** With a mouse, fixtures and handles show they can be grabbed. */
+  /** With a mouse, fixtures, furniture and handles show they can be grabbed. */
   #showHover(event: PointerEvent): void {
     const target = this.#actions.targetAt(event.clientX, event.clientY);
     this.#canvas.style.cursor = target ? 'grab' : '';
@@ -168,5 +174,5 @@ export class PointerGestures {
 }
 
 function isHandle(target: PressTarget | null): boolean {
-  return target !== null && target.kind !== 'luminaire';
+  return target !== null && target.kind !== 'luminaire' && target.kind !== 'furniture';
 }

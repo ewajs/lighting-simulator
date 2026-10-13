@@ -8,9 +8,9 @@ const WALL_LIGHT = { x: 845, y: 437 };
 /** With the pendant selected: the right arm of its x (red) arrow, and the upper arm of its height (green) arrow. */
 const PENDANT_X_ARROW = { x: 675, y: 362 };
 const PENDANT_HEIGHT_ARROW = { x: 642, y: 312 };
-/** The track spot on the ceiling, aimed at the left wall; in aim mode, its beam marker and the right of its ring. */
+/** The track spot on the ceiling, aimed at the picture on the left wall; in aim mode, its beam marker and the right of its ring. */
 const TRACK_SPOT = { x: 523, y: 312 };
-const SPOT_AIM_POINT = { x: 434, y: 391 };
+const SPOT_AIM_POINT = { x: 432, y: 375 };
 const SPOT_RING_RIGHT = { x: 569, y: 306 };
 
 async function openDemo(page: Page): Promise<string[]> {
@@ -147,13 +147,13 @@ test('E switches to the aim handle: drag the beam’s landing point to re-aim', 
 
   // From the left wall to the floor in front: less tilt, turned towards the front right.
   await drag(page, SPOT_AIM_POINT, { x: 600, y: 600 });
-  expect(await positionField(page, 'Inclinación')).toBeLessThan(45);
+  expect(await positionField(page, 'Inclinación')).toBeLessThan(50);
   expect(await positionField(page, 'Giro')).toBeGreaterThan(0);
   await expect(page).toHaveScreenshot('spot-re-aimed.png');
 
   await page.keyboard.press('ControlOrMeta+z');
   await expect.poll(() => positionField(page, 'Giro')).toBe(-90);
-  expect(await positionField(page, 'Inclinación')).toBe(45);
+  expect(await positionField(page, 'Inclinación')).toBe(50);
   expect(errors).toEqual([]);
 });
 
@@ -166,7 +166,7 @@ test('the rotation ring turns pan only, in 15° steps', async ({ page }) => {
   const pan = await positionField(page, 'Giro');
   expect(pan).not.toBe(-90);
   expect(Math.abs(pan % 15)).toBe(0); // abs: −180 % 15 is −0.
-  expect(await positionField(page, 'Inclinación')).toBe(45);
+  expect(await positionField(page, 'Inclinación')).toBe(50);
   // Position untouched, selection kept.
   expect(await positionField(page, 'X')).toBe(-1);
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');

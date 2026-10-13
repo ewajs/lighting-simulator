@@ -13,7 +13,7 @@ describe('Simulator', () => {
   });
 
   it('rejects an invalid starting scene', () => {
-    const scene = { room: { ...create().scene.room, width: -1 }, luminaires: [] };
+    const scene = { room: { ...create().scene.room, width: -1 }, luminaires: [], furniture: [] };
     expect(() => new Simulator({ catalog, scene })).toThrow(/room.width/);
   });
 
@@ -110,5 +110,48 @@ describe('Simulator', () => {
     ]);
     expect(logger.debug).toHaveBeenCalledWith('[scene] Update', { id, dimming: 0.8 });
     expect(logger.warn).not.toHaveBeenCalled();
+  });
+});
+
+describe('Simulator furniture', () => {
+  it('adds, changes, copies and removes pieces, each one undo step', () => {
+    const sim = create();
+    const id = sim.addFurniture('sofa', { x: 1, z: 0 });
+    sim.updateFurniture(id, { rotationDeg: 90 });
+    const [copy] = sim.duplicateFurniture([id]);
+    sim.removeFurniture([id]);
+    expect(sim.scene.furniture.map((f) => f.id)).toEqual([copy]);
+
+    for (let i = 0; i < 4; i++) sim.undo();
+    expect(sim.scene.furniture).toEqual([]);
+    for (let i = 0; i < 4; i++) sim.redo();
+    expect(sim.scene.furniture.map((f) => f.id)).toEqual([copy]);
+  });
+
+  it('merges edits with the same key', () => {
+    const sim = create();
+    const id = sim.addFurniture('chair');
+    sim.updateFurniture(id, { rotationDeg: 10 }, { mergeKey: 'turn' });
+    sim.updateFurniture(id, { rotationDeg: 20 }, { mergeKey: 'turn' });
+    sim.undo();
+    expect(sim.scene.furniture[0]!.rotationDeg).toBe(0);
+  });
+
+  it('rejects an invalid starting piece', () => {
+    const scene = {
+      room: create().scene.room,
+      luminaires: [],
+      furniture: [
+        {
+          id: 'x',
+          kind: 'sofa' as const,
+          position: { x: 0, y: 0, z: NaN },
+          rotationDeg: 0,
+          size: { width: 2, depth: 1, height: 1 },
+          finish: { main: 'linen' as const, accent: 'oak' as const },
+        },
+      ],
+    };
+    expect(() => new Simulator({ catalog, scene })).toThrow(/position.z/);
   });
 });

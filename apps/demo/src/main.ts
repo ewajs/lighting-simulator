@@ -64,9 +64,9 @@ app.append(brand);
 document.body.append(app);
 
 /**
- * A small room lit by the real IES products: a linear direct/indirect pendant
- * over the centre, two wall washers on the back wall, a track spot aimed at
- * the left wall and an up/down light on the right wall.
+ * A small dining room lit by the real IES products: a linear direct/indirect
+ * pendant over the dining table, two wall washers on the back wall, a track
+ * spot on the picture on the left wall, and an up/down light on the right wall.
  */
 function starterScene(catalog: Catalog): Scene {
   // Built with a scratch simulator, so placement and aim follow the usual rules.
@@ -77,9 +77,21 @@ function starterScene(catalog: Catalog): Scene {
     const washer = sim.addLuminaire('ies-wall-washer', { x, z: -1.5 });
     sim.updateLuminaire(washer, { aim: { tiltDeg: 0, panDeg: 180 } });
   }
-  // Pan −90° tilts the spot towards the left wall at x = −2.5.
+  // Pan −90° turns the spot towards the left wall at x = −2.5; 50° tilt meets
+  // it 1.5 / tan 50° ≈ 1.26 m below the ceiling, at the picture's centre.
   const spot = sim.addLuminaire('ies-track-spot', { x: -1, z: 0.8 });
-  sim.updateLuminaire(spot, { aim: { tiltDeg: 45, panDeg: -90 } });
+  sim.updateLuminaire(spot, { aim: { tiltDeg: 50, panDeg: -90 } });
   sim.addLuminaire('ies-wall-up-down', { x: 2.4, z: 0 });
+
+  sim.addFurniture('dining-table');
+  // Two chairs on each long side, facing the table (a chair faces +z unturned).
+  for (const x of [-0.4, 0.4]) {
+    sim.addFurniture('chair', { x, z: -0.55 });
+    const facing = sim.addFurniture('chair', { x, z: 0.55 });
+    sim.updateFurniture(facing, { rotationDeg: 180 });
+  }
+  const picture = sim.addFurniture('artwork', { x: -2.5, z: 0.8 });
+  sim.updateFurniture(picture, { position: { x: -2.5, y: 1.45, z: 0.8 } });
+  sim.addFurniture('plant', { x: 2.1, z: -1.65 });
   return sim.scene;
 }

@@ -145,7 +145,7 @@ import { Viewport } from '@luxstudio/core';
 
 const viewport = new Viewport({ simulator, container: document.querySelector('#stage')! });
 await viewport.init();
-viewport.onPick(({ luminaireId }) => viewport.setHighlighted(luminaireId ? [luminaireId] : []));
+viewport.onPick(({ target }) => viewport.setHighlighted(target ? [target.id] : []));
 viewport.handle = 'move'; // arrows on the highlighted luminaires
 ```
 

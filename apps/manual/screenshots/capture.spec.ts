@@ -3,6 +3,7 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 // Screen points for the default camera at 1280×800, as in the demo's e2e tests.
 const PENDANT = { x: 642, y: 356 };
 const TRACK_SPOT = { x: 523, y: 312 };
+const TABLE = { x: 640, y: 455 };
 const IES_FILE = '../demo/public/ies/qg63_b35q.ies';
 /** The selection outline's amber, for marking the control a screenshot is about. */
 const HIGHLIGHT = '#f5b544';
@@ -133,6 +134,18 @@ for (const language of LANGUAGES) {
       await page.keyboard.press('e');
       await mark(page.getByRole('radio', { name: language === 'es' ? 'Orientar' : 'Aim' }));
       await page.locator('lxs-app .stage').screenshot({ path: out(language, 'aiming') });
+    });
+
+    test('furniture', async ({ page }) => {
+      await open(page, language);
+      await page
+        .getByRole('radio', { name: language === 'es' ? 'Mobiliario' : 'Furniture' })
+        .click();
+      await page.locator('lxs-library').screenshot({ path: out(language, 'furniture-catalog') });
+      await page.mouse.click(TABLE.x, TABLE.y);
+      await page
+        .locator('lxs-inspector')
+        .screenshot({ path: out(language, 'furniture-inspector') });
     });
 
     test('room', async ({ page }) => {

@@ -1,3 +1,4 @@
+import { constrainFurniture } from './furniture';
 import { constrainPosition } from './placement';
 import type { Catalog, Room, Scene, Surface, SurfaceName } from './types';
 import { assertHexColor, assertInRange, assertPositive } from './validate';
@@ -17,7 +18,7 @@ export const DEFAULT_ROOM: Room = {
 /** Room dimensions that can be changed together. */
 export type RoomSize = Pick<Room, 'width' | 'depth' | 'height'>;
 
-/** Resizes the room and moves luminaires so they stay valid for their mount type. */
+/** Resizes the room, moving luminaires and furniture back inside where they can be. */
 export function resizeRoom(scene: Scene, size: Partial<RoomSize>, catalog: Catalog): Scene {
   const room = { ...scene.room, ...size };
   assertRoomSize(room);
@@ -27,6 +28,7 @@ export function resizeRoom(scene: Scene, size: Partial<RoomSize>, catalog: Catal
       ...luminaire,
       position: constrainPosition(luminaire.position, catalog.get(luminaire.productId), room),
     })),
+    furniture: scene.furniture.map((piece) => constrainFurniture(piece, room)),
   };
 }
 
