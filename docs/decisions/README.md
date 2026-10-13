@@ -48,3 +48,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0042 | [Distances to the walls while moving](0042-distances-while-moving.md) | Accepted |
 | 0043 | [Fixture models: a model provider and glTF conventions](0043-fixture-models.md) | Accepted |
 | 0044 | [Logging, diagnostics and loud test failures](0044-logging-and-loud-failures.md) | Accepted |
+| 0045 | [User manual with VitePress, in Spanish and English](0045-user-manual-vitepress.md) | Accepted |

@@ -1,0 +1,36 @@
+/* Lux Studio's warm "2700 K" amber (packages/ui/src/theme.css), darker on light
+   backgrounds so links keep their contrast. */
+:root {
+  --vp-c-brand-1: #a8660b;
+  --vp-c-brand-2: #c27a14;
+  --vp-c-brand-3: #d98f1f;
+  --vp-c-brand-soft: rgb(245 181 68 / 0.16);
+  --vp-button-brand-text: #1a1204;
+  --vp-button-brand-bg: #f5b544;
+  --vp-button-brand-hover-bg: #ffc861;
+  --vp-button-brand-hover-text: #1a1204;
+  --vp-button-brand-active-bg: #f5b544;
+}
+
+.dark {
+  --vp-c-brand-1: #f5b544;
+  --vp-c-brand-2: #ffc861;
+  --vp-c-brand-3: #f5b544;
+}
+
+/* Screenshots: a soft frame so dark UI shots sit well on either background. */
+.vp-doc img {
+  border-radius: 10px;
+  box-shadow: 0 4px 24px rgb(0 0 0 / 0.18);
+}
+
+/* Two phone screenshots next to each other, stacked on narrow screens. */
+.side-by-side {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+.side-by-side p {
+  margin: 0;
+}
