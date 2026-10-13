@@ -7,6 +7,10 @@ import type { SuiteOptions } from './e2e/fixtures';
  */
 export default defineConfig<SuiteOptions>({
   testDir: 'e2e',
+  // The budget includes launching the browser context. With many workers
+  // starting Chrome at once, that alone occasionally took over 30 s (the
+  // default), failing a test before it ran a line.
+  timeout: 60_000,
   webServer: {
     command: 'npm run build && npm run preview -- --port 4173 --strictPort',
     url: 'http://localhost:4173',

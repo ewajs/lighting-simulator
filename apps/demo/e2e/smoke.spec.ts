@@ -203,6 +203,15 @@ test('dimming to zero, or switching off, and back keeps rendering', async ({ pag
   expect(errors).toEqual([]);
 });
 
+test('the starter scene is where undo stops', async ({ page }) => {
+  // Regression: it was built from undoable edits, so ⌘Z took it apart.
+  await openDemo(page);
+  await expect(page.getByRole('button', { name: 'Deshacer' })).toBeDisabled();
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect(page.getByText('Luminarias: 5')).toBeVisible();
+  await expect(page).toHaveScreenshot('starter-scene.png');
+});
+
 test('undo and redo, with one slider drag as one undo step', async ({ page }) => {
   await openDemo(page);
   await page.mouse.click(PENDANT.x, PENDANT.y);
