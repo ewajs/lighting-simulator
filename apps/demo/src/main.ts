@@ -1,4 +1,10 @@
-import { consoleLogger, Simulator, type Catalog, type PhotometryProvider } from '@luxstudio/core';
+import {
+  consoleLogger,
+  Simulator,
+  type Catalog,
+  type PhotometryProvider,
+  type Scene,
+} from '@luxstudio/core';
 import '@luxstudio/ui';
 import '@luxstudio/ui/theme.css';
 import { ImportedProducts } from './imported-products';
@@ -20,13 +26,14 @@ const photometry: PhotometryProvider = {
 // `?debug` in the URL logs every step to the console and shows frame rate and draw counts.
 const debug = new URLSearchParams(location.search).has('debug');
 
+// The starter layout is the starting scene, not edits: undo can't take it apart.
 const simulator = new Simulator({
   catalog,
+  scene: starterScene(catalog),
   photometry,
   models: sampleModels,
   logger: consoleLogger(debug ? 'debug' : 'warn'),
 });
-addStarterLayout(simulator);
 
 const app = document.createElement('lxs-app');
 app.simulator = simulator;
@@ -61,7 +68,9 @@ document.body.append(app);
  * over the centre, two wall washers on the back wall, a track spot aimed at
  * the left wall and an up/down light on the right wall.
  */
-function addStarterLayout(sim: Simulator): void {
+function starterScene(catalog: Catalog): Scene {
+  // Built with a scratch simulator, so placement and aim follow the usual rules.
+  const sim = new Simulator({ catalog });
   sim.addLuminaire('ies-linear-pendant');
   // Pan 180° turns their forward throw (C0, local +z) towards the back wall at z = −2.
   for (const x of [-1.2, 1.2]) {
@@ -72,4 +81,5 @@ function addStarterLayout(sim: Simulator): void {
   const spot = sim.addLuminaire('ies-track-spot', { x: -1, z: 0.8 });
   sim.updateLuminaire(spot, { aim: { tiltDeg: 45, panDeg: -90 } });
   sim.addLuminaire('ies-wall-up-down', { x: 2.4, z: 0 });
+  return sim.scene;
 }
