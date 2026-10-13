@@ -14,6 +14,8 @@ const out = (language: Language, name: string) =>
   `pages/public/screenshots/${language}/${name}.png`;
 
 async function open(page: Page, language: Language): Promise<void> {
+  // The getting-started help opens on a first visit; these shots are of the app.
+  await page.addInitScript(() => localStorage.setItem('lxs-help-seen', '1'));
   await page.goto('/');
   await expect(page.locator('lxs-viewport canvas')).toBeVisible();
   if (language === 'en') {

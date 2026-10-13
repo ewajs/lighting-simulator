@@ -11,7 +11,8 @@ how it's lit. It all runs in the browser: there's nothing to install.
    lists the ones you've placed.
 2. **3D view:** the room. This is where you pick, move and aim luminaires.
 3. **Properties:** whatever is selected, or the room when nothing is.
-4. **Top bar:** undo and redo, screenshot, panels, theme and language.
+4. **Top bar:** undo and redo, screenshot, panels, theme, language and **?**,
+   which opens a quick getting-started guide.
 5. **Tools:** **Move**, **Aim** and **Magnet**. How the scene is drawn is at
    the top centre, the camera views on the right, and exposure at the bottom.
 

@@ -4,7 +4,7 @@
 
 The 3D view fills the screen. At the bottom, four tabs open panels:
 **Catalog**, **Scene**, **Properties** and **View** (tools, modes, views and
-exposure). Language and theme are under **⋯**, top right.
+exposure). Language, theme and **Help** are under **⋯**, top right.
 
 <div class="side-by-side">
 

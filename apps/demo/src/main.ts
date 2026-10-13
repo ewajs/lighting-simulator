@@ -32,6 +32,13 @@ const app = document.createElement('lxs-app');
 app.simulator = simulator;
 app.iesImport = true;
 app.diagnostics = debug;
+// First-time visitors get the getting-started help; it links to the manual,
+// which is published next to the demo.
+app.helpOnStart = true;
+app.manualUrls = {
+  'es-AR': new URL('manual/', document.baseURI).href,
+  en: new URL('manual/en/', document.baseURI).href,
+};
 app.catalog = sampleDisplay('es-AR'); // Matches the default UI locale.
 // Product names come from the host, so swap them when the user changes language.
 app.addEventListener(

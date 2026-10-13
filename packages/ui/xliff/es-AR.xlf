@@ -451,6 +451,114 @@
   <source><x id="0" equiv-text="${drawCalls}"/> draw calls, <x id="1" equiv-text="${thousands}"/>k triangles</source>
   <target><x id="0" equiv-text="${drawCalls}"/> llamadas de dibujo, <x id="1" equiv-text="${thousands}"/> mil triángulos</target>
 </trans-unit>
+<trans-unit id="s5f7e985f130ca7d1">
+  <source>Welcome to Lux Studio</source>
+  <target>Te damos la bienvenida a Lux Studio</target>
+</trans-unit>
+<trans-unit id="s9b378ddf3205da1a">
+  <source>Lay out a room, place luminaires and see how they light it, with their real light.</source>
+  <target>Armá un ambiente, poné luminarias y mirá cómo ilumina cada una, con su luz real.</target>
+</trans-unit>
+<trans-unit id="s3c206e6b2780f883">
+  <source>Add luminaires</source>
+  <target>Agregá luminarias</target>
+</trans-unit>
+<trans-unit id="seaf411acb35c7f62">
+  <source>Tap a product in the catalog and it appears in the room.</source>
+  <target>Tocá un producto del catálogo y aparece en el ambiente.</target>
+</trans-unit>
+<trans-unit id="s1738309e97fb0a12">
+  <source>Click a product in the catalog, or drag it into the room.</source>
+  <target>Hacé clic en un producto del catálogo, o arrastralo al ambiente.</target>
+</trans-unit>
+<trans-unit id="s2d483e8a9a8f04fa">
+  <source>Pick and move</source>
+  <target>Elegí y mové</target>
+</trans-unit>
+<trans-unit id="s5391e88da1b805b2">
+  <source>Tap a luminaire to pick it, and drag it with one finger. The arrows move it in one direction.</source>
+  <target>Tocá una luminaria para elegirla y arrastrala con un dedo. Las flechas la mueven en una sola dirección.</target>
+</trans-unit>
+<trans-unit id="sc814d4047216e3aa">
+  <source>Click a luminaire to pick it, and drag it. The arrows (W) move it in one direction.</source>
+  <target>Hacé clic en una luminaria para elegirla y arrastrala. Las flechas (W) la mueven en una sola dirección.</target>
+</trans-unit>
+<trans-unit id="s7164e9b82a3e7ebd">
+  <source>Aim the light</source>
+  <target>Orientá la luz</target>
+</trans-unit>
+<trans-unit id="s0e86d933421977b7">
+  <source>With Aim, drag the dot to where you want the light, or turn the ring.</source>
+  <target>Con Orientar, arrastrá el punto a donde querés la luz, o girá el aro.</target>
+</trans-unit>
+<trans-unit id="s373a9f0c74f92155">
+  <source>With Aim (E), drag the dot to where you want the light, or turn the ring.</source>
+  <target>Con Orientar (E), arrastrá el punto a donde querés la luz, o girá el aro.</target>
+</trans-unit>
+<trans-unit id="s8f8c223b2411e2a5">
+  <source>Adjust the light</source>
+  <target>Ajustá la luz</target>
+</trans-unit>
+<trans-unit id="s2a778fff4c621be2">
+  <source>In Properties: dimming, colour temperature, and on or off.</source>
+  <target>En Propiedades: atenuación, temperatura de color y encendido.</target>
+</trans-unit>
+<trans-unit id="s129bf90feb4a6cb7">
+  <source>Look around</source>
+  <target>Mirá desde donde quieras</target>
+</trans-unit>
+<trans-unit id="s8129f98efad34eda">
+  <source>One finger on empty space orbits, two fingers pan, and a pinch zooms.</source>
+  <target>Un dedo en un lugar vacío gira la vista, dos dedos la desplazan y pellizcando acercás.</target>
+</trans-unit>
+<trans-unit id="s61ed7972f78afc65">
+  <source>Drag on empty space to orbit and use the wheel to zoom. Plan, Front and Side are ready-made views.</source>
+  <target>Arrastrá en un lugar vacío para girar y usá la rueda para acercar. Planta, Frente y Lateral son vistas listas.</target>
+</trans-unit>
+<trans-unit id="sf2be0429377fa58b">
+  <source>Precise, and undoable</source>
+  <target>Preciso, y se puede deshacer</target>
+</trans-unit>
+<trans-unit id="sbd3f5681ac427348">
+  <source>The magnet snaps to 10 cm and lines things up. Undo is at the top.</source>
+  <target>El imán ajusta a 10 cm y alinea. Deshacer está arriba.</target>
+</trans-unit>
+<trans-unit id="s6962e8cc419777e5">
+  <source>The magnet snaps to 10 cm and lines things up; hold Alt to move freely. ⌘Z undoes.</source>
+  <target>El imán ajusta a 10 cm y alinea; mantené Alt para mover libre. ⌘Z deshace.</target>
+</trans-unit>
+<trans-unit id="seadfab8a55957cd4">
+  <source>Try your own IES file</source>
+  <target>Probá tu propio archivo IES</target>
+</trans-unit>
+<trans-unit id="sf018784e552b6dd3">
+  <source>At the bottom of the catalog, load a luminaire’s IES file to see its light.</source>
+  <target>Al pie del catálogo, cargá el archivo IES de una luminaria para ver su luz.</target>
+</trans-unit>
+<trans-unit id="s19ffc8e54e5940f3">
+  <source>Read the full manual</source>
+  <target>Ver el manual completo</target>
+</trans-unit>
+<trans-unit id="sc16e00a7a8b2fde2">
+  <source>Back</source>
+  <target>Atrás</target>
+</trans-unit>
+<trans-unit id="s684b6bfe5d516e5c">
+  <source>Step <x id="0" equiv-text="${i + 1}"/> of <x id="1" equiv-text="${steps.length}"/></source>
+  <target>Paso <x id="0" equiv-text="${i + 1}"/> de <x id="1" equiv-text="${steps.length}"/></target>
+</trans-unit>
+<trans-unit id="sae1c7f13b7c0c47f">
+  <source>Start</source>
+  <target>Empezar</target>
+</trans-unit>
+<trans-unit id="s0fbf6dc6a1966408">
+  <source>Next</source>
+  <target>Siguiente</target>
+</trans-unit>
+<trans-unit id="s352719d86112de9a">
+  <source>Help</source>
+  <target>Ayuda</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

@@ -2,7 +2,17 @@ import type { Simulator } from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
-import { Camera, Ellipsis, Moon, PanelLeft, PanelRight, Redo2, Sun, Undo2 } from 'lucide';
+import {
+  Camera,
+  CircleQuestionMark,
+  Ellipsis,
+  Moon,
+  PanelLeft,
+  PanelRight,
+  Redo2,
+  Sun,
+  Undo2,
+} from 'lucide';
 import { icon } from './icons';
 import type { Locale } from './localization';
 import { segmentedStyles, sharedStyles } from './styles';
@@ -24,6 +34,7 @@ export type PanelName = 'library' | 'inspector';
  * @fires lxs-locale-request - `detail: { locale }`
  * @fires lxs-panel-toggle - `detail: { panel }`
  * @fires lxs-screenshot-request
+ * @fires lxs-help-request - the user asked for the getting-started help
  */
 @customElement('lxs-top-bar')
 @localized()
@@ -143,6 +154,9 @@ export class LxsTopBar extends LitElement {
           <button class="menu-item" type="button" role="menuitem" @click=${this.#toggleTheme}>
             ${icon(this.theme === 'dark' ? Sun : Moon)} ${this.#themeLabel()}
           </button>
+          <button class="menu-item" type="button" role="menuitem" @click=${this.#help}>
+            ${icon(CircleQuestionMark)} ${msg('Help')}
+          </button>
           <div class="menu-row">${this.#languageToggle()}</div>
         </div>
       `;
@@ -167,7 +181,7 @@ export class LxsTopBar extends LitElement {
         )}
         ${this.#button(this.#themeLabel(), icon(this.theme === 'dark' ? Sun : Moon), this.#toggleTheme)}
         <span class="divider"></span>
-        ${this.#languageToggle()}
+        ${this.#languageToggle()} ${this.#button(msg('Help'), icon(CircleQuestionMark), this.#help)}
       </div>
     `;
   }
@@ -194,6 +208,11 @@ export class LxsTopBar extends LitElement {
       )}
     </div>`;
   }
+
+  #help = (): void => {
+    this.#closeMenu();
+    this.#emit('lxs-help-request', {});
+  };
 
   #screenshot = (): void => {
     this.#closeMenu();
@@ -251,5 +270,6 @@ declare global {
     'lxs-locale-request': CustomEvent<{ locale: Locale }>;
     'lxs-panel-toggle': CustomEvent<{ panel: PanelName }>;
     'lxs-screenshot-request': CustomEvent<object>;
+    'lxs-help-request': CustomEvent<object>;
   }
 }
