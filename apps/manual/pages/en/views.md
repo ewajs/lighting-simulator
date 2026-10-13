@@ -26,4 +26,4 @@
 ![The top bar](/screenshots/en/top-bar.png)
 
 Undo and redo, **screenshot**, show or hide the panels, light or dark
-**theme**, and **language**.
+**theme**, **language**, and **?**, the quick getting-started guide.

@@ -9,6 +9,15 @@ export interface SuiteOptions {
   readonly disableWebGPU: boolean;
 }
 
+/** Options a test file can change with `test.use`. */
+export interface TestOptions {
+  /**
+   * Whether the browser has already seen the getting-started help, so it
+   * doesn't open over the app on load. Help tests set it to false.
+   */
+  readonly helpSeen: boolean;
+}
+
 /** Per-test fixtures. */
 export interface TestFixtures {
   /**
@@ -22,13 +31,17 @@ export interface TestFixtures {
 /** Messages any page may print: three.js saying it fell back to WebGL 2. */
 const ALWAYS_ALLOWED = [/WebGPU is not available/, /Failed to create WebGPU Context Provider/];
 
-export const test = base.extend<SuiteOptions & TestFixtures>({
+export const test = base.extend<SuiteOptions & TestOptions & TestFixtures>({
   disableWebGPU: [false, { option: true }],
+  helpSeen: [true, { option: true }],
   // eslint-disable-next-line no-empty-pattern -- Playwright requires the destructuring form.
   allowConsole: async ({}, use) => {
     await use([]);
   },
-  page: async ({ page, disableWebGPU, allowConsole }, use) => {
+  page: async ({ page, disableWebGPU, helpSeen, allowConsole }, use) => {
+    if (helpSeen) {
+      await page.addInitScript(() => localStorage.setItem('lxs-help-seen', '1'));
+    }
     if (disableWebGPU) {
       await page.addInitScript(() => {
         Object.defineProperty(Navigator.prototype, 'gpu', {

@@ -4,7 +4,7 @@
 
 La vista 3D ocupa toda la pantalla. Abajo, cuatro pestañas abren paneles:
 **Catálogo**, **Escena**, **Propiedades** y **Vista** (herramientas, modos,
-vistas y exposición). El idioma y el tema están en **⋯**, arriba a la derecha.
+vistas y exposición). El idioma, el tema y la **Ayuda** están en **⋯**, arriba a la derecha.
 
 <div class="side-by-side">
 

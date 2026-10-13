@@ -220,7 +220,10 @@ Key interaction rules:
   `Esc` deselect, `1/2` render modes (`3` for illuminance in M5), `0/7/8/9` perspective / top / front
   / side, `W/E` move/aim handles.
 - Touch: tap = click, long press = Shift-click (add to or remove from the
-  selection), one finger on a fixture drags it. On tablets the library starts collapsed and the inspector
+  selection), one finger on a fixture drags it.
+- Help: a getting-started carousel from the **?** button, optionally shown on
+  a first visit, linking to the user manual
+  ([ADR 0046](./decisions/0046-in-app-help.md)). On tablets the library starts collapsed and the inspector
   becomes a foldable sheet ([ADR 0030](./decisions/0030-touch-and-tablet.md)).
 
 ## 6. Architecture

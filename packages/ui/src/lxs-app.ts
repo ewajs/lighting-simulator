@@ -15,8 +15,10 @@ import { appStyles } from './lxs-app.styles';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { newMergeKey } from './field-change';
 import { screenshotFileName } from './format';
+import { helpSeen, markHelpSeen } from './help-seen';
 import { DEFAULT_LOCALE, setLocale, type Locale } from './localization';
 import './lxs-catalog-panel';
+import './lxs-help';
 import './lxs-inspector';
 import './lxs-library';
 import type { SetSelectionDetail } from './lxs-luminaire-inspector';
@@ -75,6 +77,13 @@ export class LxsApp extends LitElement {
   @property({ attribute: false }) catalog: DisplayCatalog = EMPTY_DISPLAY_CATALOG;
   /** Lets the user load their own IES file from the catalog panel (ADR 0037). */
   @property({ type: Boolean, attribute: 'ies-import' }) iesImport = false;
+  /**
+   * Opens the getting-started help when the app starts, unless this browser
+   * has seen it before (ADR 0046). The "?" button opens it any time.
+   */
+  @property({ type: Boolean, attribute: 'help-on-start' }) helpOnStart = false;
+  /** The full user manual, per language; the help's last card links to it. */
+  @property({ attribute: false }) manualUrls: Partial<Record<Locale, string>> = {};
   /** Shows frame rate, backend, shadows and draw counts over the viewport, for debugging (ADR 0044). */
   @property({ type: Boolean }) diagnostics = false;
   /** UI language for the whole page. */
@@ -87,6 +96,7 @@ export class LxsApp extends LitElement {
     false;
 
   @state() private selection: readonly string[] = [];
+  @state() private helpOpen = false;
   @state() private scene: Scene | undefined;
   /** Which handle the selection shows: arrows to move it, or the aim handle. */
   @state() private tool: EditTool = 'move';
@@ -114,7 +124,13 @@ export class LxsApp extends LitElement {
   #unsubscribe: (() => void) | undefined;
 
   override render() {
-    return this.phone ? this.#renderPhone() : this.#renderDesktop();
+    return html`${this.phone ? this.#renderPhone() : this.#renderDesktop()}
+      <lxs-help
+        .open=${this.helpOpen}
+        .iesImport=${this.iesImport}
+        manual-url=${this.manualUrls[this.locale] ?? ''}
+        @lxs-help-close=${this.#onHelpClose}
+      ></lxs-help>`;
   }
 
   #renderDesktop() {
@@ -216,6 +232,7 @@ export class LxsApp extends LitElement {
       @lxs-theme-change=${({ detail }: CustomEvent<{ theme: Theme }>) => (this.theme = detail.theme)}
       @lxs-locale-request=${({ detail }: CustomEvent<{ locale: Locale }>) => (this.locale = detail.locale)}
       @lxs-screenshot-request=${() => void this.#takeScreenshot()}
+      @lxs-help-request=${() => (this.helpOpen = true)}
       @lxs-panel-toggle=${({ detail }: CustomEvent<{ panel: PanelName }>) => this.#togglePanel(detail.panel)}
     >
       <slot name="brand" slot="brand"></slot>
@@ -288,6 +305,11 @@ export class LxsApp extends LitElement {
   }
 
   protected override firstUpdated(): void {
+    // Marked seen as soon as it's shown: "once" holds even if the page is reloaded before closing it.
+    if (this.helpOnStart && !helpSeen()) {
+      this.helpOpen = true;
+      markHelpSeen();
+    }
     // Hosts that set library-collapsed themselves keep their choice.
     if (
       !this.hasAttribute('library-collapsed') &&
@@ -409,6 +431,10 @@ export class LxsApp extends LitElement {
     this.landscape = event.matches;
   };
 
+  #onHelpClose = (): void => {
+    this.helpOpen = false;
+  };
+
   #onPick = ({ detail }: CustomEvent<PickEvent>): void => {
     // Long press (touch) toggles, like Shift-click.
     const toggle = detail.event.shiftKey || detail.longPress;
@@ -431,7 +457,8 @@ export class LxsApp extends LitElement {
   };
 
   #onKeyDown = (event: KeyboardEvent): void => {
-    if (isTyping(event)) return;
+    // The help is modal: shortcuts mustn't act on the app behind it, and Esc is its own.
+    if (this.helpOpen || isTyping(event)) return;
     const action = shortcutAction(event);
     if (!action) return;
     event.preventDefault();

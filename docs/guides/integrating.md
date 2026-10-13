@@ -120,6 +120,10 @@ Properties worth knowing on `<lxs-app>`:
 - `theme`: `dark` or `light`.
 - `ies-import`: lets visitors try their own IES file.
 - `diagnostics`: shows a frame-rate and draw-count overlay.
+- `help-on-start`: opens the getting-started help on a visitor's first
+  visit. The **?** button opens it any time.
+- `manualUrls`: your user manual per language, such as
+  `{ 'es-AR': '…', en: '…' }`. The help's last card links to it.
 - `library-collapsed` and `inspector-collapsed`.
 
 Events:
