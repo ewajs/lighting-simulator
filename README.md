@@ -8,6 +8,7 @@ light: real IES distributions, aimed and moved directly in 3D.
 
 - **Live demo:** <https://ewajs.github.io/lighting-simulator/>. Add `?debug` to
   the URL for step-by-step logs and a diagnostics overlay.
+- **User manual** (Spanish and English): <https://ewajs.github.io/lighting-simulator/manual/>
 - **Docs and API reference:** <https://ewajs.github.io/lighting-simulator/docs/>
 
 ## Packages (npm workspaces)

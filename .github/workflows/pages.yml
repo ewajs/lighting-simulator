@@ -27,6 +27,8 @@ jobs:
       - run: npm run build
       # API reference and guides, served at /docs next to the demo.
       - run: npm run docs
+      # The user manual, served at /manual (Spanish) and /manual/en.
+      - run: npm run manual
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:

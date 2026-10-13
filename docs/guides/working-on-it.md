@@ -19,6 +19,8 @@ npm run typecheck     # TypeScript in every package
 npm test              # unit tests (Vitest)
 npm run test:e2e      # end-to-end tests (Playwright); add `-- --project chrome` for a quick run
 npm run docs          # this site, into apps/demo/dist/docs
+npm run manual        # the user manual, into apps/demo/dist/manual
+npm run manual:screenshots   # retake the manual's screenshots after UI changes
 npm run build         # the demo, into apps/demo/dist
 ```
 
