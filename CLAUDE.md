@@ -92,8 +92,14 @@ new images in the PR. Run `npm run i18n:build` first if translations changed.
   classes with `#private` fields and ordinary methods, used with `new`, the
   same way three.js works. Callers pass methods as callbacks with an arrow
   wrapper (`() => sim.undo()`).
-- No clever code: no metaprogramming, no inheritance beyond extending
-  framework base classes (LitElement, three.js types).
+- No clever code: no metaprogramming.
+- The scene stays plain readonly data, not class instances: it's saved as
+  JSON, and undo keeps old snapshots, which only works if nothing changes in
+  place. Where luminaires and furniture behave alike, use functions over
+  both; where they differ, a small rules object per kind
+  ([ADR 0048](docs/decisions/0048-one-set-of-edits-for-scene-items.md)).
+  Inheritance is fine elsewhere when it makes the code simpler, as with
+  LitElement and three.js types.
 - Measure before optimizing.
 
 ### Readability

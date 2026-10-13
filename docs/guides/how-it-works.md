@@ -46,9 +46,18 @@ Furniture is built in: each piece names one of 14 kinds, and
 ([ADR 0047](../decisions/0047-furniture.md)).
 
 Edits are **pure functions** that take a scene and return a new one:
-`updateLuminaire`, `updateFurniture`, `resizeRoom`, `constrainPosition` and so
-on, in `luminaires.ts`, `furniture.ts`, `room.ts` and `placement.ts`. They have no three.js and no
+`updateLuminaire`, `updateFurniture`, `removeItems`, `resizeRoom`,
+`constrainPosition` and so on, in `luminaires.ts`, `furniture.ts`,
+`scene-items.ts`, `room.ts` and `placement.ts`. They have no three.js and no
 DOM, so they're unit-tested in Node.
+
+Luminaires and furniture are plain objects, not classes with methods. A
+scene is saved as JSON, and undo keeps old scenes, so nothing may change an
+item in place. Where the two kinds behave alike, one function handles both:
+`findItem`, `removeItems` and `duplicateItems` work by id, and ids are
+unique across both lists. Where they differ, each kind has its own function
+(`updateLuminaire`, `updateFurniture`) or its own rules, as in dragging below
+([ADR 0048](../decisions/0048-one-set-of-edits-for-scene-items.md)).
 
 ### The Simulator owns the scene and its history
 
@@ -119,14 +128,20 @@ shape all the components:
    - else part of the aim handle;
    - else a fixture, by ray hit or within 10 px on screen.
 
-   On a fixture, it switches the camera controls off, so the camera won't orbit.
+   - else a piece of furniture.
+
+   On any of them, it switches the camera controls off, so the camera won't orbit.
 2. **The pointer moves past the tap tolerance** (4 px with a mouse, 10 px for
-   a finger). It becomes a drag. `Manipulator.startDrag` creates a
-   [`LuminaireDrag`](https://github.com/ewajs/lighting-simulator/blob/master/packages/core/src/drag.ts).
-   That remembers where every luminaire in the group started, and the offset
-   between the luminaire and the point grabbed. It reports `onMoveStart`.
-   `<lxs-viewport>` re-emits that as `lxs-move-start`, and `<lxs-app>`
-   selects the luminaire (`selectionForMove`).
+   a finger). It becomes a drag. `Manipulator.startDrag` creates an
+   [`ItemDrag`](https://github.com/ewajs/lighting-simulator/blob/master/packages/core/src/drag.ts)
+   with the rules for what was grabbed: a luminaire slides over its mount
+   surface, and a piece of furniture over the floor at the height it was
+   grabbed (a picture over the walls). The drag remembers where every item
+   in the group started, and the offset between the item and the point
+   grabbed. It reports `onMoveStart`. `<lxs-viewport>` re-emits that as
+   `lxs-move-start`, and `<lxs-app>` selects the item (`selectionForMove`).
+   The steps below follow a luminaire; a piece goes through the same ones
+   with its own rules.
 3. **Each pointer move:**
    1. The Manipulator turns the pointer into a ray.
    2. It converts 8 px of alignment tolerance into metres at that distance.

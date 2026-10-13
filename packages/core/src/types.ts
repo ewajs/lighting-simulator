@@ -142,6 +142,19 @@ export interface Furniture {
   readonly finish: FurnitureFinish;
 }
 
+/** The two kinds of things placed in a room. */
+export type ItemKind = 'luminaire' | 'furniture';
+
+/** A luminaire or a piece of furniture, with its kind, e.g. as found by `findItem`. */
+export type SceneItem =
+  | { readonly kind: 'luminaire'; readonly item: Luminaire }
+  | { readonly kind: 'furniture'; readonly item: Furniture };
+
+/** A luminaire or a piece of furniture by id, e.g. as picked in the viewport. */
+export type PickTarget =
+  | { readonly kind: 'luminaire'; readonly id: string }
+  | { readonly kind: 'furniture'; readonly id: string };
+
 /** The editable document: everything that is saved and undoable. */
 export interface Scene {
   readonly room: Room;

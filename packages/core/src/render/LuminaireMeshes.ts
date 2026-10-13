@@ -1,11 +1,12 @@
 import * as THREE from 'three/webgpu';
 import type { Logger } from '../logger';
+import { DEG } from '../math';
 import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../types';
 import { candelaGrid } from '../photometry/grid';
 import { buildFixture, type Fixture } from './fixtures';
 import { IesLight, profileTexture } from './IesLight';
 import { candela, kelvinToRgb, lightingProduct } from './lighting';
-import { outlineMaterial } from './overlay';
+import { selectionOutline, tagItem } from './overlay';
 import type { RenderMode } from './RoomMeshes';
 
 /** Only the brightest few lights cast shadows; the rest still light the scene. */
@@ -14,7 +15,6 @@ export const SHADOW_BUDGET = 8;
 const EMISSIVE_GAIN = 160;
 /** Gap between a highlighted fixture and its outline, in m. */
 const HIGHLIGHT_MARGIN = 0.04;
-const DEG = Math.PI / 180;
 
 /** An IES distribution ready for the GPU, shared by every luminaire of a product. */
 interface Profile {
@@ -107,16 +107,6 @@ export class LuminaireMeshes {
     return flux;
   }
 
-  /** Finds the luminaire id an intersected object belongs to. */
-  luminaireIdOf(object: THREE.Object3D): string | undefined {
-    for (const [id, item] of this.#items) {
-      let current: THREE.Object3D | null = object;
-      while (current && current !== item.fixture.root) current = current.parent;
-      if (current) return id;
-    }
-    return undefined;
-  }
-
   /**
    * The luminaire whose body comes nearest a screen point, within `slopPx`:
    * the distance to its bounding rectangle on screen, pendant cords left out.
@@ -178,6 +168,7 @@ export class LuminaireMeshes {
       fixture: buildFixture(product, photometry && this.#profile(photometry).texture, model),
       flux: 0,
     };
+    tagItem(item.fixture.root, luminaire.id);
     this.group.add(item.fixture.root);
     this.#items.set(luminaire.id, item);
     return item;
@@ -237,10 +228,7 @@ export class LuminaireMeshes {
 
   #outline(item: Item, on: boolean): void {
     if (on && !item.outline) {
-      item.outline = new THREE.Box3Helper(new THREE.Box3());
-      (item.outline.material as THREE.Material).dispose();
-      item.outline.material = outlineMaterial();
-      item.outline.renderOrder = 1;
+      item.outline = selectionOutline(new THREE.Box3());
       this.group.add(item.outline);
     } else if (!on && item.outline) {
       this.#removeOutline(item);

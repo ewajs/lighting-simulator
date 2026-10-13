@@ -4,6 +4,7 @@
 
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import type { MoveAxis } from '../move-handle';
+import type { PickTarget } from '../types';
 import type { AimPart } from './AimHandle';
 
 /** Pointer movement allowed for a press to still count as a click or tap, in px. Fingers wobble more than mice. */
@@ -12,11 +13,6 @@ const TAP_TOLERANCE_PX = { mouse: 4, other: 10 };
 const MAIN_BUTTON = 0;
 /** How long a touch or pen must stay still to count as a long press, in ms. */
 export const LONG_PRESS_MS = 500;
-
-/** A luminaire or a piece of furniture, as picked in the viewport. */
-export type PickTarget =
-  | { readonly kind: 'luminaire'; readonly id: string }
-  | { readonly kind: 'furniture'; readonly id: string };
 
 /** Something under the pointer that can be dragged: a fixture, a piece of furniture, or part of a handle. */
 export type PressTarget =

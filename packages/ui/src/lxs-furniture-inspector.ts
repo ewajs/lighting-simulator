@@ -235,7 +235,7 @@ export class LxsFurnitureInspector extends LitElement {
       </button>`;
     return html`<div class="actions">
       ${button(msg('Duplicate'), icon(Copy), () => {
-        const copies = this.simulator?.duplicateFurniture(ids) ?? [];
+        const copies = this.simulator?.duplicate(ids) ?? [];
         this.dispatchEvent(
           new CustomEvent<SetSelectionDetail>('lxs-set-selection', {
             detail: { ids: copies },
@@ -245,7 +245,7 @@ export class LxsFurnitureInspector extends LitElement {
         );
       })}
       <span class="spacer"></span>
-      ${button(msg('Delete'), icon(Trash), () => this.simulator?.removeFurniture(ids), true)}
+      ${button(msg('Delete'), icon(Trash), () => this.simulator?.remove(ids), true)}
     </div>`;
   }
 }

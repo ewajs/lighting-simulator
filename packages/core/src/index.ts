@@ -4,7 +4,6 @@ export type { PhotometryListener } from './photometry/cache';
 export type { ModelListener } from './model-cache';
 export { Viewport } from './render/Viewport';
 export { LONG_PRESS_MS } from './render/PointerGestures';
-export type { PickTarget } from './render/PointerGestures';
 export type {
   Diagnostics,
   Measurement,
@@ -23,8 +22,9 @@ export type { Logger, LogLevel } from './logger';
 export { summarizeScene } from './summary';
 export type { SceneSummary } from './summary';
 export type { RoomSize } from './room';
-export type { LuminairePatch } from './luminaires';
-export type { FurniturePatch } from './furniture';
+export type { AddLuminaireOptions, LuminairePatch } from './luminaires';
+export type { AddFurnitureOptions, FurniturePatch } from './furniture';
+export { findItem } from './scene-items';
 export { MAX_SIZE_SHARE, MIN_SIZE_SHARE } from './furniture';
 export { FINISHES, FURNITURE_KINDS, FURNITURE_TYPES } from './furniture-kinds';
 export type { Finish, FurnitureType } from './furniture-kinds';
@@ -37,14 +37,17 @@ export type {
   FurnitureFinish,
   FurnitureKind,
   FurnitureSize,
+  ItemKind,
   Luminaire,
   ModelProvider,
   MountType,
   Photometry,
   PhotometryProvider,
+  PickTarget,
   Product,
   Room,
   Scene,
+  SceneItem,
   Surface,
   SurfaceName,
   Vec3,
