@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { AxisDrag, axisOffset, groupAxes, groupCenter, luminaireAxes } from './move-handle';
+import { itemRules, luminaireAxes } from './item-rules';
+import { AxisDrag, axisOffset, groupAxes, groupCenter } from './move-handle';
 import type { Ray } from './placement';
 import { Simulator } from './simulator';
 import { catalog, product, room } from './test-fixtures';
@@ -17,6 +18,8 @@ const at = (productId: string, x: number, y: number, z: number): Luminaire => ({
 
 const positionOf = (sim: Simulator, id: string) =>
   sim.scene.luminaires.find((l) => l.id === id)!.position;
+const piecePosition = (sim: Simulator, id: string) =>
+  sim.scene.furniture.find((f) => f.id === id)!.position;
 
 describe('luminaireAxes', () => {
   const anywhere = { x: 0, y: 0, z: 0 };
@@ -39,28 +42,49 @@ describe('luminaireAxes', () => {
 });
 
 describe('groupAxes', () => {
-  const lookup = (id: string) => catalog.get(id);
+  /** The axes the luminaires share, in a scene of just them. */
+  const shared = (...luminaires: Luminaire[]) => {
+    const sim = new Simulator({ catalog, scene: { room, luminaires, furniture: [] } });
+    return groupAxes(
+      itemRules(sim, 'luminaire'),
+      luminaires.map((l) => l.id),
+    );
+  };
 
   it('keeps only the axes every luminaire shares', () => {
     const pendant = at('test-pendant', 0, 2, 0);
     const backWall = at('test-wall', 0, 1.8, -2);
     const rightWall = at('test-wall', 2.5, 1.8, 0);
-    expect(groupAxes([pendant], lookup, room)).toEqual(['x', 'y', 'z']);
-    expect(groupAxes([pendant, backWall], lookup, room)).toEqual(['x', 'y']);
-    expect(groupAxes([pendant, at('test-recessed', 1, 2.7, 1)], lookup, room)).toEqual(['x', 'z']);
-    expect(groupAxes([backWall, rightWall], lookup, room)).toEqual(['y']);
-    expect(groupAxes([backWall, rightWall, at('test-floor', 0, 0, 0)], lookup, room)).toEqual([]);
+    expect(shared(pendant)).toEqual(['x', 'y', 'z']);
+    expect(shared(pendant, backWall)).toEqual(['x', 'y']);
+    expect(shared(pendant, at('test-recessed', 1, 2.7, 1))).toEqual(['x', 'z']);
+    expect(shared(backWall, rightWall)).toEqual(['y']);
+    expect(shared(backWall, rightWall, at('test-floor', 0, 0, 0))).toEqual([]);
   });
 
   it('has no axes for nothing, or for an unknown product', () => {
-    expect(groupAxes([], lookup, room)).toEqual([]);
-    expect(groupAxes([at('missing', 0, 0, 0)], lookup, room)).toEqual([]);
+    expect(shared()).toEqual([]);
+    expect(shared(at('missing', 0, 0, 0))).toEqual([]);
+  });
+
+  it('slides floor pieces across the floor, and pictures along their wall and up', () => {
+    const sim = new Simulator({ catalog });
+    const table = sim.addFurniture('dining-table');
+    const chair = sim.addFurniture('chair', { at: { x: 1, z: 1 } });
+    const picture = sim.addFurniture('artwork', { at: { x: 2.4, z: 0 } }); // Right wall.
+    const rules = itemRules(sim, 'furniture');
+    expect(groupAxes(rules, [table, chair])).toEqual(['x', 'z']);
+    expect(groupAxes(rules, [picture])).toEqual(['y', 'z']);
+    expect(groupAxes(rules, [table, picture])).toEqual(['z']);
   });
 });
 
 describe('groupCenter', () => {
-  it('averages the positions', () => {
-    const center = groupCenter([at('a', 0, 2, 0), at('b', 2, 1, -1)]);
+  it('averages the points', () => {
+    const center = groupCenter([
+      { x: 0, y: 2, z: 0 },
+      { x: 2, y: 1, z: -1 },
+    ]);
     expect(center).toEqual({ x: 1, y: 1.5, z: -0.5 });
   });
 });
@@ -121,5 +145,26 @@ describe('AxisDrag', () => {
     const drag = new AxisDrag(sim, [id], 'y', towards(0.3, 2.1));
     drag.moveTo(towards(0.3, 1.63), { toleranceM: 0.05 });
     expect(positionOf(sim, id).y).toBe(1.5);
+  });
+
+  it('slides furniture, keeping each footprint inside the room and the group’s shape', () => {
+    const sim = new Simulator({ catalog });
+    // The chair is 0.46 m wide: its centre can go up to x = 2.27.
+    const a = sim.addFurniture('chair', { at: { x: 0, z: 0 } });
+    const b = sim.addFurniture('chair', { at: { x: 1.5, z: 1 } });
+    // Handle at the chairs' middle height; dragged 3 m right, b can only go 0.77 m.
+    const middle = sim.scene.furniture[0]!.size.height / 2;
+    const drag = new AxisDrag(sim, [a, b], 'x', towards(0.75, middle));
+    drag.moveTo(towards(3.75, middle));
+    expect(piecePosition(sim, a).x).toBeCloseTo(0.77, 9);
+    expect(piecePosition(sim, b)).toEqual({ x: 2.27, y: 0, z: 1 });
+  });
+
+  it('slides a picture up its wall', () => {
+    const sim = new Simulator({ catalog });
+    const id = sim.addFurniture('artwork'); // Back wall, centre at (0, 1.5, −2).
+    const drag = new AxisDrag(sim, [id], 'y', towards(0, 1.5));
+    drag.moveTo(towards(0.4, 1.8));
+    expect(piecePosition(sim, id)).toEqual({ x: 0, y: 1.8, z: -2 });
   });
 });

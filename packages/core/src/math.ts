@@ -5,6 +5,11 @@ import type { Vec3 } from './types';
 /** Radians per degree. */
 export const DEG = Math.PI / 180;
 
+/** An angle in degrees wrapped into [−180, 180). */
+export function wrapDeg(deg: number): number {
+  return ((((deg + 180) % 360) + 360) % 360) - 180;
+}
+
 /** `value` kept within [min, max]. */
 export function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));

@@ -1,12 +1,11 @@
-// The aim handle's logic: where a beam lands, aiming at a point, and turning
-// around the vertical. Rays are plain data, so this runs without three.js.
+// The aim handle's logic: where a beam lands and aiming at a point. Its
+// ring turns pan through turn.ts. Rays are plain data, so this runs without three.js.
 // See ADR 0040.
 
 import { DEG } from './math';
 import type { Ray } from './placement';
 import { roomSurfaceHit } from './placement';
 import type { Simulator } from './simulator';
-import { snapPan, type SnapOptions } from './snap';
 import type { Aim, Luminaire, MountType, Product, Room, Vec3 } from './types';
 
 /** Mounts with an adjustable head, which the aim handle can turn. */
@@ -76,26 +75,6 @@ export function aimAt(position: Vec3, target: Vec3, currentPanDeg: number): Aim 
   return { tiltDeg, panDeg };
 }
 
-/** An angle in degrees wrapped into [−180, 180). */
-export function wrapDeg(deg: number): number {
-  return ((((deg + 180) % 360) + 360) % 360) - 180;
-}
-
-/**
- * The bearing of a ray around a vertical axis through `center`, in degrees,
- * measured like pan (0 towards +z, 90 towards +x). Read on the horizontal
- * plane through `center`; null if the ray runs parallel to it or away.
- */
-export function bearingAround(ray: Ray, center: Vec3): number | null {
-  const { origin, direction } = ray;
-  if (Math.abs(direction.y) < VERTICAL_EPSILON) return null;
-  const t = (center.y - origin.y) / direction.y;
-  if (t <= 0) return null;
-  const x = origin.x + t * direction.x - center.x;
-  const z = origin.z + t * direction.z - center.z;
-  return Math.atan2(x, z) / DEG;
-}
-
 /** One drag of the aim point: the luminaire turns to point where the ray meets the room. */
 export class AimPointDrag {
   readonly #simulator: Simulator;
@@ -114,44 +93,6 @@ export class AimPointDrag {
     if (!luminaire || !target) return;
     const aim = aimAt(luminaire.position, target, luminaire.aim.panDeg);
     this.#simulator.updateLuminaire(this.#id, { aim }, { mergeKey: this.#mergeKey });
-  }
-}
-
-/** One drag around the rotation ring: pan follows the pointer's turn, tilt stays. Snaps to PAN_STEP_DEG. */
-export class PanDrag {
-  readonly #simulator: Simulator;
-  readonly #id: string;
-  readonly #startPanDeg: number;
-  /** The pointer's bearing when grabbed; null if the grab ray missed the ring's plane. */
-  readonly #grabbedDeg: number | null;
-  readonly #mergeKey = `pan-${crypto.randomUUID()}`;
-
-  /** `ray` points at where the ring was grabbed. */
-  constructor(simulator: Simulator, id: string, ray: Ray) {
-    const luminaire = findLuminaire(simulator, id);
-    this.#simulator = simulator;
-    this.#id = id;
-    this.#startPanDeg = luminaire?.aim.panDeg ?? 0;
-    this.#grabbedDeg = luminaire ? bearingAround(ray, luminaire.position) : null;
-  }
-
-  /**
-   * Turns by as much as the pointer has turned around the luminaire since the
-   * grab, in PAN_STEP_DEG steps unless `snap` is null.
-   */
-  moveTo(ray: Ray, snap: SnapOptions | null = null): void {
-    const luminaire = findLuminaire(this.#simulator, this.#id);
-    const bearing = luminaire && bearingAround(ray, luminaire.position);
-    if (!luminaire || bearing === null || bearing === undefined || this.#grabbedDeg === null) {
-      return;
-    }
-    const freePanDeg = wrapDeg(this.#startPanDeg + bearing - this.#grabbedDeg);
-    const panDeg = snap ? snapPan(freePanDeg) : freePanDeg;
-    this.#simulator.updateLuminaire(
-      this.#id,
-      { aim: { ...luminaire.aim, panDeg } },
-      { mergeKey: this.#mergeKey },
-    );
   }
 }
 

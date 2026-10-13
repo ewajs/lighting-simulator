@@ -5,6 +5,11 @@ import { expect, test, type Page } from './fixtures';
 // 1280×800, as in smoke.spec.ts.
 const TABLE = { x: 640, y: 455 };
 const PENDANT = { x: 642, y: 356 };
+/** On the table's +x arrow, which sits at the table's middle height. */
+const TABLE_X_ARROW = { x: 686, y: 497 };
+/** The front (+z) and right (+x) of the table's rotation ring, on the floor: a quarter turn apart. */
+const RING_FRONT = { x: 647, y: 560 };
+const RING_RIGHT = { x: 729, y: 510 };
 
 async function openDemo(page: Page): Promise<void> {
   await page.goto('/');
@@ -20,7 +25,7 @@ async function drag(page: Page, from: { x: number; y: number }, to: { x: number;
 }
 
 /** The inspector's number field with this label, as a number (es-AR uses a decimal comma). */
-async function field(page: Page, label: 'X' | 'Z'): Promise<number> {
+async function field(page: Page, label: 'X' | 'Z' | 'Rotación'): Promise<number> {
   const value = await page.getByRole('textbox', { name: label, exact: false }).inputValue();
   return Number(value.replace(',', '.'));
 }
@@ -112,4 +117,32 @@ test('duplicate and delete act on the selected furniture; selections never mix k
   await page.keyboard.up('Shift');
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
   await expect(inspectorHeading(page)).toHaveText('Luminaria');
+});
+
+test('the move arrows slide a piece along one axis, and the floor ring turns it', async ({
+  page,
+}) => {
+  await openDemo(page);
+  await page.mouse.click(TABLE.x, TABLE.y);
+  await drag(page, TABLE_X_ARROW, { x: TABLE_X_ARROW.x + 60, y: TABLE_X_ARROW.y + 23 });
+  expect(await field(page, 'X')).toBeGreaterThan(0.3);
+  expect(await field(page, 'Z')).toBe(0);
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect.poll(() => field(page, 'X')).toBe(0);
+
+  // A quarter turn around the ring, snapped to 15° steps.
+  await drag(page, RING_FRONT, RING_RIGHT);
+  expect(await field(page, 'Rotación')).toBe(90);
+  expect(await field(page, 'X')).toBe(0);
+  await expect(page).toHaveScreenshot('table-turned.png');
+  await page.keyboard.press('ControlOrMeta+z');
+  await expect.poll(() => field(page, 'Rotación')).toBe(0);
+});
+
+test('select all picks every piece when furniture is selected', async ({ page }) => {
+  await openDemo(page);
+  await page.mouse.click(TABLE.x, TABLE.y);
+  await page.keyboard.press('ControlOrMeta+a');
+  await expect(selectedCount(page)).toHaveText('Seleccionadas: 7');
+  await expect(inspectorHeading(page)).toHaveText('Mobiliario');
 });

@@ -52,3 +52,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0046 | [In-app help: a getting-started carousel](0046-in-app-help.md) | Accepted |
 | 0047 | [Furniture: procedural pieces in one design language](0047-furniture.md) | Accepted |
 | 0048 | [One set of edits for luminaires and furniture](0048-one-set-of-edits-for-scene-items.md) | Accepted |
+| 0049 | [Furniture in the editing tools: arrows, a floor ring, edge distances](0049-furniture-in-the-editing-tools.md) | Accepted |

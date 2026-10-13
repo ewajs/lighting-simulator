@@ -216,7 +216,7 @@ Key interaction rules:
 - **All UI text is localised**: `es-AR` default, `en` always available
   ([ADR 0012](./decisions/0012-language-and-i18n.md)).
 - Keyboard: `⌘/Ctrl+Z` undo, `⇧⌘Z` / `Ctrl+Y` redo, `⌘/Ctrl+D` duplicate,
-  `⌘/Ctrl+A` select all, `Del` delete, `H` on/off, `F` frame selection,
+  `⌘/Ctrl+A` select all (of the kind selected), `Del` delete, `H` on/off, `F` frame selection,
   `Esc` deselect, `1/2` render modes (`3` for illuminance in M5), `0/7/8/9` perspective / top / front
   / side, `W/E` move/aim handles.
 - Touch: tap = click, long press = Shift-click (add to or remove from the

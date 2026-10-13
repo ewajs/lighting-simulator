@@ -24,6 +24,16 @@ Hacé clic en un mueble para elegirlo, y **arrastralo** para moverlo por el
 piso; el cuadro se desliza por las paredes. El imán lo alinea con la grilla
 de 10 cm y con otros muebles. Cada arrastre se deshace de una vez.
 
+Con la herramienta **Mover** (W), el mueble elegido muestra:
+
+- **flechas** para moverlo en una sola dirección, como las de las
+  luminarias. Si elegiste varios muebles, se mueven juntos;
+- un **anillo en el piso** alrededor del mueble: arrastralo para girarlo.
+  Con el imán gira de a 15°; con **Alt**, libre. El cuadro no tiene anillo,
+  porque mira siempre al ambiente desde su pared.
+
+**⌘A** (o **Ctrl+A**) con un mueble elegido elige todos los muebles.
+
 Si una luminaria está justo encima de un mueble (un colgante sobre una
 mesa), un clic elige la luminaria. Para elegir el mueble, hacé clic en otra
 parte de él, o elegilo en la lista de **Escena**, donde los muebles tienen

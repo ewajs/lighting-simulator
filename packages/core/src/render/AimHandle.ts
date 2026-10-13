@@ -1,7 +1,7 @@
 import * as THREE from 'three/webgpu';
 import { uniform } from 'three/tsl';
 import type { Vec3 } from '../types';
-import { overlayColor, worldPerPixel } from './overlay';
+import { ACTIVE_HANDLE_COLOR, HIGHLIGHT_COLOR, overlayColor, worldPerPixel } from './overlay';
 
 // Sizes are in CSS px on screen; the ring and marker are rescaled every frame.
 /** The rotation ring's radius, clear of the move-drag area over the fixture. */
@@ -14,10 +14,6 @@ const MARKER_PICK_RADIUS_PX = 16;
 const RING_SEGMENTS = 96;
 const SPHERE_SEGMENTS = 16;
 
-/** The selection outline colour: the handle reads as part of the selection, and shows on white walls. */
-const IDLE_COLOR = 0xf5b544;
-/** The part being hovered or dragged. */
-const ACTIVE_COLOR = 0xff6a2b;
 /** Drawn after the outlines (renderOrder 1), on top of everything. */
 const RENDER_ORDER = 2;
 
@@ -34,8 +30,8 @@ export class AimHandle {
   readonly #marker = new THREE.Group();
   readonly #line: THREE.Line;
   readonly #colors: Record<AimPart, THREE.UniformNode<'color', THREE.Color>> = {
-    point: uniform(new THREE.Color(IDLE_COLOR)),
-    ring: uniform(new THREE.Color(IDLE_COLOR)),
+    point: uniform(new THREE.Color(HIGHLIGHT_COLOR)),
+    ring: uniform(new THREE.Color(HIGHLIGHT_COLOR)),
   };
   readonly #disposables: { dispose(): void }[] = [];
   #active: AimPart | null = null;
@@ -99,7 +95,7 @@ export class AimHandle {
     if (part === this.#active) return;
     this.#active = part;
     for (const [name, color] of Object.entries(this.#colors)) {
-      color.value.setHex(name === part ? ACTIVE_COLOR : IDLE_COLOR);
+      color.value.setHex(name === part ? ACTIVE_HANDLE_COLOR : HIGHLIGHT_COLOR);
     }
   }
 

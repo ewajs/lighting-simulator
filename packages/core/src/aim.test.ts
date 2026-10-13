@@ -1,14 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  AimPointDrag,
-  aimAt,
-  aimDirection,
-  beamHit,
-  bearingAround,
-  isAimable,
-  PanDrag,
-  wrapDeg,
-} from './aim';
+import { AimPointDrag, aimAt, aimDirection, beamHit, isAimable } from './aim';
 import type { Ray } from './placement';
 import { Simulator } from './simulator';
 import { catalog, product, room } from './test-fixtures';
@@ -87,32 +78,6 @@ describe('aimAt', () => {
   });
 });
 
-describe('wrapDeg', () => {
-  it('wraps into [−180, 180)', () => {
-    expect(wrapDeg(190)).toBe(-170);
-    expect(wrapDeg(-190)).toBe(170);
-    expect(wrapDeg(180)).toBe(-180);
-    expect(wrapDeg(45)).toBe(45);
-  });
-});
-
-describe('bearingAround', () => {
-  const center = { x: 0, y: 2.7, z: 0 };
-
-  it('reads the pointer around the vertical like pan', () => {
-    expect(bearingAround(downOnto(0, 1), center)).toBeCloseTo(0);
-    expect(bearingAround(downOnto(1, 0), center)).toBeCloseTo(90);
-    expect(bearingAround(downOnto(-1, 0), center)).toBeCloseTo(-90);
-  });
-
-  it('is null for rays parallel to the ring or pointing away', () => {
-    const level: Ray = { origin: { x: 0, y: 2.7, z: 3 }, direction: { x: 0, y: 0, z: -1 } };
-    expect(bearingAround(level, center)).toBeNull();
-    const up: Ray = { origin: { x: 0, y: 5, z: 0 }, direction: { x: 0, y: 1, z: 0 } };
-    expect(bearingAround(up, center)).toBeNull();
-  });
-});
-
 describe('AimPointDrag', () => {
   it('aims at where the ray meets the room, as one undo step', () => {
     const sim = new Simulator({ catalog });
@@ -133,27 +98,5 @@ describe('AimPointDrag', () => {
     const before = sim.scene;
     new AimPointDrag(sim, id).moveTo(downOnto(9, 0));
     expect(sim.scene).toBe(before);
-  });
-});
-
-describe('PanDrag', () => {
-  it('turns pan by the pointer’s turn around the luminaire, keeping tilt', () => {
-    const sim = new Simulator({ catalog });
-    const id = sim.addLuminaire('test-recessed');
-    sim.updateLuminaire(id, { aim: { tiltDeg: 30, panDeg: 100 } });
-    // Grabbed in front (+z), dragged a quarter turn to the right (+x): +90°, wrapped.
-    const drag = new PanDrag(sim, id, downOnto(0, 1));
-    drag.moveTo(downOnto(1, 0));
-    expect(luminaireOf(sim, id).aim.tiltDeg).toBe(30);
-    expect(luminaireOf(sim, id).aim.panDeg).toBeCloseTo(-170);
-  });
-
-  it('turns in 15° steps when snapping', () => {
-    const sim = new Simulator({ catalog });
-    const id = sim.addLuminaire('test-recessed');
-    sim.updateLuminaire(id, { aim: { tiltDeg: 30, panDeg: 100 } });
-    // A free quarter turn gives −170°; the nearest step is −165°.
-    new PanDrag(sim, id, downOnto(0, 1)).moveTo(downOnto(1, 0), { toleranceM: 0.05 });
-    expect(luminaireOf(sim, id).aim.panDeg).toBe(-165);
   });
 });

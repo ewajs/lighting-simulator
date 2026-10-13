@@ -7,8 +7,8 @@ import type { Vec3 } from './types';
 
 /** Grid spacing, in m. Positions snap to multiples of it, measured from the room centre. */
 export const GRID_STEP = 0.1;
-/** Pan snaps to multiples of this on the rotation ring, in degrees. */
-export const PAN_STEP_DEG = 15;
+/** Rotation rings turn in multiples of this, in degrees: a luminaire's pan, a piece's rotation. */
+export const TURN_STEP_DEG = 15;
 
 /** How a drag snaps, or null for free movement. */
 export interface SnapOptions {
@@ -60,9 +60,9 @@ export function snapPosition(
   return { position: snapped, guides };
 }
 
-/** Pan snapped to PAN_STEP_DEG, in [−180, 180). */
-export function snapPan(panDeg: number): number {
-  const snapped = Math.round(panDeg / PAN_STEP_DEG) * PAN_STEP_DEG;
+/** An angle snapped to TURN_STEP_DEG, in [−180, 180). */
+export function snapTurn(angleDeg: number): number {
+  const snapped = Math.round(angleDeg / TURN_STEP_DEG) * TURN_STEP_DEG;
   return snapped >= 180 ? snapped - 360 : snapped;
 }
 

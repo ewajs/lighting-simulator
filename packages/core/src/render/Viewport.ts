@@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { constrainPosition, defaultPosition, mountSurfaceHit, roomSurfaceHit } from '../placement';
 import type { Simulator } from '../simulator';
-import { findItem } from '../scene-items';
-import type { FloorPoint, PickTarget, Scene, Vec3 } from '../types';
+import { findItem, itemCentre } from '../scene-items';
+import type { FloorPoint, PickTarget, Scene } from '../types';
 import {
   indirectIlluminance,
   MIN_FILL_LUX,
@@ -287,13 +287,10 @@ export class Viewport {
 
   /** Centres the camera on the given luminaires and furniture, keeping the current viewing direction. */
   frame(ids: readonly string[]): void {
-    const positions = ids.flatMap((id): Vec3[] => {
+    // A piece's middle, not its footprint on the floor.
+    const positions = ids.flatMap((id) => {
       const found = findItem(this.#simulator.scene, id);
-      if (!found) return [];
-      const { position } = found.item;
-      // A piece's middle, not its footprint on the floor (pictures already are).
-      const onFloor = found.kind === 'furniture' && position.y === 0;
-      return [onFloor ? { ...position, y: found.item.size.height / 2 } : position];
+      return found ? [itemCentre(found)] : [];
     });
     if (positions.length === 0) return;
     const center = new THREE.Vector3();
@@ -343,23 +340,25 @@ export class Viewport {
   }
 
   /**
-   * The handle shown on the highlighted luminaires. `'move'` shows arrows for
-   * the axes they can slide along (ADR 0039). `'aim'` shows the aim point and
-   * rotation ring, for a single recessed or track luminaire (ADR 0040).
-   * Default `'none'`.
+   * The handle shown on the highlighted luminaires or furniture. `'move'`
+   * shows arrows for the axes they can slide along (ADRs 0039, 0049), and a
+   * rotation ring on the floor around a single piece of furniture. `'aim'`
+   * shows the aim point and rotation ring, for a single recessed or track
+   * luminaire (ADR 0040). Default `'none'`.
    */
   get handle(): HandleMode {
     return this.#manipulator.mode;
   }
 
-  /** Switches the handle shown on the highlighted luminaires. */
+  /** Switches the handle shown on the highlighted items. */
   set handle(mode: HandleMode) {
     this.#manipulator.mode = mode;
   }
 
   /**
    * Whether drags snap: to a 10 cm grid from the room centre, into line with
-   * other luminaires and the centre lines, and pan in 15° steps (ADR 0041).
+   * other items of the same kind and the centre lines, and rotation rings in
+   * 15° steps (ADR 0041).
    * Holding Alt during a drag moves freely. Default true.
    */
   get snapping(): boolean {
