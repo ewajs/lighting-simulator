@@ -1,5 +1,5 @@
 import { constrainPosition, defaultPosition } from './placement';
-import type { Catalog, FloorPoint, Luminaire, Product, Scene } from './types';
+import type { Catalog, FloorPoint, Luminaire, Product, Room, Scene } from './types';
 import { assertFinite, assertInRange, assertPositive } from './validate';
 
 /** How far a duplicate is offset from its source along x, in m. */
@@ -9,6 +9,13 @@ export const DUPLICATE_OFFSET = 0.5;
 export type LuminairePatch = Partial<
   Pick<Luminaire, 'position' | 'aim' | 'dimming' | 'on' | 'cct'>
 >;
+
+/**
+ * A new luminaire's place and starting fields. `at` is the floor point it
+ * stands over, at its mount height (default: room centre); the other fields
+ * apply as in an update, so a `position` overrides `at`.
+ */
+export type AddLuminaireOptions = LuminairePatch & { readonly at?: FloorPoint };
 
 /** Adds a luminaire for `product`, at its mount height above `at` (default: room centre). */
 export function addLuminaire(scene: Scene, product: Product, id: string, at?: FloorPoint): Scene {
@@ -42,35 +49,19 @@ export function updateLuminaire(
   };
 }
 
-/** Removes the given luminaires. Unknown ids are an error. */
-export function removeLuminaires(scene: Scene, ids: readonly string[]): Scene {
-  ids.forEach((id) => findLuminaire(scene, id));
-  const removed = new Set(ids);
-  return { ...scene, luminaires: scene.luminaires.filter((l) => !removed.has(l.id)) };
-}
-
-/** Copies the given luminaires, offset by DUPLICATE_OFFSET. `newIds[i]` is the id of the copy of `ids[i]`. */
-export function duplicateLuminaires(
-  scene: Scene,
-  ids: readonly string[],
-  newIds: readonly string[],
+/** A copy of `source` with id `id`, DUPLICATE_OFFSET along x and kept where its mount allows. */
+export function copyLuminaire(
+  source: Luminaire,
+  id: string,
+  room: Room,
   catalog: Catalog,
-): Scene {
-  if (newIds.length !== ids.length) {
-    throw new Error(
-      `duplicateLuminaires: got ${newIds.length} new ids for ${ids.length} luminaires`,
-    );
-  }
-  const copies = ids.map((id, i) => {
-    const source = findLuminaire(scene, id);
-    const position = { ...source.position, x: source.position.x + DUPLICATE_OFFSET };
-    return {
-      ...source,
-      id: newIds[i]!,
-      position: constrainPosition(position, catalog.get(source.productId), scene.room),
-    };
-  });
-  return { ...scene, luminaires: [...scene.luminaires, ...copies] };
+): Luminaire {
+  const position = { ...source.position, x: source.position.x + DUPLICATE_OFFSET };
+  return {
+    ...source,
+    id,
+    position: constrainPosition(position, catalog.get(source.productId), room),
+  };
 }
 
 export function assertProduct(product: Product): void {

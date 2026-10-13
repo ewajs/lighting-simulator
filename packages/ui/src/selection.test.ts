@@ -1,12 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DEFAULT_ROOM, type Furniture, type Luminaire, type Scene } from '@luxstudio/core';
-import {
-  kindOf,
-  pruneSelection,
-  selectionAfterPick,
-  selectionForMove,
-  selectionKind,
-} from './selection';
+import { pruneSelection, selectionAfterPick, selectionForMove, selectionKind } from './selection';
 
 const luminaire = (id: string) => ({ id }) as Luminaire;
 const piece = (id: string) => ({ id }) as Furniture;
@@ -17,12 +11,11 @@ const scene: Scene = {
   furniture: ['f', 'g'].map(piece),
 };
 
-describe('kindOf and selectionKind', () => {
+describe('selectionKind', () => {
   it('tells luminaires from furniture', () => {
-    expect(kindOf('a', scene)).toBe('luminaire');
-    expect(kindOf('f', scene)).toBe('furniture');
-    expect(kindOf('gone', scene)).toBeUndefined();
+    expect(selectionKind(['a'], scene)).toBe('luminaire');
     expect(selectionKind(['g', 'f'], scene)).toBe('furniture');
+    expect(selectionKind(['gone'], scene)).toBeUndefined();
     expect(selectionKind([], scene)).toBeUndefined();
   });
 });

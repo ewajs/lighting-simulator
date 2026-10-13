@@ -2,7 +2,8 @@ import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { constrainPosition, defaultPosition, mountSurfaceHit, roomSurfaceHit } from '../placement';
 import type { Simulator } from '../simulator';
-import type { FloorPoint, Scene } from '../types';
+import { findItem } from '../scene-items';
+import type { FloorPoint, PickTarget, Scene, Vec3 } from '../types';
 import {
   indirectIlluminance,
   MIN_FILL_LUX,
@@ -15,7 +16,8 @@ import { FurnitureMeshes } from './FurnitureMeshes';
 import { IesLight, IesLightNode } from './IesLight';
 import { LuminaireMeshes } from './LuminaireMeshes';
 import { Manipulator, type HandleMode, type MoveStartEvent } from './Manipulator';
-import { PointerGestures, type PickTarget } from './PointerGestures';
+import { PointerGestures } from './PointerGestures';
+import { itemIdOf } from './overlay';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
 
 const VIEW_TRANSITION_MS = 450;
@@ -285,16 +287,14 @@ export class Viewport {
 
   /** Centres the camera on the given luminaires and furniture, keeping the current viewing direction. */
   frame(ids: readonly string[]): void {
-    const { luminaires, furniture } = this.#simulator.scene;
-    const positions = [
-      ...luminaires.filter((l) => ids.includes(l.id)).map((l) => l.position),
+    const positions = ids.flatMap((id): Vec3[] => {
+      const found = findItem(this.#simulator.scene, id);
+      if (!found) return [];
+      const { position } = found.item;
       // A piece's middle, not its footprint on the floor (pictures already are).
-      ...furniture
-        .filter((f) => ids.includes(f.id))
-        .map(({ position, size }) =>
-          position.y === 0 ? { ...position, y: size.height / 2 } : position,
-        ),
-    ];
+      const onFloor = found.kind === 'furniture' && position.y === 0;
+      return [onFloor ? { ...position, y: found.item.size.height / 2 } : position];
+    });
     if (positions.length === 0) return;
     const center = new THREE.Vector3();
     for (const { x, y, z } of positions) center.add(new THREE.Vector3(x, y, z));
@@ -308,7 +308,7 @@ export class Viewport {
 
   /**
    * Where a product dropped at a screen point goes, as the floor point to pass
-   * to `Simulator.addLuminaire`: below where the pointer meets the surface the
+   * to `Simulator.addLuminaire` as `at`: below where the pointer meets the surface the
    * product mounts on, so it lands under the pointer. Null when the pointer
    * misses that surface (e.g. above the horizon) or the product is unknown.
    */
@@ -325,7 +325,7 @@ export class Viewport {
 
   /**
    * Where a piece of furniture dropped at a screen point goes, as the floor
-   * point to pass to `Simulator.addFurniture`: under the pointer on the floor,
+   * point to pass to `Simulator.addFurniture` as `at`: under the pointer on the floor,
    * or below where it meets a wall. Null when it misses the room.
    */
   furnitureDropPoint(clientX: number, clientY: number): FloorPoint | null {
@@ -561,7 +561,7 @@ export class Viewport {
     const luminaireId = this.#luminaireAt(clientX, clientY);
     if (luminaireId) return { kind: 'luminaire', id: luminaireId };
     const hit = this.#furnitureHit(clientX, clientY);
-    const furnitureId = hit && this.#furniture.furnitureIdOf(hit.object);
+    const furnitureId = hit && itemIdOf(hit.object);
     return furnitureId ? { kind: 'furniture', id: furnitureId } : null;
   }
 
@@ -578,7 +578,7 @@ export class Viewport {
   #luminaireAt(clientX: number, clientY: number): string | null {
     const raycaster = this.#raycasterAt(clientX, clientY);
     const hits = raycaster.intersectObject(this.#luminaires.group, true);
-    const hit = hits.map((h) => this.#luminaires.luminaireIdOf(h.object)).find(Boolean);
+    const hit = hits.map((h) => itemIdOf(h.object)).find(Boolean);
     if (hit) return hit;
     const rect = this.#renderer.domElement.getBoundingClientRect();
     const pointer = new THREE.Vector2(clientX - rect.left, clientY - rect.top);

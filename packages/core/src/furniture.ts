@@ -1,8 +1,9 @@
-// Scene operations on furniture (ADR 0047): adding, changing, removing and
-// copying pieces, and keeping them where they can stand. Pure functions over
+// Scene operations on furniture (ADR 0047): adding, changing and copying
+// pieces, and keeping them where they can stand. Pure functions over
 // plain data, like luminaires.ts.
 
 import { FINISHES, FURNITURE_TYPES } from './furniture-kinds';
+import { clamp, DEG } from './math';
 import type {
   FloorPoint,
   Furniture,
@@ -23,9 +24,6 @@ export const MIN_SIZE_SHARE = 0.5;
 export const MAX_SIZE_SHARE = 2;
 /** How far a copy sits from its source, to the source's right, in m. */
 const DUPLICATE_OFFSET = 0.5;
-const DEG = Math.PI / 180;
-
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 /**
  * Keeps an extent of half-size `half` around `value` within ±`limit`. One
@@ -39,6 +37,13 @@ export type FurniturePatch = Partial<Pick<Furniture, 'position' | 'rotationDeg'>
   readonly size?: Partial<FurnitureSize>;
   readonly finish?: Partial<FurnitureFinish>;
 };
+
+/**
+ * A new piece's place and starting fields. `at` is the floor point it stands
+ * on (default: room centre; wall pieces go to the nearest wall); the other
+ * fields apply as in an update, so a `position` overrides `at`.
+ */
+export type AddFurnitureOptions = FurniturePatch & { readonly at?: FloorPoint };
 
 /** Adds a piece of `kind` at its usual size and finishes, standing at `at` (default: room centre). */
 export function addFurniture(
@@ -81,36 +86,16 @@ export function updateFurniture(scene: Scene, id: string, patch: FurniturePatch)
   };
 }
 
-/** Removes the given pieces. Unknown ids are an error. */
-export function removeFurniture(scene: Scene, ids: readonly string[]): Scene {
-  ids.forEach((id) => findFurniture(scene, id));
-  const removed = new Set(ids);
-  return { ...scene, furniture: scene.furniture.filter((piece) => !removed.has(piece.id)) };
-}
-
 /**
- * Copies the given pieces, each DUPLICATE_OFFSET to its source's right, so a
- * copied chair lands beside it and a copied picture further along its wall.
- * `newIds[i]` is the id of the copy of `ids[i]`.
+ * A copy of `source` with id `id`, DUPLICATE_OFFSET to the source's right, so
+ * a copied chair lands beside it and a copied picture further along its wall.
  */
-export function duplicateFurniture(
-  scene: Scene,
-  ids: readonly string[],
-  newIds: readonly string[],
-): Scene {
-  if (newIds.length !== ids.length) {
-    throw new Error(`duplicateFurniture: got ${newIds.length} new ids for ${ids.length} pieces`);
-  }
-  const copies = ids.map((id, i) => {
-    const source = findFurniture(scene, id);
-    const turn = source.rotationDeg * DEG;
-    // The piece's own +x (its right, seen from the front) in the room.
-    const step = { x: Math.cos(turn) * DUPLICATE_OFFSET, z: -Math.sin(turn) * DUPLICATE_OFFSET };
-    const { x, y, z } = source.position;
-    const position = { x: x + step.x, y, z: z + step.z };
-    return constrainFurniture({ ...source, id: newIds[i]!, position }, scene.room);
-  });
-  return { ...scene, furniture: [...scene.furniture, ...copies] };
+export function copyFurniture(source: Furniture, id: string, room: Room): Furniture {
+  const turn = source.rotationDeg * DEG;
+  // The piece's own +x (its right, seen from the front) in the room.
+  const step = { x: Math.cos(turn) * DUPLICATE_OFFSET, z: -Math.sin(turn) * DUPLICATE_OFFSET };
+  const { x, y, z } = source.position;
+  return constrainFurniture({ ...source, id, position: { x: x + step.x, y, z: z + step.z } }, room);
 }
 
 /**

@@ -234,7 +234,7 @@ export class LxsLuminaireInspector extends LitElement {
         { pressed: anyOn },
       )}
       ${button(msg('Duplicate'), icon(Copy), () => {
-        const copies = this.simulator?.duplicateLuminaires(ids) ?? [];
+        const copies = this.simulator?.duplicate(ids) ?? [];
         this.dispatchEvent(
           new CustomEvent<SetSelectionDetail>('lxs-set-selection', {
             detail: { ids: copies },
@@ -244,7 +244,7 @@ export class LxsLuminaireInspector extends LitElement {
         );
       })}
       <span class="spacer"></span>
-      ${button(msg('Delete'), icon(Trash), () => this.simulator?.removeLuminaires(ids), { danger: true })}
+      ${button(msg('Delete'), icon(Trash), () => this.simulator?.remove(ids), { danger: true })}
     </div>`;
   }
 }

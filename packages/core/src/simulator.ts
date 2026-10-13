@@ -1,9 +1,8 @@
 import {
   addFurniture,
   assertFurniture,
-  duplicateFurniture,
-  removeFurniture,
   updateFurniture,
+  type AddFurnitureOptions,
   type FurniturePatch,
 } from './furniture';
 import * as history from './history';
@@ -14,15 +13,14 @@ import {
   addLuminaire,
   assertLuminaire,
   assertProduct,
-  duplicateLuminaires,
-  removeLuminaires,
   updateLuminaire,
+  type AddLuminaireOptions,
   type LuminairePatch,
 } from './luminaires';
 import { assertRoom, DEFAULT_ROOM, resizeRoom, setSurface, type RoomSize } from './room';
+import { duplicateItems, removeItems } from './scene-items';
 import type {
   Catalog,
-  FloorPoint,
   FurnitureKind,
   ModelProvider,
   Photometry,
@@ -74,7 +72,7 @@ export interface SimulatorOptions {
  *
  * ```ts
  * const sim = new Simulator({ catalog });
- * const id = sim.addLuminaire('spot-7w', { x: 1, z: -1 });
+ * const id = sim.addLuminaire('spot-7w', { at: { x: 1, z: -1 } });
  * sim.undo();
  * ```
  */
@@ -161,13 +159,20 @@ export class Simulator {
     this.#commit(setSurface(this.#scene, name, patch), options, `Finish ${name}`, patch);
   }
 
-  /** Adds a luminaire and returns its id. Throws if the product isn't in the catalog. */
-  addLuminaire(productId: string, at?: FloorPoint): string {
+  /**
+   * Adds a luminaire and returns its id. It starts at the product's defaults,
+   * standing over `at`, with any other fields given set as by
+   * `updateLuminaire`, all in one undo step. Throws if the product isn't in the
+   * catalog or a field is invalid.
+   */
+  addLuminaire(productId: string, { at, ...fields }: AddLuminaireOptions = {}): string {
     const id = crypto.randomUUID();
-    this.#commit(addLuminaire(this.#scene, this.#product(productId), id, at), undefined, 'Add', {
+    const added = addLuminaire(this.#scene, this.#product(productId), id, at);
+    this.#commit(updateLuminaire(added, id, fields, this.#catalog), undefined, 'Add', {
       productId,
       id,
       at,
+      ...fields,
     });
     return id;
   }
@@ -184,37 +189,20 @@ export class Simulator {
     });
   }
 
-  /** Removes these luminaires, as one undo step. Throws for an unknown id. */
-  removeLuminaires(ids: readonly string[]): void {
-    this.#commit(removeLuminaires(this.#scene, ids), undefined, 'Remove', ids);
-  }
-
-  /** Copies luminaires and returns the new ids, in the same order. */
-  duplicateLuminaires(ids: readonly string[]): string[] {
-    const newIds = ids.map(() => crypto.randomUUID());
-    this.#commit(
-      duplicateLuminaires(this.#scene, ids, newIds, this.#catalog),
-      undefined,
-      'Duplicate',
-      {
-        ids,
-        newIds,
-      },
-    );
-    return newIds;
-  }
-
   /**
-   * Adds a piece of furniture at its usual size and finishes, standing at `at`
-   * (default: the room centre; wall pieces go to the nearest wall), and
-   * returns its id. Throws for an unknown kind.
+   * Adds a piece of furniture and returns its id. It starts at its usual size
+   * and finishes, standing at `at`, with any other fields given set as by
+   * `updateFurniture`, all in one undo step. Throws for an unknown kind or an
+   * invalid field.
    */
-  addFurniture(kind: FurnitureKind, at?: FloorPoint): string {
+  addFurniture(kind: FurnitureKind, { at, ...fields }: AddFurnitureOptions = {}): string {
     const id = crypto.randomUUID();
-    this.#commit(addFurniture(this.#scene, kind, id, at), undefined, 'Add furniture', {
+    const added = addFurniture(this.#scene, kind, id, at);
+    this.#commit(updateFurniture(added, id, fields), undefined, 'Add furniture', {
       kind,
       id,
       at,
+      ...fields,
     });
     return id;
   }
@@ -231,15 +219,24 @@ export class Simulator {
     });
   }
 
-  /** Removes these pieces, as one undo step. Throws for an unknown id. */
-  removeFurniture(ids: readonly string[]): void {
-    this.#commit(removeFurniture(this.#scene, ids), undefined, 'Remove furniture', ids);
+  /**
+   * Removes these luminaires and pieces of furniture, as one undo step. An
+   * empty list changes nothing. Throws for an unknown id.
+   */
+  remove(ids: readonly string[]): void {
+    if (ids.length === 0) return;
+    this.#commit(removeItems(this.#scene, ids), undefined, 'Remove', ids);
   }
 
-  /** Copies pieces, each beside its source, and returns the new ids in the same order. */
-  duplicateFurniture(ids: readonly string[]): string[] {
+  /**
+   * Copies these luminaires and pieces of furniture, each beside its source,
+   * as one undo step, and returns the new ids in the same order. An empty list
+   * changes nothing. Throws for an unknown id.
+   */
+  duplicate(ids: readonly string[]): string[] {
+    if (ids.length === 0) return [];
     const newIds = ids.map(() => crypto.randomUUID());
-    this.#commit(duplicateFurniture(this.#scene, ids, newIds), undefined, 'Duplicate furniture', {
+    this.#commit(duplicateItems(this.#scene, ids, newIds, this.#catalog), undefined, 'Duplicate', {
       ids,
       newIds,
     });

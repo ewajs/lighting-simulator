@@ -1,12 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import {
-  addLuminaire,
-  duplicateLuminaires,
-  DUPLICATE_OFFSET,
-  removeLuminaires,
-  updateLuminaire,
-} from './luminaires';
-import { catalog, emptyScene, product } from './test-fixtures';
+import { addLuminaire, copyLuminaire, DUPLICATE_OFFSET, updateLuminaire } from './luminaires';
+import { catalog, emptyScene, product, room } from './test-fixtures';
 
 const withSpot = addLuminaire(emptyScene, product('recessed', { cct: 2700 }), 'a', { x: 1, z: 1 });
 
@@ -53,20 +47,9 @@ describe('updateLuminaire', () => {
   });
 });
 
-describe('removeLuminaires', () => {
-  it('removes the given ids', () => {
-    expect(removeLuminaires(withSpot, ['a']).luminaires).toEqual([]);
-  });
-
-  it('rejects unknown ids', () => {
-    expect(() => removeLuminaires(withSpot, ['nope'])).toThrow(/nope/);
-  });
-});
-
-describe('duplicateLuminaires', () => {
+describe('copyLuminaire', () => {
   it('copies with a new id, offset along x', () => {
-    const scene = duplicateLuminaires(withSpot, ['a'], ['b'], catalog);
-    expect(scene.luminaires[1]).toMatchObject({
+    expect(copyLuminaire(withSpot.luminaires[0]!, 'b', room, catalog)).toMatchObject({
       id: 'b',
       position: { x: 1 + DUPLICATE_OFFSET, y: 2.7, z: 1 },
     });
@@ -74,7 +57,6 @@ describe('duplicateLuminaires', () => {
 
   it('keeps the copy inside the room', () => {
     const atEdge = addLuminaire(emptyScene, product('recessed'), 'a', { x: 2.5, z: 0 });
-    const scene = duplicateLuminaires(atEdge, ['a'], ['b'], catalog);
-    expect(scene.luminaires[1]?.position.x).toBe(2.5);
+    expect(copyLuminaire(atEdge.luminaires[0]!, 'b', room, catalog).position.x).toBe(2.5);
   });
 });

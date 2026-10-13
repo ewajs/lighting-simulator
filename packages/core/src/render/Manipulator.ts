@@ -5,8 +5,7 @@
 
 import * as THREE from 'three/webgpu';
 import { AimPointDrag, beamHit, isAimable, PanDrag } from '../aim';
-import { LuminaireDrag } from '../drag';
-import { FurnitureDrag } from '../furniture-drag';
+import { ItemDrag } from '../drag';
 import {
   groupDimensions,
   luminaireDimensions,
@@ -15,14 +14,15 @@ import {
 } from '../measure';
 import { AxisDrag, groupAxes, groupCenter } from '../move-handle';
 import type { Ray } from '../placement';
+import { findItem } from '../scene-items';
 import type { Simulator } from '../simulator';
 import type { Guide, SnapOptions } from '../snap';
-import type { Vec3 } from '../types';
+import type { PickTarget, Vec3 } from '../types';
 import { AimHandle } from './AimHandle';
 import { DimensionLines } from './DimensionLines';
 import { MoveHandle } from './MoveHandle';
 import { worldPerPixel } from './overlay';
-import type { PickTarget, PressTarget } from './PointerGestures';
+import type { PressTarget } from './PointerGestures';
 import { SnapGuides } from './SnapGuides';
 
 /** How close on screen counts as lined up with another luminaire, in CSS px. */
@@ -55,7 +55,7 @@ export interface ManipulatorOptions {
   raycasterAt(clientX: number, clientY: number): THREE.Raycaster;
   /** The fixture or piece of furniture under a screen point, if any. */
   itemAt(clientX: number, clientY: number): PickTarget | null;
-  /** How high above the floor the furniture under a screen point is, where the pointer meets it; 0 if none. */
+  /** How high above the floor the furniture under a screen point is, where the pointer meets it; 0 if none. Drags of furniture slide at that height. */
   furnitureHeightAt(clientX: number, clientY: number): number;
   /** The viewport's height in CSS px, for handles that keep their size on screen. */
   viewportHeightPx(): number;
@@ -192,21 +192,11 @@ export class Manipulator {
           : new PanDrag(simulator, highlighted, grabbed);
     } else if (target.kind === 'luminaire' || target.kind === 'furniture') {
       const { id } = target;
-      const items =
-        target.kind === 'luminaire' ? simulator.scene.luminaires : simulator.scene.furniture;
       // Undo or delete may have removed it since the press.
-      if (!items.some((item) => item.id === id)) return undefined;
+      if (!findItem(simulator.scene, id)) return undefined;
       const group = this.#highlighted.includes(id) ? this.#highlighted : [id];
-      drag =
-        target.kind === 'luminaire'
-          ? new LuminaireDrag(simulator, id, group, grabbed)
-          : new FurnitureDrag(
-              simulator,
-              id,
-              group,
-              grabbed,
-              this.#options.furnitureHeightAt(press.clientX, press.clientY),
-            );
+      const grabHeight = this.#options.furnitureHeightAt(press.clientX, press.clientY);
+      drag = new ItemDrag(simulator, target, group, grabbed, grabHeight);
       this.#moveStartListeners.forEach((listener) => listener({ target, event: move }));
     } else {
       return undefined;
@@ -256,12 +246,9 @@ export class Manipulator {
 
   /** The grabbed luminaire's or piece's position, or the centre of the highlighted luminaires. */
   #anchor(grabbed: PickTarget | undefined): Vec3 | undefined {
-    const { luminaires, furniture } = this.#options.simulator.scene;
-    if (grabbed) {
-      const items = grabbed.kind === 'luminaire' ? luminaires : furniture;
-      return items.find((item) => item.id === grabbed.id)?.position;
-    }
-    const selected = luminaires.filter((l) => this.#highlighted.includes(l.id));
+    const { scene } = this.#options.simulator;
+    if (grabbed) return findItem(scene, grabbed.id)?.item.position;
+    const selected = scene.luminaires.filter((l) => this.#highlighted.includes(l.id));
     return selected.length > 0 ? groupCenter(selected) : undefined;
   }
 
@@ -288,9 +275,8 @@ export class Manipulator {
 function describeTarget(target: PressTarget): string {
   switch (target.kind) {
     case 'luminaire':
-      return `Moving luminaire ${target.id}`;
     case 'furniture':
-      return `Moving furniture ${target.id}`;
+      return `Moving ${target.kind} ${target.id}`;
     case 'move-axis':
       return `Sliding along ${target.axis}`;
     case 'aim':

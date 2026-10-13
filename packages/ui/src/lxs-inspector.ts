@@ -1,4 +1,4 @@
-import type { Scene, Simulator } from '@luxstudio/core';
+import type { ItemKind, Scene, Simulator } from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -8,7 +8,7 @@ import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import './lxs-furniture-inspector';
 import './lxs-luminaire-inspector';
 import './lxs-room-inspector';
-import { selectionKind, type SelectionKind } from './selection';
+import { selectionKind } from './selection';
 import { sharedStyles } from './styles';
 
 /**
@@ -91,7 +91,7 @@ export class LxsInspector extends LitElement {
     `;
   }
 
-  #body(kind: SelectionKind | undefined) {
+  #body(kind: ItemKind | undefined) {
     switch (kind) {
       case 'luminaire':
         return html`<lxs-luminaire-inspector

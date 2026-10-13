@@ -56,7 +56,8 @@ and galleries.
     break; finishes come from the palette only.
 - **Simulator:** `addFurniture`, `updateFurniture`, `removeFurniture` and
   `duplicateFurniture`, one undo step each. A copy goes 0.5 m to its
-  source's right, so a copied picture stays on its wall.
+  source's right, so a copied picture stays on its wall. (ADR 0048 later
+  merged remove and duplicate into `remove` and `duplicate` for both kinds.)
 - **Picking reports what was hit:** `PickEvent.target` and
   `MoveStartEvent.target` are `{ kind: 'luminaire' | 'furniture', id }`,
   replacing `luminaireId`. Luminaires win over furniture, even a few pixels

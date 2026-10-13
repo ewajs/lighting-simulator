@@ -106,8 +106,8 @@ describe('AxisDrag', () => {
 
   it('moves the group by the same distance, stopping when one reaches a wall', () => {
     const sim = new Simulator({ catalog });
-    const a = sim.addLuminaire('test-recessed', { x: 0, z: 0 });
-    const b = sim.addLuminaire('test-recessed', { x: 2, z: 1 });
+    const a = sim.addLuminaire('test-recessed', { at: { x: 0, z: 0 } });
+    const b = sim.addLuminaire('test-recessed', { at: { x: 2, z: 1 } });
     // Centre at x = 1; the handle is dragged 3 m right, but b can only go 0.5 m.
     const drag = new AxisDrag(sim, [a, b], 'x', towards(1, 2));
     drag.moveTo(towards(4, 2));

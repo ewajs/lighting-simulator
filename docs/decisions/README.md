@@ -51,3 +51,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0045 | [User manual with VitePress, in Spanish and English](0045-user-manual-vitepress.md) | Accepted |
 | 0046 | [In-app help: a getting-started carousel](0046-in-app-help.md) | Accepted |
 | 0047 | [Furniture: procedural pieces in one design language](0047-furniture.md) | Accepted |
+| 0048 | [One set of edits for luminaires and furniture](0048-one-set-of-edits-for-scene-items.md) | Accepted |

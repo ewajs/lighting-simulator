@@ -33,7 +33,7 @@ import type { PanelName, Theme } from './lxs-top-bar';
 import './lxs-viewport';
 import type { DropFurnitureDetail, DropProductDetail, LxsViewport } from './lxs-viewport';
 import './lxs-viewport-controls';
-import { pruneSelection, selectionAfterPick, selectionForMove, selectionKind } from './selection';
+import { pruneSelection, selectionAfterPick, selectionForMove } from './selection';
 import { isTyping, shortcutAction, type EditTool, type ShortcutAction } from './shortcuts';
 
 /** Below this width the library starts collapsed, leaving the viewport room (landscape tablets). */
@@ -461,7 +461,8 @@ export class LxsApp extends LitElement {
   };
 
   #onDropProduct = ({ detail }: CustomEvent<DropProductDetail>): void => {
-    if (this.simulator) this.selection = [this.simulator.addLuminaire(detail.productId, detail.at)];
+    if (this.simulator)
+      this.selection = [this.simulator.addLuminaire(detail.productId, { at: detail.at })];
   };
 
   #onAddFurniture = ({ detail }: CustomEvent<{ kind: FurnitureKind }>): void => {
@@ -471,24 +472,9 @@ export class LxsApp extends LitElement {
   };
 
   #onDropFurniture = ({ detail }: CustomEvent<DropFurnitureDetail>): void => {
-    if (this.simulator) this.selection = [this.simulator.addFurniture(detail.kind, detail.at)];
+    if (this.simulator)
+      this.selection = [this.simulator.addFurniture(detail.kind, { at: detail.at })];
   };
-
-  /** Deletes what is selected, luminaires or furniture, as one undo step. */
-  #removeSelection(): void {
-    if (!this.simulator || !this.scene) return;
-    const kind = selectionKind(this.selection, this.scene);
-    if (kind === 'luminaire') this.simulator.removeLuminaires(this.selection);
-    if (kind === 'furniture') this.simulator.removeFurniture(this.selection);
-  }
-
-  /** Copies what is selected and selects the copies. */
-  #duplicateSelection(): void {
-    if (!this.simulator || !this.scene) return;
-    const kind = selectionKind(this.selection, this.scene);
-    if (kind === 'luminaire') this.selection = this.simulator.duplicateLuminaires(this.selection);
-    if (kind === 'furniture') this.selection = this.simulator.duplicateFurniture(this.selection);
-  }
 
   #onKeyDown = (event: KeyboardEvent): void => {
     // The help is modal: shortcuts mustn't act on the app behind it, and Esc is its own.
@@ -508,9 +494,11 @@ export class LxsApp extends LitElement {
       case 'redo':
         return sim?.redo();
       case 'delete':
-        return this.#removeSelection();
+        return sim?.remove(this.selection);
       case 'duplicate':
-        return this.#duplicateSelection();
+        // The copies become the selection.
+        if (sim) this.selection = sim.duplicate(this.selection);
+        return;
       case 'select-all':
         this.selection = this.scene?.luminaires.map((l) => l.id) ?? [];
         return;

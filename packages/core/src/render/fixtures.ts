@@ -1,4 +1,5 @@
 import * as THREE from 'three/webgpu';
+import { DEG } from '../math';
 import type { Product } from '../types';
 import { IesLight } from './IesLight';
 import { isSpot } from './lighting';
@@ -91,7 +92,7 @@ export function buildFixture(
   light.shadow.autoUpdate = false;
   if (light instanceof THREE.SpotLight) {
     const halfFieldDeg = (product.beamDeg / 2) * FIELD_TO_BEAM_RATIO;
-    light.angle = Math.min(MAX_SPOT_HALF_ANGLE_DEG, halfFieldDeg) * (Math.PI / 180);
+    light.angle = Math.min(MAX_SPOT_HALF_ANGLE_DEG, halfFieldDeg) * DEG;
     light.penumbra = SPOT_PENUMBRA;
     light.shadow.mapSize.set(SPOT_SHADOW_MAP_SIZE, SPOT_SHADOW_MAP_SIZE);
     root.add(light.target);

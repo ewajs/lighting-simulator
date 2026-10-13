@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  addFurniture,
-  constrainFurniture,
-  duplicateFurniture,
-  removeFurniture,
-  updateFurniture,
-} from './furniture';
+import { addFurniture, constrainFurniture, copyFurniture, updateFurniture } from './furniture';
 import { FURNITURE_KINDS, FURNITURE_TYPES } from './furniture-kinds';
 import { resizeRoom } from './room';
 import { catalog, emptyScene, room } from './test-fixtures';
@@ -128,31 +122,20 @@ describe('updateFurniture', () => {
   });
 });
 
-describe('removeFurniture and duplicateFurniture', () => {
-  it('removes pieces and rejects unknown ids', () => {
-    const [scene] = withPiece('chair');
-    expect(removeFurniture(scene, ['a']).furniture).toEqual([]);
-    expect(() => removeFurniture(scene, ['b'])).toThrow(/Unknown furniture/);
-  });
-
+describe('copyFurniture', () => {
   it('puts a copy 0.5 m to its source’s right', () => {
-    const [scene] = withPiece('chair');
-    expect(position(duplicateFurniture(scene, ['a'], ['b']), 'b')).toEqual({ x: 0.5, y: 0, z: 0 });
+    const [, chair] = withPiece('chair');
+    expect(copyFurniture(chair, 'b', room).position).toEqual({ x: 0.5, y: 0, z: 0 });
     // Turned to face +x, its right is −z.
-    const turned = updateFurniture(scene, 'a', { rotationDeg: 90 });
-    const copy = position(duplicateFurniture(turned, ['a'], ['b']), 'b');
+    const copy = copyFurniture({ ...chair, rotationDeg: 90 }, 'b', room).position;
     expect(copy.x).toBeCloseTo(0, 9);
     expect(copy.z).toBeCloseTo(-0.5, 9);
   });
 
   it('slides a copied picture along its wall', () => {
     // On the left wall the picture faces +x, so its right is −z.
-    const [scene] = withPiece('artwork', { x: -2.4, z: 0 });
-    expect(position(duplicateFurniture(scene, ['a'], ['b']), 'b')).toEqual({
-      x: -2.5,
-      y: 1.5,
-      z: -0.5,
-    });
+    const [, picture] = withPiece('artwork', { x: -2.4, z: 0 });
+    expect(copyFurniture(picture, 'b', room).position).toEqual({ x: -2.5, y: 1.5, z: -0.5 });
   });
 });
 

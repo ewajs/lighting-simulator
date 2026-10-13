@@ -2,6 +2,7 @@
 // sliding along one. Rays are plain data, so this runs without three.js.
 // See ADR 0039.
 
+import { dot, subtract } from './math';
 import { wallNormalAxis, type Ray } from './placement';
 import { snapPosition, type Guide, type SnapOptions } from './snap';
 import type { Simulator } from './simulator';
@@ -168,12 +169,4 @@ export class AxisDrag {
     }
     return Math.min(highest, Math.max(lowest, distance));
   }
-}
-
-function dot(a: Vec3, b: Vec3): number {
-  return a.x * b.x + a.y * b.y + a.z * b.z;
-}
-
-function subtract(a: Vec3, b: Vec3): Vec3 {
-  return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
 }

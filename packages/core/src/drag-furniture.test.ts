@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FurnitureDrag } from './furniture-drag';
+import { ItemDrag } from './drag';
 import type { Ray } from './placement';
 import { Simulator } from './simulator';
 import { catalog } from './test-fixtures';
@@ -18,11 +18,11 @@ const atBackWall = (x: number, y: number): Ray => ({
 
 const piece = (sim: Simulator, id: string) => sim.scene.furniture.find((f) => f.id === id)!;
 
-describe('FurnitureDrag', () => {
+describe('ItemDrag: furniture', () => {
   it('slides over the floor, keeping the offset from where it was grabbed', () => {
     const sim = new Simulator({ catalog });
     const id = sim.addFurniture('chair');
-    const drag = new FurnitureDrag(sim, id, [id], downAt(0.2, 0.2));
+    const drag = new ItemDrag(sim, { kind: 'furniture', id }, [id], downAt(0.2, 0.2));
     drag.moveTo(downAt(1.2, 0.7));
     expect(piece(sim, id).position).toEqual({ x: 1, y: 0, z: 0.5 });
   });
@@ -37,7 +37,7 @@ describe('FurnitureDrag', () => {
       origin: camera,
       direction: { x: x - camera.x, y: 0.75 - camera.y, z: z - camera.z },
     });
-    const drag = new FurnitureDrag(sim, id, [id], at(0.2, 0.1), 0.75);
+    const drag = new ItemDrag(sim, { kind: 'furniture', id }, [id], at(0.2, 0.1), 0.75);
     drag.moveTo(at(0.7, 0.4));
     const { x, z } = piece(sim, id).position;
     expect(x).toBeCloseTo(0.5, 9);
@@ -48,14 +48,14 @@ describe('FurnitureDrag', () => {
     // The chair is 0.46 m wide: its centre stays within 2.5 − 0.23 m of the middle.
     const sim = new Simulator({ catalog });
     const id = sim.addFurniture('chair');
-    new FurnitureDrag(sim, id, [id], downAt(0, 0)).moveTo(downAt(9, 0));
+    new ItemDrag(sim, { kind: 'furniture', id }, [id], downAt(0, 0)).moveTo(downAt(9, 0));
     expect(piece(sim, id).position.x).toBe(2.27);
   });
 
   it('records the whole drag as one undo step', () => {
     const sim = new Simulator({ catalog });
     const id = sim.addFurniture('chair');
-    const drag = new FurnitureDrag(sim, id, [id], downAt(0, 0));
+    const drag = new ItemDrag(sim, { kind: 'furniture', id }, [id], downAt(0, 0));
     drag.moveTo(downAt(0.5, 0));
     drag.moveTo(downAt(1, 0));
     sim.undo();
@@ -66,8 +66,13 @@ describe('FurnitureDrag', () => {
   it('moves the rest of the group by the same offset', () => {
     const sim = new Simulator({ catalog });
     const grabbed = sim.addFurniture('chair');
-    const table = sim.addFurniture('dining-table', { x: -1, z: 0.5 });
-    const drag = new FurnitureDrag(sim, grabbed, [grabbed, table], downAt(0, 0));
+    const table = sim.addFurniture('dining-table', { at: { x: -1, z: 0.5 } });
+    const drag = new ItemDrag(
+      sim,
+      { kind: 'furniture', id: grabbed },
+      [grabbed, table],
+      downAt(0, 0),
+    );
     drag.moveTo(downAt(0.5, -0.3));
     const { x, z } = piece(sim, table).position;
     expect(x).toBeCloseTo(-0.5, 9);
@@ -77,8 +82,8 @@ describe('FurnitureDrag', () => {
   it('snaps to the grid, or lines up with other pieces', () => {
     const sim = new Simulator({ catalog });
     const id = sim.addFurniture('chair');
-    sim.addFurniture('plant', { x: 0.62, z: -1 });
-    const drag = new FurnitureDrag(sim, id, [id], downAt(0, 0));
+    sim.addFurniture('plant', { at: { x: 0.62, z: -1 } });
+    const drag = new ItemDrag(sim, { kind: 'furniture', id }, [id], downAt(0, 0));
     expect(drag.moveTo(downAt(1.03, 0.47), { toleranceM: 0.01 })).toEqual([]);
     expect(piece(sim, id).position).toEqual({ x: 1, y: 0, z: 0.5 });
     // Within 5 cm of the plant's x: lined up with it.
@@ -90,7 +95,7 @@ describe('FurnitureDrag', () => {
   it('slides a picture along its wall and up, snapping along both', () => {
     const sim = new Simulator({ catalog });
     const id = sim.addFurniture('artwork'); // (0, 1.5, −2)
-    const drag = new FurnitureDrag(sim, id, [id], atBackWall(0.1, 1.6));
+    const drag = new ItemDrag(sim, { kind: 'furniture', id }, [id], atBackWall(0.1, 1.6));
     drag.moveTo(atBackWall(1.1, 1.3));
     expect(piece(sim, id).position).toEqual({ x: 1, y: 1.2, z: -2 });
     drag.moveTo(atBackWall(0.73, 1.07), { toleranceM: 0.01 });
@@ -100,7 +105,7 @@ describe('FurnitureDrag', () => {
   it('moves a picture onto the wall the pointer reaches', () => {
     const sim = new Simulator({ catalog });
     const id = sim.addFurniture('artwork');
-    const drag = new FurnitureDrag(sim, id, [id], atBackWall(0, 1.5));
+    const drag = new ItemDrag(sim, { kind: 'furniture', id }, [id], atBackWall(0, 1.5));
     drag.moveTo({ origin: { x: 0, y: 1.4, z: 0.5 }, direction: { x: 1, y: 0, z: 0 } });
     expect(piece(sim, id)).toMatchObject({
       position: { x: 2.5, y: 1.4, z: 0.5 },
@@ -111,7 +116,7 @@ describe('FurnitureDrag', () => {
   it('ignores rays that miss the floor', () => {
     const sim = new Simulator({ catalog });
     const id = sim.addFurniture('chair');
-    const drag = new FurnitureDrag(sim, id, [id], downAt(0, 0));
+    const drag = new ItemDrag(sim, { kind: 'furniture', id }, [id], downAt(0, 0));
     const before = sim.scene;
     drag.moveTo({ origin: { x: 0, y: 1, z: 0 }, direction: { x: 0, y: 1, z: 0 } });
     expect(sim.scene).toBe(before);

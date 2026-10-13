@@ -1,3 +1,4 @@
+import { clamp } from './math';
 import type { FloorPoint, MountType, Product, Room, Vec3 } from './types';
 
 /** Pendant drop when the product doesn't specify one, in m. */
@@ -9,8 +10,6 @@ export const WALL_MOUNT_HEIGHT = 1.8;
 const PARALLEL_EPSILON = 1e-9;
 /** Slack when checking that a wall hit lies on the wall, in m (rounding at the edges). */
 const EDGE_EPSILON = 1e-6;
-
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
 /** A half-line in world space, e.g. from the camera through the pointer. */
 export interface Ray {

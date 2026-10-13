@@ -3,6 +3,7 @@
 // Between measured angles the intensity is interpolated linearly in both
 // directions; outside the measured vertical range it is 0 cd.
 
+import { DEG } from '../math';
 import type { Photometry } from '../types';
 
 /**
@@ -15,7 +16,6 @@ import type { Photometry } from '../types';
 export type HorizontalSymmetry = 'rotational' | 'quadrant' | 'bilateral' | 'bilateral-90' | 'none';
 
 const FULL_CIRCLE_DEG = 360;
-const DEG_TO_RAD = Math.PI / 180;
 /** Beam angle threshold: 50 % of peak intensity (IES/CIE beam angle). */
 const BEAM_FRACTION = 0.5;
 
@@ -195,8 +195,8 @@ function horizontalWeights(photometry: Photometry): number[] {
 function zonalIntegral(anglesDeg: readonly number[], values: readonly number[]): number {
   let sum = 0;
   for (let i = 0; i + 1 < anglesDeg.length; i++) {
-    const a = anglesDeg[i]! * DEG_TO_RAD;
-    const b = anglesDeg[i + 1]! * DEG_TO_RAD;
+    const a = anglesDeg[i]! * DEG;
+    const b = anglesDeg[i + 1]! * DEG;
     const ia = values[i]!;
     const slope = (values[i + 1]! - ia) / (b - a);
     sum += ia * (Math.cos(a) - Math.cos(b));

@@ -2,6 +2,7 @@
 // around the vertical. Rays are plain data, so this runs without three.js.
 // See ADR 0040.
 
+import { DEG } from './math';
 import type { Ray } from './placement';
 import { roomSurfaceHit } from './placement';
 import type { Simulator } from './simulator';
@@ -13,7 +14,6 @@ export const AIMABLE_MOUNTS: readonly MountType[] = ['recessed', 'track'];
 /** Steepest tilt the aim handle sets: level with the ceiling, as in the inspector. */
 export const MAX_TILT_DEG = 90;
 
-const DEG = Math.PI / 180;
 /** Horizontal reach below which the beam points straight down and pan can't be read from it, in m. */
 const VERTICAL_EPSILON = 1e-9;
 

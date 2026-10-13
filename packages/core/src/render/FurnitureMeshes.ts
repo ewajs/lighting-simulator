@@ -1,16 +1,16 @@
 import * as THREE from 'three/webgpu';
 import { FINISHES } from '../furniture-kinds';
+import { DEG } from '../math';
 import type { Furniture, Scene } from '../types';
 import { PIECE_BUILDERS } from './furniture/builders';
 import { disposePiece } from './furniture/style';
-import { outlineMaterial } from './overlay';
+import { selectionOutline, tagItem } from './overlay';
 import { CLAY_COLOR, type RenderMode } from './RoomMeshes';
 
 /** Gap between a highlighted piece and its outline, in m. */
 const HIGHLIGHT_MARGIN = 0.02;
 /** Clay furniture is a little rougher than the room, so it reads as matte card. */
 const CLAY_ROUGHNESS = 0.9;
-const DEG = Math.PI / 180;
 
 interface Item {
   /** The piece as drawn: kind, size and finishes it was built with. */
@@ -55,16 +55,6 @@ export class FurnitureMeshes {
     for (const id of [...this.#items.keys()]) if (!present.has(id)) this.#remove(id);
   }
 
-  /** Finds the furniture id an intersected object belongs to. */
-  furnitureIdOf(object: THREE.Object3D): string | undefined {
-    for (const [id, item] of this.#items) {
-      let current: THREE.Object3D | null = object;
-      while (current && current !== item.root) current = current.parent;
-      if (current) return id;
-    }
-    return undefined;
-  }
-
   /** Shows or hides all highlight outlines without changing which are highlighted. */
   setOutlinesVisible(visible: boolean): void {
     for (const item of this.#items.values()) if (item.outline) item.outline.visible = visible;
@@ -80,6 +70,7 @@ export class FurnitureMeshes {
     const finishes = { main: FINISHES[piece.finish.main], accent: FINISHES[piece.finish.accent] };
     const root = PIECE_BUILDERS[piece.kind](piece.size, finishes);
     if (mode === 'clay') this.#toClay(root);
+    tagItem(root, piece.id);
     // Measured before it is placed, so the outline can turn with it.
     root.updateMatrixWorld(true);
     const bounds = new THREE.Box3().setFromObject(root, true);
@@ -103,13 +94,8 @@ export class FurnitureMeshes {
 
   #outline(item: Item, on: boolean): void {
     if (on && !item.outline) {
-      const box = item.bounds.clone().expandByScalar(HIGHLIGHT_MARGIN);
-      const outline = new THREE.Box3Helper(box);
-      (outline.material as THREE.Material).dispose();
-      outline.material = outlineMaterial();
-      outline.renderOrder = 1;
-      // A child of the piece, so it turns with it; never hit by picking.
-      outline.raycast = () => {};
+      const outline = selectionOutline(item.bounds.clone().expandByScalar(HIGHLIGHT_MARGIN));
+      // A child of the piece, so it turns with it.
       item.root.add(outline);
       item.outline = outline;
     } else if (!on && item.outline) {
