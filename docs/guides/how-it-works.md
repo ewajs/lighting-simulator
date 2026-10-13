@@ -37,14 +37,17 @@ Dependencies only go one way, **demo → ui → core**, and ESLint enforces it.
 
 [`types.ts`](https://github.com/ewajs/lighting-simulator/blob/master/packages/core/src/types.ts)
 defines the document: a {@link @luxstudio/core!Scene} has a
-{@link @luxstudio/core!Room} and a list of {@link @luxstudio/core!Luminaire}s.
-These are readonly objects, metres and SI units throughout. A luminaire refers
-to a {@link @luxstudio/core!Product} by id; the host's catalog supplies the
-product.
+{@link @luxstudio/core!Room}, a list of {@link @luxstudio/core!Luminaire}s and
+a list of {@link @luxstudio/core!Furniture}. These are readonly objects, metres
+and SI units throughout. A luminaire refers to a
+{@link @luxstudio/core!Product} by id; the host's catalog supplies the product.
+Furniture is built in: each piece names one of 14 kinds, and
+`furniture-kinds.ts` holds their usual sizes and finishes
+([ADR 0047](../decisions/0047-furniture.md)).
 
 Edits are **pure functions** that take a scene and return a new one:
-`updateLuminaire`, `resizeRoom`, `constrainPosition` and so on, in
-`luminaires.ts`, `room.ts` and `placement.ts`. They have no three.js and no
+`updateLuminaire`, `updateFurniture`, `resizeRoom`, `constrainPosition` and so
+on, in `luminaires.ts`, `furniture.ts`, `room.ts` and `placement.ts`. They have no three.js and no
 DOM, so they're unit-tested in Node.
 
 ### The Simulator owns the scene and its history
@@ -185,17 +188,20 @@ shape all the components:
 ## Walkthrough 3: a click becomes a selection
 
 1. **Pointer down and up within the tap tolerance.** `PointerGestures` calls
-   the Viewport's `pick`, which finds the fixture under the pointer and calls
-   every `onPick` listener with a {@link @luxstudio/core!PickEvent}.
+   the Viewport's `pick`, which finds the luminaire or piece of furniture
+   under the pointer (luminaires first) and calls every `onPick` listener with
+   a {@link @luxstudio/core!PickEvent}: `{ target: { kind, id } }`, or a null
+   target for empty space.
 2. **`<lxs-viewport>` re-emits it** as `lxs-pick`.
 3. **`<lxs-app>` decides what that means:** `selectionAfterPick`
    ([`selection.ts`](https://github.com/ewajs/lighting-simulator/blob/master/packages/ui/src/selection.ts)).
-   A plain click selects one luminaire. Shift or a long press toggles it. A
-   click on empty space clears the selection.
+   A plain click selects one item. Shift or a long press toggles it, within
+   one kind: luminaires and furniture are never selected together. A click on
+   empty space clears the selection.
 4. **The new selection flows down as properties:**
    - to `<lxs-viewport>`, which calls `setHighlighted`, so the outline and
      the move handle appear;
-   - to the inspector, which shows the luminaire's fields;
+   - to the inspector, which shows the luminaire's (or the piece's) fields;
    - to the scene list, which marks its row.
 
 ## Where to start reading

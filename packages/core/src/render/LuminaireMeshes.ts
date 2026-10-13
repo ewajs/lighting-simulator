@@ -1,19 +1,17 @@
 import * as THREE from 'three/webgpu';
-import { color } from 'three/tsl';
 import type { Logger } from '../logger';
 import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../types';
 import { candelaGrid } from '../photometry/grid';
 import { buildFixture, type Fixture } from './fixtures';
 import { IesLight, profileTexture } from './IesLight';
 import { candela, kelvinToRgb, lightingProduct } from './lighting';
-import { overlayColor } from './overlay';
+import { outlineMaterial } from './overlay';
 import type { RenderMode } from './RoomMeshes';
 
 /** Only the brightest few lights cast shadows; the rest still light the scene. */
 export const SHADOW_BUDGET = 8;
 /** Emissive strength of lit faces, chosen so they read bright under BASE_EXPOSURE. */
 const EMISSIVE_GAIN = 160;
-const HIGHLIGHT_COLOR = 0xf5b544;
 /** Gap between a highlighted fixture and its outline, in m. */
 const HIGHLIGHT_MARGIN = 0.04;
 const DEG = Math.PI / 180;
@@ -302,13 +300,6 @@ function yawAwayFromWall({ position }: Luminaire, room: Room): number {
     [room.width / 2 - position.x, -Math.PI / 2],
   ];
   return distances.reduce((best, next) => (next[0] < best[0] ? next : best))[1];
-}
-
-/** The outline's line material: drawn through other objects, in a colour that reads as itself. */
-function outlineMaterial(): THREE.LineBasicNodeMaterial {
-  const material = new THREE.LineBasicNodeMaterial({ depthTest: false });
-  material.colorNode = overlayColor(color(HIGHLIGHT_COLOR));
-  return material;
 }
 
 /** A box's bounding rectangle on screen, in px; null if empty or partly behind the camera. */

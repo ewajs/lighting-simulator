@@ -1,6 +1,6 @@
 import * as THREE from 'three/webgpu';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { constrainPosition, defaultPosition, mountSurfaceHit } from '../placement';
+import { constrainPosition, defaultPosition, mountSurfaceHit, roomSurfaceHit } from '../placement';
 import type { Simulator } from '../simulator';
 import type { FloorPoint, Scene } from '../types';
 import {
@@ -11,10 +11,11 @@ import {
   type ViewName,
 } from './lighting';
 import { FixtureModels } from './FixtureModels';
+import { FurnitureMeshes } from './FurnitureMeshes';
 import { IesLight, IesLightNode } from './IesLight';
 import { LuminaireMeshes } from './LuminaireMeshes';
 import { Manipulator, type HandleMode, type MoveStartEvent } from './Manipulator';
-import { PointerGestures } from './PointerGestures';
+import { PointerGestures, type PickTarget } from './PointerGestures';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
 
 const VIEW_TRANSITION_MS = 450;
@@ -67,9 +68,10 @@ export interface Diagnostics {
   readonly triangles: number;
 }
 
-/** A click in the viewport. `luminaireId` is null when no fixture was hit. */
+/** A click in the viewport. */
 export interface PickEvent {
-  readonly luminaireId: string | null;
+  /** The luminaire or piece of furniture clicked, or null for neither. */
+  readonly target: PickTarget | null;
   readonly event: PointerEvent;
   /**
    * True when a touch or pen was held still for LONG_PRESS_MS. Fired while the
@@ -85,14 +87,15 @@ export interface PickEvent {
  * ```ts
  * const viewport = new Viewport({ simulator, container });
  * await viewport.init();
- * viewport.onPick(({ luminaireId }) => viewport.setHighlighted(luminaireId ? [luminaireId] : []));
+ * viewport.onPick(({ target }) => viewport.setHighlighted(target ? [target.id] : []));
  * ```
  *
  * The viewport has no selection of its own: it reports picks and highlights
  * whatever the host asks for. Dragging a luminaire moves it along the surface
- * it's mounted on, one undo step per drag. If it is highlighted, the other
- * highlighted luminaires move with it. `onMoveStart` reports the start, e.g.
- * for the host to select what is being moved (ADR 0038).
+ * it's mounted on, and a piece of furniture over the floor (a picture over
+ * the walls), one undo step per drag. If it is highlighted, the other
+ * highlighted items move with it. `onMoveStart` reports the start, e.g. for
+ * the host to select what is being moved (ADRs 0038, 0047).
  */
 export class Viewport {
   readonly #simulator: Simulator;
@@ -104,6 +107,7 @@ export class Viewport {
   readonly #room = new RoomMeshes();
   readonly #luminaires: LuminaireMeshes;
   readonly #models: FixtureModels;
+  readonly #furniture = new FurnitureMeshes();
   // Uniform stand-in for inter-reflections (SPEC §6).
   readonly #bounce = new THREE.HemisphereLight(0xffffff, 0xffffff, 0);
   readonly #pickListeners = new Set<(pick: PickEvent) => void>();
@@ -150,11 +154,18 @@ export class Viewport {
       simulator,
       camera: this.#camera,
       raycasterAt: (x, y) => this.#raycasterAt(x, y),
-      luminaireAt: (x, y) => this.#luminaireAt(x, y),
+      itemAt: (x, y) => this.#itemAt(x, y),
+      furnitureHeightAt: (x, y) => this.#furnitureHit(x, y)?.point.y ?? 0,
       viewportHeightPx: () => this.#container.clientHeight,
     });
     const manipulator = this.#manipulator.group;
-    this.#scene.add(this.#room.group, this.#luminaires.group, manipulator, this.#bounce);
+    this.#scene.add(
+      this.#room.group,
+      this.#luminaires.group,
+      this.#furniture.group,
+      manipulator,
+      this.#bounce,
+    );
   }
 
   /** Starts the renderer (WebGPU, or WebGL 2 as fallback) and begins drawing. */
@@ -272,11 +283,18 @@ export class Viewport {
     );
   }
 
-  /** Centres the camera on the given luminaires, keeping the current viewing direction. */
+  /** Centres the camera on the given luminaires and furniture, keeping the current viewing direction. */
   frame(ids: readonly string[]): void {
-    const positions = this.#simulator.scene.luminaires
-      .filter((l) => ids.includes(l.id))
-      .map((l) => l.position);
+    const { luminaires, furniture } = this.#simulator.scene;
+    const positions = [
+      ...luminaires.filter((l) => ids.includes(l.id)).map((l) => l.position),
+      // A piece's middle, not its footprint on the floor (pictures already are).
+      ...furniture
+        .filter((f) => ids.includes(f.id))
+        .map(({ position, size }) =>
+          position.y === 0 ? { ...position, y: size.height / 2 } : position,
+        ),
+    ];
     if (positions.length === 0) return;
     const center = new THREE.Vector3();
     for (const { x, y, z } of positions) center.add(new THREE.Vector3(x, y, z));
@@ -305,10 +323,22 @@ export class Viewport {
     return { x, z };
   }
 
-  /** Outlines these luminaires (e.g. the host's selection). */
+  /**
+   * Where a piece of furniture dropped at a screen point goes, as the floor
+   * point to pass to `Simulator.addFurniture`: under the pointer on the floor,
+   * or below where it meets a wall. Null when it misses the room.
+   */
+  furnitureDropPoint(clientX: number, clientY: number): FloorPoint | null {
+    const ray = this.#raycasterAt(clientX, clientY).ray;
+    const hit = roomSurfaceHit(ray, this.#simulator.scene.room);
+    return hit && { x: hit.x, z: hit.z };
+  }
+
+  /** Outlines these luminaires and pieces of furniture (e.g. the host's selection). */
   setHighlighted(ids: readonly string[]): void {
     this.#highlighted = ids;
     this.#luminaires.sync(this.#simulator.scene, ids, this.#renderMode);
+    this.#furniture.sync(this.#simulator.scene, ids, this.#renderMode);
     this.#manipulator.setHighlighted(ids);
   }
 
@@ -358,7 +388,7 @@ export class Viewport {
     return () => this.#pickListeners.delete(listener);
   }
 
-  /** Calls `listener` when dragging a luminaire starts. Returns an unsubscribe function. */
+  /** Calls `listener` when dragging a luminaire or piece of furniture starts. Returns an unsubscribe function. */
   onMoveStart(listener: (start: MoveStartEvent) => void): () => void {
     return this.#manipulator.onMoveStart(listener);
   }
@@ -377,6 +407,7 @@ export class Viewport {
     this.#controls.dispose();
     this.#room.dispose();
     this.#luminaires.dispose();
+    this.#furniture.dispose();
     this.#models.dispose();
     this.#manipulator.dispose();
     this.#renderer.domElement.remove();
@@ -393,6 +424,7 @@ export class Viewport {
     this.#captures = [];
     const source = this.#renderer.domElement;
     this.#luminaires.setOutlinesVisible(false);
+    this.#furniture.setOutlinesVisible(false);
     this.#manipulator.group.visible = false;
     this.#renderer.render(this.#scene, this.#camera);
     for (const { options, resolve, reject } of captures) {
@@ -415,12 +447,14 @@ export class Viewport {
       );
     }
     this.#luminaires.setOutlinesVisible(true);
+    this.#furniture.setOutlinesVisible(true);
     this.#manipulator.group.visible = true;
   }
 
   #sync(scene: Scene, previous: Scene | undefined): void {
     if (scene.room !== previous?.room) this.#room.update(scene.room, this.#renderMode);
     this.#luminaires.sync(scene, this.#highlighted, this.#renderMode);
+    this.#furniture.sync(scene, this.#highlighted, this.#renderMode);
     this.#bounce.intensity =
       indirectIlluminance(this.#luminaires.totalFlux(), scene.room) + MIN_FILL_LUX;
     this.#renderer.toneMappingExposure = toneMappingExposure(this.#exposureEv);
@@ -513,8 +547,28 @@ export class Viewport {
   }
 
   #pick(event: PointerEvent, longPress: boolean): void {
-    const luminaireId = this.#luminaireAt(event.clientX, event.clientY);
-    this.#pickListeners.forEach((listener) => listener({ luminaireId, event, longPress }));
+    const target = this.#itemAt(event.clientX, event.clientY);
+    this.#pickListeners.forEach((listener) => listener({ target, event, longPress }));
+  }
+
+  /**
+   * The luminaire or piece under a screen point. Luminaires come first, even
+   * a little off them or behind a piece: they're small, often over furniture
+   * (a pendant over a table), and what the tool is about. Pieces can also be
+   * picked from the scene list.
+   */
+  #itemAt(clientX: number, clientY: number): PickTarget | null {
+    const luminaireId = this.#luminaireAt(clientX, clientY);
+    if (luminaireId) return { kind: 'luminaire', id: luminaireId };
+    const hit = this.#furnitureHit(clientX, clientY);
+    const furnitureId = hit && this.#furniture.furnitureIdOf(hit.object);
+    return furnitureId ? { kind: 'furniture', id: furnitureId } : null;
+  }
+
+  /** Where the ray through a screen point first meets furniture, if it does. */
+  #furnitureHit(clientX: number, clientY: number): THREE.Intersection | undefined {
+    const raycaster = this.#raycasterAt(clientX, clientY);
+    return raycaster.intersectObject(this.#furniture.group, true)[0];
   }
 
   /**

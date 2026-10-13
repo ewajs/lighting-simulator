@@ -2,7 +2,10 @@
 // handles. See ADRs 0039 and 0040.
 
 import * as THREE from 'three/webgpu';
-import { toneMappingExposure } from 'three/tsl';
+import { color, toneMappingExposure } from 'three/tsl';
+
+/** Colour of selection outlines. */
+const HIGHLIGHT_COLOR = 0xf5b544;
 
 /**
  * A colour that reads as itself on screen. The whole frame is exposed for
@@ -23,4 +26,11 @@ export function worldPerPixel(
   const forward = camera.getWorldDirection(new THREE.Vector3());
   const depth = Math.max(point.clone().sub(camera.position).dot(forward), camera.near);
   return (2 * depth * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) / viewportHeightPx;
+}
+
+/** A selection outline's line material: drawn through other objects, in a colour that reads as itself. */
+export function outlineMaterial(): THREE.LineBasicNodeMaterial {
+  const material = new THREE.LineBasicNodeMaterial({ depthTest: false });
+  material.colorNode = overlayColor(color(HIGHLIGHT_COLOR));
+  return material;
 }

@@ -5,13 +5,15 @@ import { customElement, property } from 'lit/decorators.js';
 import { ChevronDown, ChevronUp } from 'lucide';
 import { icon } from './icons';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
+import './lxs-furniture-inspector';
 import './lxs-luminaire-inspector';
 import './lxs-room-inspector';
+import { selectionKind, type SelectionKind } from './selection';
 import { sharedStyles } from './styles';
 
 /**
  * The right panel: the room when nothing is selected, otherwise the selected
- * luminaires. In `sheet` mode (narrow screens, where it floats over the
+ * luminaires or furniture. In `sheet` mode (narrow screens, where it floats over the
  * viewport) the header toggles it between just the header and the full panel.
  *
  * @fires lxs-sheet-toggle - the header was tapped in sheet mode
@@ -59,7 +61,13 @@ export class LxsInspector extends LitElement {
   @property({ type: Boolean, reflect: true }) collapsed = false;
 
   override render() {
-    const room = this.selection.length === 0;
+    const kind = this.scene ? selectionKind(this.selection, this.scene) : undefined;
+    const heading =
+      kind === 'luminaire'
+        ? msg('Luminaire')
+        : kind === 'furniture'
+          ? msg('Furniture')
+          : msg('Room');
     return html`
       ${
         this.sheet
@@ -72,29 +80,38 @@ export class LxsInspector extends LitElement {
                   new CustomEvent('lxs-sheet-toggle', { bubbles: true, composed: true }),
                 )}
             >
-              <h2>${room ? msg('Room') : msg('Luminaire')}</h2>
+              <h2>${heading}</h2>
               ${icon(this.collapsed ? ChevronUp : ChevronDown)}
             </button>`
           : html`<div class="panel-header" part="header">
-              <h2>${room ? msg('Room') : msg('Luminaire')}</h2>
+              <h2>${heading}</h2>
             </div>`
       }
-      <div class="body">
-        ${
-          room
-            ? html`<lxs-room-inspector
-                .simulator=${this.simulator}
-                .scene=${this.scene}
-              ></lxs-room-inspector>`
-            : html`<lxs-luminaire-inspector
-                .simulator=${this.simulator}
-                .scene=${this.scene}
-                .selection=${this.selection}
-                .display=${this.display}
-              ></lxs-luminaire-inspector>`
-        }
-      </div>
+      <div class="body">${this.#body(kind)}</div>
     `;
+  }
+
+  #body(kind: SelectionKind | undefined) {
+    switch (kind) {
+      case 'luminaire':
+        return html`<lxs-luminaire-inspector
+          .simulator=${this.simulator}
+          .scene=${this.scene}
+          .selection=${this.selection}
+          .display=${this.display}
+        ></lxs-luminaire-inspector>`;
+      case 'furniture':
+        return html`<lxs-furniture-inspector
+          .simulator=${this.simulator}
+          .scene=${this.scene}
+          .selection=${this.selection}
+        ></lxs-furniture-inspector>`;
+      default:
+        return html`<lxs-room-inspector
+          .simulator=${this.simulator}
+          .scene=${this.scene}
+        ></lxs-room-inspector>`;
+    }
   }
 }
 

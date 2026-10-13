@@ -4,18 +4,23 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { EMPTY_DISPLAY_CATALOG, luminaireNames, type DisplayCatalog } from './display-catalog';
 import { formatNumber } from './format';
+import { furnitureIcon } from './furniture-icons';
 import { mountIcon } from './icons';
+import { furnitureNames } from './labels';
 import { sharedStyles } from './styles';
 
-/** Detail of `lxs-select`: a luminaire chosen in a list; `toggle` for Shift/⌘-click or a long press. */
+/**
+ * Detail of `lxs-select`: a luminaire or piece of furniture chosen in a list;
+ * `toggle` for Shift/⌘-click or a long press.
+ */
 export interface SelectDetail {
-  readonly luminaireId: string;
+  readonly id: string;
   readonly toggle: boolean;
 }
 
 /**
- * Scene totals and the list of luminaires. Rows report clicks; the selection
- * itself is owned by the host (ADR 0019).
+ * Scene totals and the lists of luminaires and furniture. Rows report clicks;
+ * the selection itself is owned by the host (ADR 0019).
  *
  * @fires lxs-select - `detail: SelectDetail`
  * @fires lxs-open-catalog - from the empty state's button
@@ -112,14 +117,20 @@ export class LxsScenePanel extends LitElement {
   override render() {
     const scene = this.scene;
     const count = scene?.luminaires.length ?? 0;
+    const pieces = scene?.furniture.length ?? 0;
     return html`
       <div class="panel-header" part="header">
         <h2>${msg('Scene')}</h2>
         <span class="meta">${msg(str`${count} luminaires`)}</span>
       </div>
       ${scene && this.products ? this.#stats(scene, this.products) : ''}
-      <div class="list" role="listbox" aria-multiselectable="true" aria-label=${msg('Luminaires')}>
-        ${scene && count > 0 ? this.#rows(scene) : this.#empty()}
+      <div class="list">
+        ${
+          scene && count + pieces > 0
+            ? html`${count > 0 ? this.#luminaireRows(scene, pieces > 0) : ''}
+              ${pieces > 0 ? this.#furnitureRows(scene) : ''}`
+            : this.#empty()
+        }
       </div>
     `;
   }
@@ -139,37 +150,59 @@ export class LxsScenePanel extends LitElement {
     </div>`;
   }
 
-  #rows(scene: Scene) {
+  /** The luminaires, headed when the furniture list follows. */
+  #luminaireRows(scene: Scene, headed: boolean) {
     const names = luminaireNames(scene, this.display);
-    return scene.luminaires.map((luminaire) => {
-      const product = this.products?.get(luminaire.productId);
-      return html`<button
-        class="row ${luminaire.on ? '' : 'off'}"
-        type="button"
-        role="option"
-        aria-selected=${this.selection.includes(luminaire.id)}
-        @pointerdown=${(event: PointerEvent) => this.#startLongPress(event, luminaire.id)}
-        @pointerup=${this.#cancelLongPress}
-        @pointercancel=${this.#cancelLongPress}
-        @pointerleave=${this.#cancelLongPress}
-        @click=${(event: MouseEvent) => {
-          // The long press already toggled this row; ignore the click that follows it.
-          if (this.#longPressed) this.#longPressed = false;
-          else this.#select(luminaire.id, event.shiftKey || event.metaKey || event.ctrlKey);
-        }}
-      >
-        ${mountIcon(product?.mount)}
-        <span class="row-name">${names.get(luminaire.id)}</span>
-        <span class="row-meta">
-          ${luminaire.on ? `${formatNumber(luminaire.dimming * 100)}%` : msg('off')}
-        </span>
-      </button>`;
-    });
+    return html`${headed ? html`<div class="group-label" aria-hidden="true">${msg('Luminaires')}</div>` : ''}
+      <div role="listbox" aria-multiselectable="true" aria-label=${msg('Luminaires')}>
+        ${scene.luminaires.map((luminaire) => {
+          const product = this.products?.get(luminaire.productId);
+          return this.#row(
+            luminaire.id,
+            mountIcon(product?.mount),
+            names.get(luminaire.id),
+            luminaire.on ? `${formatNumber(luminaire.dimming * 100)}%` : msg('off'),
+            luminaire.on ? '' : 'off',
+          );
+        })}
+      </div>`;
+  }
+
+  #furnitureRows(scene: Scene) {
+    const names = furnitureNames(scene);
+    return html`<div class="group-label" aria-hidden="true">${msg('Furniture')}</div>
+      <div role="listbox" aria-multiselectable="true" aria-label=${msg('Furniture')}>
+        ${scene.furniture.map((piece) =>
+          this.#row(piece.id, furnitureIcon(piece.kind), names.get(piece.id), '', ''),
+        )}
+      </div>`;
+  }
+
+  #row(id: string, rowIcon: unknown, name: string | undefined, meta: string, state: string) {
+    return html`<button
+      class="row ${state}"
+      type="button"
+      role="option"
+      aria-selected=${this.selection.includes(id)}
+      @pointerdown=${(event: PointerEvent) => this.#startLongPress(event, id)}
+      @pointerup=${this.#cancelLongPress}
+      @pointercancel=${this.#cancelLongPress}
+      @pointerleave=${this.#cancelLongPress}
+      @click=${(event: MouseEvent) => {
+        // The long press already toggled this row; ignore the click that follows it.
+        if (this.#longPressed) this.#longPressed = false;
+        else this.#select(id, event.shiftKey || event.metaKey || event.ctrlKey);
+      }}
+    >
+      ${rowIcon}
+      <span class="row-name">${name}</span>
+      <span class="row-meta">${meta}</span>
+    </button>`;
   }
 
   #empty() {
     return html`<div class="empty">
-      <p>${msg('No luminaires yet. Add one from the catalog.')}</p>
+      <p>${msg('Nothing here yet. Add luminaires or furniture from the catalog.')}</p>
       <button
         class="btn"
         type="button"
@@ -187,13 +220,13 @@ export class LxsScenePanel extends LitElement {
   #longPressed = false;
 
   /** Touch and pen: holding a row for LONG_PRESS_MS toggles it, like Shift-click. */
-  #startLongPress(event: PointerEvent, luminaireId: string): void {
+  #startLongPress(event: PointerEvent, id: string): void {
     this.#cancelLongPress();
     this.#longPressed = false;
     if (event.pointerType === 'mouse') return;
     this.#longPressTimer = window.setTimeout(() => {
       this.#longPressed = true;
-      this.#select(luminaireId, true);
+      this.#select(id, true);
     }, LONG_PRESS_MS);
   }
 
@@ -202,10 +235,10 @@ export class LxsScenePanel extends LitElement {
     this.#longPressTimer = undefined;
   };
 
-  #select(luminaireId: string, toggle: boolean): void {
+  #select(id: string, toggle: boolean): void {
     this.dispatchEvent(
       new CustomEvent<SelectDetail>('lxs-select', {
-        detail: { luminaireId, toggle },
+        detail: { id, toggle },
         bubbles: true,
         composed: true,
       }),

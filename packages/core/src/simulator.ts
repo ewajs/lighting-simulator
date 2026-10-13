@@ -1,3 +1,11 @@
+import {
+  addFurniture,
+  assertFurniture,
+  duplicateFurniture,
+  removeFurniture,
+  updateFurniture,
+  type FurniturePatch,
+} from './furniture';
 import * as history from './history';
 import { consoleLogger, type Logger } from './logger';
 import { ModelCache, type ModelListener } from './model-cache';
@@ -15,6 +23,7 @@ import { assertRoom, DEFAULT_ROOM, resizeRoom, setSurface, type RoomSize } from 
 import type {
   Catalog,
   FloorPoint,
+  FurnitureKind,
   ModelProvider,
   Photometry,
   PhotometryProvider,
@@ -79,9 +88,10 @@ export class Simulator {
   #history = history.emptyHistory<Scene>();
 
   constructor({ catalog, scene, photometry, models, logger }: SimulatorOptions) {
-    const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [] };
+    const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [], furniture: [] };
     assertRoom(initial.room);
     initial.luminaires.forEach(assertLuminaire);
+    initial.furniture.forEach(assertFurniture);
     this.#catalog = catalog;
     this.#logger = logger ?? consoleLogger();
     this.#photometry = new PhotometryCache(photometry, this.#logger);
@@ -89,7 +99,7 @@ export class Simulator {
     this.#scene = initial;
     const { width, depth, height } = initial.room;
     this.#logger.debug(
-      `[scene] Started: ${width} × ${depth} × ${height} m room, ${initial.luminaires.length} luminaires`,
+      `[scene] Started: ${width} × ${depth} × ${height} m room, ${initial.luminaires.length} luminaires, ${initial.furniture.length} pieces of furniture`,
     );
   }
 
@@ -138,7 +148,10 @@ export class Simulator {
     return this.#scene;
   }
 
-  /** Resizes the room. Luminaires outside the new walls are moved back inside, mount by mount. */
+  /**
+   * Resizes the room. Luminaires outside the new walls are moved back inside,
+   * mount by mount, and so is furniture.
+   */
   setRoomSize(size: Partial<RoomSize>, options?: EditOptions): void {
     this.#commit(resizeRoom(this.#scene, size, this.#catalog), options, 'Resize room', size);
   }
@@ -188,6 +201,48 @@ export class Simulator {
         newIds,
       },
     );
+    return newIds;
+  }
+
+  /**
+   * Adds a piece of furniture at its usual size and finishes, standing at `at`
+   * (default: the room centre; wall pieces go to the nearest wall), and
+   * returns its id. Throws for an unknown kind.
+   */
+  addFurniture(kind: FurnitureKind, at?: FloorPoint): string {
+    const id = crypto.randomUUID();
+    this.#commit(addFurniture(this.#scene, kind, id, at), undefined, 'Add furniture', {
+      kind,
+      id,
+      at,
+    });
+    return id;
+  }
+
+  /**
+   * Changes a piece's position, rotation, size or finishes. The result is kept
+   * inside the room and within the piece's size range (ADR 0047). Throws for
+   * an unknown id or an invalid value.
+   */
+  updateFurniture(id: string, patch: FurniturePatch, options?: EditOptions): void {
+    this.#commit(updateFurniture(this.#scene, id, patch), options, 'Update furniture', {
+      id,
+      ...patch,
+    });
+  }
+
+  /** Removes these pieces, as one undo step. Throws for an unknown id. */
+  removeFurniture(ids: readonly string[]): void {
+    this.#commit(removeFurniture(this.#scene, ids), undefined, 'Remove furniture', ids);
+  }
+
+  /** Copies pieces, each beside its source, and returns the new ids in the same order. */
+  duplicateFurniture(ids: readonly string[]): string[] {
+    const newIds = ids.map(() => crypto.randomUUID());
+    this.#commit(duplicateFurniture(this.#scene, ids, newIds), undefined, 'Duplicate furniture', {
+      ids,
+      newIds,
+    });
     return newIds;
   }
 

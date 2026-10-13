@@ -4,7 +4,7 @@ With nothing selected, **Properties** shows the room.
 
 ![The room's properties: size and surfaces](/screenshots/en/room-inspector.png)
 
-- **Dimensions:** width, depth and height in metres. Luminaires that end up
+- **Dimensions:** width, depth and height in metres. Luminaires and furniture that end up
   outside move back in by themselves.
 - **Floor, walls and ceiling:** each surface has a **colour** and a
   **reflectance ρ**, the share of light it sends back. A white wall returns

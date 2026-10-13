@@ -1,0 +1,44 @@
+# Furniture
+
+Furniture gives the room scale and shows how light falls on things: a table
+under a pendant, a picture under a spot. It gives no light.
+
+## Adding furniture
+
+At the top of the **Catalog**, switch from **Luminaires** to **Furniture**.
+The pieces are grouped by room: living room, dining, office, bedroom,
+kitchen, and display and decor.
+
+![The furniture catalog](/screenshots/en/furniture-catalog.png)
+
+As with luminaires:
+- **click** a piece, and it appears in the middle of the room;
+- or **drag** it into the 3D view, and it lands where you drop it.
+
+Pieces stand on the floor. The **artwork** goes on the nearest wall, at eye
+height, facing the room.
+
+## Picking and moving
+
+Click a piece to pick it, and **drag** it to move it over the floor; the
+artwork slides along the walls. The magnet lines it up with the 10 cm grid
+and with other pieces. Each drag undoes in one go.
+
+When a luminaire is right over a piece (a pendant over a table), a click
+picks the luminaire. To pick the piece, click another part of it, or pick it
+in the **Scene** list, where furniture has its own section.
+
+A selection holds luminaires or furniture, never both: **Shift**-clicking a
+piece while luminaires are picked starts a new selection.
+
+## Properties
+
+![A table's properties: size, position and finish](/screenshots/en/furniture-inspector.png)
+
+- **Size:** width, depth and height, from half to twice the usual size.
+  Parts keep their thickness: a longer table doesn't get thicker legs.
+- **Position** and **rotation** (in 15° steps with the arrow keys).
+- **Finish:** each piece has one or two parts you can change, such as a
+  sofa's upholstery and legs, in colours that go together.
+
+**⌘D** duplicates the piece beside it, and **Delete** removes it.

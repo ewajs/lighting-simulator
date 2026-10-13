@@ -22,4 +22,4 @@ export const catalog: Catalog = {
 /** DEFAULT_ROOM is 5 × 4 × 2.7 m: x ∈ [−2.5, 2.5], z ∈ [−2, 2]. */
 export const room: Room = DEFAULT_ROOM;
 
-export const emptyScene: Scene = { room, luminaires: [] };
+export const emptyScene: Scene = { room, luminaires: [], furniture: [] };

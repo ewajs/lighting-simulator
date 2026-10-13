@@ -1,10 +1,12 @@
 // Direct manipulation in the viewport: the move and aim handles on the
 // highlighted luminaires, what a press lands on, and the drags that follow.
-// Kept apart from Viewport so that one stays about drawing (ADRs 0038–0042).
+// Kept apart from Viewport so that one stays about drawing (ADRs 0038–0042,
+// 0047).
 
 import * as THREE from 'three/webgpu';
 import { AimPointDrag, beamHit, isAimable, PanDrag } from '../aim';
 import { LuminaireDrag } from '../drag';
+import { FurnitureDrag } from '../furniture-drag';
 import {
   groupDimensions,
   luminaireDimensions,
@@ -20,7 +22,7 @@ import { AimHandle } from './AimHandle';
 import { DimensionLines } from './DimensionLines';
 import { MoveHandle } from './MoveHandle';
 import { worldPerPixel } from './overlay';
-import type { PressTarget } from './PointerGestures';
+import type { PickTarget, PressTarget } from './PointerGestures';
 import { SnapGuides } from './SnapGuides';
 
 /** How close on screen counts as lined up with another luminaire, in CSS px. */
@@ -37,9 +39,10 @@ interface Drag {
  */
 export type HandleMode = 'move' | 'aim' | 'none';
 
-/** A press on a luminaire started moving it. */
+/** A press on a luminaire or piece of furniture started moving it. */
 export interface MoveStartEvent {
-  readonly luminaireId: string;
+  /** What is being moved. */
+  readonly target: PickTarget;
   /** The pointer move that started it. */
   readonly event: PointerEvent;
 }
@@ -50,8 +53,10 @@ export interface ManipulatorOptions {
   readonly camera: THREE.PerspectiveCamera;
   /** A ray through a screen point, with world matrices up to date. */
   raycasterAt(clientX: number, clientY: number): THREE.Raycaster;
-  /** The fixture under a screen point, if any. */
-  luminaireAt(clientX: number, clientY: number): string | null;
+  /** The fixture or piece of furniture under a screen point, if any. */
+  itemAt(clientX: number, clientY: number): PickTarget | null;
+  /** How high above the floor the furniture under a screen point is, where the pointer meets it; 0 if none. */
+  furnitureHeightAt(clientX: number, clientY: number): number;
   /** The viewport's height in CSS px, for handles that keep their size on screen. */
   viewportHeightPx(): number;
 }
@@ -98,13 +103,13 @@ export class Manipulator {
     this.refresh();
   }
 
-  /** The luminaires the handles act on, and that move together when one is dragged. */
+  /** What the handles act on, and what moves together when one of them is dragged. */
   setHighlighted(ids: readonly string[]): void {
     this.#highlighted = ids;
     this.refresh();
   }
 
-  /** Calls `listener` when dragging a luminaire starts. Returns an unsubscribe function. */
+  /** Calls `listener` when dragging a luminaire or piece starts. Returns an unsubscribe function. */
   onMoveStart(listener: (start: MoveStartEvent) => void): () => void {
     this.#moveStartListeners.add(listener);
     return () => this.#moveStartListeners.delete(listener);
@@ -139,15 +144,14 @@ export class Manipulator {
     this.#aimHandle.update(this.#options.camera, heightPx);
   }
 
-  /** The handle part or fixture under a screen point. Handles are drawn on top, so they win. */
+  /** The handle part, fixture or piece under a screen point. Handles are drawn on top, so they win. */
   targetAt(clientX: number, clientY: number): PressTarget | null {
     const raycaster = this.#options.raycasterAt(clientX, clientY);
     const axis = this.#moveHandle.axisAt(raycaster);
     if (axis) return { kind: 'move-axis', axis };
     const part = this.#aimHandle.partAt(raycaster);
     if (part) return { kind: 'aim', part };
-    const luminaireId = this.#options.luminaireAt(clientX, clientY);
-    return luminaireId ? { kind: 'luminaire', luminaireId } : null;
+    return this.#options.itemAt(clientX, clientY);
   }
 
   /**
@@ -165,8 +169,8 @@ export class Manipulator {
   }
 
   /**
-   * Starts a drag. A fixture moves with the other highlighted ones if it is
-   * highlighted, otherwise alone (ADR 0038). A move arrow slides all
+   * Starts a drag. A fixture or piece moves with the other highlighted ones
+   * if it is highlighted, otherwise alone (ADRs 0038, 0047). A move arrow slides all
    * highlighted ones along its axis (ADR 0039). The aim point and ring turn
    * the one highlighted luminaire (ADR 0040). Returns how to follow the pointer.
    */
@@ -186,13 +190,24 @@ export class Manipulator {
         target.part === 'point'
           ? new AimPointDrag(simulator, highlighted)
           : new PanDrag(simulator, highlighted, grabbed);
-    } else if (target.kind === 'luminaire') {
-      const { luminaireId } = target;
+    } else if (target.kind === 'luminaire' || target.kind === 'furniture') {
+      const { id } = target;
+      const items =
+        target.kind === 'luminaire' ? simulator.scene.luminaires : simulator.scene.furniture;
       // Undo or delete may have removed it since the press.
-      if (!simulator.scene.luminaires.some((l) => l.id === luminaireId)) return undefined;
-      const group = this.#highlighted.includes(luminaireId) ? this.#highlighted : [luminaireId];
-      drag = new LuminaireDrag(simulator, luminaireId, group, grabbed);
-      this.#moveStartListeners.forEach((listener) => listener({ luminaireId, event: move }));
+      if (!items.some((item) => item.id === id)) return undefined;
+      const group = this.#highlighted.includes(id) ? this.#highlighted : [id];
+      drag =
+        target.kind === 'luminaire'
+          ? new LuminaireDrag(simulator, id, group, grabbed)
+          : new FurnitureDrag(
+              simulator,
+              id,
+              group,
+              grabbed,
+              this.#options.furnitureHeightAt(press.clientX, press.clientY),
+            );
+      this.#moveStartListeners.forEach((listener) => listener({ target, event: move }));
     } else {
       return undefined;
     }
@@ -202,33 +217,36 @@ export class Manipulator {
       highlighted: this.#highlighted.length,
       snapping: this.snapping,
     });
-    // Where the drag is measured: the grabbed luminaire, or the handle's centre.
-    const anchorId = target.kind === 'luminaire' ? target.luminaireId : undefined;
+    // Where the drag is measured: what was grabbed, or the handle's centre.
+    const grabbedItem =
+      target.kind === 'luminaire' || target.kind === 'furniture' ? target : undefined;
     return (event) => {
-      const anchor = this.#anchor(anchorId);
+      const anchor = this.#anchor(grabbedItem);
       const snap =
         this.snapping && !event.altKey && anchor ? { toleranceM: this.#toleranceAt(anchor) } : null;
       const guides = drag.moveTo(this.#rayAt(event), snap) ?? [];
-      this.#guides.show(guides, this.#anchor(anchorId)?.y ?? 0, simulator.scene.room);
+      this.#guides.show(guides, this.#anchor(grabbedItem)?.y ?? 0, simulator.scene.room);
       this.#showDimensions(this.#measure(target));
     };
   }
 
-  /** What a drag measures: the grabbed luminaire, or the group moved by an arrow. Aiming measures nothing. */
+  /**
+   * What a drag measures: the grabbed luminaire, or the group moved by an
+   * arrow. Aiming and furniture measure nothing yet (M3.3).
+   */
   #measure(target: PressTarget): Dimension[] {
+    if (target.kind === 'furniture' || target.kind === 'aim') return [];
     const { scene, catalog } = this.#options.simulator;
-    const ids = target.kind === 'luminaire' ? [target.luminaireId] : this.#highlighted;
+    const ids = target.kind === 'luminaire' ? [target.id] : this.#highlighted;
     const measured: MeasuredLuminaire[] = [];
     for (const { id, productId, position } of scene.luminaires) {
       const mount = ids.includes(id) ? catalog.get(productId)?.mount : undefined;
       if (mount) measured.push({ position, mount });
     }
-    if (target.kind === 'luminaire' && measured[0]) {
-      return luminaireDimensions(measured[0], scene.room, false);
+    if (target.kind === 'luminaire') {
+      return measured[0] ? luminaireDimensions(measured[0], scene.room, false) : [];
     }
-    if (target.kind === 'move-axis')
-      return groupDimensions(measured, scene.room, target.axis === 'y');
-    return [];
+    return groupDimensions(measured, scene.room, target.axis === 'y');
   }
 
   #showDimensions(dimensions: readonly Dimension[]): void {
@@ -236,10 +254,13 @@ export class Manipulator {
     this.#dimensionLines.show(dimensions);
   }
 
-  /** The grabbed luminaire's position, or the centre of the highlighted ones. */
-  #anchor(luminaireId: string | undefined): Vec3 | undefined {
-    const { luminaires } = this.#options.simulator.scene;
-    if (luminaireId) return luminaires.find((l) => l.id === luminaireId)?.position;
+  /** The grabbed luminaire's or piece's position, or the centre of the highlighted luminaires. */
+  #anchor(grabbed: PickTarget | undefined): Vec3 | undefined {
+    const { luminaires, furniture } = this.#options.simulator.scene;
+    if (grabbed) {
+      const items = grabbed.kind === 'luminaire' ? luminaires : furniture;
+      return items.find((item) => item.id === grabbed.id)?.position;
+    }
     const selected = luminaires.filter((l) => this.#highlighted.includes(l.id));
     return selected.length > 0 ? groupCenter(selected) : undefined;
   }
@@ -267,7 +288,9 @@ export class Manipulator {
 function describeTarget(target: PressTarget): string {
   switch (target.kind) {
     case 'luminaire':
-      return `Moving luminaire ${target.luminaireId}`;
+      return `Moving luminaire ${target.id}`;
+    case 'furniture':
+      return `Moving furniture ${target.id}`;
     case 'move-axis':
       return `Sliding along ${target.axis}`;
     case 'aim':

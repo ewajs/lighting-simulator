@@ -4,7 +4,7 @@ Sin nada seleccionado, **Propiedades** muestra el ambiente.
 
 ![Las propiedades del ambiente: medidas y superficies](/screenshots/es/room-inspector.png)
 
-- **Dimensiones:** ancho, profundidad y altura en metros. Las luminarias que
+- **Dimensiones:** ancho, profundidad y altura en metros. Las luminarias y los muebles que
   queden afuera vuelven adentro solas.
 - **Piso, paredes y cielorraso:** cada superficie tiene un **color** y una
   **reflectancia ρ**, la parte de la luz que devuelve. Una pared blanca
