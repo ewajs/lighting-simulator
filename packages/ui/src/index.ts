@@ -8,7 +8,12 @@ export { LxsIesImport } from './lxs-ies-import';
 export type { ImportIesDetail } from './lxs-ies-import';
 export { LxsScenePanel } from './lxs-scene-panel';
 export type { SelectDetail } from './lxs-scene-panel';
-export type { CatalogCategory, CatalogItem, DisplayCatalog } from './display-catalog';
+export type {
+  CatalogCategory,
+  CatalogItem,
+  DisplayCatalog,
+  SurfaceMaterial,
+} from './display-catalog';
 export { DEFAULT_LOCALE, getLocale, LOCALES, setLocale } from './localization';
 export type { Locale } from './localization';
 export { LxsInspector } from './lxs-inspector';

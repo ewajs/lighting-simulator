@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { isGlb, ModelCache } from './model-cache';
+import { AssetCache } from './asset-cache';
+import { isGlb, MODEL_ASSET } from './model-asset';
 import type { ModelProvider } from './types';
 
 /** The smallest bytes that pass as a .glb: the magic, then anything. */
@@ -12,7 +13,7 @@ function setup(load: ModelProvider['load']) {
   const provider = { load: vi.fn(load) };
   const warn = vi.fn();
   const logger = { debug: vi.fn(), info: vi.fn(), warn, error: vi.fn() };
-  const cache = new ModelCache(provider, logger);
+  const cache = new AssetCache(provider, MODEL_ASSET, logger);
   const loaded = vi.fn();
   cache.subscribe(loaded);
   return { provider, warn, cache, loaded };
@@ -26,7 +27,8 @@ describe('isGlb', () => {
   });
 });
 
-describe('ModelCache', () => {
+// The cache's behaviour, shown with models; photometry and textures use the same class.
+describe('AssetCache', () => {
   it('loads on first request, then answers from the cache', async () => {
     const bytes = glb();
     const { provider, cache, loaded } = setup(() => Promise.resolve(bytes));
@@ -63,7 +65,7 @@ describe('ModelCache', () => {
 
   it('does nothing without a provider', () => {
     expect(
-      new ModelCache(undefined, {
+      new AssetCache(undefined, MODEL_ASSET, {
         debug: vi.fn(),
         info: vi.fn(),
         warn: vi.fn(),

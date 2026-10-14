@@ -7,8 +7,10 @@ import {
 } from './furniture';
 import * as history from './history';
 import { consoleLogger, type Logger } from './logger';
-import { ModelCache, type ModelListener } from './model-cache';
-import { PhotometryCache, type PhotometryListener } from './photometry/cache';
+import { AssetCache } from './asset-cache';
+import { MODEL_ASSET, type ModelListener } from './model-asset';
+import { PHOTOMETRY_ASSET, type PhotometryListener } from './photometry/asset';
+import { TEXTURE_ASSET, type TextureListener } from './texture-asset';
 import {
   addLuminaire,
   assertLuminaire,
@@ -29,6 +31,8 @@ import type {
   Scene,
   Surface,
   SurfaceName,
+  TextureImage,
+  TextureProvider,
 } from './types';
 
 /** Options for edits that can be merged into one undo step. */
@@ -60,6 +64,11 @@ export interface SimulatorOptions {
    */
   readonly models?: ModelProvider;
   /**
+   * Images for surfaces that name a texture (ADR 0050). Without it, or for
+   * ids it has no image for, those surfaces show their colour.
+   */
+  readonly textures?: TextureProvider;
+  /**
    * Where the library reports what it does (ADR 0044). Defaults to the
    * console, warnings and errors only; `consoleLogger('debug')` shows every
    * step. The viewport logs through the same one.
@@ -78,22 +87,24 @@ export interface SimulatorOptions {
  */
 export class Simulator {
   readonly #catalog: Catalog;
-  readonly #photometry: PhotometryCache;
-  readonly #models: ModelCache;
+  readonly #photometry: AssetCache<string, Photometry>;
+  readonly #models: AssetCache<ArrayBuffer, ArrayBuffer>;
+  readonly #textures: AssetCache<TextureImage, TextureImage>;
   readonly #logger: Logger;
   readonly #listeners = new Set<SceneListener>();
   #scene: Scene;
   #history = history.emptyHistory<Scene>();
 
-  constructor({ catalog, scene, photometry, models, logger }: SimulatorOptions) {
+  constructor({ catalog, scene, photometry, models, textures, logger }: SimulatorOptions) {
     const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [], furniture: [] };
     assertRoom(initial.room);
     initial.luminaires.forEach(assertLuminaire);
     initial.furniture.forEach(assertFurniture);
     this.#catalog = catalog;
     this.#logger = logger ?? consoleLogger();
-    this.#photometry = new PhotometryCache(photometry, this.#logger);
-    this.#models = new ModelCache(models, this.#logger);
+    this.#photometry = new AssetCache(photometry, PHOTOMETRY_ASSET, this.#logger);
+    this.#models = new AssetCache(models, MODEL_ASSET, this.#logger);
+    this.#textures = new AssetCache(textures, TEXTURE_ASSET, this.#logger);
     this.#scene = initial;
     const { width, depth, height } = initial.room;
     this.#logger.debug(
@@ -141,6 +152,21 @@ export class Simulator {
     return this.#models.subscribe(listener);
   }
 
+  /**
+   * A surface texture's image, or undefined while it loads or if there's
+   * none. The first call starts loading it; `onTexture` reports when it
+   * arrives. An image that fails to load or isn't a JPEG or PNG is reported
+   * as a warning to the logger and treated as missing.
+   */
+  texture(textureId: string): TextureImage | undefined {
+    return this.#textures.get(textureId);
+  }
+
+  /** Calls `listener` when a texture loads. Returns an unsubscribe function. */
+  onTexture(listener: TextureListener): () => void {
+    return this.#textures.subscribe(listener);
+  }
+
   /** Current scene snapshot. Never mutate it; it is replaced on every change. */
   get scene(): Scene {
     return this.#scene;
@@ -154,7 +180,10 @@ export class Simulator {
     this.#commit(resizeRoom(this.#scene, size, this.#catalog), options, 'Resize room', size);
   }
 
-  /** Changes a room surface's colour and/or reflectance. */
+  /**
+   * Changes a room surface's colour, reflectance or texture. `texture:
+   * undefined` takes the texture off.
+   */
   setSurface(name: SurfaceName, patch: Partial<Surface>, options?: EditOptions): void {
     this.#commit(setSurface(this.#scene, name, patch), options, `Finish ${name}`, patch);
   }

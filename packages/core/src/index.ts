@@ -1,7 +1,8 @@
 export { Simulator } from './simulator';
 export type { EditOptions, SceneListener, SimulatorOptions } from './simulator';
-export type { PhotometryListener } from './photometry/cache';
-export type { ModelListener } from './model-cache';
+export type { PhotometryListener } from './photometry/asset';
+export type { ModelListener } from './model-asset';
+export type { TextureListener } from './texture-asset';
 export { Viewport } from './render/Viewport';
 export { LONG_PRESS_MS } from './render/PointerGestures';
 export type {
@@ -50,5 +51,7 @@ export type {
   SceneItem,
   Surface,
   SurfaceName,
+  TextureImage,
+  TextureProvider,
   Vec3,
 } from './types';

@@ -58,4 +58,7 @@ function assertSurface(name: SurfaceName, surface: Surface): void {
   assertHexColor(`${name}.color`, surface.color);
   // ρ = 1 would make the inter-reflection estimate diverge (SPEC §6).
   assertInRange(`${name}.reflectance`, surface.reflectance, 0, 0.99);
+  if (surface.texture !== undefined && (typeof surface.texture !== 'string' || !surface.texture)) {
+    throw new RangeError(`${name}.texture must be a texture id, got ${String(surface.texture)}`);
+  }
 }

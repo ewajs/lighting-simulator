@@ -12,6 +12,7 @@ import { sampleCatalog } from './sample-catalog';
 import { sampleDisplay } from './sample-display';
 import { sampleModels } from './sample-models';
 import { samplePhotometry } from './sample-photometry';
+import { sampleTextures } from './sample-textures';
 
 // Visitors can try their own IES files; they join the sample catalog for this visit.
 const imported = new ImportedProducts();
@@ -32,6 +33,7 @@ const simulator = new Simulator({
   scene: starterScene(catalog),
   photometry,
   models: sampleModels,
+  textures: sampleTextures,
   logger: consoleLogger(debug ? 'debug' : 'warn'),
 });
 
@@ -64,13 +66,14 @@ app.append(brand);
 document.body.append(app);
 
 /**
- * A small dining room lit by the real IES products: a linear direct/indirect
+ * A small dining room with an oak floor, lit by the real IES products: a linear direct/indirect
  * pendant over the dining table, two wall washers on the back wall, a track
  * spot on the picture on the left wall, and an up/down light on the right wall.
  */
 function starterScene(catalog: Catalog): Scene {
   // Built with a scratch simulator, so placement and aim follow the usual rules.
   const sim = new Simulator({ catalog });
+  sim.setSurface('floor', { texture: 'oak-planks', reflectance: 0.3 });
   sim.addLuminaire('ies-linear-pendant');
   // Pan 180° turns their forward throw (C0, local +z) towards the back wall at z = −2.
   for (const x of [-1.2, 1.2]) {

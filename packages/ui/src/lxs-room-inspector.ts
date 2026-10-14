@@ -3,6 +3,11 @@ import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Box } from 'lucide';
+import {
+  EMPTY_DISPLAY_CATALOG,
+  type DisplayCatalog,
+  type SurfaceMaterial,
+} from './display-catalog';
 import { newMergeKey, type FieldChange } from './field-change';
 import { formatNumber } from './format';
 import { icon } from './icons';
@@ -16,7 +21,10 @@ const ROOM_SIZE_RANGE = { min: 1, max: 30 };
 /** Highest reflectance offered; core rejects ρ ≥ 1 (SPEC §6). */
 const MAX_REFLECTANCE = 0.95;
 
-/** Edits the room: dimensions and surface finishes. */
+/**
+ * Edits the room: dimensions and surface finishes, a colour or one of the
+ * host's materials (ADR 0050).
+ */
 @customElement('lxs-room-inspector')
 @localized()
 export class LxsRoomInspector extends LitElement {
@@ -41,6 +49,12 @@ export class LxsRoomInspector extends LitElement {
         border: 1px solid var(--lxs-line-strong);
         border-radius: var(--lxs-r-md);
         cursor: pointer;
+      }
+      .swatch img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
       .swatch input {
         width: 150%;
@@ -72,11 +86,25 @@ export class LxsRoomInspector extends LitElement {
         color: var(--lxs-text);
         border-color: var(--lxs-line-strong);
       }
+      .chip[aria-pressed='true'] {
+        border-color: var(--lxs-accent);
+        color: var(--lxs-text);
+      }
       .dot {
         width: 8px;
         height: 8px;
         border: 1px solid var(--lxs-line-strong);
         border-radius: 50%;
+      }
+      .chip img {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .chips-label {
+        color: var(--lxs-text-faint);
+        font-size: var(--lxs-fs-xs);
       }
     `,
   ];
@@ -85,6 +113,8 @@ export class LxsRoomInspector extends LitElement {
   @property({ attribute: false }) simulator: Simulator | undefined;
   /** What to show; the host passes each new scene so the view updates. */
   @property({ attribute: false }) scene: Scene | undefined;
+  /** The host's display data; its `materials` are offered for the surfaces they suit. */
+  @property({ attribute: false }) display: DisplayCatalog = EMPTY_DISPLAY_CATALOG;
 
   /** One merge key per colour-picker session, kept across re-renders. */
   readonly #colorKeys = new Map<SurfaceName, string>();
@@ -129,23 +159,18 @@ export class LxsRoomInspector extends LitElement {
 
   #surface(name: SurfaceName, label: string) {
     const surface = this.scene!.room.surfaces[name];
+    const materials = (this.display.materials ?? []).filter((m) => m.surfaces.includes(name));
+    const current = materials.find((m) => m.textureId === surface.texture);
     return html`<section>
       <h3>${label}</h3>
       <div class="finish">
-        <span class="swatch">
-          <input
-            type="color"
-            .value=${surface.color}
-            aria-label=${msg(str`${label} colour`)}
-            @input=${(event: Event) => {
-              const mergeKey = this.#colorKeys.get(name) ?? newMergeKey();
-              this.#colorKeys.set(name, mergeKey);
-              const color = (event.target as HTMLInputElement).value;
-              this.simulator?.setSurface(name, { color }, { mergeKey });
-            }}
-            @change=${() => this.#colorKeys.delete(name)}
-          />
-        </span>
+        ${
+          surface.texture
+            ? html`<span class="swatch" title=${current?.name ?? ''}>
+                ${current?.thumbnailUrl ? html`<img src=${current.thumbnailUrl} alt="" />` : ''}
+              </span>`
+            : this.#colorPicker(name, label, surface.color)
+        }
         <lxs-slider-field
           label=${msg('Reflectance ρ')}
           .value=${surface.reflectance}
@@ -159,6 +184,7 @@ export class LxsRoomInspector extends LitElement {
             )}
         ></lxs-slider-field>
       </div>
+      ${materials.length > 0 ? html`<span class="chips-label">${msg('Colour')}</span>` : ''}
       <div class="chips">
         ${surfacePresets().map(
           (preset) =>
@@ -170,13 +196,60 @@ export class LxsRoomInspector extends LitElement {
                 this.simulator?.setSurface(name, {
                   color: preset.color,
                   reflectance: preset.reflectance,
+                  texture: undefined,
                 })}
             >
               <span class="dot" style="background: ${preset.color}"></span>${preset.name}
             </button>`,
         )}
       </div>
+      ${materials.length > 0 ? this.#materials(name, materials, surface.texture) : ''}
     </section>`;
+  }
+
+  /** The materials offered for a surface; picking one sets its texture and typical reflectance. */
+  #materials(name: SurfaceName, materials: readonly SurfaceMaterial[], texture?: string) {
+    return html`<span class="chips-label">${msg('Material')}</span>
+      <div class="chips">
+        ${materials.map(
+          (material) =>
+            html`<button
+              class="chip"
+              type="button"
+              aria-pressed=${material.textureId === texture}
+              title="ρ ${formatNumber(material.reflectance * 100)}%"
+              @click=${() =>
+                this.simulator?.setSurface(name, {
+                  texture: material.textureId,
+                  reflectance: material.reflectance,
+                })}
+            >
+              ${
+                material.thumbnailUrl
+                  ? html`<img src=${material.thumbnailUrl} alt="" />`
+                  : html`<span class="dot"></span>`
+              }${material.name}
+            </button>`,
+        )}
+      </div>`;
+  }
+
+  /** The surface's colour, editable while it has no texture. */
+  #colorPicker(name: SurfaceName, label: string, color: string) {
+    return html`<span class="swatch">
+      <input
+        type="color"
+        .value=${color}
+        aria-label=${msg(str`${label} colour`)}
+        @input=${(event: Event) => {
+          const mergeKey = this.#colorKeys.get(name) ?? newMergeKey();
+          this.#colorKeys.set(name, mergeKey);
+          const color = (event.target as HTMLInputElement).value;
+          this.simulator?.setSurface(name, { color }, { mergeKey });
+        }}
+        @change=${() => this.#colorKeys.delete(name)}
+      />
+    </span>`;
   }
 }
 

@@ -1,5 +1,6 @@
 import type { DisplayCatalog } from '@luxstudio/ui';
 import type { ImportedItem } from './imported-products';
+import { sampleMaterials } from './sample-textures';
 
 type Labels = Record<'es-AR' | 'en', string>;
 
@@ -79,8 +80,9 @@ const IMPORTED_CATEGORY = {
 };
 
 /**
- * Display data for the sample products, in the given language, plus any IES
- * files the visitor imported (listed first, under their own category).
+ * Display data for the sample products and materials, in the given language,
+ * plus any IES files the visitor imported (listed first, under their own
+ * category).
  */
 export function sampleDisplay(
   locale: keyof Labels,
@@ -100,5 +102,6 @@ export function sampleDisplay(
         name: name[locale],
       })),
     ],
+    materials: sampleMaterials(locale),
   };
 }
