@@ -9,10 +9,10 @@ import { ItemDrag } from '../drag';
 import { FURNITURE_TYPES } from '../furniture-kinds';
 import { itemRules } from '../item-rules';
 import {
+  furnitureDimensions,
   groupDimensions,
   luminaireDimensions,
   type Dimension,
-  type MeasuredLuminaire,
 } from '../measure';
 import { AxisDrag, groupAxes, groupCenter } from '../move-handle';
 import type { Ray } from '../placement';
@@ -246,22 +246,26 @@ export class Manipulator {
   }
 
   /**
-   * What a drag measures: the grabbed luminaire, or the group moved by an
-   * arrow. Aiming, turning and furniture measure nothing yet (M3.3b).
+   * What a drag measures: the grabbed luminaire or piece, the piece being
+   * turned, or the group moved by an arrow; for a group, only the shortest
+   * distance each way (ADRs 0042, 0049). Aiming measures nothing.
    */
   #measure(target: PressTarget): Dimension[] {
-    if (target.kind !== 'luminaire' && target.kind !== 'move-axis') return [];
+    if (target.kind === 'aim') return [];
     const { scene, catalog } = this.#options.simulator;
-    const ids = target.kind === 'luminaire' ? [target.id] : this.#highlighted;
-    const measured: MeasuredLuminaire[] = [];
-    for (const { id, productId, position } of scene.luminaires) {
-      const mount = ids.includes(id) ? catalog.get(productId)?.mount : undefined;
-      if (mount) measured.push({ position, mount });
-    }
-    if (target.kind === 'luminaire') {
-      return measured[0] ? luminaireDimensions(measured[0], scene.room, false) : [];
-    }
-    return groupDimensions(measured, scene.room, target.axis === 'y');
+    const ids =
+      target.kind === 'luminaire' || target.kind === 'furniture' ? [target.id] : this.#highlighted;
+    // A pendant's height is measured only while an arrow slides it up or down.
+    const withHeight = target.kind === 'move-axis' && target.axis === 'y';
+    const dimensions = ids.flatMap((id) => {
+      const found = findItem(scene, id);
+      if (found?.kind === 'furniture') return furnitureDimensions(found.item, scene.room);
+      const mount = found && catalog.get(found.item.productId)?.mount;
+      return mount
+        ? luminaireDimensions({ position: found.item.position, mount }, scene.room, withHeight)
+        : [];
+    });
+    return groupDimensions(dimensions);
   }
 
   #showDimensions(dimensions: readonly Dimension[]): void {

@@ -12,7 +12,8 @@ kitchen, and display and decor.
 ![The furniture catalog](/screenshots/en/furniture-catalog.png)
 
 As with luminaires:
-- **click** a piece, and it appears in the middle of the room;
+- **click** a piece, and it appears in the middle of the room or, if
+  another is already there, at the nearest free spot;
 - or **drag** it into the 3D view, and it lands where you drop it.
 
 Pieces stand on the floor. The **artwork** goes on the nearest wall, at eye
@@ -31,6 +32,10 @@ With the **Move** tool (W), the picked piece shows:
 - a **ring on the floor** around the piece: drag it to turn the piece. With
   the magnet it turns in 15° steps; with **Alt**, freely. The artwork has no
   ring, since it always faces the room from its wall.
+
+While you move or turn a piece, lines show the gap between its edges and
+the nearest walls. For the artwork, the distance to the nearest corner and
+the height of its bottom edge.
 
 **⌘A** (or **Ctrl+A**) with a piece picked picks all the furniture.
 

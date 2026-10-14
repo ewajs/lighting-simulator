@@ -45,12 +45,19 @@ new pieces from landing on top of the table. It ships as two PRs: M3.3a
   with a piece selected, otherwise all luminaires.
 - **Distances measure from the piece's edges** to the nearest walls: what
   matters is the gap behind a sofa, not where its centre is. A picture
-  measures from its sides to the corners of its wall, and from its bottom
-  edge to the floor. (M3.3b)
-- **A piece added by click goes to the free spot nearest the room centre,**
-  where its footprint overlaps no other piece. A dropped piece still lands
-  under the pointer. Luminaires added by click keep going to the centre:
-  stacked lights are rarer and easier to see. (M3.3b)
+  measures from its side to the nearer corner of its wall, and from its
+  bottom edge to the floor. They show while a piece is dragged, slid with an
+  arrow or turned with the ring (turning changes its gaps). A group shows
+  only the shortest distance each way, as luminaires do. (M3.3b)
+- **A piece added by click goes to the free spot nearest its usual place,**
+  where it keeps 10 cm from every other piece. The usual place is the room
+  centre, or for a picture the middle of the back wall, so a second picture
+  goes along that wall, not onto the front wall the camera looks through.
+  Spots are 10 cm grid points; pieces only clash with what their boxes
+  touch, so a plant can stand below a picture. With no free spot, it goes
+  to the usual place. A dropped piece still lands under the pointer.
+  Luminaires added by click keep going to the centre: stacked lights are
+  rarer and easier to see. (M3.3b)
 
 ## Consequences
 

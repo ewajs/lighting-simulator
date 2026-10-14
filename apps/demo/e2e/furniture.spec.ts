@@ -81,6 +81,8 @@ test('furniture is added from the catalog by click and by drag and drop', async 
   await list.getByRole('button', { name: /Sofá/ }).click();
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
   await expect(page.getByText('Sofá 1', { exact: true })).toBeVisible();
+  // The table and chairs fill the centre: the sofa goes to the nearest free spot.
+  expect(Math.abs(await field(page, 'Z'))).toBeGreaterThan(1);
 
   // Onto the floor in front of the table, a little left: not the room centre.
   await list
@@ -145,4 +147,25 @@ test('select all picks every piece when furniture is selected', async ({ page })
   await page.keyboard.press('ControlOrMeta+a');
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 7');
   await expect(inspectorHeading(page)).toHaveText('Mobiliario');
+});
+
+test('moving a piece shows the gaps from its edges to the walls, gone on release', async ({
+  page,
+}) => {
+  await openDemo(page);
+  await page.mouse.move(TABLE.x, TABLE.y);
+  await page.mouse.down();
+  await page.mouse.move(TABLE.x + 40, TABLE.y + 60, { steps: 10 });
+  await expect(page.locator('lxs-viewport .measure')).toHaveCount(2);
+  const texts = await page.locator('lxs-viewport .measure').allInnerTexts();
+  const during = texts.map((text) => Number(text.replace(' m', '').replace(',', '.')));
+  await expect(page).toHaveScreenshot('table-distances.png');
+  await page.mouse.up();
+  await expect(page.locator('lxs-viewport .measure')).toHaveCount(0);
+
+  // The table is 1.6 × 0.9 m: from its right edge to x = 2.5, its front edge to z = 2.
+  const x = await field(page, 'X');
+  const z = await field(page, 'Z');
+  const gaps = [2.5 - (x + 0.8), 2 - (z + 0.45)].map((d) => Math.round(d * 100) / 100);
+  expect(during.sort()).toEqual(gaps.sort());
 });
