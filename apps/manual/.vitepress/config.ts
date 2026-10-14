@@ -22,7 +22,10 @@ function sidebar(
       text: t.use,
       items: ['luminaires', 'moving', 'aiming', 'light', 'furniture', 'room', 'views'].map(item),
     },
-    { text: t.more, items: ['ies', 'screenshots', 'touch', 'shortcuts', 'help'].map(item) },
+    {
+      text: t.more,
+      items: ['files', 'ies', 'screenshots', 'touch', 'shortcuts', 'help'].map(item),
+    },
   ];
 }
 
@@ -57,6 +60,7 @@ export default defineConfig({
             furniture: ['mobiliario', 'Mobiliario'],
             room: ['ambiente', 'El ambiente'],
             views: ['vista', 'La vista'],
+            files: ['guardar', 'Guardar y abrir'],
             ies: ['archivos-ies', 'Tus archivos IES'],
             screenshots: ['capturas', 'Capturas'],
             touch: ['celulares-y-tablets', 'Celulares y tablets'],
@@ -94,6 +98,7 @@ export default defineConfig({
             furniture: ['furniture', 'Furniture'],
             room: ['room', 'The room'],
             views: ['views', 'The view'],
+            files: ['saving', 'Saving and opening'],
             ies: ['ies-files', 'Your IES files'],
             screenshots: ['screenshots', 'Screenshots'],
             touch: ['phones-and-tablets', 'Phones and tablets'],

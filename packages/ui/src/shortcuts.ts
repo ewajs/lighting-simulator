@@ -6,6 +6,7 @@ export type EditTool = Exclude<HandleMode, 'none'>;
 /** What a keyboard shortcut asks the app to do. */
 export type ShortcutAction =
   | { readonly type: 'undo' | 'redo' | 'delete' | 'duplicate' | 'select-all' | 'deselect' }
+  | { readonly type: 'save' | 'open' }
   | { readonly type: 'toggle-on' | 'frame' }
   | { readonly type: 'render-mode'; readonly mode: RenderMode }
   | { readonly type: 'tool'; readonly tool: EditTool }
@@ -41,6 +42,8 @@ export function shortcutAction({
     if (k === 'y') return { type: 'redo' };
     if (k === 'd') return { type: 'duplicate' };
     if (k === 'a') return { type: 'select-all' };
+    if (k === 's') return { type: 'save' };
+    if (k === 'o') return { type: 'open' };
     return null;
   }
   if (k === 'delete' || k === 'backspace') return { type: 'delete' };

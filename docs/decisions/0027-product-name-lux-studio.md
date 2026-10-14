@@ -26,7 +26,7 @@ The product is **Lux Studio**.
 | Custom elements | `lxs-` (e.g. `<lxs-app>`, `<lxs-viewport>`) |
 | Events | `lxs-` (e.g. `lxs-pick`, `lxs-locale-change`) |
 | CSS tokens and theme attribute | `--lxs-*`, `data-lxs-theme` |
-| Scene files | `.lux.json` |
+| Scene files | `.lux.json` (changed to `.luxstudio.json` by ADR 0051) |
 
 ## Consequences
 

@@ -176,8 +176,9 @@ whatever the visual quality.
 
 ### 4.6 Persistence
 
-- P0: Export / import a scene as versioned JSON. The file extension is
-  chosen with the product name.
+- P0: Export / import a scene as versioned JSON, `.luxstudio.json`
+  ([ADR 0051](./decisions/0051-scene-files.md)). Opening replaces the scene
+  as one undo step.
 - P0: Autosave the current scene locally (IndexedDB).
 - P1: Save and share through a host-provided storage provider (e.g. the
   integrator's backend), giving a shareable URL.
@@ -216,7 +217,7 @@ Key interaction rules:
 - **All UI text is localised**: `es-AR` default, `en` always available
   ([ADR 0012](./decisions/0012-language-and-i18n.md)).
 - Keyboard: `⌘/Ctrl+Z` undo, `⇧⌘Z` / `Ctrl+Y` redo, `⌘/Ctrl+D` duplicate,
-  `⌘/Ctrl+A` select all (of the kind selected), `Del` delete, `H` on/off, `F` frame selection,
+  `⌘/Ctrl+A` select all (of the kind selected), `⌘/Ctrl+S` save, `⌘/Ctrl+O` open, `Del` delete, `H` on/off, `F` frame selection,
   `Esc` deselect, `1/2` render modes (`3` for illuminance in M5), `0/7/8/9` perspective / top / front
   / side, `W/E` move/aim handles.
 - Touch: tap = click, long press = Shift-click (add to or remove from the

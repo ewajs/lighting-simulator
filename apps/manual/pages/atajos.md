@@ -6,6 +6,8 @@ En Windows y Linux, **Ctrl** en lugar de **⌘**.
 |---|---|
 | **⌘Z** | Deshacer |
 | **⇧⌘Z** o **Ctrl+Y** | Rehacer |
+| **⌘S** | Guardar la escena en un archivo |
+| **⌘O** | Abrir un archivo de escena |
 | **⌘D** | Duplicar lo seleccionado |
 | **⌘A** | Elegir todas |
 | **Supr** o **⌫** | Eliminar lo seleccionado |

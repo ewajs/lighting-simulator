@@ -6,6 +6,8 @@ On Windows and Linux, use **Ctrl** instead of **⌘**.
 |---|---|
 | **⌘Z** | Undo |
 | **⇧⌘Z** or **Ctrl+Y** | Redo |
+| **⌘S** | Save the scene to a file |
+| **⌘O** | Open a scene file |
 | **⌘D** | Duplicate the selection |
 | **⌘A** | Pick all |
 | **Delete** or **⌫** | Delete the selection |

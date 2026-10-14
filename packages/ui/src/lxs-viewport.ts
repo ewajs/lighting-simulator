@@ -33,6 +33,7 @@ const STATS_INTERVAL_MS = 500;
  *   MoveStartEvent: `{ target, event }`. The drag itself edits the Simulator.
  * @fires lxs-drop-product - a catalog card was dropped: `detail: { productId, at }`.
  * @fires lxs-drop-furniture - a furniture card was dropped: `detail: { kind, at }`.
+ * @fires lxs-drop-file - a file was dropped, e.g. a scene file: `detail: { file }`.
  */
 @customElement('lxs-viewport')
 @localized()
@@ -220,13 +221,18 @@ export class LxsViewport extends LitElement {
   #onDragOver = (event: DragEvent): void => {
     const transfer = event.dataTransfer;
     const types = transfer?.types ?? [];
-    if (!transfer || (!types.includes(PRODUCT_DRAG_TYPE) && !types.includes(FURNITURE_DRAG_TYPE)))
-      return;
+    const accepted = [PRODUCT_DRAG_TYPE, FURNITURE_DRAG_TYPE, 'Files'];
+    if (!transfer || !accepted.some((type) => types.includes(type))) return;
     event.preventDefault(); // Allows the drop.
     transfer.dropEffect = 'copy';
   };
 
   #onDrop = (event: DragEvent): void => {
+    const [file] = event.dataTransfer?.files ?? [];
+    if (file) {
+      event.preventDefault(); // Otherwise the browser opens the file itself.
+      return this.#emit<DropFileDetail>('lxs-drop-file', { file });
+    }
     const kind = event.dataTransfer?.getData(FURNITURE_DRAG_TYPE) as FurnitureKind | undefined;
     if (kind) return this.#onDropFurniture(event, kind);
     const productId = event.dataTransfer?.getData(PRODUCT_DRAG_TYPE);
@@ -260,6 +266,11 @@ export interface DropProductDetail {
   readonly at: FloorPoint;
 }
 
+/** Detail of `lxs-drop-file`: the file dropped on the viewport. */
+export interface DropFileDetail {
+  readonly file: File;
+}
+
 /** Detail of `lxs-drop-furniture`: which piece, and where on the floor it was dropped. */
 export interface DropFurnitureDetail {
   readonly kind: FurnitureKind;
@@ -275,5 +286,6 @@ declare global {
     'lxs-move-start': CustomEvent<MoveStartEvent>;
     'lxs-drop-product': CustomEvent<DropProductDetail>;
     'lxs-drop-furniture': CustomEvent<DropFurnitureDetail>;
+    'lxs-drop-file': CustomEvent<DropFileDetail>;
   }
 }

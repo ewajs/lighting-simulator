@@ -15,7 +15,10 @@ import { Eye, Layers, LayoutGrid, SlidersHorizontal } from 'lucide';
 import { appStyles } from './lxs-app.styles';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { newMergeKey } from './field-change';
-import { screenshotFileName } from './format';
+import { datedFileName } from './format';
+import './lxs-notice';
+import type { Notice } from './lxs-notice';
+import { download, openSceneFile, saveSceneFile, SCENE_FILE_ACCEPT } from './scene-files';
 import { helpSeen, markHelpSeen } from './help-seen';
 import { DEFAULT_LOCALE, setLocale, type Locale } from './localization';
 import './lxs-catalog-panel';
@@ -31,7 +34,12 @@ import type { TabBarItem } from './lxs-tab-bar';
 import './lxs-top-bar';
 import type { PanelName, Theme } from './lxs-top-bar';
 import './lxs-viewport';
-import type { DropFurnitureDetail, DropProductDetail, LxsViewport } from './lxs-viewport';
+import type {
+  DropFileDetail,
+  DropFurnitureDetail,
+  DropProductDetail,
+  LxsViewport,
+} from './lxs-viewport';
 import './lxs-viewport-controls';
 import { pruneSelection, selectionAfterPick, selectionForMove, selectionKind } from './selection';
 import { isTyping, shortcutAction, type EditTool, type ShortcutAction } from './shortcuts';
@@ -98,6 +106,8 @@ export class LxsApp extends LitElement {
 
   @state() private selection: readonly string[] = [];
   @state() private helpOpen = false;
+  /** A short message over the viewport, e.g. after opening a file. */
+  @state() private notice: Notice | null = null;
   @state() private scene: Scene | undefined;
   /** Which handle the selection shows: arrows to move it, or the aim handle. */
   @state() private tool: EditTool = 'move';
@@ -152,7 +162,7 @@ export class LxsApp extends LitElement {
         @lxs-collapse-request=${({ detail }: CustomEvent<{ collapsed: boolean }>) =>
           (this.libraryCollapsed = detail.collapsed)}
       ></lxs-library>
-      <div class="stage">${this.#viewport()} ${this.#controls('overlay')}</div>
+      <div class="stage">${this.#viewport()} ${this.#controls('overlay')} ${this.#notice()}</div>
       ${this.#inspector(this.narrow)}
       <footer>
         <span>${msg(str`Luminaires: ${total}`)}</span>
@@ -171,7 +181,7 @@ export class LxsApp extends LitElement {
     const tab = this.phoneTab;
     return html`
       ${this.#topBar(true)}
-      <div class="stage">${this.#viewport()}</div>
+      <div class="stage">${this.#viewport()} ${this.#notice()}</div>
       ${
         tab
           ? html`<lxs-sheet
@@ -234,6 +244,8 @@ export class LxsApp extends LitElement {
       .compact=${compact}
       @lxs-theme-change=${({ detail }: CustomEvent<{ theme: Theme }>) => (this.theme = detail.theme)}
       @lxs-locale-request=${({ detail }: CustomEvent<{ locale: Locale }>) => (this.locale = detail.locale)}
+      @lxs-open-request=${this.#pickFile}
+      @lxs-save-request=${this.#save}
       @lxs-screenshot-request=${() => void this.#takeScreenshot()}
       @lxs-help-request=${() => (this.helpOpen = true)}
       @lxs-panel-toggle=${({ detail }: CustomEvent<{ panel: PanelName }>) => this.#togglePanel(detail.panel)}
@@ -256,8 +268,41 @@ export class LxsApp extends LitElement {
         (this.selection = selectionForMove(this.selection, detail.target.id))}
       @lxs-drop-product=${this.#onDropProduct}
       @lxs-drop-furniture=${this.#onDropFurniture}
+      @lxs-drop-file=${({ detail }: CustomEvent<DropFileDetail>) => void this.#open(detail.file)}
     ></lxs-viewport>`;
   }
+
+  #notice() {
+    return html`<lxs-notice
+      class="notice"
+      .notice=${this.notice}
+      @lxs-notice-close=${() => (this.notice = null)}
+    ></lxs-notice>`;
+  }
+
+  /** Asks for a scene file to open, with the browser's file picker. */
+  #pickFile = (): void => {
+    const input = Object.assign(document.createElement('input'), {
+      type: 'file',
+      accept: SCENE_FILE_ACCEPT,
+    });
+    input.addEventListener('change', () => {
+      const [file] = input.files ?? [];
+      if (file) void this.#open(file);
+    });
+    input.click();
+  };
+
+  async #open(file: File): Promise<void> {
+    if (!this.simulator) return;
+    this.notice = await openSceneFile(file, this.simulator);
+    // Opened (errors leave the scene as it was): frame the new room in the current view.
+    if (this.notice.kind !== 'error') this.viewport.setView(this.view);
+  }
+
+  #save = (): void => {
+    if (this.scene) saveSceneFile(this.scene);
+  };
 
   #controls(variant: 'overlay' | 'panel') {
     return html`<lxs-viewport-controls
@@ -399,18 +444,14 @@ export class LxsApp extends LitElement {
       return;
     }
     // A neutral, translated base name: hosts ship this under their own brand.
-    const fileName = screenshotFileName(msg('scene'), new Date());
+    const fileName = datedFileName(msg('scene'), '.png', new Date());
     const event = new CustomEvent<ScreenshotDetail>('lxs-screenshot', {
       detail: { png, fileName },
       cancelable: true,
       bubbles: true,
       composed: true,
     });
-    if (!this.dispatchEvent(event)) return;
-    const url = URL.createObjectURL(png);
-    const link = Object.assign(document.createElement('a'), { href: url, download: fileName });
-    link.click();
-    setTimeout(() => URL.revokeObjectURL(url), 0);
+    if (this.dispatchEvent(event)) download(png, fileName);
   }
 
   #togglePanel(panel: PanelName): void {
@@ -511,6 +552,10 @@ export class LxsApp extends LitElement {
       case 'deselect':
         this.selection = [];
         return;
+      case 'save':
+        return this.#save();
+      case 'open':
+        return this.#pickFile();
       case 'toggle-on': {
         const selected = this.scene?.luminaires.filter((l) => this.selection.includes(l.id)) ?? [];
         const on = !selected.some((l) => l.on);

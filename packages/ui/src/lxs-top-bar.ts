@@ -6,10 +6,12 @@ import {
   Camera,
   CircleQuestionMark,
   Ellipsis,
+  FolderOpen,
   Moon,
   PanelLeft,
   PanelRight,
   Redo2,
+  Save,
   Sun,
   Undo2,
 } from 'lucide';
@@ -23,9 +25,9 @@ export type Theme = 'dark' | 'light';
 export type PanelName = 'library' | 'inspector';
 
 /**
- * Top bar: host brand (slot), undo/redo, panel toggles, theme and language.
- * `compact` (phones) keeps brand and undo/redo, and moves screenshot, theme and
- * language into a ⋯ menu (a native popover).
+ * Top bar: host brand (slot), undo/redo, open and save, panel toggles, theme
+ * and language. `compact` (phones) keeps brand and undo/redo, and moves the
+ * rest into a ⋯ menu (a native popover).
  * Undo/redo are document edits and go to the Simulator directly (ADR 0025);
  * the rest is UI state, reported as events.
  *
@@ -33,6 +35,8 @@ export type PanelName = 'library' | 'inspector';
  * @fires lxs-theme-change - `detail: { theme }`
  * @fires lxs-locale-request - `detail: { locale }`
  * @fires lxs-panel-toggle - `detail: { panel }`
+ * @fires lxs-open-request - the user wants to open a scene file
+ * @fires lxs-save-request - the user wants to save the scene to a file
  * @fires lxs-screenshot-request
  * @fires lxs-help-request - the user asked for the getting-started help
  */
@@ -148,6 +152,12 @@ export class LxsTopBar extends LitElement {
           </button>
         </div>
         <div id="menu" popover role="menu" @beforetoggle=${this.#placeMenu}>
+          <button class="menu-item" type="button" role="menuitem" @click=${this.#open}>
+            ${icon(FolderOpen)} ${msg('Open…')}
+          </button>
+          <button class="menu-item" type="button" role="menuitem" @click=${this.#save}>
+            ${icon(Save)} ${msg('Save')}
+          </button>
           <button class="menu-item" type="button" role="menuitem" @click=${this.#screenshot}>
             ${icon(Camera)} ${msg('Screenshot')}
           </button>
@@ -165,6 +175,8 @@ export class LxsTopBar extends LitElement {
       <div class="side"><slot name="brand"></slot></div>
       <div class="side" style="flex: none">${undoRedo}</div>
       <div class="side end">
+        ${this.#button(msg('Open…'), icon(FolderOpen), this.#open)}
+        ${this.#button(msg('Save'), icon(Save), this.#save)}
         ${this.#button(msg('Screenshot'), icon(Camera), this.#screenshot)}
         <span class="divider"></span>
         ${this.#button(
@@ -212,6 +224,16 @@ export class LxsTopBar extends LitElement {
   #help = (): void => {
     this.#closeMenu();
     this.#emit('lxs-help-request', {});
+  };
+
+  #open = (): void => {
+    this.#closeMenu();
+    this.#emit('lxs-open-request', {});
+  };
+
+  #save = (): void => {
+    this.#closeMenu();
+    this.#emit('lxs-save-request', {});
   };
 
   #screenshot = (): void => {
@@ -269,6 +291,8 @@ declare global {
     'lxs-theme-change': CustomEvent<{ theme: Theme }>;
     'lxs-locale-request': CustomEvent<{ locale: Locale }>;
     'lxs-panel-toggle': CustomEvent<{ panel: PanelName }>;
+    'lxs-open-request': CustomEvent<object>;
+    'lxs-save-request': CustomEvent<object>;
     'lxs-screenshot-request': CustomEvent<object>;
     'lxs-help-request': CustomEvent<object>;
   }

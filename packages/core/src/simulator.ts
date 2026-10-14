@@ -1,6 +1,5 @@
 import {
   addFurniture,
-  assertFurniture,
   updateFurniture,
   type AddFurnitureOptions,
   type FurniturePatch,
@@ -13,13 +12,13 @@ import { PHOTOMETRY_ASSET, type PhotometryListener } from './photometry/asset';
 import { TEXTURE_ASSET, type TextureListener } from './texture-asset';
 import {
   addLuminaire,
-  assertLuminaire,
   assertProduct,
   updateLuminaire,
   type AddLuminaireOptions,
   type LuminairePatch,
 } from './luminaires';
-import { assertRoom, DEFAULT_ROOM, resizeRoom, setSurface, type RoomSize } from './room';
+import { DEFAULT_ROOM, resizeRoom, setSurface, type RoomSize } from './room';
+import { assertScene } from './scene-file';
 import { duplicateItems, removeItems } from './scene-items';
 import type {
   Catalog,
@@ -97,9 +96,7 @@ export class Simulator {
 
   constructor({ catalog, scene, photometry, models, textures, logger }: SimulatorOptions) {
     const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [], furniture: [] };
-    assertRoom(initial.room);
-    initial.luminaires.forEach(assertLuminaire);
-    initial.furniture.forEach(assertFurniture);
+    assertScene(initial);
     this.#catalog = catalog;
     this.#logger = logger ?? consoleLogger();
     this.#photometry = new AssetCache(photometry, PHOTOMETRY_ASSET, this.#logger);
@@ -170,6 +167,21 @@ export class Simulator {
   /** Current scene snapshot. Never mutate it; it is replaced on every change. */
   get scene(): Scene {
     return this.#scene;
+  }
+
+  /**
+   * Replaces the whole scene, e.g. with one opened from a file (`parseScene`)
+   * or a template, as one undo step: undo brings the previous scene back
+   * (ADR 0051). Throws a RangeError naming the field if the scene isn't valid.
+   */
+  setScene(scene: Scene): void {
+    assertScene(scene);
+    const { room, luminaires, furniture } = scene;
+    this.#commit(scene, undefined, 'Replaced', {
+      room: `${room.width} × ${room.depth} × ${room.height} m`,
+      luminaires: luminaires.length,
+      furniture: furniture.length,
+    });
   }
 
   /**

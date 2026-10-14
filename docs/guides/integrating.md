@@ -179,6 +179,33 @@ The viewport has no selection of its own: you decide what a click means and
 what to highlight. Drags edit the Simulator directly, one undo step each. Call
 `viewport.dispose()` when you remove it.
 
+## Saving and opening scenes
+
+A scene is plain data, so saving it is turning it into text
+([ADR 0051](../decisions/0051-scene-files.md)). `<lxs-app>` has Save and Open
+built in; with core only, it's three calls:
+
+```ts
+import { parseScene, SceneFileError, serializeScene, unknownProducts } from '@luxstudio/core';
+
+// Save: a versioned .luxstudio.json file.
+const text = serializeScene(simulator.scene);
+
+// Open: checked field by field; older versions are upgraded.
+try {
+  simulator.setScene(parseScene(text)); // one undo step
+} catch (error) {
+  if (error instanceof SceneFileError) console.warn(error.problem, error.message);
+}
+
+// Products the file uses that your catalog doesn't have: kept, but not drawn.
+const missing = unknownProducts(simulator.scene, catalog);
+```
+
+`error.problem` is `not-a-scene`, `newer-version` or `invalid`, for a message
+in your own words; `error.message` names the field at fault. Files store
+product ids, not product data: your catalog stays the source of truth.
+
 ## When something looks wrong
 
 - Pass `consoleLogger('debug')` to see every step: loads, parses, edits,

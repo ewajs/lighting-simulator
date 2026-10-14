@@ -165,7 +165,7 @@ new images in the PR. Run `npm run i18n:build` first if translations changed.
 - Units: SI. 1 world unit = 1 m, Y-up. Light in lm / cd / lx, colour
   temperature in K.
 - Product name: **Lux Studio**. Packages `@luxstudio/*`, element, event and
-  token prefix `lxs-`, scene files `.lux.json`
+  token prefix `lxs-`, scene files `.luxstudio.json`
   ([ADR 0027](docs/decisions/0027-product-name-lux-studio.md)).
 
 ## Verification before "done"
