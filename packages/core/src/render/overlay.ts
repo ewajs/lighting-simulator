@@ -5,8 +5,10 @@
 import * as THREE from 'three/webgpu';
 import { color, toneMappingExposure } from 'three/tsl';
 
-/** Colour of selection outlines. */
-const HIGHLIGHT_COLOR = 0xf5b544;
+/** Colour of selection outlines, and of handles at rest: they read as part of the selection. */
+export const HIGHLIGHT_COLOR = 0xf5b544;
+/** A ring or marker being hovered or dragged. */
+export const ACTIVE_HANDLE_COLOR = 0xff6a2b;
 /** Where `tagItem` keeps an item's id in `Object3D.userData`. */
 const ITEM_ID_KEY = 'lxsItemId';
 

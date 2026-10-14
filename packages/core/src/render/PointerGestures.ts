@@ -14,11 +14,12 @@ const MAIN_BUTTON = 0;
 /** How long a touch or pen must stay still to count as a long press, in ms. */
 export const LONG_PRESS_MS = 500;
 
-/** Something under the pointer that can be dragged: a fixture, a piece of furniture, or part of a handle. */
+/** Something under the pointer that can be dragged: a fixture, a piece of furniture, part of a handle, or a piece's rotation ring. */
 export type PressTarget =
   | PickTarget
   | { readonly kind: 'move-axis'; readonly axis: MoveAxis }
-  | { readonly kind: 'aim'; readonly part: AimPart };
+  | { readonly kind: 'aim'; readonly part: AimPart }
+  | { readonly kind: 'rotate' };
 
 /** What the gestures do, supplied by the Viewport. */
 export interface GestureActions {

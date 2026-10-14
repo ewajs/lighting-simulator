@@ -33,7 +33,7 @@ import type { PanelName, Theme } from './lxs-top-bar';
 import './lxs-viewport';
 import type { DropFurnitureDetail, DropProductDetail, LxsViewport } from './lxs-viewport';
 import './lxs-viewport-controls';
-import { pruneSelection, selectionAfterPick, selectionForMove } from './selection';
+import { pruneSelection, selectionAfterPick, selectionForMove, selectionKind } from './selection';
 import { isTyping, shortcutAction, type EditTool, type ShortcutAction } from './shortcuts';
 
 /** Below this width the library starts collapsed, leaving the viewport room (landscape tablets). */
@@ -499,9 +499,15 @@ export class LxsApp extends LitElement {
         // The copies become the selection.
         if (sim) this.selection = sim.duplicate(this.selection);
         return;
-      case 'select-all':
-        this.selection = this.scene?.luminaires.map((l) => l.id) ?? [];
+      case 'select-all': {
+        // All of the kind selected, luminaires when nothing is.
+        if (!this.scene) return;
+        const furniture = selectionKind(this.selection, this.scene) === 'furniture';
+        this.selection = (furniture ? this.scene.furniture : this.scene.luminaires).map(
+          (i) => i.id,
+        );
         return;
+      }
       case 'deselect':
         this.selection = [];
         return;

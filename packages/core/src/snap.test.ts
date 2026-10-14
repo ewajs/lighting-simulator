@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { snapPan, snapPosition } from './snap';
+import { snapTurn, snapPosition } from './snap';
 
 const tolerance = { toleranceM: 0.05 };
 
@@ -50,11 +50,11 @@ describe('snapPosition', () => {
   });
 });
 
-describe('snapPan', () => {
+describe('snapTurn', () => {
   it('rounds to 15° steps within [−180, 180)', () => {
-    expect(snapPan(22)).toBe(15);
-    expect(snapPan(-97)).toBe(-90);
-    expect(snapPan(178)).toBe(-180);
-    expect(snapPan(-180)).toBe(-180);
+    expect(snapTurn(22)).toBe(15);
+    expect(snapTurn(-97)).toBe(-90);
+    expect(snapTurn(178)).toBe(-180);
+    expect(snapTurn(-180)).toBe(-180);
   });
 });

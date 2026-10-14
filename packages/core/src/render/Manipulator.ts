@@ -1,11 +1,13 @@
-// Direct manipulation in the viewport: the move and aim handles on the
-// highlighted luminaires, what a press lands on, and the drags that follow.
-// Kept apart from Viewport so that one stays about drawing (ADRs 0038–0042,
-// 0047).
+// Direct manipulation in the viewport: the move, aim and rotation handles on
+// the highlighted luminaires or furniture, what a press lands on, and the
+// drags that follow. Kept apart from Viewport so that one stays about drawing
+// (ADRs 0038–0042, 0047, 0049).
 
 import * as THREE from 'three/webgpu';
-import { AimPointDrag, beamHit, isAimable, PanDrag } from '../aim';
+import { AimPointDrag, beamHit, isAimable } from '../aim';
 import { ItemDrag } from '../drag';
+import { FURNITURE_TYPES } from '../furniture-kinds';
+import { itemRules } from '../item-rules';
 import {
   groupDimensions,
   luminaireDimensions,
@@ -14,15 +16,17 @@ import {
 } from '../measure';
 import { AxisDrag, groupAxes, groupCenter } from '../move-handle';
 import type { Ray } from '../placement';
-import { findItem } from '../scene-items';
+import { findItem, itemCentre } from '../scene-items';
 import type { Simulator } from '../simulator';
 import type { Guide, SnapOptions } from '../snap';
-import type { PickTarget, Vec3 } from '../types';
+import { TurnDrag } from '../turn';
+import type { PickTarget, SceneItem, Vec3 } from '../types';
 import { AimHandle } from './AimHandle';
 import { DimensionLines } from './DimensionLines';
 import { MoveHandle } from './MoveHandle';
 import { worldPerPixel } from './overlay';
 import type { PressTarget } from './PointerGestures';
+import { RotateHandle } from './RotateHandle';
 import { SnapGuides } from './SnapGuides';
 
 /** How close on screen counts as lined up with another luminaire, in CSS px. */
@@ -34,8 +38,9 @@ interface Drag {
 }
 
 /**
- * Which handle the viewport shows on highlighted luminaires: arrows to move
- * them, or the aim point and rotation ring for one aimable luminaire.
+ * Which handle the viewport shows on the highlighted items. `move`: arrows to
+ * move luminaires or furniture, plus a rotation ring on the floor around a
+ * single piece. `aim`: the aim point and rotation ring for one aimable luminaire.
  */
 export type HandleMode = 'move' | 'aim' | 'none';
 
@@ -68,6 +73,7 @@ export class Manipulator {
   readonly #options: ManipulatorOptions;
   readonly #moveHandle = new MoveHandle();
   readonly #aimHandle = new AimHandle();
+  readonly #rotateHandle = new RotateHandle();
   readonly #guides = new SnapGuides();
   readonly #dimensionLines = new DimensionLines();
   #dimensions: readonly Dimension[] = [];
@@ -84,6 +90,7 @@ export class Manipulator {
     this.group.add(
       this.#moveHandle.group,
       this.#aimHandle.group,
+      this.#rotateHandle.group,
       this.#guides.group,
       this.#dimensionLines.object,
     );
@@ -115,23 +122,35 @@ export class Manipulator {
     return () => this.#moveStartListeners.delete(listener);
   }
 
-  /** Puts the handle of the current mode on the highlighted luminaires. Call after scene changes. */
+  /** Puts the handles of the current mode on the highlighted items. Call after scene changes. */
   refresh(): void {
-    const { scene, catalog } = this.#options.simulator;
-    const { luminaires, room } = scene;
-    const selected = luminaires.filter((l) => this.#highlighted.includes(l.id));
-    const product = (id: string) => catalog.get(id);
+    const { simulator } = this.#options;
+    const { room } = simulator.scene;
+    const selected = this.#selected();
+    const [only] = selected.length === 1 ? selected : [];
 
-    const moving = this.#mode === 'move' && selected.length > 0;
-    if (moving) this.#moveHandle.show(groupCenter(selected), groupAxes(selected, product, room));
-    else this.#moveHandle.show(null, []);
+    const moving = this.#mode === 'move' && selected[0];
+    if (moving) {
+      const axes = groupAxes(itemRules(simulator, moving.kind), this.#highlighted);
+      this.#moveHandle.show(groupCenter(selected.map(itemCentre)), axes);
+    } else {
+      this.#moveHandle.show(null, []);
+    }
 
-    const aimed = this.#mode === 'aim' && selected.length === 1 ? selected[0] : undefined;
-    const aimedProduct = aimed && product(aimed.productId);
+    const aimed = this.#mode === 'aim' && only?.kind === 'luminaire' ? only.item : undefined;
+    const aimedProduct = aimed && simulator.catalog.get(aimed.productId);
     if (aimed && aimedProduct && isAimable(aimedProduct)) {
       this.#aimHandle.show(aimed.position, beamHit(aimed.position, aimed.aim, room));
     } else {
       this.#aimHandle.show(null);
+    }
+
+    // A wall piece's rotation is set by its wall, so it gets no ring.
+    const turned = this.#mode === 'move' && only?.kind === 'furniture' ? only.item : undefined;
+    if (turned && !FURNITURE_TYPES[turned.kind].onWall) {
+      this.#rotateHandle.show(turned.position, turned.size.width, turned.size.depth);
+    } else {
+      this.#rotateHandle.show(null);
     }
     // Sized now, not on the next frame, so they can be grabbed straight away.
     this.updateSizes();
@@ -142,6 +161,7 @@ export class Manipulator {
     const heightPx = this.#options.viewportHeightPx();
     this.#moveHandle.update(this.#options.camera, heightPx);
     this.#aimHandle.update(this.#options.camera, heightPx);
+    this.#rotateHandle.update(this.#options.camera, heightPx);
   }
 
   /** The handle part, fixture or piece under a screen point. Handles are drawn on top, so they win. */
@@ -151,6 +171,7 @@ export class Manipulator {
     if (axis) return { kind: 'move-axis', axis };
     const part = this.#aimHandle.partAt(raycaster);
     if (part) return { kind: 'aim', part };
+    if (this.#rotateHandle.isAt(raycaster)) return { kind: 'rotate' };
     return this.#options.itemAt(clientX, clientY);
   }
 
@@ -161,6 +182,7 @@ export class Manipulator {
   hover(target: PressTarget | null): void {
     this.#moveHandle.setActive(target?.kind === 'move-axis' ? target.axis : null);
     this.#aimHandle.setActive(target?.kind === 'aim' ? target.part : null);
+    this.#rotateHandle.setActive(target?.kind === 'rotate');
     if (target) return;
     if (this.#dragging) this.#options.simulator.logger.debug('[drag] Ended');
     this.#dragging = false;
@@ -171,8 +193,9 @@ export class Manipulator {
   /**
    * Starts a drag. A fixture or piece moves with the other highlighted ones
    * if it is highlighted, otherwise alone (ADRs 0038, 0047). A move arrow slides all
-   * highlighted ones along its axis (ADR 0039). The aim point and ring turn
-   * the one highlighted luminaire (ADR 0040). Returns how to follow the pointer.
+   * highlighted ones along its axis (ADRs 0039, 0049). The aim point and ring
+   * turn the one highlighted luminaire (ADR 0040), and the floor ring the one
+   * highlighted piece (ADR 0049). Returns how to follow the pointer.
    */
   startDrag(
     target: PressTarget,
@@ -189,7 +212,9 @@ export class Manipulator {
       drag =
         target.part === 'point'
           ? new AimPointDrag(simulator, highlighted)
-          : new PanDrag(simulator, highlighted, grabbed);
+          : new TurnDrag(simulator, { kind: 'luminaire', id: highlighted }, grabbed);
+    } else if (target.kind === 'rotate' && highlighted) {
+      drag = new TurnDrag(simulator, { kind: 'furniture', id: highlighted }, grabbed);
     } else if (target.kind === 'luminaire' || target.kind === 'furniture') {
       const { id } = target;
       // Undo or delete may have removed it since the press.
@@ -222,10 +247,10 @@ export class Manipulator {
 
   /**
    * What a drag measures: the grabbed luminaire, or the group moved by an
-   * arrow. Aiming and furniture measure nothing yet (M3.3).
+   * arrow. Aiming, turning and furniture measure nothing yet (M3.3b).
    */
   #measure(target: PressTarget): Dimension[] {
-    if (target.kind === 'furniture' || target.kind === 'aim') return [];
+    if (target.kind !== 'luminaire' && target.kind !== 'move-axis') return [];
     const { scene, catalog } = this.#options.simulator;
     const ids = target.kind === 'luminaire' ? [target.id] : this.#highlighted;
     const measured: MeasuredLuminaire[] = [];
@@ -244,12 +269,17 @@ export class Manipulator {
     this.#dimensionLines.show(dimensions);
   }
 
-  /** The grabbed luminaire's or piece's position, or the centre of the highlighted luminaires. */
+  /** The grabbed luminaire's or piece's position, or the centre of the highlighted items. */
   #anchor(grabbed: PickTarget | undefined): Vec3 | undefined {
+    if (grabbed) return findItem(this.#options.simulator.scene, grabbed.id)?.item.position;
+    const selected = this.#selected();
+    return selected.length > 0 ? groupCenter(selected.map(itemCentre)) : undefined;
+  }
+
+  /** The highlighted items still in the scene. */
+  #selected(): SceneItem[] {
     const { scene } = this.#options.simulator;
-    if (grabbed) return findItem(scene, grabbed.id)?.item.position;
-    const selected = scene.luminaires.filter((l) => this.#highlighted.includes(l.id));
-    return selected.length > 0 ? groupCenter(selected) : undefined;
+    return this.#highlighted.flatMap((id) => findItem(scene, id) ?? []);
   }
 
   /** ALIGN_TOLERANCE_PX in metres at `point`'s distance from the camera. */
@@ -262,6 +292,7 @@ export class Manipulator {
   dispose(): void {
     this.#moveHandle.dispose();
     this.#aimHandle.dispose();
+    this.#rotateHandle.dispose();
     this.#guides.dispose();
     this.#dimensionLines.dispose();
   }
@@ -281,5 +312,7 @@ function describeTarget(target: PressTarget): string {
       return `Sliding along ${target.axis}`;
     case 'aim':
       return target.part === 'point' ? 'Aiming at a point' : 'Turning pan';
+    case 'rotate':
+      return 'Turning a piece';
   }
 }

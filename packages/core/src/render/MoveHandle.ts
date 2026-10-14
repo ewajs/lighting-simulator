@@ -2,7 +2,7 @@ import * as THREE from 'three/webgpu';
 import { uniform } from 'three/tsl';
 import type { MoveAxis } from '../move-handle';
 import type { Vec3 } from '../types';
-import { overlayColor, worldPerPixel } from './overlay';
+import { HIGHLIGHT_COLOR, overlayColor, worldPerPixel } from './overlay';
 
 // Sizes are in CSS px on screen: the handle is rescaled every frame so it
 // keeps the same size however far away it is.
@@ -23,8 +23,6 @@ const AXIS_COLORS: Readonly<Record<MoveAxis, number>> = {
   y: 0x57ab5a,
   z: 0x4a8fdd,
 };
-/** The axis being hovered or dragged; the selection outline colour. */
-const ACTIVE_COLOR = 0xf5b544;
 /** Drawn after the outlines (renderOrder 1), on top of everything. */
 const RENDER_ORDER = 2;
 
@@ -69,7 +67,8 @@ export class MoveHandle {
     if (axis === this.#active) return;
     this.#active = axis;
     for (const [name, { color }] of this.#arrows) {
-      color.value.setHex(name === axis ? ACTIVE_COLOR : AXIS_COLORS[name]);
+      // The axis being hovered or dragged takes the selection colour.
+      color.value.setHex(name === axis ? HIGHLIGHT_COLOR : AXIS_COLORS[name]);
     }
   }
 

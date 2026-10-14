@@ -1,12 +1,14 @@
-// The move handle's logic: which axes a selection can slide along, and
-// sliding along one. Rays are plain data, so this runs without three.js.
-// See ADR 0039.
+// The move handle's logic: which axes a selection of luminaires or furniture
+// can slide along, and sliding along one. Rays are plain data, so this runs
+// without three.js. See ADRs 0039 and 0049.
 
+import { itemRules, type ItemRules } from './item-rules';
 import { dot, subtract } from './math';
-import { wallNormalAxis, type Ray } from './placement';
+import type { Ray } from './placement';
+import { findItem, itemCentre } from './scene-items';
 import { snapPosition, type Guide, type SnapOptions } from './snap';
 import type { Simulator } from './simulator';
-import type { Luminaire, Product, Room, Vec3 } from './types';
+import type { Vec3 } from './types';
 
 /** A world axis a move handle slides along. `y` is height. */
 export type MoveAxis = 'x' | 'y' | 'z';
@@ -21,54 +23,27 @@ export const AXIS_DIRECTIONS: Readonly<Record<MoveAxis, Vec3>> = {
   z: { x: 0, y: 0, z: 1 },
 };
 
-/**
- * The axes a luminaire can slide along: across the ceiling or floor, plus
- * height for pendants; along its wall and up for wall fixtures.
- */
-export function luminaireAxes(product: Product, position: Vec3, room: Room): MoveAxis[] {
-  switch (product.mount) {
-    case 'recessed':
-    case 'track':
-    case 'floor':
-    case 'table':
-      return ['x', 'z'];
-    case 'pendant':
-      return ['x', 'y', 'z'];
-    case 'wall':
-      return [wallNormalAxis(position, room) === 'x' ? 'z' : 'x', 'y'];
-  }
-}
-
-/**
- * The axes every luminaire in a group can slide along, in x, y, z order.
- * Empty when they share none (e.g. fixtures on two different walls) or when
- * a product is unknown.
- */
-export function groupAxes(
-  luminaires: readonly Luminaire[],
-  product: (productId: string) => Product | undefined,
-  room: Room,
-): MoveAxis[] {
-  if (luminaires.length === 0) return [];
+/** The axes every item in `ids` can slide along, in x, y, z order. Empty when they share none, e.g. pictures on two different walls. */
+export function groupAxes(rules: ItemRules, ids: readonly string[]): MoveAxis[] {
+  const items = rules.items().filter((item) => ids.includes(item.id));
+  if (items.length === 0) return [];
   let shared: MoveAxis[] = ['x', 'y', 'z'];
-  for (const luminaire of luminaires) {
-    const found = product(luminaire.productId);
-    if (!found) return [];
-    const axes = luminaireAxes(found, luminaire.position, room);
+  for (const { id, position } of items) {
+    const axes = rules.axes(id, position);
     shared = shared.filter((axis) => axes.includes(axis));
   }
   return shared;
 }
 
-/** The average position of a group of luminaires, where its handle sits. */
-export function groupCenter(luminaires: readonly Luminaire[]): Vec3 {
+/** The average of some points, e.g. the middles of a group, where its handle sits. */
+export function groupCenter(points: readonly Vec3[]): Vec3 {
   const sum = { x: 0, y: 0, z: 0 };
-  for (const { position } of luminaires) {
-    sum.x += position.x;
-    sum.y += position.y;
-    sum.z += position.z;
+  for (const point of points) {
+    sum.x += point.x;
+    sum.y += point.y;
+    sum.z += point.z;
   }
-  const n = Math.max(1, luminaires.length);
+  const n = Math.max(1, points.length);
   return { x: sum.x / n, y: sum.y / n, z: sum.z / n };
 }
 
@@ -94,29 +69,32 @@ export function axisOffset(ray: Ray, origin: Vec3, axis: MoveAxis): number | nul
 }
 
 /**
- * One drag of a move handle: every luminaire in the group slides by the same
- * distance along one axis, as one undo step. The distance is limited so all
- * of them stay inside the room, which keeps the group's shape. With
- * snapping, the group's centre snaps to the grid or lines up with
- * luminaires outside the group.
+ * One drag of a move handle: every luminaire or piece in the group slides by
+ * the same distance along one axis, as one undo step. The distance is
+ * limited by the item that can go least far, so the group keeps its shape
+ * at the walls. With snapping, the group's centre snaps to the grid or
+ * lines up with items of its kind outside the group.
  */
 export class AxisDrag {
-  readonly #simulator: Simulator;
+  readonly #rules: ItemRules;
   readonly #axis: MoveAxis;
   readonly #origin: Vec3;
-  /** Where each luminaire started, by id. */
+  /** Where each item started, by id. */
   readonly #start = new Map<string, Vec3>();
   /** Offset along the axis where the handle was grabbed; null if the grab ray missed. */
   readonly #grabbed: number | null;
   readonly #mergeKey = `axis-drag-${crypto.randomUUID()}`;
 
-  /** `ray` points at where the handle was grabbed. Unknown ids are ignored. */
+  /**
+   * Slides the items in `ids`, all of one kind. `ray` points at where the
+   * handle was grabbed. Unknown ids are ignored.
+   */
   constructor(simulator: Simulator, ids: readonly string[], axis: MoveAxis, ray: Ray) {
-    const luminaires = simulator.scene.luminaires.filter((l) => ids.includes(l.id));
-    for (const { id, position } of luminaires) this.#start.set(id, position);
-    this.#simulator = simulator;
+    const found = ids.flatMap((id) => findItem(simulator.scene, id) ?? []);
+    this.#rules = itemRules(simulator, found[0]?.kind ?? 'luminaire');
+    for (const { item } of found) this.#start.set(item.id, item.position);
     this.#axis = axis;
-    this.#origin = groupCenter(luminaires);
+    this.#origin = groupCenter(found.map(itemCentre));
     this.#grabbed = axisOffset(ray, this.#origin, axis);
   }
 
@@ -135,38 +113,37 @@ export class AxisDrag {
       distance = snapped.position[this.#axis] - this.#origin[this.#axis];
       guides = snapped.guides;
     }
-    distance = this.#withinRoom(distance);
+    distance = this.#keepingShape(distance);
     const options = { mergeKey: this.#mergeKey };
+    const present = new Set(this.#rules.items().map((item) => item.id));
     for (const [id, start] of this.#start) {
-      if (!this.#simulator.scene.luminaires.some((l) => l.id === id)) continue;
-      const position = { ...start, [this.#axis]: start[this.#axis] + distance };
-      this.#simulator.updateLuminaire(id, { position }, options);
+      if (!present.has(id)) continue;
+      this.#rules.move(id, this.#moved(start, distance), options);
     }
     return guides;
   }
 
-  /** Positions of the luminaires not being moved, to line up with. */
+  /** Positions of the items not being moved, to line up with. */
   #others(): Vec3[] {
-    return this.#simulator.scene.luminaires
-      .filter((l) => !this.#start.has(l.id))
-      .map((l) => l.position);
+    return this.#rules
+      .items()
+      .filter((item) => !this.#start.has(item.id))
+      .map((item) => item.position);
   }
 
-  /** The distance limited so every luminaire stays inside the room. */
-  #withinRoom(distance: number): number {
-    const { width, depth, height } = this.#simulator.scene.room;
-    const bounds: Record<MoveAxis, [min: number, max: number]> = {
-      x: [-width / 2, width / 2],
-      y: [0, height],
-      z: [-depth / 2, depth / 2],
-    };
-    const [min, max] = bounds[this.#axis];
-    let lowest = -Infinity;
-    let highest = Infinity;
-    for (const start of this.#start.values()) {
-      lowest = Math.max(lowest, min - start[this.#axis]);
-      highest = Math.min(highest, max - start[this.#axis]);
+  /** The distance cut short where an item would be stopped (a wall, the floor), so none lags behind. */
+  #keepingShape(distance: number): number {
+    let allowed = distance;
+    for (const [id, start] of this.#start) {
+      const reach =
+        this.#rules.constrain(id, this.#moved(start, distance))[this.#axis] - start[this.#axis];
+      if (Math.abs(reach) < Math.abs(allowed))
+        allowed = Math.sign(reach) === Math.sign(distance) ? reach : 0;
     }
-    return Math.min(highest, Math.max(lowest, distance));
+    return allowed;
+  }
+
+  #moved(start: Vec3, distance: number): Vec3 {
+    return { ...start, [this.#axis]: start[this.#axis] + distance };
   }
 }

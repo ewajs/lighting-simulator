@@ -3,7 +3,7 @@
 // plain data, like luminaires.ts.
 
 import { FINISHES, FURNITURE_TYPES } from './furniture-kinds';
-import { clamp, DEG } from './math';
+import { clamp, DEG, wrapDeg } from './math';
 import type {
   FloorPoint,
   Furniture,
@@ -108,7 +108,7 @@ export function constrainFurniture(piece: Furniture, room: Room): Furniture {
   const type = FURNITURE_TYPES[piece.kind];
   const size = constrainSize(piece.size, type.size);
   if (type.onWall) return { ...piece, size, ...onNearestWall(piece.position, size, room) };
-  const rotationDeg = normalizeDeg(piece.rotationDeg);
+  const rotationDeg = wrapDeg(piece.rotationDeg);
   const { halfX, halfZ } = footprint(size, rotationDeg);
   const position = {
     x: within(piece.position.x, halfX, room.width / 2),
@@ -195,12 +195,6 @@ function onNearestWall(
           z: within(point.z, halfAcross, halfDepth),
         };
   return { position, rotationDeg };
-}
-
-/** Degrees in [−180, 180). */
-function normalizeDeg(deg: number): number {
-  const turned = (((deg + 180) % 360) + 360) % 360;
-  return turned - 180;
 }
 
 function findFurniture(scene: Scene, id: string): Furniture {

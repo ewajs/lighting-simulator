@@ -2,35 +2,22 @@
 // plain data, so this runs without three.js and is unit-tested in Node. See
 // ADRs 0038, 0041, 0047 and 0048.
 
-import { constrainFurniture } from './furniture';
 import { FURNITURE_TYPES } from './furniture-kinds';
+import { itemRules, type ItemRules } from './item-rules';
 import { add, subtract } from './math';
-import { luminaireAxes, type MoveAxis } from './move-handle';
-import {
-  constrainPosition,
-  horizontalHit,
-  mountSurfaceHit,
-  wallNormalAxis,
-  wallSlideHit,
-  type Ray,
-} from './placement';
+import { horizontalHit, mountSurfaceHit, wallSlideHit, type Ray } from './placement';
 import { snapPosition, type Guide, type SnapOptions } from './snap';
-import type { EditOptions, Simulator } from './simulator';
+import type { Simulator } from './simulator';
 import type { PickTarget, Vec3 } from './types';
 
 const NO_OFFSET: Vec3 = { x: 0, y: 0, z: 0 };
 
-/** How the grabbed item, and the list it's in, follow a drag. One per kind. */
-interface DragRules {
-  /** The items of the grabbed one's kind: what moves along, and what the rest lines up with. */
-  items(): readonly { readonly id: string; readonly position: Vec3 }[];
-  /** Where `ray` meets what the grabbed item slides on, given where it started. */
+/** What the grabbed item slides on. */
+interface Slide {
+  /** Where `ray` meets it, given where the item started; null if it misses. */
   hit(ray: Ray, from: Vec3): Vec3 | null;
-  /** The nearest position the grabbed item can actually take. */
-  constrain(position: Vec3): Vec3;
-  /** The coordinates snapping may change at `position`. */
-  snapAxes(position: Vec3): MoveAxis[];
-  move(id: string, position: Vec3, options: EditOptions): void;
+  /** Whether it's level (a ceiling, the floor, a pendant's height), so the drag never changes height. */
+  readonly level: boolean;
 }
 
 /**
@@ -44,7 +31,8 @@ interface DragRules {
  */
 export class ItemDrag {
   readonly #grabbedId: string;
-  readonly #rules: DragRules;
+  readonly #rules: ItemRules;
+  readonly #slide: Slide;
   /** Where each item of the group started, by id. */
   readonly #start = new Map<string, Vec3>();
   /** From the grabbed point to the grabbed item's position. */
@@ -65,16 +53,17 @@ export class ItemDrag {
     grabHeight = 0,
   ) {
     this.#grabbedId = grabbed.id;
-    this.#rules =
+    this.#rules = itemRules(simulator, grabbed.kind);
+    this.#slide =
       grabbed.kind === 'luminaire'
-        ? luminaireRules(simulator, grabbed.id)
-        : furnitureRules(simulator, grabbed.id, grabHeight);
+        ? luminaireSlide(simulator, grabbed.id)
+        : furnitureSlide(simulator, grabbed.id, grabHeight);
     for (const id of new Set([grabbed.id, ...groupIds])) {
       const position = this.#position(id);
       if (position) this.#start.set(id, position);
     }
     const from = this.#start.get(grabbed.id)!;
-    const grabbedPoint = this.#rules.hit(ray, from);
+    const grabbedPoint = this.#slide.hit(ray, from);
     this.#grabOffset = grabbedPoint ? subtract(from, grabbedPoint) : NO_OFFSET;
   }
 
@@ -85,18 +74,21 @@ export class ItemDrag {
   moveTo(ray: Ray, snap: SnapOptions | null = null): readonly Guide[] {
     const rules = this.#rules;
     const from = this.#start.get(this.#grabbedId)!;
-    const hit = rules.hit(ray, from);
+    const hit = this.#slide.hit(ray, from);
     // Undo or a delete during the drag can remove items; they're skipped.
     if (!hit || !this.#position(this.#grabbedId)) return [];
     // Constrained before snapping, so it snaps to where the item can actually go.
-    let target = rules.constrain(add(hit, this.#grabOffset));
+    let target = rules.constrain(this.#grabbedId, add(hit, this.#grabOffset));
     let guides: readonly Guide[] = [];
     if (snap) {
       const others = rules
         .items()
         .filter((item) => !this.#start.has(item.id))
         .map((item) => item.position);
-      ({ position: target, guides } = snapPosition(target, rules.snapAxes(target), others, snap));
+      const axes = rules
+        .axes(this.#grabbedId, target)
+        .filter((axis) => axis !== 'y' || !this.#slide.level);
+      ({ position: target, guides } = snapPosition(target, axes, others, snap));
     }
     const options = { mergeKey: this.#mergeKey };
     rules.move(this.#grabbedId, target, options);
@@ -117,21 +109,14 @@ export class ItemDrag {
   }
 }
 
-/** A luminaire slides over its mount surface; a pendant keeps its height when snapping. */
-function luminaireRules(simulator: Simulator, id: string): DragRules {
+/** A luminaire slides over its mount surface; a pendant at its height. */
+function luminaireSlide(simulator: Simulator, id: string): Slide {
   const grabbed = simulator.scene.luminaires.find((l) => l.id === id);
   const product = grabbed && simulator.catalog.get(grabbed.productId);
   if (!product) throw new Error(`Cannot drag luminaire "${id}"`);
-  const room = () => simulator.scene.room;
   return {
-    items: () => simulator.scene.luminaires,
-    hit: (ray, from) => mountSurfaceHit(ray, product, from, room()),
-    constrain: (position) => constrainPosition(position, product, room()),
-    snapAxes: (position) => {
-      const axes = luminaireAxes(product, position, room());
-      return product.mount === 'pendant' ? axes.filter((axis) => axis !== 'y') : axes;
-    },
-    move: (id, position, options) => simulator.updateLuminaire(id, { position }, options),
+    hit: (ray, from) => mountSurfaceHit(ray, product, from, simulator.scene.room),
+    level: product.mount !== 'wall',
   };
 }
 
@@ -140,23 +125,17 @@ function luminaireRules(simulator: Simulator, id: string): DragRules {
  * top the drag follows the top, not the floor far behind it. A picture slides
  * along the walls and up.
  */
-function furnitureRules(simulator: Simulator, id: string, grabHeight: number): DragRules {
+function furnitureSlide(simulator: Simulator, id: string, grabHeight: number): Slide {
   const grabbed = simulator.scene.furniture.find((f) => f.id === id);
   if (!grabbed) throw new Error(`Cannot drag furniture "${id}"`);
-  const { onWall } = FURNITURE_TYPES[grabbed.kind];
-  const room = () => simulator.scene.room;
+  if (FURNITURE_TYPES[grabbed.kind].onWall) {
+    return { hit: (ray, from) => wallSlideHit(ray, from, simulator.scene.room), level: false };
+  }
   return {
-    items: () => simulator.scene.furniture,
-    hit: (ray, from) => {
-      if (onWall) return wallSlideHit(ray, from, room());
+    hit: (ray) => {
       const hit = horizontalHit(ray, grabHeight);
       return hit && { ...hit, y: 0 };
     },
-    constrain: (position) => constrainFurniture({ ...grabbed, position }, room()).position,
-    snapAxes: (position) => {
-      if (!onWall) return ['x', 'z'];
-      return [wallNormalAxis(position, room()) === 'x' ? 'z' : 'x', 'y'];
-    },
-    move: (id, position, options) => simulator.updateFurniture(id, { position }, options),
+    level: true,
   };
 }

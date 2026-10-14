@@ -56,7 +56,8 @@ scene is saved as JSON, and undo keeps old scenes, so nothing may change an
 item in place. Where the two kinds behave alike, one function handles both:
 `findItem`, `removeItems` and `duplicateItems` work by id, and ids are
 unique across both lists. Where they differ, each kind has its own function
-(`updateLuminaire`, `updateFurniture`) or its own rules, as in dragging below
+(`updateLuminaire`, `updateFurniture`) or its own rules (`item-rules.ts`:
+where an item can be, which axes it slides along), as in dragging below
 ([ADR 0048](../decisions/0048-one-set-of-edits-for-scene-items.md)).
 
 ### The Simulator owns the scene and its history

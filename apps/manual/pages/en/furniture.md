@@ -24,6 +24,16 @@ Click a piece to pick it, and **drag** it to move it over the floor; the
 artwork slides along the walls. The magnet lines it up with the 10 cm grid
 and with other pieces. Each drag undoes in one go.
 
+With the **Move** tool (W), the picked piece shows:
+
+- **arrows** to move it in one direction only, like a luminaire's. With
+  several pieces picked, they move together;
+- a **ring on the floor** around the piece: drag it to turn the piece. With
+  the magnet it turns in 15° steps; with **Alt**, freely. The artwork has no
+  ring, since it always faces the room from its wall.
+
+**⌘A** (or **Ctrl+A**) with a piece picked picks all the furniture.
+
 When a luminaire is right over a piece (a pendant over a table), a click
 picks the luminaire. To pick the piece, click another part of it, or pick it
 in the **Scene** list, where furniture has its own section.

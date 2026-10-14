@@ -3,7 +3,7 @@
 
 import { copyFurniture } from './furniture';
 import { copyLuminaire } from './luminaires';
-import type { Catalog, Scene, SceneItem } from './types';
+import type { Catalog, Scene, SceneItem, Vec3 } from './types';
 
 /** The luminaire or piece of furniture with this id, or undefined if there is none. */
 export function findItem(scene: Scene, id: string): SceneItem | undefined {
@@ -11,6 +11,15 @@ export function findItem(scene: Scene, id: string): SceneItem | undefined {
   if (luminaire) return { kind: 'luminaire', item: luminaire };
   const piece = scene.furniture.find((f) => f.id === id);
   return piece && { kind: 'furniture', item: piece };
+}
+
+/**
+ * The middle of an item: a luminaire's position; a piece's centre, half its
+ * height above the floor (a wall piece's position already is its centre).
+ */
+export function itemCentre({ kind, item }: SceneItem): Vec3 {
+  if (kind === 'luminaire' || item.position.y !== 0) return item.position;
+  return { ...item.position, y: item.size.height / 2 };
 }
 
 /** Removes the given luminaires and pieces. Unknown ids are an error. */
