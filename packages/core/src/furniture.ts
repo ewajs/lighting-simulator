@@ -4,6 +4,7 @@
 
 import { FINISHES, FURNITURE_TYPES } from './furniture-kinds';
 import { clamp, DEG, wrapDeg } from './math';
+import { GRID_STEP } from './snap';
 import type {
   FloorPoint,
   Furniture,
@@ -24,6 +25,10 @@ export const MIN_SIZE_SHARE = 0.5;
 export const MAX_SIZE_SHARE = 2;
 /** How far a copy sits from its source, to the source's right, in m. */
 const DUPLICATE_OFFSET = 0.5;
+/** The gap a piece added at a free spot keeps from every other piece, in m: room to walk past a chair. */
+const FREE_SPOT_CLEARANCE = 0.1;
+/** Slack in the free-spot overlap test, so a piece exactly FREE_SPOT_CLEARANCE away still fits despite rounding, in m. */
+const FIT_EPSILON = 1e-9;
 
 /**
  * Keeps an extent of half-size `half` around `value` within ±`limit`. One
@@ -40,33 +45,94 @@ export type FurniturePatch = Partial<Pick<Furniture, 'position' | 'rotationDeg'>
 
 /**
  * A new piece's place and starting fields. `at` is the floor point it stands
- * on (default: room centre; wall pieces go to the nearest wall); the other
+ * on; without it, the piece goes to the room centre (a wall piece, to the
+ * middle of the nearest wall) or the free spot nearest that. The other
  * fields apply as in an update, so a `position` overrides `at`.
  */
 export type AddFurnitureOptions = FurniturePatch & { readonly at?: FloorPoint };
 
-/** Adds a piece of `kind` at its usual size and finishes, standing at `at` (default: room centre). */
+/**
+ * Adds a piece of `kind` at its usual size and finishes, standing at `at`.
+ * Without `at`, it goes where it would by default (the room centre; a wall
+ * piece, the middle of the nearest wall), or if that's taken, to the free
+ * spot nearest it (ADR 0049). When the room has none, the default it is.
+ */
 export function addFurniture(
   scene: Scene,
   kind: FurnitureKind,
   id: string,
-  at: FloorPoint = { x: 0, z: 0 },
+  at?: FloorPoint,
 ): Scene {
   const type = FURNITURE_TYPES[kind];
   if (!type) throw new RangeError(`Unknown furniture kind "${kind}"`);
   const y = type.onWall ? WALL_PIECE_CENTRE_HEIGHT : 0;
-  const piece = constrainFurniture(
-    {
-      id,
-      kind,
-      position: { x: at.x, y, z: at.z },
-      rotationDeg: 0,
-      size: type.size,
-      finish: type.finish,
-    },
-    scene.room,
-  );
+  const placed = ({ x, z }: FloorPoint) =>
+    constrainFurniture(
+      { id, kind, position: { x, y, z }, rotationDeg: 0, size: type.size, finish: type.finish },
+      scene.room,
+    );
+  const piece = at ? placed(at) : freeSpot(scene, placed);
   return { ...scene, furniture: [...scene.furniture, piece] };
+}
+
+/**
+ * The box a piece fills, aligned with the room's axes: its turned footprint,
+ * from the floor to its top (a wall piece: around its centre on the wall).
+ */
+export function furnitureBounds({ position, size, rotationDeg }: Furniture): {
+  min: Vec3;
+  max: Vec3;
+} {
+  const { halfX, halfZ } = footprint(size, rotationDeg);
+  const bottom = position.y === 0 ? 0 : position.y - size.height / 2;
+  return {
+    min: { x: position.x - halfX, y: bottom, z: position.z - halfZ },
+    max: { x: position.x + halfX, y: bottom + size.height, z: position.z + halfZ },
+  };
+}
+
+/**
+ * The piece `placed` puts at the room centre, or else at the grid point
+ * nearest that spot where it keeps FREE_SPOT_CLEARANCE from every other
+ * piece (for a picture, along its wall first). The centre if none is free.
+ */
+function freeSpot(scene: Scene, placed: (at: FloorPoint) => Furniture): Furniture {
+  const others = scene.furniture.map(furnitureBounds);
+  const gap = FREE_SPOT_CLEARANCE - FIT_EPSILON;
+  const fits = (piece: Furniture) => {
+    const { min, max } = furnitureBounds(piece);
+    return others.every(
+      (other) =>
+        min.x >= other.max.x + gap ||
+        max.x <= other.min.x - gap ||
+        min.z >= other.max.z + gap ||
+        max.z <= other.min.z - gap ||
+        min.y >= other.max.y - FIT_EPSILON ||
+        max.y <= other.min.y + FIT_EPSILON,
+    );
+  };
+  const home = placed({ x: 0, z: 0 });
+  if (fits(home)) return home;
+  for (const point of gridPointsNearest(home.position, scene.room)) {
+    const piece = placed(point);
+    if (fits(piece)) return piece;
+  }
+  return home;
+}
+
+/** Every GRID_STEP point on the floor plan, nearest `from` first. */
+function gridPointsNearest(from: FloorPoint, room: Room): FloorPoint[] {
+  // Dividing by the lines per metre keeps points like 0.3 exact, as in snap.ts.
+  const perMetre = Math.round(1 / GRID_STEP);
+  const points: FloorPoint[] = [];
+  const stepsX = Math.floor((room.width / 2) * perMetre);
+  const stepsZ = Math.floor((room.depth / 2) * perMetre);
+  for (let i = -stepsX; i <= stepsX; i++) {
+    for (let k = -stepsZ; k <= stepsZ; k++) points.push({ x: i / perMetre, z: k / perMetre });
+  }
+  const distance = (point: FloorPoint) => Math.hypot(point.x - from.x, point.z - from.z);
+  // Ties go to the front (+z), then to the right: the side nearest the default camera.
+  return points.sort((a, b) => distance(a) - distance(b) || b.z - a.z || b.x - a.x);
 }
 
 /** Applies `patch` to one piece, then keeps it inside the room and within its size range. */

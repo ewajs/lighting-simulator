@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { groupDimensions, luminaireDimensions } from './measure';
-import { room } from './test-fixtures';
+import { addFurniture, updateFurniture } from './furniture';
+import { FURNITURE_TYPES } from './furniture-kinds';
+import { furnitureDimensions, groupDimensions, luminaireDimensions } from './measure';
+import { emptyScene, room } from './test-fixtures';
 
 // DEFAULT_ROOM: x ∈ [−2.5, 2.5], z ∈ [−2, 2], 2.7 m high.
 const lengths = (dimensions: { lengthM: number }[]) => dimensions.map((d) => d.lengthM);
@@ -45,10 +47,53 @@ describe('groupDimensions', () => {
       { position: { x: 2, y: 2.7, z: -1.2 }, mount: 'recessed' as const },
     ];
     // −x: 1.5 from the first; +x: 0.5 from the last; −z: 0.8 (all equal).
-    const found = groupDimensions(row, room, false).map((d) => [d.to.x, d.lengthM]);
+    const all = row.flatMap((luminaire) => luminaireDimensions(luminaire, room, false));
+    const found = groupDimensions(all).map((d) => [d.to.x, d.lengthM]);
     expect(found).toHaveLength(3);
     expect(found).toContainEqual([-2.5, 1.5]);
     expect(found).toContainEqual([2.5, 0.5]);
-    expect(lengths(groupDimensions(row, room, false))).toContainEqual(expect.closeTo(0.8));
+    expect(lengths(groupDimensions(all))).toContainEqual(expect.closeTo(0.8));
+  });
+});
+
+describe('furnitureDimensions', () => {
+  /** A dining table (1.6 × 0.9 m) standing at (1, 0.5), turned by `rotationDeg`. */
+  const table = (rotationDeg = 0) => {
+    const scene = updateFurniture(
+      addFurniture(emptyScene, 'dining-table', 'a', { x: 1, z: 0.5 }),
+      'a',
+      {
+        rotationDeg,
+      },
+    );
+    return scene.furniture[0]!;
+  };
+
+  it('measures a floor piece from its edges to the nearer walls, along the floor', () => {
+    const [toSide, toEnd] = furnitureDimensions(table(), room);
+    // Its right edge at x = 1.8, its front edge at z = 0.95.
+    expect(toSide?.from).toEqual({ x: 1.8, y: 0, z: 0.5 });
+    expect(toSide?.lengthM).toBeCloseTo(0.7);
+    expect(toEnd?.from).toEqual({ x: 1, y: 0, z: 0.95 });
+    expect(toEnd?.lengthM).toBeCloseTo(1.05);
+  });
+
+  it('measures a turned piece from its turned footprint', () => {
+    // Turned a quarter, it's 0.9 m across x and 1.6 m along z: its right edge
+    // is at x = 1.45, its front edge at z = 1.3.
+    expect(lengths(furnitureDimensions(table(90), room))).toEqual([
+      expect.closeTo(1.05),
+      expect.closeTo(0.7),
+    ]);
+  });
+
+  it('measures a picture along its wall to the nearer corner, and its bottom edge to the floor', () => {
+    const { width, height } = FURNITURE_TYPES.artwork.size;
+    const picture = addFurniture(emptyScene, 'artwork', 'p', { x: 0.5, z: -1.9 }).furniture[0]!;
+    // On the back wall at x = 0.5, centre 1.5 m up.
+    expect(lengths(furnitureDimensions(picture, room))).toEqual([
+      expect.closeTo(2 - width / 2),
+      expect.closeTo(1.5 - height / 2),
+    ]);
   });
 });

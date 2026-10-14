@@ -191,7 +191,8 @@ export class Simulator {
 
   /**
    * Adds a piece of furniture and returns its id. It starts at its usual size
-   * and finishes, standing at `at`, with any other fields given set as by
+   * and finishes, standing at `at` or, without it, at the free spot nearest
+   * the room centre (ADR 0049). Any other fields given are set as by
    * `updateFurniture`, all in one undo step. Throws for an unknown kind or an
    * invalid field.
    */

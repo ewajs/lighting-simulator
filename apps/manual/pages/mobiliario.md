@@ -12,7 +12,8 @@ cocina, y exhibición y decoración.
 ![El catálogo de mobiliario](/screenshots/es/furniture-catalog.png)
 
 Igual que con las luminarias:
-- **hacé clic** en un mueble y aparece en el medio del ambiente;
+- **hacé clic** en un mueble y aparece en el medio del ambiente o, si ahí
+  ya hay otro, en el lugar libre más cercano;
 - o **arrastralo** a la vista 3D y queda donde lo soltás.
 
 Los muebles van al piso. El **cuadro** va a la pared más cercana, a la
@@ -31,6 +32,10 @@ Con la herramienta **Mover** (W), el mueble elegido muestra:
 - un **anillo en el piso** alrededor del mueble: arrastralo para girarlo.
   Con el imán gira de a 15°; con **Alt**, libre. El cuadro no tiene anillo,
   porque mira siempre al ambiente desde su pared.
+
+Mientras movés o girás un mueble, unas líneas muestran cuánto espacio queda
+entre sus bordes y las paredes más cercanas. En el cuadro, la distancia a la
+esquina más cercana y la altura de su borde de abajo.
 
 **⌘A** (o **Ctrl+A**) con un mueble elegido elige todos los muebles.
 

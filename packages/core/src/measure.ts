@@ -1,8 +1,9 @@
-// Distances from moving luminaires to the walls and floor, shown while
-// dragging. Pure functions over plain data. See ADR 0042.
+// Distances from moving luminaires and furniture to the walls and floor,
+// shown while dragging. Pure functions over plain data. See ADRs 0042, 0049.
 
+import { furnitureBounds } from './furniture';
 import { wallNormalAxis } from './placement';
-import type { MountType, Room, Vec3 } from './types';
+import type { Furniture, MountType, Room, Vec3 } from './types';
 
 /** Shorter than this, a dimension isn't worth drawing, in m. */
 const MIN_LENGTH_M = 0.001;
@@ -45,21 +46,41 @@ export function luminaireDimensions(
 }
 
 /**
- * Dimensions for a group: for each direction measured (towards +x, −x, +z,
- * −z or the floor), only the shortest, from the luminaire nearest that wall.
+ * Dimensions from a piece's edges to the room around it, not from its centre:
+ * the gap behind a sofa is what matters.
+ * - Floor pieces: from the edges facing the nearer side wall (x) and the
+ *   nearer back or front wall (z), along the floor.
+ * - Wall pieces: from the side facing the nearer corner, along the wall, and
+ *   from the bottom edge down to the floor.
  */
-export function groupDimensions(
-  luminaires: readonly MeasuredLuminaire[],
-  room: Room,
-  withHeight: boolean,
-): Dimension[] {
+export function furnitureDimensions(piece: Furniture, room: Room): Dimension[] {
+  const { position } = piece;
+  const { min, max } = furnitureBounds(piece);
+  const onWall = position.y !== 0;
+  const across: ('x' | 'z')[] = onWall
+    ? [wallNormalAxis(position, room) === 'x' ? 'z' : 'x']
+    : ['x', 'z'];
+  const dimensions = across.map((axis) => {
+    const half = (axis === 'x' ? room.width : room.depth) / 2;
+    const towardsPlus = position[axis] >= 0;
+    const edge = { ...position, [axis]: towardsPlus ? max[axis] : min[axis] };
+    return dimension(edge, { ...edge, [axis]: towardsPlus ? half : -half });
+  });
+  if (onWall) dimensions.push(dimension({ ...position, y: min.y }, { ...position, y: 0 }));
+  return dimensions.filter(({ lengthM }) => lengthM >= MIN_LENGTH_M);
+}
+
+/**
+ * Dimensions for a group, from each item's own: for each direction measured
+ * (towards +x, −x, +z, −z or the floor), only the shortest, from the item
+ * nearest that wall.
+ */
+export function groupDimensions(dimensions: readonly Dimension[]): Dimension[] {
   const shortest = new Map<string, Dimension>();
-  for (const luminaire of luminaires) {
-    for (const found of luminaireDimensions(luminaire, room, withHeight)) {
-      const key = direction(found);
-      const current = shortest.get(key);
-      if (!current || found.lengthM < current.lengthM) shortest.set(key, found);
-    }
+  for (const found of dimensions) {
+    const key = direction(found);
+    const current = shortest.get(key);
+    if (!current || found.lengthM < current.lengthM) shortest.set(key, found);
   }
   return [...shortest.values()];
 }

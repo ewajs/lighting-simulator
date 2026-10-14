@@ -40,6 +40,25 @@ describe('addFurniture', () => {
     expect(withPiece('artwork', { x: -2.4, z: 0 })[1].rotationDeg).toBe(90);
   });
 
+  it('without a point, goes to the free spot nearest its usual place', () => {
+    // The table fills the centre: a chair keeps 10 cm from it, in front (+z).
+    const [withTable] = withPiece('dining-table');
+    const chair = addFurniture(withTable, 'chair', 'b');
+    expect(position(chair, 'b')).toEqual({ x: 0, y: 0, z: 0.8 });
+    // A second picture goes along the back wall, clear of the first (1 m wide).
+    const [withPicture] = withPiece('artwork');
+    const second = addFurniture(withPicture, 'artwork', 'b');
+    expect(position(second, 'b')).toEqual({ x: 1.1, y: 1.5, z: -2 });
+    // The picture is up on the wall: a plant still takes the empty centre.
+    expect(position(addFurniture(withPicture, 'plant', 'b'), 'b')).toEqual({ x: 0, y: 0, z: 0 });
+  });
+
+  it('goes to the room centre when no spot is free', () => {
+    const tiny = { ...emptyScene, room: { ...room, width: 2.2, depth: 2.2 } };
+    const withBed = addFurniture(tiny, 'bed', 'a');
+    expect(position(addFurniture(withBed, 'bed', 'b'), 'b')).toEqual({ x: 0, y: 0, z: 0 });
+  });
+
   it('rejects an unknown kind', () => {
     expect(() => addFurniture(emptyScene, 'throne' as FurnitureKind, 'a')).toThrow(/throne/);
   });
