@@ -32,8 +32,9 @@ Core never fetches. You hand it small objects that answer its questions:
 | Products | {@link @luxstudio/core!Catalog} | yes | simulation data per product id: mount, power, flux, CCT, beam |
 | IES files | {@link @luxstudio/core!PhotometryProvider} | no | real light distributions; without one, light is estimated from flux and beam |
 | 3D models | {@link @luxstudio/core!ModelProvider} | no | fixture models; without one, simple placeholders |
+| Surface textures | {@link @luxstudio/core!TextureProvider} | no | photos of floors and walls, by texture id; without one, surfaces show their colour |
 | Logging | {@link @luxstudio/core!Logger} | no | where messages go; default: warnings and errors to the console |
-| Names and categories | {@link @luxstudio/ui!DisplayCatalog} | with the UI | what the catalog panel shows, in the active language |
+| Names and categories | {@link @luxstudio/ui!DisplayCatalog} | with the UI | what the catalog panel shows, in the active language, and the materials the room panel offers |
 
 `Catalog.get` is synchronous, so keep your product list in memory. The
 providers are asynchronous. Each file is requested once, on first use, and the
@@ -94,6 +95,31 @@ A binary glTF (`.glb`) per product
   - `head`: what turns when aimed;
   - `cord…`: where pendant cables attach;
   - materials named `emissive…`: glow with the light.
+
+### Surface textures
+
+A surface names a texture by id (`Surface.texture`), and your
+`TextureProvider` returns its image: a JPEG or PNG, plus how much of the
+surface one copy covers, in metres
+([ADR 0050](../decisions/0050-surface-textures.md)). Only the colours are
+used, so a single photo per material is enough.
+
+```ts
+const textures: TextureProvider = {
+  async load(textureId) {
+    const finish = myBackend.finish(textureId); // e.g. { photoUrl, widthM: 1.8, heightM: 1.8 }
+    if (!finish) return undefined;
+    const data = await (await fetch(finish.photoUrl)).arrayBuffer();
+    return { data, widthM: finish.widthM, heightM: finish.heightM };
+  },
+};
+```
+
+You don't need to correct the photos' brightness: the renderer scales each one
+so its average equals the surface's reflectance ρ, which is also what the
+lighting uses. To offer materials in the room panel, list them in
+`DisplayCatalog.materials` with a name, a swatch, their typical ρ and the
+surfaces they suit; picking one sets the texture and that ρ.
 
 ## The full editor
 

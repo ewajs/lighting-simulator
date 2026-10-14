@@ -19,6 +19,7 @@ import { Manipulator, type HandleMode, type MoveStartEvent } from './Manipulator
 import { PointerGestures } from './PointerGestures';
 import { itemIdOf } from './overlay';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
+import { SurfaceTextures } from './SurfaceTextures';
 
 const VIEW_TRANSITION_MS = 450;
 /** Weight of each new frame in the smoothed frame time: about a second's memory at 60 fps. */
@@ -110,6 +111,7 @@ export class Viewport {
   readonly #luminaires: LuminaireMeshes;
   readonly #models: FixtureModels;
   readonly #furniture = new FurnitureMeshes();
+  readonly #textures: SurfaceTextures;
   // Uniform stand-in for inter-reflections (SPEC §6).
   readonly #bounce = new THREE.HemisphereLight(0xffffff, 0xffffff, 0);
   readonly #pickListeners = new Set<(pick: PickEvent) => void>();
@@ -120,6 +122,7 @@ export class Viewport {
   #unsubscribe: (() => void) | undefined;
   #unsubscribePhotometry: (() => void) | undefined;
   #unsubscribeModels: (() => void) | undefined;
+  #unsubscribeTextures: (() => void) | undefined;
   #renderMode: RenderMode = 'realistic';
   #exposureEv = 0;
   #highlighted: readonly string[] = [];
@@ -140,6 +143,8 @@ export class Viewport {
       () => this.#sync(this.#simulator.scene, undefined),
       simulator.logger,
     );
+    // A decoded texture replaces its surface's colour.
+    this.#textures = new SurfaceTextures(() => this.#updateRoom(), simulator.logger);
     this.#luminaires = new LuminaireMeshes({
       catalog: simulator.catalog,
       photometry: (productId) => simulator.photometry(productId),
@@ -202,6 +207,8 @@ export class Viewport {
     this.#unsubscribeModels = this.#simulator.onModel(() =>
       this.#sync(this.#simulator.scene, undefined),
     );
+    // A texture that arrives is decoded on the next room update, then shown.
+    this.#unsubscribeTextures = this.#simulator.onTexture(() => this.#updateRoom());
     this.#sync(this.#simulator.scene, undefined);
     this.setView('perspective', { animate: false });
 
@@ -402,12 +409,14 @@ export class Viewport {
     this.#unsubscribe?.();
     this.#unsubscribePhotometry?.();
     this.#unsubscribeModels?.();
+    this.#unsubscribeTextures?.();
     this.#resizeObserver.disconnect();
     this.#controls.dispose();
     this.#room.dispose();
     this.#luminaires.dispose();
     this.#furniture.dispose();
     this.#models.dispose();
+    this.#textures.dispose();
     this.#manipulator.dispose();
     this.#renderer.domElement.remove();
     void this.#renderer.dispose();
@@ -451,13 +460,22 @@ export class Viewport {
   }
 
   #sync(scene: Scene, previous: Scene | undefined): void {
-    if (scene.room !== previous?.room) this.#room.update(scene.room, this.#renderMode);
+    if (scene.room !== previous?.room) this.#updateRoom();
     this.#luminaires.sync(scene, this.#highlighted, this.#renderMode);
     this.#furniture.sync(scene, this.#highlighted, this.#renderMode);
     this.#bounce.intensity =
       indirectIlluminance(this.#luminaires.totalFlux(), scene.room) + MIN_FILL_LUX;
     this.#renderer.toneMappingExposure = toneMappingExposure(this.#exposureEv);
     this.#manipulator.refresh();
+  }
+
+  /** Rebuilds the room shell, with each surface's texture once it's ready. */
+  #updateRoom(): void {
+    const { room } = this.#simulator.scene;
+    this.#room.update(room, this.#renderMode, (name) => {
+      const id = room.surfaces[name].texture;
+      return id ? this.#textures.get(id, this.#simulator.texture(id)) : undefined;
+    });
   }
 
   /** Projects the dimensions' midpoints to the screen and reports them if anything changed. */

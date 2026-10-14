@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { PhotometryProvider } from '../types';
-import { PhotometryCache } from './cache';
+import { AssetCache } from '../asset-cache';
+import { PHOTOMETRY_ASSET } from './asset';
 
 const DOWNLIGHT_IES = `IESNA:LM-63-2002
 TILT=NONE
@@ -18,13 +19,13 @@ function setup(load: PhotometryProvider['load']) {
   const provider = { load: vi.fn(load) };
   const warn = vi.fn();
   const logger = { debug: vi.fn(), info: vi.fn(), warn, error: vi.fn() };
-  const cache = new PhotometryCache(provider, logger);
+  const cache = new AssetCache(provider, PHOTOMETRY_ASSET, logger);
   const loaded = vi.fn();
   cache.subscribe(loaded);
   return { provider, warn, cache, loaded };
 }
 
-describe('PhotometryCache', () => {
+describe('PHOTOMETRY_ASSET in an AssetCache', () => {
   it('loads on first request, then answers from the cache', async () => {
     const { provider, cache, loaded } = setup(() => Promise.resolve(DOWNLIGHT_IES));
     expect(cache.get('a')).toBeUndefined();
@@ -63,7 +64,7 @@ describe('PhotometryCache', () => {
   });
 
   it('does nothing without a provider', () => {
-    const cache = new PhotometryCache(undefined, {
+    const cache = new AssetCache(undefined, PHOTOMETRY_ASSET, {
       debug: vi.fn(),
       info: vi.fn(),
       warn: vi.fn(),

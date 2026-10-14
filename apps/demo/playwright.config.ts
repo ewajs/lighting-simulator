@@ -11,6 +11,11 @@ export default defineConfig<SuiteOptions>({
   // starting Chrome at once, that alone occasionally took over 30 s (the
   // default), failing a test before it ran a line.
   timeout: 60_000,
+  // Every worker drives a browser rendering WebGPU or WebGL. The default (half
+  // the cores: 5 on a 10-core Mac) overloaded the GPU and CPU: contexts timed
+  // out at launch, canvases appeared late and screenshots timed out, a few
+  // tests per run. Three keeps runs clean at a small cost in time.
+  workers: 3,
   webServer: {
     command: 'npm run build && npm run preview -- --port 4173 --strictPort',
     url: 'http://localhost:4173',

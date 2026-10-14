@@ -2,7 +2,7 @@
 // Catalog, which stays the single source of simulation data. Names and labels
 // arrive already in the active language.
 
-import type { Catalog, MountType, Scene } from '@luxstudio/core';
+import type { Catalog, MountType, Scene, SurfaceName } from '@luxstudio/core';
 
 /** A catalog section, e.g. "Downlights". Defined by the host; `label` is in the active language. */
 export interface CatalogCategory {
@@ -20,10 +20,28 @@ export interface CatalogItem {
   readonly thumbnailUrl?: string;
 }
 
-/** What the catalog panel shows. Category order is display order. */
+/**
+ * A surface material the room panel offers (ADR 0050): a texture core loads
+ * through the host's TextureProvider, with its name and swatch.
+ */
+export interface SurfaceMaterial {
+  /** Id of the texture in core's TextureProvider. */
+  readonly textureId: string;
+  readonly name: string;
+  /** Optional image shown on the swatch. */
+  readonly thumbnailUrl?: string;
+  /** Its typical diffuse reflectance ρ, 0–1 (exclusive of 1); picking the material sets it. */
+  readonly reflectance: number;
+  /** The surfaces it's offered for, e.g. only the floor for wooden planks. */
+  readonly surfaces: readonly SurfaceName[];
+}
+
+/** What the catalog panel and the room panel show. Category order is display order. */
 export interface DisplayCatalog {
   readonly categories: readonly CatalogCategory[];
   readonly items: readonly CatalogItem[];
+  /** Surface materials, in display order. Without them, surfaces offer colours only. */
+  readonly materials?: readonly SurfaceMaterial[];
 }
 
 export const EMPTY_DISPLAY_CATALOG: DisplayCatalog = { categories: [], items: [] };

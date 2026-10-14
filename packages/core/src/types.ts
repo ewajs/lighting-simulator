@@ -25,6 +25,11 @@ export interface Surface {
   readonly color: string;
   /** Diffuse reflectance ρ, 0–1 (exclusive of 1). */
   readonly reflectance: number;
+  /**
+   * A texture the host's TextureProvider supplies, by id. Its image replaces
+   * `color`, scaled so its average brightness equals `reflectance` (ADR 0050).
+   */
+  readonly texture?: string;
 }
 
 /** The room surfaces that can be finished independently. */
@@ -201,6 +206,24 @@ export interface PhotometryProvider {
    * Decoding the bytes is up to the host (IES files are usually ASCII or Latin-1).
    */
   load(productId: string): Promise<string | undefined>;
+}
+
+/** A surface texture's image, as a TextureProvider supplies it. */
+export interface TextureImage {
+  /** A JPEG or PNG file. Only its colours are used: no normal or roughness maps. */
+  readonly data: ArrayBuffer;
+  /** How much of the surface one copy of the image covers, in m, along its width and height. */
+  readonly widthM: number;
+  readonly heightM: number;
+}
+
+/**
+ * Supplies surface textures, e.g. a flooring catalogue's photos. Injected by
+ * the host; core never fetches anything itself (ADR 0050).
+ */
+export interface TextureProvider {
+  /** The texture's image, or undefined if there's none with this id. */
+  load(textureId: string): Promise<TextureImage | undefined>;
 }
 
 /**

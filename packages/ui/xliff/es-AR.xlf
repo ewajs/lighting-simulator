@@ -767,6 +767,14 @@
   <source>Nothing here yet. Add luminaires or furniture from the catalog.</source>
   <target>Todavía no hay nada. Agregá luminarias o muebles desde el catálogo.</target>
 </trans-unit>
+<trans-unit id="s7e9d0b96d39e517d">
+  <source>Colour</source>
+  <target>Color</target>
+</trans-unit>
+<trans-unit id="sb19c9290038389c0">
+  <source>Material</source>
+  <target>Material</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

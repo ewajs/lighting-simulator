@@ -110,6 +110,7 @@ export class LxsInspector extends LitElement {
         return html`<lxs-room-inspector
           .simulator=${this.simulator}
           .scene=${this.scene}
+          .display=${this.display}
         ></lxs-room-inspector>`;
     }
   }

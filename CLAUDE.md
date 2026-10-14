@@ -131,7 +131,7 @@ new images in the PR. Run `npm run i18n:build` first if translations changed.
 - Log through the injected `Logger` (`simulator.logger`), never `console`
   directly ([ADR 0044](docs/decisions/0044-logging-and-loud-failures.md)).
 - Start messages with their area in brackets: `[scene]`, `[photometry]`,
-  `[models]`, `[render]`, `[drag]`, `[ui]`.
+  `[models]`, `[textures]`, `[render]`, `[drag]`, `[ui]`.
 - `debug` for each step at the edges (edits, loads, parses, budget
   changes), once per gesture, not per frame or pointer move. `info` for rare,
   notable events. `warn` when something is skipped but the library carries
