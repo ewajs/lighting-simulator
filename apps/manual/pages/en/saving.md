@@ -1,4 +1,4 @@
-# Saving and opening
+# Saving, opening and sharing
 
 While you work, the scene **saves itself** in this browser. If you close
 the tab or the computer shuts down, it's there as you left it when you come
@@ -13,6 +13,16 @@ room** and ready-made rooms, such as a dining room, a living room, a
 bedroom, a home office or a shop, each with its floor plan. Pick one and it replaces the
 scene; if it was a mistake, **⌘Z** brings the previous one back.
 
+## Sharing
+
+**Share** (at the top; on a phone, in the **⋯** menu) copies a link to your
+scene. Whoever opens it sees a copy: what they change doesn't touch yours. On
+a phone, the phone's share menu opens, to send it straight in a message or an
+email.
+
+Opening a link replaces your scene with the shared one; **⌘Z** brings yours
+back.
+
 ## Files
 
 - **Save** (the disk at the top, or **⌘S**) downloads the scene as a
@@ -25,7 +35,7 @@ scene; if it was a mistake, **⌘Z** brings the previous one back.
 Opening replaces the current scene. If it was a mistake, **⌘Z** brings it
 back.
 
-On a phone, New, Save and Open are in the **⋯** menu.
+On a phone, New, Save, Open and Share are in the **⋯** menu.
 
 ### When a file won't open
 

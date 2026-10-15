@@ -59,6 +59,8 @@ export type {
   Room,
   Scene,
   SceneItem,
+  SceneStorage,
+  SharedScene,
   Surface,
   SurfaceName,
   TextureImage,

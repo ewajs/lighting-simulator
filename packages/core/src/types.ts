@@ -226,6 +226,32 @@ export interface TextureProvider {
   load(textureId: string): Promise<TextureImage | undefined>;
 }
 
+/** A scene a link pointed to, as `SceneStorage.open` returns it. */
+export interface SharedScene {
+  /** The scene file (`serializeScene`), to read with `parseScene`. */
+  readonly file: string;
+  /**
+   * The link without the shared scene. The app puts it in the address bar once
+   * the scene is open, so a reload keeps the user's edits instead of opening
+   * the link again.
+   */
+  readonly pageLink: string;
+}
+
+/**
+ * Keeps scenes and hands out links to them, e.g. the integrator's backend
+ * (ADR 0053). It stores scene files, so a scene's version travels with it.
+ */
+export interface SceneStorage {
+  /** Keeps a scene file and returns a link that opens a copy of it. */
+  share(file: string): Promise<string>;
+  /**
+   * The scene `link` points to, or undefined if it points to none. The app
+   * calls it once, with the page's own address, when it starts.
+   */
+  open(link: string): Promise<SharedScene | undefined>;
+}
+
 /**
  * Supplies products' 3D models, e.g. from a backend's download links.
  * Injected by the host; core never fetches anything itself. Models follow the

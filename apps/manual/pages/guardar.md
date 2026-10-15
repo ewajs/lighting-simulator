@@ -1,4 +1,4 @@
-# Guardar y abrir
+# Guardar, abrir y compartir
 
 Mientras trabajás, la escena se **guarda sola** en este navegador. Si
 cerrás la pestaña o se te apaga la computadora, al volver la encontrás como
@@ -13,6 +13,16 @@ vacío** y ambientes ya armados, como un comedor, un living, un dormitorio,
 una oficina en casa o un local, cada uno con su plano. Elegí uno y reemplaza la escena; si
 fue sin querer, **⌘Z** trae de vuelta la anterior.
 
+## Compartir
+
+**Compartir** (arriba; en el celular, en el menú **⋯**) copia un enlace a tu
+escena. Quien lo abra ve una copia: lo que cambie no toca la tuya. En el
+celular se abre el menú para compartir del teléfono, para mandarlo directo
+por mensaje o correo.
+
+Al abrir un enlace, la escena compartida reemplaza la tuya; **⌘Z** la trae de
+vuelta.
+
 ## Archivos
 
 - **Guardar** (el disquete arriba, o **⌘S**) descarga la escena como un
@@ -25,7 +35,7 @@ fue sin querer, **⌘Z** trae de vuelta la anterior.
 Abrir reemplaza la escena actual. Si fue sin querer, **⌘Z** la trae de
 vuelta.
 
-En el celular, Nuevo, Guardar y Abrir están en el menú **⋯**.
+En el celular, Nuevo, Guardar, Abrir y Compartir están en el menú **⋯**.
 
 ### Si un archivo no abre
 
