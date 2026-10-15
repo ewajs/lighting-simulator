@@ -95,7 +95,8 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
 - P1: Simple parametric furniture and props (table, sofa, desk, shelf) for
   scale and to catch light.
 - P1: Room templates: starter scenes (living room, kitchen, office, shop)
-  with sizes, finishes and a lighting layout.
+  with sizes, finishes and a lighting layout, offered by New
+  ([ADR 0052](./decisions/0052-autosave-and-templates.md)).
 - P2: glTF import for furniture and architecture.
 
 ### 4.2 Luminaires
@@ -179,7 +180,8 @@ whatever the visual quality.
 - P0: Export / import a scene as versioned JSON, `.luxstudio.json`
   ([ADR 0051](./decisions/0051-scene-files.md)). Opening replaces the scene
   as one undo step.
-- P0: Autosave the current scene locally (IndexedDB).
+- P0: Autosave the current scene locally, in localStorage (a scene is a few
+  KB; [ADR 0052](./decisions/0052-autosave-and-templates.md)).
 - P1: Save and share through a host-provided storage provider (e.g. the
   integrator's backend), giving a shareable URL.
 

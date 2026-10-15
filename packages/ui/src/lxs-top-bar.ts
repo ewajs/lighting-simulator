@@ -6,6 +6,7 @@ import {
   Camera,
   CircleQuestionMark,
   Ellipsis,
+  FilePlus,
   FolderOpen,
   Moon,
   PanelLeft,
@@ -25,7 +26,7 @@ export type Theme = 'dark' | 'light';
 export type PanelName = 'library' | 'inspector';
 
 /**
- * Top bar: host brand (slot), undo/redo, open and save, panel toggles, theme
+ * Top bar: host brand (slot), undo/redo, new, open and save, panel toggles, theme
  * and language. `compact` (phones) keeps brand and undo/redo, and moves the
  * rest into a ⋯ menu (a native popover).
  * Undo/redo are document edits and go to the Simulator directly (ADR 0025);
@@ -35,6 +36,7 @@ export type PanelName = 'library' | 'inspector';
  * @fires lxs-theme-change - `detail: { theme }`
  * @fires lxs-locale-request - `detail: { locale }`
  * @fires lxs-panel-toggle - `detail: { panel }`
+ * @fires lxs-new-request - the user wants to start a new scene from a template
  * @fires lxs-open-request - the user wants to open a scene file
  * @fires lxs-save-request - the user wants to save the scene to a file
  * @fires lxs-screenshot-request
@@ -152,6 +154,9 @@ export class LxsTopBar extends LitElement {
           </button>
         </div>
         <div id="menu" popover role="menu" @beforetoggle=${this.#placeMenu}>
+          <button class="menu-item" type="button" role="menuitem" @click=${this.#new}>
+            ${icon(FilePlus)} ${msg('New…')}
+          </button>
           <button class="menu-item" type="button" role="menuitem" @click=${this.#open}>
             ${icon(FolderOpen)} ${msg('Open…')}
           </button>
@@ -175,6 +180,7 @@ export class LxsTopBar extends LitElement {
       <div class="side"><slot name="brand"></slot></div>
       <div class="side" style="flex: none">${undoRedo}</div>
       <div class="side end">
+        ${this.#button(msg('New…'), icon(FilePlus), this.#new)}
         ${this.#button(msg('Open…'), icon(FolderOpen), this.#open)}
         ${this.#button(msg('Save'), icon(Save), this.#save)}
         ${this.#button(msg('Screenshot'), icon(Camera), this.#screenshot)}
@@ -224,6 +230,11 @@ export class LxsTopBar extends LitElement {
   #help = (): void => {
     this.#closeMenu();
     this.#emit('lxs-help-request', {});
+  };
+
+  #new = (): void => {
+    this.#closeMenu();
+    this.#emit('lxs-new-request', {});
   };
 
   #open = (): void => {
@@ -291,6 +302,7 @@ declare global {
     'lxs-theme-change': CustomEvent<{ theme: Theme }>;
     'lxs-locale-request': CustomEvent<{ locale: Locale }>;
     'lxs-panel-toggle': CustomEvent<{ panel: PanelName }>;
+    'lxs-new-request': CustomEvent<object>;
     'lxs-open-request': CustomEvent<object>;
     'lxs-save-request': CustomEvent<object>;
     'lxs-screenshot-request': CustomEvent<object>;

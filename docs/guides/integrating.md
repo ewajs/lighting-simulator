@@ -206,6 +206,25 @@ const missing = unknownProducts(simulator.scene, catalog);
 in your own words; `error.message` names the field at fault. Files store
 product ids, not product data: your catalog stays the source of truth.
 
+### Autosave and templates
+
+`<lxs-app autosave>` keeps the scene in the browser as it changes. Start the
+Simulator from it, so the user picks up where they left off
+([ADR 0052](../decisions/0052-autosave-and-templates.md)):
+
+```ts
+import { loadAutosave } from '@luxstudio/ui';
+
+const simulator = new Simulator({ catalog, scene: loadAutosave() ?? myStarterScene });
+app.autosave = true;
+```
+
+New offers an empty room plus your templates, listed in
+`DisplayCatalog.templates` with a name in the active language. A template is
+just a scene; build it with a scratch Simulator so placement follows the usual
+rules, and build it once so its ids stay put. Without a `thumbnailUrl`, New
+draws its floor plan.
+
 ## When something looks wrong
 
 - Pass `consoleLogger('debug')` to see every step: loads, parses, edits,

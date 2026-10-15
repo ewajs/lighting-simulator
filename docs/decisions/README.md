@@ -55,3 +55,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0049 | [Furniture in the editing tools: arrows, a floor ring, edge distances](0049-furniture-in-the-editing-tools.md) | Accepted |
 | 0050 | [Surface textures from a host provider, brightness matched to reflectance](0050-surface-textures.md) | Accepted |
 | 0051 | [Scene files: versioned `.luxstudio.json`, opened as one undo step](0051-scene-files.md) | Accepted |
+| 0052 | [Autosave in localStorage, and New from room templates](0052-autosave-and-templates.md) | Accepted |

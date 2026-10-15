@@ -168,6 +168,12 @@ for (const language of LANGUAGES) {
       await page.locator('lxs-top-bar').screenshot({ path: out(language, 'top-bar') });
     });
 
+    test('new scene', async ({ page }) => {
+      await open(page, language);
+      await page.getByRole('button', { name: language === 'es' ? 'Nuevo…' : 'New…' }).click();
+      await page.locator('lxs-new-scene dialog').screenshot({ path: out(language, 'new-scene') });
+    });
+
     test('your own IES file', async ({ page }) => {
       await open(page, language);
       await page.locator('lxs-ies-import input[type=file]').setInputFiles(IES_FILE);
