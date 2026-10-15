@@ -35,6 +35,9 @@ export default defineConfig<SuiteOptions>({
     { name: 'webkit', use: { browserName: 'webkit' } },
   ],
   expect: {
+    // Refreshing a baseline takes two identical captures in a row; WebKit
+    // under load sometimes needed more than the default 5 s.
+    timeout: 10_000,
     // Renders were pixel-identical across runs on the dev machine; removing the
     // 4200 lm pendant changes ~1800 pixels. 100 leaves room for GPU/driver noise
     // while still catching a missing fixture or outline.

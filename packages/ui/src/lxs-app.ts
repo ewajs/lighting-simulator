@@ -16,6 +16,9 @@ import { appStyles } from './lxs-app.styles';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { newMergeKey } from './field-change';
 import { datedFileName } from './format';
+import { writeAutosave } from './autosave';
+import './lxs-new-scene';
+import type { TemplatePickDetail } from './lxs-new-scene';
 import './lxs-notice';
 import type { Notice } from './lxs-notice';
 import { download, openSceneFile, saveSceneFile, SCENE_FILE_ACCEPT } from './scene-files';
@@ -44,6 +47,8 @@ import './lxs-viewport-controls';
 import { pruneSelection, selectionAfterPick, selectionForMove, selectionKind } from './selection';
 import { isTyping, shortcutAction, type EditTool, type ShortcutAction } from './shortcuts';
 
+/** How long after the last change the scene is autosaved, in ms. */
+const AUTOSAVE_DELAY_MS = 1000;
 /** Below this width the library starts collapsed, leaving the viewport room (landscape tablets). */
 const AUTO_COLLAPSE_LIBRARY_BELOW_PX = 1200;
 /** Matches the narrow layout in the styles below, where the inspector becomes a sheet over the viewport. */
@@ -93,6 +98,12 @@ export class LxsApp extends LitElement {
   @property({ type: Boolean, attribute: 'help-on-start' }) helpOnStart = false;
   /** The full user manual, per language; the help's last card links to it. */
   @property({ attribute: false }) manualUrls: Partial<Record<Locale, string>> = {};
+  /**
+   * Keeps the scene in this browser's localStorage as it changes, a second
+   * after the last edit (ADR 0052). Start the Simulator from `loadAutosave()`
+   * to pick up where the user left off.
+   */
+  @property({ type: Boolean }) autosave = false;
   /** Shows frame rate, backend, shadows and draw counts over the viewport, for debugging (ADR 0044). */
   @property({ type: Boolean }) diagnostics = false;
   /** UI language for the whole page. */
@@ -108,6 +119,11 @@ export class LxsApp extends LitElement {
   @state() private helpOpen = false;
   /** A short message over the viewport, e.g. after opening a file. */
   @state() private notice: Notice | null = null;
+  /** Whether New's template dialog is open. */
+  @state() private newOpen = false;
+  #autosaveTimer: number | undefined;
+  /** Whether autosaving has failed, so it's reported once. */
+  #autosaveFailed = false;
   @state() private scene: Scene | undefined;
   /** Which handle the selection shows: arrows to move it, or the aim handle. */
   @state() private tool: EditTool = 'move';
@@ -136,6 +152,12 @@ export class LxsApp extends LitElement {
 
   override render() {
     return html`${this.phone ? this.#renderPhone() : this.#renderDesktop()}
+      <lxs-new-scene
+        .open=${this.newOpen}
+        .templates=${this.catalog.templates ?? []}
+        @lxs-template-pick=${this.#onTemplatePick}
+        @lxs-new-scene-close=${() => (this.newOpen = false)}
+      ></lxs-new-scene>
       <lxs-help
         .open=${this.helpOpen}
         .iesImport=${this.iesImport}
@@ -244,6 +266,7 @@ export class LxsApp extends LitElement {
       .compact=${compact}
       @lxs-theme-change=${({ detail }: CustomEvent<{ theme: Theme }>) => (this.theme = detail.theme)}
       @lxs-locale-request=${({ detail }: CustomEvent<{ locale: Locale }>) => (this.locale = detail.locale)}
+      @lxs-new-request=${() => (this.newOpen = true)}
       @lxs-open-request=${this.#pickFile}
       @lxs-save-request=${this.#save}
       @lxs-screenshot-request=${() => void this.#takeScreenshot()}
@@ -300,6 +323,41 @@ export class LxsApp extends LitElement {
     if (this.notice.kind !== 'error') this.viewport.setView(this.view);
   }
 
+  /** New: the template replaces the scene as one undo step, framed in the current view. */
+  #onTemplatePick = ({ detail }: CustomEvent<TemplatePickDetail>): void => {
+    if (!this.simulator) return;
+    this.simulator.setScene(detail.scene);
+    this.viewport.setView(this.view);
+    this.notice = { kind: 'info', text: msg(str`New scene: ${detail.name}.`) };
+  };
+
+  /** Autosaves a second after the last change, so a drag is written once, not per move. */
+  #scheduleAutosave(): void {
+    window.clearTimeout(this.#autosaveTimer);
+    this.#autosaveTimer = window.setTimeout(() => this.#writeAutosave(), AUTOSAVE_DELAY_MS);
+  }
+
+  #writeAutosave(): void {
+    window.clearTimeout(this.#autosaveTimer);
+    this.#autosaveTimer = undefined;
+    if (!this.scene) return;
+    try {
+      writeAutosave(this.scene);
+    } catch (error) {
+      if (!this.#autosaveFailed) this.#logger.error("[ui] Couldn't autosave the scene", error);
+      this.#autosaveFailed = true;
+    }
+  }
+
+  /**
+   * Leaving or hiding the page writes a pending autosave now. Phones often
+   * hide a page without ever unloading it; writing on any visibility change
+   * does no harm.
+   */
+  #flushAutosave = (): void => {
+    if (this.#autosaveTimer !== undefined) this.#writeAutosave();
+  };
+
   #save = (): void => {
     if (this.scene) saveSceneFile(this.scene);
   };
@@ -345,6 +403,8 @@ export class LxsApp extends LitElement {
   override connectedCallback(): void {
     super.connectedCallback();
     window.addEventListener('keydown', this.#onKeyDown);
+    window.addEventListener('pagehide', this.#flushAutosave);
+    document.addEventListener('visibilitychange', this.#flushAutosave);
     this.#narrowQuery.addEventListener('change', this.#onNarrowChange);
     this.#phoneQuery.addEventListener('change', this.#onPhoneChange);
     this.#landscapeQuery.addEventListener('change', this.#onLandscapeChange);
@@ -371,6 +431,9 @@ export class LxsApp extends LitElement {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.#onKeyDown);
+    window.removeEventListener('pagehide', this.#flushAutosave);
+    document.removeEventListener('visibilitychange', this.#flushAutosave);
+    this.#flushAutosave();
     this.#narrowQuery.removeEventListener('change', this.#onNarrowChange);
     this.#phoneQuery.removeEventListener('change', this.#onPhoneChange);
     this.#landscapeQuery.removeEventListener('change', this.#onLandscapeChange);
@@ -431,6 +494,7 @@ export class LxsApp extends LitElement {
     this.#unsubscribe = simulator?.subscribe((scene) => {
       this.scene = scene;
       this.selection = pruneSelection(this.selection, scene);
+      if (this.autosave) this.#scheduleAutosave();
     });
   }
 
@@ -519,7 +583,7 @@ export class LxsApp extends LitElement {
 
   #onKeyDown = (event: KeyboardEvent): void => {
     // The help is modal: shortcuts mustn't act on the app behind it, and Esc is its own.
-    if (this.helpOpen || isTyping(event)) return;
+    if (this.helpOpen || this.newOpen || isTyping(event)) return;
     const action = shortcutAction(event);
     if (!action) return;
     event.preventDefault();

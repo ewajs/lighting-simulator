@@ -1,7 +1,19 @@
 # Guardar y abrir
 
-Tu escena se guarda en un archivo que podés volver a abrir, mandar o
-guardar junto al proyecto.
+Mientras trabajás, la escena se **guarda sola** en este navegador. Si
+cerrás la pestaña o se te apaga la computadora, al volver la encontrás como
+la dejaste. Para tenerla en otro lado, o mandarla, guardala en un archivo.
+
+## Nueva escena
+
+![Nueva escena: un ambiente vacío y plantillas, cada una con su plano](/screenshots/es/new-scene.png)
+
+**Nuevo** (la hoja con el +, arriba) abre las plantillas: un **ambiente
+vacío** y ambientes ya armados, como un comedor, un living, un dormitorio,
+una oficina en casa o un local, cada uno con su plano. Elegí uno y reemplaza la escena; si
+fue sin querer, **⌘Z** trae de vuelta la anterior.
+
+## Archivos
 
 - **Guardar** (el disquete arriba, o **⌘S**) descarga la escena como un
   archivo `.luxstudio.json`, por ejemplo `escena-2026-10-14-1830.luxstudio.json`.
@@ -13,9 +25,9 @@ guardar junto al proyecto.
 Abrir reemplaza la escena actual. Si fue sin querer, **⌘Z** la trae de
 vuelta.
 
-En el celular, Guardar y Abrir están en el menú **⋯**.
+En el celular, Nuevo, Guardar y Abrir están en el menú **⋯**.
 
-## Si un archivo no abre
+### Si un archivo no abre
 
 Un aviso abajo a la izquierda dice qué pasó, y la escena no cambia:
 
@@ -23,7 +35,7 @@ Un aviso abajo a la izquierda dice qué pasó, y la escena no cambia:
 - **se guardó con una versión más nueva:** actualizá la app para abrirlo;
 - **está dañado:** le falta algo o tiene un valor que no corresponde.
 
-## Productos que el catálogo no tiene
+### Productos que el catálogo no tiene
 
 El archivo guarda qué producto es cada luminaria, no sus datos: los toma
 del catálogo. Si abrís un archivo con productos que este catálogo no tiene

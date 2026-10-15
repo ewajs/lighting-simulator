@@ -12,8 +12,14 @@ export type {
   CatalogCategory,
   CatalogItem,
   DisplayCatalog,
+  RoomTemplate,
   SurfaceMaterial,
 } from './display-catalog';
+export { AUTOSAVE_KEY, loadAutosave } from './autosave';
+export { LxsNewScene } from './lxs-new-scene';
+export type { TemplatePickDetail } from './lxs-new-scene';
+export { LxsNotice } from './lxs-notice';
+export type { Notice } from './lxs-notice';
 export { DEFAULT_LOCALE, getLocale, LOCALES, setLocale } from './localization';
 export type { Locale } from './localization';
 export { LxsInspector } from './lxs-inspector';

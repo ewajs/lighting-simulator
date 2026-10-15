@@ -807,6 +807,30 @@
   <source><x id="0" equiv-text="${name}"/> is damaged and can't be opened.</source>
   <target><x id="0" equiv-text="${name}"/> está dañado y no se puede abrir.</target>
 </trans-unit>
+<trans-unit id="se2920f9cc98b823b">
+  <source>New scene: <x id="0" equiv-text="${detail.name}"/>.</source>
+  <target>Nueva escena: <x id="0" equiv-text="${detail.name}"/>.</target>
+</trans-unit>
+<trans-unit id="s93f5ad94af929fe9">
+  <source>Empty room</source>
+  <target>Ambiente vacío</target>
+</trans-unit>
+<trans-unit id="s46e3ebbedf187661">
+  <source>New scene</source>
+  <target>Nueva escena</target>
+</trans-unit>
+<trans-unit id="s29751b4ed95178e2">
+  <source>Start from a template. Undo brings your current scene back.</source>
+  <target>Empezá desde una plantilla. Deshacer trae de vuelta tu escena actual.</target>
+</trans-unit>
+<trans-unit id="s003d9ec3cbee7cb1">
+  <source><x id="0" equiv-text="${size}"/> · <x id="1" equiv-text="${lights}"/> luminaires · <x id="2" equiv-text="${pieces}"/> pieces</source>
+  <target><x id="0" equiv-text="${size}"/> · <x id="1" equiv-text="${lights}"/> luminarias · <x id="2" equiv-text="${pieces}"/> muebles</target>
+</trans-unit>
+<trans-unit id="s0ff731c6a1e0eff5">
+  <source>New…</source>
+  <target>Nuevo…</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

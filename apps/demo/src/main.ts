@@ -1,17 +1,12 @@
-import {
-  consoleLogger,
-  Simulator,
-  type Catalog,
-  type PhotometryProvider,
-  type Scene,
-} from '@luxstudio/core';
-import '@luxstudio/ui';
+import { consoleLogger, Simulator, type Catalog, type PhotometryProvider } from '@luxstudio/core';
+import { loadAutosave, type Locale } from '@luxstudio/ui';
 import '@luxstudio/ui/theme.css';
 import { ImportedProducts } from './imported-products';
 import { sampleCatalog } from './sample-catalog';
 import { sampleDisplay } from './sample-display';
 import { sampleModels } from './sample-models';
 import { samplePhotometry } from './sample-photometry';
+import { localizedTemplates, sampleTemplates } from './sample-templates';
 import { sampleTextures } from './sample-textures';
 
 // Visitors can try their own IES files; they join the sample catalog for this visit.
@@ -27,10 +22,14 @@ const photometry: PhotometryProvider = {
 // `?debug` in the URL logs every step to the console and shows frame rate and draw counts.
 const debug = new URLSearchParams(location.search).has('debug');
 
-// The starter layout is the starting scene, not edits: undo can't take it apart.
+// Built once, so their ids stay put; the dining room is also the starter scene.
+const templates = sampleTemplates(catalog);
+
+// Where the visitor left off (autosaved in this browser), else the starter
+// scene. Either is the starting scene, not edits: undo can't take it apart.
 const simulator = new Simulator({
   catalog,
-  scene: starterScene(catalog),
+  scene: loadAutosave() ?? templates[0]!.scene,
   photometry,
   models: sampleModels,
   textures: sampleTextures,
@@ -41,6 +40,7 @@ const app = document.createElement('lxs-app');
 app.simulator = simulator;
 app.iesImport = true;
 app.diagnostics = debug;
+app.autosave = true;
 // First-time visitors get the getting-started help; it links to the manual,
 // which is published next to the demo.
 app.helpOnStart = true;
@@ -48,15 +48,17 @@ app.manualUrls = {
   'es-AR': new URL('manual/', document.baseURI).href,
   en: new URL('manual/en/', document.baseURI).href,
 };
-app.catalog = sampleDisplay('es-AR'); // Matches the default UI locale.
+/** Names, materials and templates in the given language, with the visitor's imported files. */
+const display = (locale: Locale) => ({
+  ...sampleDisplay(locale, imported.items),
+  templates: localizedTemplates(templates, locale),
+});
+app.catalog = display('es-AR'); // Matches the default UI locale.
 // Product names come from the host, so swap them when the user changes language.
-app.addEventListener(
-  'lxs-locale-change',
-  ({ detail }) => (app.catalog = sampleDisplay(detail.locale, imported.items)),
-);
+app.addEventListener('lxs-locale-change', ({ detail }) => (app.catalog = display(detail.locale)));
 app.addEventListener('lxs-import-ies', ({ detail }) => {
   imported.add(detail);
-  app.catalog = sampleDisplay(app.locale, imported.items);
+  app.catalog = display(app.locale);
 });
 
 const brand = document.createElement('span');
@@ -64,33 +66,3 @@ brand.slot = 'brand';
 brand.textContent = 'Lux Studio';
 app.append(brand);
 document.body.append(app);
-
-/**
- * A small dining room with an oak floor, lit by the real IES products: a linear direct/indirect
- * pendant over the dining table, two wall washers on the back wall, a track
- * spot on the picture on the left wall, and an up/down light on the right wall.
- */
-function starterScene(catalog: Catalog): Scene {
-  // Built with a scratch simulator, so placement and aim follow the usual rules.
-  const sim = new Simulator({ catalog });
-  sim.setSurface('floor', { texture: 'oak-planks', reflectance: 0.3 });
-  sim.addLuminaire('ies-linear-pendant');
-  // Pan 180° turns their forward throw (C0, local +z) towards the back wall at z = −2.
-  for (const x of [-1.2, 1.2]) {
-    sim.addLuminaire('ies-wall-washer', { at: { x, z: -1.5 }, aim: { tiltDeg: 0, panDeg: 180 } });
-  }
-  // Pan −90° turns the spot towards the left wall at x = −2.5; 50° tilt meets
-  // it 1.5 / tan 50° ≈ 1.26 m below the ceiling, at the picture's centre.
-  sim.addLuminaire('ies-track-spot', { at: { x: -1, z: 0.8 }, aim: { tiltDeg: 50, panDeg: -90 } });
-  sim.addLuminaire('ies-wall-up-down', { at: { x: 2.4, z: 0 } });
-
-  sim.addFurniture('dining-table');
-  // Two chairs on each long side, facing the table (a chair faces +z unturned).
-  for (const x of [-0.4, 0.4]) {
-    sim.addFurniture('chair', { at: { x, z: -0.55 } });
-    sim.addFurniture('chair', { at: { x, z: 0.55 }, rotationDeg: 180 });
-  }
-  sim.addFurniture('artwork', { position: { x: -2.5, y: 1.45, z: 0.8 } });
-  sim.addFurniture('plant', { at: { x: 2.1, z: -1.65 } });
-  return sim.scene;
-}

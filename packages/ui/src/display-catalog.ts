@@ -36,12 +36,30 @@ export interface SurfaceMaterial {
   readonly surfaces: readonly SurfaceName[];
 }
 
-/** What the catalog panel and the room panel show. Category order is display order. */
+/**
+ * A starting point for a new scene (ADR 0052): a room with its finishes,
+ * luminaires and furniture, offered by New. Its products should be in core's
+ * Catalog.
+ */
+export interface RoomTemplate {
+  readonly id: string;
+  readonly name: string;
+  readonly scene: Scene;
+  /** Optional picture; without one, New draws the template's floor plan. */
+  readonly thumbnailUrl?: string;
+}
+
+/**
+ * What the catalog panel, the room panel and New show, in the active language.
+ * Category order is display order.
+ */
 export interface DisplayCatalog {
   readonly categories: readonly CatalogCategory[];
   readonly items: readonly CatalogItem[];
   /** Surface materials, in display order. Without them, surfaces offer colours only. */
   readonly materials?: readonly SurfaceMaterial[];
+  /** Room templates for New, in display order, after the empty room New always offers. */
+  readonly templates?: readonly RoomTemplate[];
 }
 
 export const EMPTY_DISPLAY_CATALOG: DisplayCatalog = { categories: [], items: [] };
