@@ -11,7 +11,7 @@ export const MAX_MODEL_SIZE_M = 6;
 /**
  * Parses each product's model file once, into a template that fixtures are
  * cloned from (ADR 0043). Parsing is asynchronous: until a model is ready,
- * luminaires keep their placeholder, and `onReady` asks for a redraw.
+ * the luminaire waits, and `onReady` asks for a redraw.
  */
 export class FixtureModels {
   readonly #loader = new GLTFLoader();
@@ -19,6 +19,7 @@ export class FixtureModels {
   readonly #logger: Logger;
   /** Parsed templates by file, or null for a file that couldn't be used. */
   readonly #templates = new Map<ArrayBuffer, THREE.Object3D | null>();
+  readonly #parsing = new Set<ArrayBuffer>();
   #disposed = false;
 
   constructor(onReady: () => void, logger: Logger) {
@@ -33,6 +34,11 @@ export class FixtureModels {
     return this.#templates.get(file) ?? undefined;
   }
 
+  /** Whether a model file is still being parsed. */
+  isParsing(file: ArrayBuffer | undefined): boolean {
+    return file !== undefined && this.#parsing.has(file);
+  }
+
   /** Frees every template's geometry and materials. */
   dispose(): void {
     this.#disposed = true;
@@ -42,6 +48,7 @@ export class FixtureModels {
 
   async #parse(productId: string, file: ArrayBuffer): Promise<void> {
     this.#templates.set(file, null); // Parsing; asked again, it's not ready yet.
+    this.#parsing.add(file);
     let template: THREE.Object3D | null = null;
     try {
       const { scene } = await this.#loader.parseAsync(file, '');
@@ -57,12 +64,14 @@ export class FixtureModels {
       const reason = error instanceof Error ? error.message : String(error);
       this.#logger.warn(`[models] "${productId}" can't be used, using a placeholder: ${reason}`);
     }
+    this.#parsing.delete(file);
     if (this.#disposed) {
       template?.traverse(disposeMesh);
       return;
     }
     this.#templates.set(file, template);
-    if (template) this.#onReady();
+    // Also when it couldn't be used: what was waiting on it can show without it.
+    this.#onReady();
   }
 }
 

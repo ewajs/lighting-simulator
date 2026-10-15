@@ -69,3 +69,15 @@ brand.slot = 'brand';
 brand.textContent = 'Lux Studio';
 app.append(brand);
 document.body.append(app);
+
+// index.html shows a plain loader before any script runs; it goes once the
+// scene is drawn with everything it needs.
+const splash = document.getElementById('splash');
+app.addEventListener(
+  'lxs-ready',
+  () => {
+    splash?.classList.add('done');
+    setTimeout(() => splash?.remove(), 250);
+  },
+  { once: true },
+);

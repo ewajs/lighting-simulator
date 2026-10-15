@@ -141,7 +141,9 @@ export class LxsRoomInspector extends LitElement {
       </section>
       ${this.#surface('floor', msg('Floor'))} ${this.#surface('walls', msg('Walls'))}
       ${this.#surface('ceiling', msg('Ceiling'))}
-      <p class="hint">${msg('Select a luminaire in the viewport or the Scene list to edit it.')}</p>
+      <p class="hint">
+        ${msg('Select a luminaire or a piece of furniture in the viewport or the Scene list to edit it.')}
+      </p>
     `;
   }
 

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // Moving luminaires by dragging them (ADR 0038) and with the move handle
 // (ADR 0039). Screen points are for the default view at 1280×800, as in
@@ -20,7 +20,7 @@ async function openDemo(page: Page): Promise<string[]> {
     if (message.type() === 'error') errors.push(message.text());
   });
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
   return errors;
 }
 

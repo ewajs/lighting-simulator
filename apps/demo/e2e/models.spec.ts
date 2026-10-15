@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // Fixture models from the demo's ModelProvider (ADR 0043). Screen points are
 // for the default view at 1280×800, as in smoke.spec.ts.
@@ -6,7 +6,7 @@ const PENDANT = { x: 642, y: 356 };
 
 async function openDemo(page: Page): Promise<void> {
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
 }
 
 test('IES products load their model once each, without warnings', async ({ page }) => {

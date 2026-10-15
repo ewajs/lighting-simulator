@@ -1,11 +1,11 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // Room surfaces: colours and the host's materials (ADR 0050). The demo's
 // starter floor is oak planks; the other materials come from its sample list.
 
 async function openDemo(page: Page): Promise<void> {
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
 }
 
 /** The room panel's section for one surface, by its Spanish heading. */
@@ -66,5 +66,5 @@ test('a texture that fails to load is reported, and the floor shows its colour',
   await expect
     .poll(() => warnings.some((text) => /\[textures\] "oak-planks" failed to load/.test(text)))
     .toBe(true);
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
 });

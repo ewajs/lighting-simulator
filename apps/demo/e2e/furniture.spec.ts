@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // Furniture (ADR 0047): adding it, selecting it, editing it in the inspector
 // and dragging it over the floor. Screen points are for the default view at
@@ -13,7 +13,7 @@ const RING_RIGHT = { x: 729, y: 510 };
 
 async function openDemo(page: Page): Promise<void> {
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
 }
 
 /** Presses at `from`, moves to `to` in small steps and releases. */

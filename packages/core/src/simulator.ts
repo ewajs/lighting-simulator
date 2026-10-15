@@ -164,6 +164,36 @@ export class Simulator {
     return this.#textures.subscribe(listener);
   }
 
+  /**
+   * Whether nothing more is coming for the product: its IES file and model
+   * have each arrived, turned out not to exist, failed or timed out. The
+   * first call starts loading them. The viewport draws a luminaire only once
+   * its product has settled, so a stand-in never shows (ADR 0054).
+   */
+  productSettled(productId: string): boolean {
+    this.#photometry.get(productId);
+    this.#models.get(productId);
+    return !this.#photometry.isLoading(productId) && !this.#models.isLoading(productId);
+  }
+
+  /** Like `productSettled`, for a surface texture. */
+  textureSettled(textureId: string): boolean {
+    this.#textures.get(textureId);
+    return !this.#textures.isLoading(textureId);
+  }
+
+  /**
+   * Calls `listener` whenever an IES file, model or texture load ends, in
+   * whatever way, including one that arrives after timing out. Returns an
+   * unsubscribe function.
+   */
+  onAssetSettled(listener: () => void): () => void {
+    const unsubscribes = [this.#photometry, this.#models, this.#textures].map((cache) =>
+      cache.onSettled(() => listener()),
+    );
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
+  }
+
   /** Current scene snapshot. Never mutate it; it is replaced on every change. */
   get scene(): Scene {
     return this.#scene;

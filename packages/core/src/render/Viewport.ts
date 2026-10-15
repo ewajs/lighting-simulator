@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { constrainPosition, defaultPosition, mountSurfaceHit, roomSurfaceHit } from '../placement';
 import type { Simulator } from '../simulator';
 import { findItem, itemCentre } from '../scene-items';
-import type { FloorPoint, PickTarget, Scene } from '../types';
+import type { FloorPoint, PickTarget, Scene, SurfaceName } from '../types';
 import {
   indirectIlluminance,
   MIN_FILL_LUX,
@@ -19,9 +19,10 @@ import { Manipulator, type HandleMode, type MoveStartEvent } from './Manipulator
 import { PointerGestures } from './PointerGestures';
 import { itemIdOf } from './overlay';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
-import { SurfaceTextures } from './SurfaceTextures';
+import { SurfaceTextures, type PreparedTexture } from './SurfaceTextures';
 
 const VIEW_TRANSITION_MS = 450;
+const SURFACE_NAMES: readonly SurfaceName[] = ['floor', 'walls', 'ceiling'];
 /** Weight of each new frame in the smoothed frame time: about a second's memory at 60 fps. */
 const FRAME_SMOOTHING = 0.05;
 /** A click this close to a fixture on screen still picks it: thin fixtures, fingers. In px. */
@@ -62,6 +63,7 @@ export interface Diagnostics {
   readonly backend: 'WebGPU' | 'WebGL 2';
   /** Frames per second, smoothed over the last second or so. */
   readonly fps: number;
+  /** Luminaires drawn: those still waiting for their files aren't (ADR 0054). */
   readonly luminaires: number;
   /** Lights casting shadows, at most the shadow budget. */
   readonly shadowCasters: number;
@@ -120,9 +122,12 @@ export class Viewport {
   #lastMeasurements = '[]';
   readonly #resizeObserver = new ResizeObserver(() => this.#resize());
   #unsubscribe: (() => void) | undefined;
-  #unsubscribePhotometry: (() => void) | undefined;
-  #unsubscribeModels: (() => void) | undefined;
-  #unsubscribeTextures: (() => void) | undefined;
+  #unsubscribeAssets: (() => void) | undefined;
+  readonly #loadingListeners = new Set<(loading: boolean) => void>();
+  /** What was last reported to loading listeners. */
+  #lastLoading = false;
+  /** Each surface's texture as last drawn: kept while a new one loads, so no plain colour flashes. */
+  #shownTextures: Partial<Record<SurfaceName, PreparedTexture>> = {};
   #renderMode: RenderMode = 'realistic';
   #exposureEv = 0;
   #highlighted: readonly string[] = [];
@@ -147,6 +152,7 @@ export class Viewport {
     this.#textures = new SurfaceTextures(() => this.#updateRoom(), simulator.logger);
     this.#luminaires = new LuminaireMeshes({
       catalog: simulator.catalog,
+      ready: (productId) => this.#productReady(productId),
       photometry: (productId) => simulator.photometry(productId),
       model: (productId) => this.#models.get(productId, simulator.model(productId)),
       logger: simulator.logger,
@@ -199,16 +205,11 @@ export class Viewport {
     this.#resize();
 
     this.#unsubscribe = this.#simulator.subscribe((scene, previous) => this.#sync(scene, previous));
-    // Fixtures are rebuilt from a product's photometry once its file arrives.
-    this.#unsubscribePhotometry = this.#simulator.onPhotometry(() =>
+    // An IES file, model or texture that arrives (or fails) is used on the next
+    // sync: fixtures waiting on it appear; models and textures are parsed, then shown.
+    this.#unsubscribeAssets = this.#simulator.onAssetSettled(() =>
       this.#sync(this.#simulator.scene, undefined),
     );
-    // A model file that arrives is parsed on the next sync, then swapped in.
-    this.#unsubscribeModels = this.#simulator.onModel(() =>
-      this.#sync(this.#simulator.scene, undefined),
-    );
-    // A texture that arrives is decoded on the next room update, then shown.
-    this.#unsubscribeTextures = this.#simulator.onTexture(() => this.#updateRoom());
     this.#sync(this.#simulator.scene, undefined);
     this.setView('perspective', { animate: false });
 
@@ -231,7 +232,7 @@ export class Viewport {
     return {
       backend: this.backend,
       fps: this.#frameMs > 0 ? 1000 / this.#frameMs : 0,
-      luminaires: this.#simulator.scene.luminaires.length,
+      luminaires: this.#luminaires.count,
       shadowCasters: this.#luminaires.shadowCasters,
       drawCalls,
       triangles,
@@ -407,9 +408,7 @@ export class Viewport {
     for (const { reject } of this.#captures) reject(new Error('Viewport disposed'));
     this.#captures = [];
     this.#unsubscribe?.();
-    this.#unsubscribePhotometry?.();
-    this.#unsubscribeModels?.();
-    this.#unsubscribeTextures?.();
+    this.#unsubscribeAssets?.();
     this.#resizeObserver.disconnect();
     this.#controls.dispose();
     this.#room.dispose();
@@ -467,15 +466,71 @@ export class Viewport {
       indirectIlluminance(this.#luminaires.totalFlux(), scene.room) + MIN_FILL_LUX;
     this.#renderer.toneMappingExposure = toneMappingExposure(this.#exposureEv);
     this.#manipulator.refresh();
+    this.#reportLoading();
   }
 
-  /** Rebuilds the room shell, with each surface's texture once it's ready. */
+  /**
+   * Rebuilds the room shell, with each surface's texture once it's ready.
+   * While a new texture loads, the surface keeps the one it had.
+   */
   #updateRoom(): void {
     const { room } = this.#simulator.scene;
+    const shown: Partial<Record<SurfaceName, PreparedTexture>> = {};
     this.#room.update(room, this.#renderMode, (name) => {
       const id = room.surfaces[name].texture;
-      return id ? this.#textures.get(id, this.#simulator.texture(id)) : undefined;
+      const texture = id && this.#textures.get(id, this.#simulator.texture(id));
+      shown[name] =
+        texture || (id && !this.#textureReady(id) ? this.#shownTextures[name] : undefined);
+      return shown[name];
     });
+    this.#shownTextures = shown;
+    this.#reportLoading();
+  }
+
+  /**
+   * Whether something the scene shows is still loading: a product's IES file
+   * or model, or a surface's texture, including parsing and decoding. Its
+   * luminaire or surface waits meanwhile (ADR 0054).
+   */
+  get loading(): boolean {
+    const { luminaires, room } = this.#simulator.scene;
+    const products = new Set(luminaires.map((l) => l.productId));
+    for (const id of products) if (!this.#productReady(id)) return true;
+    return SURFACE_NAMES.some((name) => {
+      const id = room.surfaces[name].texture;
+      return id !== undefined && !this.#textureReady(id);
+    });
+  }
+
+  /**
+   * Calls `listener` when `loading` changes, e.g. to show a spinner while it's
+   * true. Returns an unsubscribe function.
+   */
+  onLoadingChange(listener: (loading: boolean) => void): () => void {
+    this.#loadingListeners.add(listener);
+    return () => this.#loadingListeners.delete(listener);
+  }
+
+  #reportLoading(): void {
+    const loading = this.loading;
+    if (loading === this.#lastLoading) return;
+    this.#lastLoading = loading;
+    this.#simulator.logger.debug(`[render] ${loading ? 'Loading' : 'Everything loaded'}`);
+    this.#loadingListeners.forEach((listener) => listener(loading));
+  }
+
+  #productReady(productId: string): boolean {
+    return (
+      this.#simulator.productSettled(productId) &&
+      !this.#models.isParsing(this.#simulator.model(productId))
+    );
+  }
+
+  #textureReady(textureId: string): boolean {
+    return (
+      this.#simulator.textureSettled(textureId) &&
+      !this.#textures.isDecoding(this.#simulator.texture(textureId))
+    );
   }
 
   /** Projects the dimensions' midpoints to the screen and reports them if anything changed. */

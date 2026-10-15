@@ -20,14 +20,15 @@ export interface PreparedTexture {
 
 /**
  * Decodes each surface texture once and measures its average brightness.
- * Decoding is asynchronous: until a texture is ready its surface shows its
- * colour, and `onReady` asks for a redraw.
+ * Decoding is asynchronous: until a texture is ready its surface keeps its
+ * previous look, and `onReady` asks for a redraw.
  */
 export class SurfaceTextures {
   readonly #onReady: () => void;
   readonly #logger: Logger;
   /** Prepared textures by image, or null while decoding or for one that couldn't be used. */
   readonly #prepared = new Map<TextureImage, PreparedTexture | null>();
+  readonly #decoding = new Set<TextureImage>();
   #disposed = false;
 
   constructor(onReady: () => void, logger: Logger) {
@@ -42,6 +43,11 @@ export class SurfaceTextures {
     return this.#prepared.get(image) ?? undefined;
   }
 
+  /** Whether an image is still being decoded. */
+  isDecoding(image: TextureImage | undefined): boolean {
+    return image !== undefined && this.#decoding.has(image);
+  }
+
   /** Frees every texture. */
   dispose(): void {
     this.#disposed = true;
@@ -51,6 +57,7 @@ export class SurfaceTextures {
 
   async #prepare(textureId: string, image: TextureImage): Promise<void> {
     this.#prepared.set(image, null); // Decoding; asked again, it's not ready yet.
+    this.#decoding.add(image);
     let prepared: PreparedTexture | null = null;
     try {
       const bitmap = await createImageBitmap(new Blob([image.data]));
@@ -70,12 +77,14 @@ export class SurfaceTextures {
       const reason = error instanceof Error ? error.message : String(error);
       this.#logger.warn(`[textures] "${textureId}" can't be decoded, using the colour: ${reason}`);
     }
+    this.#decoding.delete(image);
     if (this.#disposed) {
       prepared?.texture.dispose();
       return;
     }
     this.#prepared.set(image, prepared);
-    if (prepared) this.#onReady();
+    // Also when it couldn't be decoded: its surface stops waiting.
+    this.#onReady();
   }
 }
 

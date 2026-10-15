@@ -1,4 +1,4 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, expect, type Page } from '@playwright/test';
 
 /** Project-level options for the e2e suite (set in playwright.config.ts). */
 export interface SuiteOptions {
@@ -68,3 +68,12 @@ export const test = base.extend<SuiteOptions & TestOptions & TestFixtures>({
 });
 
 export { expect, type Page } from '@playwright/test';
+
+/**
+ * Waits until the demo has drawn its scene: the canvas is in, and the page's
+ * own loader (index.html's #splash) is gone, so nothing covers the app.
+ */
+export async function ready(page: Page): Promise<void> {
+  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await expect(page.locator('#splash')).toHaveCount(0);
+}

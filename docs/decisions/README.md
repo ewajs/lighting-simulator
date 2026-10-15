@@ -57,3 +57,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0051 | [Scene files: versioned `.luxstudio.json`, opened as one undo step](0051-scene-files.md) | Accepted |
 | 0052 | [Autosave in localStorage, and New from room templates](0052-autosave-and-templates.md) | Accepted |
 | 0053 | [Share links through a scene storage; the demo's links carry the scene](0053-share-links.md) | Accepted |
+| 0054 | [Loading without stand-ins, and no page zoom on phones](0054-loading-without-stand-ins.md) | Accepted |

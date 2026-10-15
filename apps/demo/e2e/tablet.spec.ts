@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // Tablet sizes with a touch screen. Screen points are for the default view at
 // each size; see smoke.spec.ts for how to refresh them.
@@ -32,7 +32,7 @@ async function touchDrag(
 
 async function openDemo(page: Page): Promise<void> {
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
 }
 
 const selectedCount = (page: Page) => page.getByText(/^Seleccionadas: \d+$/);

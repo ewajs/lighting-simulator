@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // The getting-started help (ADR 0046). Screenshots freeze its animations.
 
@@ -34,14 +34,14 @@ test.describe('first visit', () => {
     await expect(dialog(page)).toBeHidden();
 
     await page.reload();
-    await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+    await ready(page);
     await expect(dialog(page)).toBeHidden();
   });
 });
 
 test('the ? button reopens it, and Esc closes it', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
   await page.keyboard.press('ControlOrMeta+a'); // Something to delete, if a shortcut got through.
   await expect(dialog(page)).toBeHidden();
   await page.getByRole('button', { name: 'Ayuda' }).click();
@@ -58,7 +58,7 @@ test.describe('phone', () => {
 
   test('the ⋯ menu opens it, worded for touch', async ({ page }) => {
     await page.goto('/');
-    await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+    await ready(page);
     await page.getByRole('button', { name: 'Más opciones' }).tap();
     await page.getByRole('menuitem', { name: 'Ayuda' }).tap();
     await page.getByRole('button', { name: 'Siguiente' }).tap();

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // Portrait phone (390 × 844) with touch. Screen points are for the default view.
 test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
@@ -7,7 +7,7 @@ const EMPTY_SPACE = { x: 195, y: 150 };
 
 async function openDemo(page: Page): Promise<void> {
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
 }
 
 const sheetHeading = (page: Page, name: string) =>
