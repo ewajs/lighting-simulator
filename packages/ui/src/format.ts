@@ -19,9 +19,12 @@ export function formatFixed(value: number, decimals: number): string {
   }).format(value);
 }
 
-/** File name for a screenshot taken at `date`, e.g. "escena-2026-10-11-1432.png" for base "escena". */
-export function screenshotFileName(base: string, date: Date): string {
+/**
+ * File name for something saved at `date`, e.g. "escena-2026-10-11-1432.png"
+ * for base "escena" and extension ".png".
+ */
+export function datedFileName(base: string, extension: string, date: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0');
   const day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-  return `${base}-${day}-${pad(date.getHours())}${pad(date.getMinutes())}.png`;
+  return `${base}-${day}-${pad(date.getHours())}${pad(date.getMinutes())}${extension}`;
 }

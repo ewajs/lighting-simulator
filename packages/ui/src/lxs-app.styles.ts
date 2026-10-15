@@ -44,6 +44,17 @@ export const appStyles = css`
     min-width: 0;
     min-height: 0;
   }
+  /* Bottom left, clear of the exposure control at the bottom right (180 px wide). */
+  .notice {
+    position: absolute;
+    left: var(--lxs-sp-3);
+    right: calc(3 * var(--lxs-sp-3) + 180px);
+    bottom: calc(var(--lxs-sp-3) + var(--lxs-stage-inset-bottom, 0px));
+    z-index: 2;
+  }
+  :host([phone]) .notice {
+    right: var(--lxs-sp-3);
+  }
   lxs-viewport {
     position: absolute;
     inset: 0;

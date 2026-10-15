@@ -22,6 +22,8 @@ describe('shortcutAction', () => {
     expect(shortcutAction(press('Backspace'))).toEqual({ type: 'delete' });
     expect(shortcutAction(press('d', { metaKey: true }))).toEqual({ type: 'duplicate' });
     expect(shortcutAction(press('a', { ctrlKey: true }))).toEqual({ type: 'select-all' });
+    expect(shortcutAction(press('s', { metaKey: true }))).toEqual({ type: 'save' });
+    expect(shortcutAction(press('o', { ctrlKey: true }))).toEqual({ type: 'open' });
     expect(shortcutAction(press('Escape'))).toEqual({ type: 'deselect' });
     expect(shortcutAction(press('h'))).toEqual({ type: 'toggle-on' });
     expect(shortcutAction(press('f'))).toEqual({ type: 'frame' });

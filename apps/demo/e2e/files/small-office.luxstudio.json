@@ -1,0 +1,46 @@
+{
+  "format": "lux-studio-scene",
+  "version": 1,
+  "scene": {
+    "room": {
+      "width": 4,
+      "depth": 3,
+      "height": 2.6,
+      "surfaces": {
+        "floor": { "color": "#8a6a4a", "reflectance": 0.4, "texture": "concrete" },
+        "walls": { "color": "#f2f0ec", "reflectance": 0.8 },
+        "ceiling": { "color": "#f2f0ec", "reflectance": 0.85 }
+      }
+    },
+    "luminaires": [
+      {
+        "id": "downlight-a",
+        "productId": "ies-downlight",
+        "position": { "x": -0.8, "y": 2.6, "z": 0 },
+        "aim": { "tiltDeg": 0, "panDeg": 0 },
+        "dimming": 1,
+        "on": true,
+        "cct": 3000
+      },
+      {
+        "id": "downlight-b",
+        "productId": "ies-downlight",
+        "position": { "x": 0.8, "y": 2.6, "z": 0 },
+        "aim": { "tiltDeg": 0, "panDeg": 0 },
+        "dimming": 1,
+        "on": true,
+        "cct": 3000
+      }
+    ],
+    "furniture": [
+      {
+        "id": "desk-a",
+        "kind": "desk",
+        "position": { "x": 0, "y": 0, "z": -0.9 },
+        "rotationDeg": 0,
+        "size": { "width": 1.4, "depth": 0.7, "height": 0.75 },
+        "finish": { "main": "oak", "accent": "charcoal" }
+      }
+    ]
+  }
+}

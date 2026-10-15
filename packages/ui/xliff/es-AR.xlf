@@ -775,6 +775,38 @@
   <source>Material</source>
   <target>Material</target>
 </trans-unit>
+<trans-unit id="s38ae7de61ceb8e1d">
+  <source>Open…</source>
+  <target>Abrir…</target>
+</trans-unit>
+<trans-unit id="s33f85f24c0f5f008">
+  <source>Save</source>
+  <target>Guardar</target>
+</trans-unit>
+<trans-unit id="sd19ad108127c96fc">
+  <source>Opened <x id="0" equiv-text="${name}"/>.</source>
+  <target>Se abrió <x id="0" equiv-text="${name}"/>.</target>
+</trans-unit>
+<trans-unit id="s0f5b36e00fa9dd56">
+  <source>Opened <x id="0" equiv-text="${name}"/>. 1 luminaire uses a product this catalog doesn't have: it's kept, but not shown.</source>
+  <target>Se abrió <x id="0" equiv-text="${name}"/>. 1 luminaria usa un producto que este catálogo no tiene: se conserva, pero no se muestra.</target>
+</trans-unit>
+<trans-unit id="s182ccc5502d5b28c">
+  <source>Opened <x id="0" equiv-text="${name}"/>. <x id="1" equiv-text="${count}"/> luminaires use products this catalog doesn't have: they're kept, but not shown.</source>
+  <target>Se abrió <x id="0" equiv-text="${name}"/>. <x id="1" equiv-text="${count}"/> luminarias usan productos que este catálogo no tiene: se conservan, pero no se muestran.</target>
+</trans-unit>
+<trans-unit id="sfd83c8376c6e2b37">
+  <source><x id="0" equiv-text="${name}"/> isn't a scene file.</source>
+  <target><x id="0" equiv-text="${name}"/> no es un archivo de escena.</target>
+</trans-unit>
+<trans-unit id="s634ef90110796b8e">
+  <source><x id="0" equiv-text="${name}"/> was saved by a newer version of this app. Update it to open the file.</source>
+  <target><x id="0" equiv-text="${name}"/> se guardó con una versión más nueva de esta app. Actualizala para abrir el archivo.</target>
+</trans-unit>
+<trans-unit id="s1bf2abc5f5483970">
+  <source><x id="0" equiv-text="${name}"/> is damaged and can't be opened.</source>
+  <target><x id="0" equiv-text="${name}"/> está dañado y no se puede abrir.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

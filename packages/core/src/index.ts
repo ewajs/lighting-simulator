@@ -26,6 +26,16 @@ export type { RoomSize } from './room';
 export type { AddLuminaireOptions, LuminairePatch } from './luminaires';
 export type { AddFurnitureOptions, FurniturePatch } from './furniture';
 export { findItem } from './scene-items';
+export {
+  parseScene,
+  SCENE_FILE_EXTENSION,
+  SCENE_FILE_FORMAT,
+  SCENE_FILE_VERSION,
+  SceneFileError,
+  serializeScene,
+  unknownProducts,
+} from './scene-file';
+export type { SceneFile, SceneFileProblem, SceneUpgrade } from './scene-file';
 export { MAX_SIZE_SHARE, MIN_SIZE_SHARE } from './furniture';
 export { FINISHES, FURNITURE_KINDS, FURNITURE_TYPES } from './furniture-kinds';
 export type { Finish, FurnitureType } from './furniture-kinds';
