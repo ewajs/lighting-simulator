@@ -2,6 +2,7 @@ import { consoleLogger, Simulator, type Catalog, type PhotometryProvider } from 
 import { loadAutosave, type Locale } from '@luxstudio/ui';
 import '@luxstudio/ui/theme.css';
 import { ImportedProducts } from './imported-products';
+import { linkStorage } from './link-storage';
 import { sampleCatalog } from './sample-catalog';
 import { sampleDisplay } from './sample-display';
 import { sampleModels } from './sample-models';
@@ -41,6 +42,8 @@ app.simulator = simulator;
 app.iesImport = true;
 app.diagnostics = debug;
 app.autosave = true;
+// Share links carry the scene itself: no backend needed.
+app.storage = linkStorage;
 // First-time visitors get the getting-started help; it links to the manual,
 // which is published next to the demo.
 app.helpOnStart = true;

@@ -13,6 +13,7 @@ import {
   PanelRight,
   Redo2,
   Save,
+  Share2,
   Sun,
   Undo2,
 } from 'lucide';
@@ -26,7 +27,7 @@ export type Theme = 'dark' | 'light';
 export type PanelName = 'library' | 'inspector';
 
 /**
- * Top bar: host brand (slot), undo/redo, new, open and save, panel toggles, theme
+ * Top bar: host brand (slot), undo/redo, new, open, save and share, panel toggles, theme
  * and language. `compact` (phones) keeps brand and undo/redo, and moves the
  * rest into a ⋯ menu (a native popover).
  * Undo/redo are document edits and go to the Simulator directly (ADR 0025);
@@ -39,6 +40,7 @@ export type PanelName = 'library' | 'inspector';
  * @fires lxs-new-request - the user wants to start a new scene from a template
  * @fires lxs-open-request - the user wants to open a scene file
  * @fires lxs-save-request - the user wants to save the scene to a file
+ * @fires lxs-share-request - the user wants a link to the scene (only with `canShare`)
  * @fires lxs-screenshot-request
  * @fires lxs-help-request - the user asked for the getting-started help
  */
@@ -126,6 +128,8 @@ export class LxsTopBar extends LitElement {
   @property() locale: Locale = 'es-AR';
   @property({ attribute: false }) libraryOpen = true;
   @property({ attribute: false }) inspectorOpen = true;
+  /** Offers Share: the host gave the app somewhere to keep shared scenes (ADR 0053). */
+  @property({ attribute: false }) canShare = false;
   /** Phone layout: fewer buttons, the rest in a ⋯ menu. */
   @property({ type: Boolean, reflect: true }) compact = false;
 
@@ -163,6 +167,13 @@ export class LxsTopBar extends LitElement {
           <button class="menu-item" type="button" role="menuitem" @click=${this.#save}>
             ${icon(Save)} ${msg('Save')}
           </button>
+          ${
+            this.canShare
+              ? html`<button class="menu-item" type="button" role="menuitem" @click=${this.#share}>
+                  ${icon(Share2)} ${msg('Share')}
+                </button>`
+              : ''
+          }
           <button class="menu-item" type="button" role="menuitem" @click=${this.#screenshot}>
             ${icon(Camera)} ${msg('Screenshot')}
           </button>
@@ -183,6 +194,7 @@ export class LxsTopBar extends LitElement {
         ${this.#button(msg('New…'), icon(FilePlus), this.#new)}
         ${this.#button(msg('Open…'), icon(FolderOpen), this.#open)}
         ${this.#button(msg('Save'), icon(Save), this.#save)}
+        ${this.canShare ? this.#button(msg('Share'), icon(Share2), this.#share) : ''}
         ${this.#button(msg('Screenshot'), icon(Camera), this.#screenshot)}
         <span class="divider"></span>
         ${this.#button(
@@ -247,6 +259,11 @@ export class LxsTopBar extends LitElement {
     this.#emit('lxs-save-request', {});
   };
 
+  #share = (): void => {
+    this.#closeMenu();
+    this.#emit('lxs-share-request', {});
+  };
+
   #screenshot = (): void => {
     this.#closeMenu();
     this.#emit('lxs-screenshot-request', {});
@@ -305,6 +322,7 @@ declare global {
     'lxs-new-request': CustomEvent<object>;
     'lxs-open-request': CustomEvent<object>;
     'lxs-save-request': CustomEvent<object>;
+    'lxs-share-request': CustomEvent<object>;
     'lxs-screenshot-request': CustomEvent<object>;
     'lxs-help-request': CustomEvent<object>;
   }

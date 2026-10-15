@@ -206,6 +206,34 @@ const missing = unknownProducts(simulator.scene, catalog);
 in your own words; `error.message` names the field at fault. Files store
 product ids, not product data: your catalog stays the source of truth.
 
+### Share links
+
+Give `<lxs-app>` a {@link @luxstudio/core!SceneStorage} and the top bar offers
+Share ([ADR 0053](../decisions/0053-share-links.md)). It stores scene files and
+hands out links; the app also asks it, once at start-up, whether the page's own
+address is a link to a scene:
+
+```ts
+const storage: SceneStorage = {
+  async share(file) {
+    const { id } = await myBackend.saveScene(file);
+    return `${location.origin}${location.pathname}?scene=${id}`;
+  },
+  async open(link) {
+    const url = new URL(link);
+    const id = url.searchParams.get('scene');
+    if (!id) return undefined;
+    url.searchParams.delete('scene'); // so a reload keeps the user's edits
+    return { file: await myBackend.loadScene(id), pageLink: url.href };
+  },
+};
+app.storage = storage; // before adding the element to the page
+```
+
+A shared scene opens as one undo step on top of the user's own. The demo needs
+no backend: its links carry the compressed scene after `#scene=`
+(`apps/demo/src/link-storage.ts`).
+
 ### Autosave and templates
 
 `<lxs-app autosave>` keeps the scene in the browser as it changes. Start the

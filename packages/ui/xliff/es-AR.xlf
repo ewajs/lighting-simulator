@@ -787,14 +787,6 @@
   <source>Opened <x id="0" equiv-text="${name}"/>.</source>
   <target>Se abrió <x id="0" equiv-text="${name}"/>.</target>
 </trans-unit>
-<trans-unit id="s0f5b36e00fa9dd56">
-  <source>Opened <x id="0" equiv-text="${name}"/>. 1 luminaire uses a product this catalog doesn't have: it's kept, but not shown.</source>
-  <target>Se abrió <x id="0" equiv-text="${name}"/>. 1 luminaria usa un producto que este catálogo no tiene: se conserva, pero no se muestra.</target>
-</trans-unit>
-<trans-unit id="s182ccc5502d5b28c">
-  <source>Opened <x id="0" equiv-text="${name}"/>. <x id="1" equiv-text="${count}"/> luminaires use products this catalog doesn't have: they're kept, but not shown.</source>
-  <target>Se abrió <x id="0" equiv-text="${name}"/>. <x id="1" equiv-text="${count}"/> luminarias usan productos que este catálogo no tiene: se conservan, pero no se muestran.</target>
-</trans-unit>
 <trans-unit id="sfd83c8376c6e2b37">
   <source><x id="0" equiv-text="${name}"/> isn't a scene file.</source>
   <target><x id="0" equiv-text="${name}"/> no es un archivo de escena.</target>
@@ -830,6 +822,42 @@
 <trans-unit id="s0ff731c6a1e0eff5">
   <source>New…</source>
   <target>Nuevo…</target>
+</trans-unit>
+<trans-unit id="s1d02e59756f16913">
+  <source>Couldn't make a link to this scene.</source>
+  <target>No se pudo crear un enlace a esta escena.</target>
+</trans-unit>
+<trans-unit id="sdea248ad9eba5fb3">
+  <source>Link copied. Anyone with it can open a copy of this scene.</source>
+  <target>Enlace copiado. Quien lo tenga puede abrir una copia de esta escena.</target>
+</trans-unit>
+<trans-unit id="se1bace3b9ca5ff95">
+  <source>Copy this link to share the scene:</source>
+  <target>Copiá este enlace para compartir la escena:</target>
+</trans-unit>
+<trans-unit id="s2df075aface0dab8">
+  <source>Share</source>
+  <target>Compartir</target>
+</trans-unit>
+<trans-unit id="sded37e49685155be">
+  <source>Opened a shared scene. Undo brings yours back.</source>
+  <target>Se abrió una escena compartida. Deshacer trae de vuelta la tuya.</target>
+</trans-unit>
+<trans-unit id="s93b63434e7439f08">
+  <source>This link was made by a newer version of this app. Update it to open the scene.</source>
+  <target>Este enlace se hizo con una versión más nueva de esta app. Actualizala para abrir la escena.</target>
+</trans-unit>
+<trans-unit id="s8434e72322d45818">
+  <source>This link's scene is damaged and can't be opened.</source>
+  <target>La escena de este enlace está dañada y no se puede abrir.</target>
+</trans-unit>
+<trans-unit id="sda8feaacc0ad1f61">
+  <source>1 luminaire uses a product this catalog doesn't have: it's kept, but not shown.</source>
+  <target>1 luminaria usa un producto que este catálogo no tiene: se conserva, pero no se muestra.</target>
+</trans-unit>
+<trans-unit id="s7cdcaad4e374d9b7">
+  <source><x id="0" equiv-text="${count}"/> luminaires use products this catalog doesn't have: they're kept, but not shown.</source>
+  <target><x id="0" equiv-text="${count}"/> luminarias usan productos que este catálogo no tiene: se conservan, pero no se muestran.</target>
 </trans-unit>
 </body>
 </file>

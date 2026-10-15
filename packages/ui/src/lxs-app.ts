@@ -1,12 +1,14 @@
-import type {
-  FurnitureKind,
-  Logger,
-  MoveStartEvent,
-  PickEvent,
-  RenderMode,
-  Scene,
-  Simulator,
-  ViewName,
+import {
+  serializeScene,
+  type FurnitureKind,
+  type Logger,
+  type MoveStartEvent,
+  type PickEvent,
+  type RenderMode,
+  type Scene,
+  type SceneStorage,
+  type Simulator,
+  type ViewName,
 } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { html, LitElement, nothing, type PropertyValues } from 'lit';
@@ -21,7 +23,13 @@ import './lxs-new-scene';
 import type { TemplatePickDetail } from './lxs-new-scene';
 import './lxs-notice';
 import type { Notice } from './lxs-notice';
-import { download, openSceneFile, saveSceneFile, SCENE_FILE_ACCEPT } from './scene-files';
+import {
+  download,
+  openSceneFile,
+  openSharedScene,
+  saveSceneFile,
+  SCENE_FILE_ACCEPT,
+} from './scene-files';
 import { helpSeen, markHelpSeen } from './help-seen';
 import { DEFAULT_LOCALE, setLocale, type Locale } from './localization';
 import './lxs-catalog-panel';
@@ -104,6 +112,12 @@ export class LxsApp extends LitElement {
    * to pick up where the user left off.
    */
   @property({ type: Boolean }) autosave = false;
+  /**
+   * Where shared scenes are kept (ADR 0053). With one, the top bar offers
+   * Share, and a link to a shared scene opens it when the app starts, as one
+   * undo step. Set it before adding the element to the page.
+   */
+  @property({ attribute: false }) storage: SceneStorage | undefined;
   /** Shows frame rate, backend, shadows and draw counts over the viewport, for debugging (ADR 0044). */
   @property({ type: Boolean }) diagnostics = false;
   /** UI language for the whole page. */
@@ -122,6 +136,8 @@ export class LxsApp extends LitElement {
   /** Whether New's template dialog is open. */
   @state() private newOpen = false;
   #autosaveTimer: number | undefined;
+  /** Settles once the UI language has loaded, so messages written then are in it. */
+  #localeApplied: Promise<void> = Promise.resolve();
   /** Whether autosaving has failed, so it's reported once. */
   #autosaveFailed = false;
   @state() private scene: Scene | undefined;
@@ -264,11 +280,13 @@ export class LxsApp extends LitElement {
       .libraryOpen=${!this.libraryCollapsed}
       .inspectorOpen=${!this.inspectorCollapsed}
       .compact=${compact}
+      .canShare=${this.storage !== undefined}
       @lxs-theme-change=${({ detail }: CustomEvent<{ theme: Theme }>) => (this.theme = detail.theme)}
       @lxs-locale-request=${({ detail }: CustomEvent<{ locale: Locale }>) => (this.locale = detail.locale)}
       @lxs-new-request=${() => (this.newOpen = true)}
       @lxs-open-request=${this.#pickFile}
       @lxs-save-request=${this.#save}
+      @lxs-share-request=${() => void this.#share()}
       @lxs-screenshot-request=${() => void this.#takeScreenshot()}
       @lxs-help-request=${() => (this.helpOpen = true)}
       @lxs-panel-toggle=${({ detail }: CustomEvent<{ panel: PanelName }>) => this.#togglePanel(detail.panel)}
@@ -320,6 +338,74 @@ export class LxsApp extends LitElement {
     if (!this.simulator) return;
     this.notice = await openSceneFile(file, this.simulator);
     // Opened (errors leave the scene as it was): frame the new room in the current view.
+    if (this.notice.kind !== 'error') this.viewport.setView(this.view);
+  }
+
+  /**
+   * Share: a link to the scene from the host's storage. On phones it goes to
+   * the system share sheet where there is one; otherwise to the clipboard, or
+   * if the clipboard refuses, into the notice to copy by hand.
+   */
+  async #share(): Promise<void> {
+    if (!this.storage || !this.scene || !this.simulator) return;
+    let link: string;
+    try {
+      link = await this.storage.share(serializeScene(this.scene));
+    } catch (error) {
+      this.simulator.logger.error("[ui] Couldn't make a share link", error);
+      this.notice = { kind: 'error', text: msg("Couldn't make a link to this scene.") };
+      return;
+    }
+    this.simulator.logger.debug(`[ui] Share link: ${link.length} characters`);
+    if (this.phone && 'share' in navigator) {
+      try {
+        await navigator.share({ url: link });
+        return;
+      } catch (error) {
+        // Closing the sheet is a choice; anything else falls back to the clipboard.
+        if (error instanceof DOMException && error.name === 'AbortError') return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(link);
+      this.notice = {
+        kind: 'info',
+        text: msg('Link copied. Anyone with it can open a copy of this scene.'),
+      };
+    } catch {
+      this.notice = {
+        kind: 'info',
+        text: msg('Copy this link to share the scene:'),
+        copyable: link,
+      };
+    }
+  }
+
+  /**
+   * A link to a shared scene opens it, once, when the app starts: one undo
+   * step on top of the user's own scene. The address bar then loses the
+   * scene, so a reload keeps the user's edits.
+   */
+  async #openSharedLink(): Promise<void> {
+    const { storage, simulator } = this;
+    if (!storage || !simulator) return;
+    // At start-up the translations may still be loading; the notice must be in the UI's language.
+    await this.#localeApplied;
+    let shared;
+    try {
+      shared = await storage.open(location.href);
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      simulator.logger.warn(`[ui] Couldn't open the shared link: ${detail}`);
+      this.notice = {
+        kind: 'error',
+        text: msg("This link's scene is damaged and can't be opened."),
+      };
+      return;
+    }
+    if (!shared) return;
+    history.replaceState(history.state, '', shared.pageLink);
+    this.notice = openSharedScene(shared.file, simulator);
     if (this.notice.kind !== 'error') this.viewport.setView(this.view);
   }
 
@@ -414,6 +500,7 @@ export class LxsApp extends LitElement {
   }
 
   protected override firstUpdated(): void {
+    void this.#openSharedLink();
     // Marked seen as soon as it's shown: "once" holds even if the page is reloaded before closing it.
     if (this.helpOnStart && !helpSeen()) {
       this.helpOpen = true;
@@ -459,8 +546,9 @@ export class LxsApp extends LitElement {
       this.toggleAttribute('phone', this.phone);
       this.toggleAttribute('landscape', this.phone && this.landscape);
     }
-    if (changed.has('locale'))
-      void this.#applyLocale(this.locale, changed.get('locale') !== undefined);
+    if (changed.has('locale')) {
+      this.#localeApplied = this.#applyLocale(this.locale, changed.get('locale') !== undefined);
+    }
     if (changed.has('simulator')) this.#watch(this.simulator);
   }
 
