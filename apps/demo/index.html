@@ -2,7 +2,10 @@
 <html lang="es-AR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"
+    />
     <title>Lux Studio</title>
     <link rel="icon" href="data:," />
     <style>
@@ -10,11 +13,56 @@
       body {
         margin: 0;
         height: 100%;
-        background: var(--lxs-bg);
+        background: var(--lxs-bg, #0e0f11);
+      }
+      /* Shown before any script runs, until the app has drawn its scene
+         (lxs-ready). Plain CSS in the theme's dark colours: the theme's own
+         CSS isn't loaded yet. */
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 16px;
+        background: #0e0f11;
+        color: #a0a5ad;
+        font:
+          14px system-ui,
+          sans-serif;
+        transition: opacity 200ms ease-out;
+      }
+      #splash.done {
+        opacity: 0;
+      }
+      #splash .spinner {
+        width: 28px;
+        height: 28px;
+        border: 2px solid #3a3f46;
+        border-top-color: #f5b544;
+        border-radius: 50%;
+        animation: spin 800ms linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(1turn);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #splash,
+        #splash .spinner {
+          transition: none;
+          animation: none;
+        }
       }
     </style>
   </head>
   <body>
+    <div id="splash" role="status">
+      <div class="spinner"></div>
+      <div>Lux Studio</div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

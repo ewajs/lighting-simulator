@@ -1,5 +1,5 @@
 import type { Browser } from '@playwright/test';
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // Share links (ADR 0053): the demo's links carry the scene after #scene=.
 // The clipboard and the share sheet are stood in for, to read what was shared.
@@ -20,7 +20,7 @@ async function openDemo(page: Page, clipboard: 'works' | 'refuses' = 'works'): P
     });
   }, clipboard);
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
 }
 
 /** A page in a fresh browser profile: someone else, with nothing autosaved. */
@@ -74,7 +74,7 @@ test('Share copies a link that opens a copy of the scene for someone else', asyn
 test('a damaged link is reported and changes nothing', async ({ page, allowConsole }) => {
   allowConsole.push(/\[ui\] Couldn't open the shared link/);
   await page.goto('/#scene=this-is-not-a-scene');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
   await expect(notice(page)).toHaveText(
     'La escena de este enlace está dañada y no se puede abrir.',
   );

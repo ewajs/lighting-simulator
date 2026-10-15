@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 /**
  * Hands the import's file input a file, as if the visitor picked it. The
@@ -26,7 +26,7 @@ async function openDemo(page: Page): Promise<string[]> {
     }
   });
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
   return problems;
 }
 

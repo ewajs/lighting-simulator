@@ -214,10 +214,6 @@
   <source>Ceiling</source>
   <target>Cielorraso</target>
 </trans-unit>
-<trans-unit id="sf13d77585ed44be6">
-  <source>Select a luminaire in the viewport or the Scene list to edit it.</source>
-  <target>Seleccioná una luminaria en la vista 3D o en la lista de la escena para editarla.</target>
-</trans-unit>
 <trans-unit id="s6282ee4c5295cdb3">
   <source><x id="0" equiv-text="${label}"/> colour</source>
   <target>Color de <x id="0" equiv-text="${label}"/></target>
@@ -858,6 +854,18 @@
 <trans-unit id="s7cdcaad4e374d9b7">
   <source><x id="0" equiv-text="${count}"/> luminaires use products this catalog doesn't have: they're kept, but not shown.</source>
   <target><x id="0" equiv-text="${count}"/> luminarias usan productos que este catálogo no tiene: se conservan, pero no se muestran.</target>
+</trans-unit>
+<trans-unit id="s272d100bb4df8019">
+  <source>Select a luminaire or a piece of furniture in the viewport or the Scene list to edit it.</source>
+  <target>Seleccioná una luminaria o un mueble en la vista 3D o en la lista de la escena para editarlo.</target>
+</trans-unit>
+<trans-unit id="s46669b47777c0d3f">
+  <source>Loading scene…</source>
+  <target>Cargando escena…</target>
+</trans-unit>
+<trans-unit id="s6ebc9bd6feae62a3">
+  <source>Loading…</source>
+  <target>Cargando…</target>
 </trans-unit>
 </body>
 </file>

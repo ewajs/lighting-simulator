@@ -15,6 +15,9 @@ export const appStyles = css`
       'status status status';
     background: var(--lxs-bg);
     color: var(--lxs-text);
+    /* An app, not a page: no pinch or double-tap zoom on its panels and bars,
+       which would push them off screen. The 3D view handles its own gestures. */
+    touch-action: pan-x pan-y;
     font: var(--lxs-fs-md) / 1.45 var(--lxs-font-ui);
     -webkit-font-smoothing: antialiased;
   }

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { AssetCache } from './asset-cache';
+import { AssetCache, LOAD_TIMEOUT_MS } from './asset-cache';
 import { isGlb, MODEL_ASSET } from './model-asset';
 import type { ModelProvider } from './types';
 
@@ -72,5 +72,52 @@ describe('AssetCache', () => {
         error: vi.fn(),
       }).get('a'),
     ).toBeUndefined();
+  });
+
+  it('says whether a load is in flight, and reports every way it ends', async () => {
+    const outcomes = [
+      Promise.resolve(glb()),
+      Promise.resolve(undefined),
+      Promise.reject(new Error('404')),
+    ];
+    const { cache } = setup(() => outcomes.shift()!);
+    const settled: string[] = [];
+    cache.onSettled((id) => settled.push(id));
+    for (const id of ['found', 'none', 'broken']) {
+      cache.get(id);
+      expect(cache.isLoading(id)).toBe(true);
+    }
+    await settle();
+    expect(settled).toEqual(['found', 'none', 'broken']);
+    expect(['found', 'none', 'broken'].map((id) => cache.isLoading(id))).toEqual([
+      false,
+      false,
+      false,
+    ]);
+  });
+
+  it('stops waiting after LOAD_TIMEOUT_MS, and still uses a file that arrives later', async () => {
+    vi.useFakeTimers();
+    try {
+      let arrive: (bytes: ArrayBuffer) => void = () => {};
+      const { cache, warn, loaded } = setup(() => new Promise((resolve) => (arrive = resolve)));
+      const settled = vi.fn();
+      cache.onSettled(settled);
+      cache.get('slow');
+      await vi.advanceTimersByTimeAsync(LOAD_TIMEOUT_MS);
+      expect(cache.isLoading('slow')).toBe(false);
+      expect(cache.get('slow')).toBeUndefined();
+      expect(warn).toHaveBeenCalledWith(expect.stringMatching(/"slow" is taking over 15 s/));
+      expect(settled).toHaveBeenCalledTimes(1);
+
+      const bytes = glb();
+      arrive(bytes);
+      await vi.advanceTimersByTimeAsync(0);
+      expect(cache.get('slow')).toBe(bytes);
+      expect(loaded).toHaveBeenCalledWith('slow', bytes);
+      expect(settled).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

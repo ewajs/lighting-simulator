@@ -1,10 +1,10 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // New from room templates, and autosave (ADR 0052).
 
 async function openDemo(page: Page): Promise<void> {
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
 }
 
 const luminaireCount = (page: Page) => page.getByText(/^Luminarias: \d+$/);
@@ -60,7 +60,7 @@ test('the scene is autosaved and comes back on the next visit', async ({ page })
     .toBe(true);
 
   await page.reload();
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
   await expect(luminaireCount(page)).toHaveText('Luminarias: 6');
   // Where the visit started: nothing to undo.
   await expect(page.getByRole('button', { name: 'Deshacer' })).toBeDisabled();

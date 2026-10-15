@@ -19,6 +19,8 @@ async function open(page: Page, language: Language): Promise<void> {
   await page.addInitScript(() => localStorage.setItem('lxs-help-seen', '1'));
   await page.goto('/');
   await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  // The demo's own loader covers the page until the scene is drawn.
+  await expect(page.locator('#splash')).toHaveCount(0);
   if (language === 'en') {
     // On phones the language switch is in the ⋯ menu.
     const more = page.getByRole('button', { name: 'Más opciones' });

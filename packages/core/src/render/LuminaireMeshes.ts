@@ -43,6 +43,7 @@ export class LuminaireMeshes {
   readonly #items = new Map<string, Item>();
   readonly #profiles = new Map<Photometry, Profile>();
   readonly #catalog: Catalog;
+  readonly #ready: (productId: string) => boolean;
   readonly #photometry: (productId: string) => Photometry | undefined;
   readonly #model: (productId: string) => THREE.Object3D | undefined;
   readonly #logger: Logger;
@@ -52,19 +53,28 @@ export class LuminaireMeshes {
   /** `photometry` and `model` look up what a product has loaded so far. */
   constructor({
     catalog,
+    ready,
     photometry,
     model,
     logger,
   }: {
     readonly catalog: Catalog;
+    /** Whether a product's IES file and model are in (or known missing), so it can be drawn. */
+    readonly ready: (productId: string) => boolean;
     readonly photometry: (productId: string) => Photometry | undefined;
     readonly model: (productId: string) => THREE.Object3D | undefined;
     readonly logger: Logger;
   }) {
     this.#catalog = catalog;
+    this.#ready = ready;
     this.#photometry = photometry;
     this.#model = model;
     this.#logger = logger;
+  }
+
+  /** How many luminaires are drawn: those whose products are ready and known. */
+  get count(): number {
+    return this.#items.size;
   }
 
   /** How many lights cast shadows now, at most SHADOW_BUDGET. */
@@ -147,8 +157,14 @@ export class LuminaireMeshes {
     this.#profiles.clear();
   }
 
+  /**
+   * The drawn fixture for a luminaire, built or rebuilt as needed. None while
+   * its product's files are still loading, so a stand-in light or a
+   * placeholder never shows, nor for a product the catalog lacks.
+   */
   #itemFor(luminaire: Luminaire): Item | undefined {
     const existing = this.#items.get(luminaire.id);
+    if (!existing && !this.#ready(luminaire.productId)) return undefined;
     const photometry = this.#photometry(luminaire.productId);
     const model = this.#model(luminaire.productId);
     const unchanged =

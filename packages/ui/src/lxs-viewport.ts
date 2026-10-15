@@ -20,6 +20,8 @@ import { FURNITURE_DRAG_TYPE } from './lxs-furniture-list';
 
 /** How often the diagnostics overlay refreshes, in ms. */
 const STATS_INTERVAL_MS = 500;
+/** Loading shorter than this feels instant, so no spinner is shown for it, in ms. */
+const LOADER_DELAY_MS = 250;
 
 /**
  * The 3D viewport: wraps core's Viewport (ADR 0019). It highlights what it is
@@ -27,7 +29,10 @@ const STATS_INTERVAL_MS = 500;
  * While luminaires are moved it labels their distances to the walls (ADR 0042).
  * Furniture is picked, dragged and dropped like luminaires (ADR 0047).
  * With `diagnostics`, it shows frame rate, backend and draw counts (ADR 0044).
+ * The scene stays hidden until its IES files, models and textures are in, and
+ * a spinner shows whenever loading takes longer than feels instant (ADR 0054).
  *
+ * @fires lxs-ready - the scene is first shown, or the renderer couldn't start
  * @fires lxs-pick - `detail` is core's PickEvent: `{ target, event, longPress }`.
  * @fires lxs-move-start - dragging a luminaire or piece started; `detail` is core's
  *   MoveStartEvent: `{ target, event }`. The drag itself edits the Simulator.
@@ -48,6 +53,64 @@ export class LxsViewport extends LitElement {
     .canvas {
       position: absolute;
       inset: 0;
+      transition: opacity 200ms ease-out;
+    }
+    .canvas.hidden {
+      opacity: 0;
+      transition: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .canvas {
+        transition: none;
+      }
+    }
+    .loader {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      justify-items: center;
+      gap: var(--lxs-sp-3);
+      color: var(--lxs-text-muted);
+      font: var(--lxs-fs-sm) var(--lxs-font-ui);
+      pointer-events: none;
+    }
+    .pill {
+      position: absolute;
+      left: 50%;
+      bottom: calc(var(--lxs-sp-3) + var(--lxs-stage-inset-bottom, 0px));
+      display: flex;
+      align-items: center;
+      gap: var(--lxs-sp-2);
+      padding: var(--lxs-sp-1) var(--lxs-sp-3);
+      border-radius: 999px;
+      background: var(--lxs-overlay);
+      color: var(--lxs-text-muted);
+      font: var(--lxs-fs-xs) var(--lxs-font-ui);
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+    .spinner {
+      width: 22px;
+      height: 22px;
+      border: 2px solid var(--lxs-line-strong);
+      border-top-color: var(--lxs-accent);
+      border-radius: 50%;
+      animation: spin 800ms linear infinite;
+    }
+    .pill .spinner {
+      width: 12px;
+      height: 12px;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(1turn);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .spinner {
+        animation: none;
+      }
     }
     .measure {
       position: absolute;
@@ -103,13 +166,24 @@ export class LxsViewport extends LitElement {
   @state() private failed = false;
   @state() private measurements: readonly Measurement[] = [];
   @state() private stats: Diagnostics | undefined;
+  /** The scene is hidden: at start-up, or after `cover()`, until nothing is loading. */
+  @state() private covered = true;
+  /** Something has been loading for longer than LOADER_DELAY_MS. */
+  @state() private slow = false;
+  #slowTimer: number | undefined;
+  #readyFired = false;
   #statsTimer: number | undefined;
   #viewport: Viewport | undefined;
 
   override render() {
     return this.failed
       ? html`<p class="error">${msg('This browser cannot start WebGPU or WebGL 2.')}</p>`
-      : html`<div class="canvas" @dragover=${this.#onDragOver} @drop=${this.#onDrop}></div>
+      : html`<div
+            class="canvas ${this.covered ? 'hidden' : ''}"
+            @dragover=${this.#onDragOver}
+            @drop=${this.#onDrop}
+          ></div>
+          ${this.#renderLoading()}
           ${this.diagnostics && this.stats ? this.#renderStats(this.stats) : ''}
           ${this.measurements.map(
             ({ lengthM, x, y }) =>
@@ -123,6 +197,46 @@ export class LxsViewport extends LitElement {
     if (changed.has('simulator')) void this.#mount();
     if (changed.has('diagnostics')) this.#watchStats(this.diagnostics);
     this.#applyProperties();
+  }
+
+  #renderLoading() {
+    if (!this.slow) return '';
+    return this.covered
+      ? html`<div class="loader" role="status">
+          <span class="spinner"></span>${msg('Loading scene…')}
+        </div>`
+      : html`<div class="pill" role="status"><span class="spinner"></span>${msg('Loading…')}</div>`;
+  }
+
+  /**
+   * Hides the scene until what it shows has loaded, with a spinner if that
+   * takes a while; e.g. right after a whole scene was opened. Does nothing if
+   * everything is already in.
+   */
+  cover(): void {
+    if (this.#viewport?.loading) this.covered = true;
+  }
+
+  #onLoading = (loading: boolean): void => {
+    window.clearTimeout(this.#slowTimer);
+    if (loading) {
+      this.#slowTimer = window.setTimeout(() => (this.slow = true), LOADER_DELAY_MS);
+      return;
+    }
+    this.slow = false;
+    if (!this.covered) return;
+    // Shown on the frame after the one drawn with everything in.
+    requestAnimationFrame(() => {
+      this.covered = false;
+      this.#fireReady();
+    });
+  };
+
+  /** The first time the scene shows, or the renderer fails: the page can drop its own loader. */
+  #fireReady(): void {
+    if (this.#readyFired) return;
+    this.#readyFired = true;
+    this.#emit('lxs-ready', {});
   }
 
   #renderStats({ backend, fps, luminaires, shadowCasters, drawCalls, triangles }: Diagnostics) {
@@ -173,6 +287,7 @@ export class LxsViewport extends LitElement {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.#watchStats(false);
+    window.clearTimeout(this.#slowTimer);
     this.#unmount();
   }
 
@@ -192,16 +307,22 @@ export class LxsViewport extends LitElement {
     viewport.onPick((pick) => this.#emit('lxs-pick', pick));
     viewport.onMoveStart((start) => this.#emit('lxs-move-start', start));
     viewport.onMeasure((measurements) => (this.measurements = measurements));
+    viewport.onLoadingChange(this.#onLoading);
     try {
       await viewport.init();
     } catch (error) {
       this.simulator.logger.error('[render] The renderer could not start', error);
       this.failed = true;
+      this.#fireReady();
       return;
     }
     // Unmounted or replaced while starting up.
     if (this.#viewport !== viewport) viewport.dispose();
-    else this.#applyProperties();
+    else {
+      this.#applyProperties();
+      // Nothing to wait for, or still loading: either way, where things stand now.
+      this.#onLoading(viewport.loading);
+    }
   }
 
   #unmount(): void {
@@ -283,6 +404,7 @@ declare global {
   }
   interface HTMLElementEventMap {
     'lxs-pick': CustomEvent<PickEvent>;
+    'lxs-ready': CustomEvent<object>;
     'lxs-move-start': CustomEvent<MoveStartEvent>;
     'lxs-drop-product': CustomEvent<DropProductDetail>;
     'lxs-drop-furniture': CustomEvent<DropFurnitureDetail>;

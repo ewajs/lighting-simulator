@@ -1,4 +1,4 @@
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // Screen points at the fixed 1280×800 viewport (playwright.config.ts) with the
 // default perspective view. If the layout or camera changes, update these and
@@ -16,7 +16,7 @@ async function openDemo(page: Page): Promise<string[]> {
   });
   await page.goto('/');
   // The viewport appends its canvas once the renderer has started.
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
   return errors;
 }
 
@@ -365,7 +365,7 @@ test('?debug logs each step and shows diagnostics', async ({ page }) => {
     if (message.type() === 'debug') debugLines.push(message.text());
   });
   await page.goto('/?debug');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
   await expect(page.locator('lxs-viewport .diagnostics')).toContainText(/\d+ fps/);
   await expect(page.locator('lxs-viewport .diagnostics')).toContainText('5 luces');
   await expect.poll(() => debugLines).toContainEqual(expect.stringMatching(/^\[scene\] Started/));

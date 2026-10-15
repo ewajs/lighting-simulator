@@ -1,5 +1,5 @@
 import type { SceneFile } from '@luxstudio/core';
-import { expect, test, type Page } from './fixtures';
+import { expect, ready, test, type Page } from './fixtures';
 
 // Saving the scene to a .luxstudio.json file and opening one (ADR 0051).
 // Saved files are read in the page and files to open are made there, so the
@@ -20,7 +20,7 @@ async function openDemo(page: Page): Promise<void> {
     };
   });
   await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeVisible();
+  await ready(page);
 }
 
 const luminaireCount = (page: Page) => page.getByText(/^Luminarias: \d+$/);

@@ -338,7 +338,7 @@ export class LxsApp extends LitElement {
     if (!this.simulator) return;
     this.notice = await openSceneFile(file, this.simulator);
     // Opened (errors leave the scene as it was): frame the new room in the current view.
-    if (this.notice.kind !== 'error') this.viewport.setView(this.view);
+    if (this.notice.kind !== 'error') this.#showNewScene();
   }
 
   /**
@@ -406,14 +406,23 @@ export class LxsApp extends LitElement {
     if (!shared) return;
     history.replaceState(history.state, '', shared.pageLink);
     this.notice = openSharedScene(shared.file, simulator);
-    if (this.notice.kind !== 'error') this.viewport.setView(this.view);
+    if (this.notice.kind !== 'error') this.#showNewScene();
+  }
+
+  /**
+   * After a whole scene replaced the last: hidden until its files are in, so
+   * no stand-ins show (ADR 0054), and framed in the current view.
+   */
+  #showNewScene(): void {
+    this.viewport.cover();
+    this.viewport.setView(this.view);
   }
 
   /** New: the template replaces the scene as one undo step, framed in the current view. */
   #onTemplatePick = ({ detail }: CustomEvent<TemplatePickDetail>): void => {
     if (!this.simulator) return;
     this.simulator.setScene(detail.scene);
-    this.viewport.setView(this.view);
+    this.#showNewScene();
     this.notice = { kind: 'info', text: msg(str`New scene: ${detail.name}.`) };
   };
 
@@ -434,6 +443,14 @@ export class LxsApp extends LitElement {
       this.#autosaveFailed = true;
     }
   }
+
+  /**
+   * iOS Safari zooms the page on a pinch whatever `touch-action` says; its own
+   * gesture event can still be cancelled. Only pinches that start on the app.
+   */
+  #blockPageZoom = (event: Event): void => {
+    if (event.composedPath().includes(this)) event.preventDefault();
+  };
 
   /**
    * Leaving or hiding the page writes a pending autosave now. Phones often
@@ -490,6 +507,7 @@ export class LxsApp extends LitElement {
     super.connectedCallback();
     window.addEventListener('keydown', this.#onKeyDown);
     window.addEventListener('pagehide', this.#flushAutosave);
+    document.addEventListener('gesturestart', this.#blockPageZoom);
     document.addEventListener('visibilitychange', this.#flushAutosave);
     this.#narrowQuery.addEventListener('change', this.#onNarrowChange);
     this.#phoneQuery.addEventListener('change', this.#onPhoneChange);
@@ -519,6 +537,7 @@ export class LxsApp extends LitElement {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.#onKeyDown);
     window.removeEventListener('pagehide', this.#flushAutosave);
+    document.removeEventListener('gesturestart', this.#blockPageZoom);
     document.removeEventListener('visibilitychange', this.#flushAutosave);
     this.#flushAutosave();
     this.#narrowQuery.removeEventListener('change', this.#onNarrowChange);

@@ -5,6 +5,14 @@
 
 import type { Logger } from './logger';
 
+/**
+ * After this long a load counts as failed, so nothing waits on it forever,
+ * in ms. A file that still arrives later is used then.
+ */
+export const LOAD_TIMEOUT_MS = 15_000;
+/** What the timeout race resolves to when time runs out. */
+const TIMED_OUT = Symbol('timed out');
+
 /** Called when an asset has loaded. */
 export type AssetListener<Value> = (id: string, value: Value) => void;
 
@@ -36,6 +44,7 @@ export class AssetCache<Raw, Value> {
   readonly #settled = new Map<string, Value | null>();
   readonly #pending = new Set<string>();
   readonly #listeners = new Set<AssetListener<Value>>();
+  readonly #settleListeners = new Set<(id: string) => void>();
 
   constructor(
     provider: AssetProvider<Raw> | undefined,
@@ -55,34 +64,73 @@ export class AssetCache<Raw, Value> {
     return undefined;
   }
 
+  /** Whether the asset is still on its way: requested, and neither arrived, failed nor timed out. */
+  isLoading(id: string): boolean {
+    return this.#pending.has(id);
+  }
+
   /** Calls `listener` whenever an asset loads. Returns an unsubscribe function. */
   subscribe(listener: AssetListener<Value>): () => void {
     this.#listeners.add(listener);
     return () => this.#listeners.delete(listener);
   }
 
+  /**
+   * Calls `listener` whenever a load ends: the asset arrived, there was none,
+   * it failed or timed out, or it arrived after timing out. Returns an
+   * unsubscribe function.
+   */
+  onSettled(listener: (id: string) => void): () => void {
+    this.#settleListeners.add(listener);
+    return () => this.#settleListeners.delete(listener);
+  }
+
   async #load(id: string): Promise<void> {
+    const { area, fallback } = this.#kind;
+    this.#pending.add(id);
+    const fetched = this.#fetch(id);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const timedOut = new Promise<typeof TIMED_OUT>((resolve) => {
+      timer = setTimeout(() => resolve(TIMED_OUT), LOAD_TIMEOUT_MS);
+    });
+    const first = await Promise.race([fetched, timedOut]);
+    clearTimeout(timer);
+    if (first !== TIMED_OUT) return this.#settle(id, first);
+    // Shown without it for now, so nothing waits on it forever; used if it does arrive.
+    this.#logger.warn(
+      `${area} "${id}" is taking over ${LOAD_TIMEOUT_MS / 1000} s, using ${fallback} meanwhile`,
+    );
+    this.#settle(id, null);
+    const late = await fetched;
+    if (late !== null) this.#settle(id, late);
+  }
+
+  /** Loads and checks one asset: null for none or a failure, which is logged. Never throws. */
+  async #fetch(id: string): Promise<Value | null> {
     const kind = this.#kind;
     const { area, noun, fallback } = kind;
-    this.#pending.add(id);
     const started = performance.now();
-    let value: Value | null = null;
     try {
       const raw = await this.#provider!.load(id);
-      if (raw !== undefined) value = kind.convert(raw);
+      const value = raw === undefined ? null : kind.convert(raw);
       const ms = Math.round(performance.now() - started);
       this.#logger.debug(
         value === null
           ? `${area} "${id}" has no ${noun}`
           : `${area} "${id}" in ${ms} ms: ${kind.describe(value)}`,
       );
+      return value;
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error);
       this.#logger.warn(`${area} "${id}" failed to load, using ${fallback}: ${reason}`);
+      return null;
     }
+  }
+
+  #settle(id: string, value: Value | null): void {
     this.#pending.delete(id);
     this.#settled.set(id, value);
-    const loaded = value;
-    if (loaded !== null) this.#listeners.forEach((listener) => listener(id, loaded));
+    if (value !== null) this.#listeners.forEach((listener) => listener(id, value));
+    this.#settleListeners.forEach((listener) => listener(id));
   }
 }

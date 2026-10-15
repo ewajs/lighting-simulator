@@ -121,6 +121,26 @@ lighting uses. To offer materials in the room panel, list them in
 `DisplayCatalog.materials` with a name, a swatch, their typical ρ and the
 surfaces they suit; picking one sets the texture and that ρ.
 
+## Loading
+
+Nothing is drawn with a stand-in ([ADR 0054](../decisions/0054-loading-without-stand-ins.md)).
+A luminaire appears once its IES file and model are in, and a surface keeps its
+look until a new texture arrives. At start-up `<lxs-viewport>` keeps the scene
+hidden until everything has loaded, then fires `lxs-ready`. Your page should
+show its own loader until then, since the library's script is large:
+
+```html
+<div id="splash">Loading…</div>
+<script type="module">
+  app.addEventListener('lxs-ready', () => document.getElementById('splash').remove(), {
+    once: true,
+  });
+</script>
+```
+
+A provider that hasn't answered after 15 s is treated as missing, with a
+warning; if its file still arrives, it's used then.
+
 ## The full editor
 
 ```ts
