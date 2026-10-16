@@ -24,6 +24,8 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      # Python, for the accuracy checks' docs at /docs/accuracy.
+      - uses: astral-sh/setup-uv@v10.2.0
       - run: npm run build
       # API reference and guides, served at /docs next to the demo.
       - run: npm run docs

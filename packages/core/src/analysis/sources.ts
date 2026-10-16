@@ -74,34 +74,49 @@ export function luminaireSources(
   if (level <= 0) return [];
   const offsets = cellOffsets(opening);
   const share = level / offsets.length;
-  return offsets.map(({ across, along }) => ({
-    position: add(frame.origin, add(scale(frame.side, across), scale(frame.forward, along))),
+  return offsets.map(({ across, along, up }) => ({
+    position: add(
+      frame.origin,
+      add(add(scale(frame.side, across), scale(frame.forward, along)), scale(frame.down, -up)),
+    ),
     frame,
     distribution,
     scale: share,
   }));
 }
 
+/** Where a cell sits from the opening's centre, in m, along the frame's side, forward and up. */
+interface CellOffset {
+  readonly across: number;
+  readonly along: number;
+  readonly up: number;
+}
+
 /**
- * Cell centres across the opening's width (`across`, along the frame's side)
- * and length (`along`, its forward), in m from its centre. Height is not
- * split: openings are flat or close to it in the luminaires this is for.
+ * Cell centres across the opening's width (`across`, along the frame's
+ * side), length (`along`, its forward) and height (`up`), in m from its
+ * centre. A tall opening, such as a sconce's glowing box or a lamp's shade,
+ * is split in height too: close to it, a single height would be far off.
  */
-function cellOffsets(opening: LuminousOpening | undefined): { across: number; along: number }[] {
+function cellOffsets(opening: LuminousOpening | undefined): CellOffset[] {
   const width = opening?.widthM ?? 0;
   const length = opening?.lengthM ?? 0;
+  const height = opening?.heightM ?? 0;
   const columns = Math.max(1, Math.ceil(width / SOURCE_CELL_M));
   const rows = Math.max(1, Math.ceil(length / SOURCE_CELL_M));
-  const cells: { across: number; along: number }[] = [];
+  const layers = Math.max(1, Math.ceil(height / SOURCE_CELL_M));
+  const cells: CellOffset[] = [];
   for (let i = 0; i < columns; i++) {
     for (let j = 0; j < rows; j++) {
       const across = width * ((i + 0.5) / columns - 0.5);
       const along = length * ((j + 0.5) / rows - 0.5);
       if (opening?.round && !insideEllipse(across, along, width / 2, length / 2)) continue;
-      cells.push({ across, along });
+      for (let k = 0; k < layers; k++) {
+        cells.push({ across, along, up: height * ((k + 0.5) / layers - 0.5) });
+      }
     }
   }
-  return cells.length > 0 ? cells : [{ across: 0, along: 0 }];
+  return cells.length > 0 ? cells : [{ across: 0, along: 0, up: 0 }];
 }
 
 function insideEllipse(x: number, z: number, halfX: number, halfZ: number): boolean {

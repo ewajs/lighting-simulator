@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Vite's types know `?raw` and `import.meta.glob`, which read the IES files and references.
+    "types": ["vite/client"]
+  },
+  "include": ["src"]
+}

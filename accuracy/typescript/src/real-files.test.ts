@@ -1,8 +1,7 @@
-// Evidence for the illuminance calculation with real manufacturer files
-// (ADR 0057): values read by hand from a file, and conservation of each
-// file's flux. Core's own tests prove the maths with made-up data; these show
-// it holds for real files. They move to validation/ in M5.2a, next to the
-// Radiance comparisons that use the same files.
+// Lux Studio's illuminance with the demo's real manufacturer files (ADR 0057,
+// 0058): values read by hand from a file, and conservation of each file's
+// flux. Core's own tests prove the maths with made-up data; these show it holds
+// for real files, next to the Radiance comparison that uses the same files.
 import {
   DEFAULT_ROOM,
   directIlluminance,
@@ -10,26 +9,36 @@ import {
   parseIes,
   totalFlux,
   type AnalysisInputs,
+  type Catalog,
   type Luminaire,
   type Photometry,
   type PointSource,
+  type Product,
   type Room,
   type Vec3,
 } from '@luxstudio/core';
 import { describe, expect, it } from 'vitest';
-import wallWasher from '../public/ies/C3L10935NZ10U-C3RLWCC.ies?raw';
-import upDown from '../public/ies/CB3326-L35K-H.ies?raw';
-import linear from '../public/ies/HP-2-ID-4ft-H-B-835-ITL85132.008.ies?raw';
-import downlight from '../public/ies/LX6C15D010-EX6C159030-6LBMH.ies?raw';
-import trackSpot from '../public/ies/qg63_b35q.ies?raw';
-import { sampleCatalog } from './sample-catalog';
+import { IES_FILES } from './inputs';
 
-const FILES: Record<string, Photometry> = {
-  'ies-downlight': parseIes(downlight),
-  'ies-track-spot': parseIes(trackSpot),
-  'ies-linear-pendant': parseIes(linear),
-  'ies-wall-washer': parseIes(wallWasher),
-  'ies-wall-up-down': parseIes(upDown),
+/** The demo's five files by the product ids the demo gives them. */
+const PRODUCT_FILES: Record<string, string> = {
+  'ies-downlight': 'LX6C15D010-EX6C159030-6LBMH.ies',
+  'ies-track-spot': 'qg63_b35q.ies',
+  'ies-linear-pendant': 'HP-2-ID-4ft-H-B-835-ITL85132.008.ies',
+  'ies-wall-washer': 'C3L10935NZ10U-C3RLWCC.ies',
+  'ies-wall-up-down': 'CB3326-L35K-H.ies',
+};
+
+const FILES: Record<string, Photometry> = Object.fromEntries(
+  Object.entries(PRODUCT_FILES).map(([id, file]) => [id, parseIes(IES_FILES[file]!)]),
+);
+
+/** Each as a recessed product: its light 3 cm below the fixture, turned only by its aim. */
+const catalog: Catalog = {
+  get: (id): Product | undefined =>
+    id in FILES
+      ? { id, mount: 'recessed', power: 1, flux: totalFlux(FILES[id]!), cct: 3000, beamDeg: 60 }
+      : undefined,
 };
 
 const room: Room = DEFAULT_ROOM;
@@ -46,9 +55,9 @@ const placed = (productId: string, position: Vec3, tiltDeg = 0, panDeg = 0): Lum
   cct: 3000,
 });
 
-/** The demo's catalog and IES files, with no models: lights at the placeholders' positions. */
+/** The products and their IES files, with no models: lights at the placeholders' positions. */
 const inputs: AnalysisInputs = {
-  catalog: sampleCatalog,
+  catalog,
   photometry: (id) => FILES[id],
   modelFile: () => undefined,
 };
@@ -132,10 +141,7 @@ describe('each real file’s flux lands on the room', () => {
           id === 'ies-wall-up-down' ? { x: 0.6, y: 1.35, z: -0.4 } : { x: 0.3, y: 1.35, z: 0.2 };
         const light = directLight(
           { room, luminaires: [placed(id, position, tilt, pan)], furniture: [] },
-          {
-            ...inputs,
-            catalog: { get: (pid) => ({ ...sampleCatalog.get(pid)!, mount: 'recessed' }) },
-          },
+          inputs,
           FULL,
         );
         expect(Math.abs(fluxOnRoom(light.sources) / totalFlux(file) - 1)).toBeLessThan(0.002);

@@ -1,0 +1,13 @@
+{
+  "description": "One 6-inch recessed downlight (Cooper, 1153 lm, a 15 cm disk) in the middle of a 5 × 4 × 2.7 m room, aimed straight down.",
+  "room": { "width": 5, "depth": 4, "height": 2.7 },
+  "luminaires": [
+    { "ies": "LX6C15D010-EX6C159030-6LBMH.ies", "origin": { "x": 0, "y": 2.67, "z": 0 } }
+  ],
+  "grids": [
+    { "surface": "work-plane", "heightM": 0.8, "spacingM": 0.25 },
+    { "surface": "floor", "spacingM": 0.25 },
+    { "surface": "wall-x-", "spacingM": 0.25 },
+    { "surface": "wall-z+", "spacingM": 0.25 }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@luxstudio/accuracy",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "test": "vitest run",
+    "report": "vite build --ssr src/report.ts --outDir .report --emptyOutDir --logLevel warn && node .report/report.js > ../REPORT.md"
+  },
+  "dependencies": {
+    "@luxstudio/core": "0.0.0"
+  }
+}

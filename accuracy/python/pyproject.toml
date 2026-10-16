@@ -1,0 +1,47 @@
+[project]
+name = "luxstudio-accuracy"
+version = "0.1.0"
+description = "Checks Lux Studio's illuminance numbers against independent references (ADR 0058)."
+requires-python = ">=3.14,<3.15"
+dependencies = []
+
+[project.scripts]
+accuracy = "luxstudio_accuracy.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.9.16,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.0",
+    "pdoc>=16.0.0",
+    "pytest>=9.1.1",
+    "ruff>=0.17.1",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, imports, modern syntax, bugbear, and docstrings
+# (pydocstyle): every public module, class and function is documented, as
+# `npm run docs` demands of the TypeScript.
+select = ["E", "W", "F", "I", "UP", "B", "D"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# Tests document themselves through their names.
+"tests/**" = ["D"]
+
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Say why a test skipped (the Radiance tests, off macOS).
+addopts = "-rs"
+markers = ["radiance: runs Radiance (downloads it on first use); skip with -m 'not radiance'"]

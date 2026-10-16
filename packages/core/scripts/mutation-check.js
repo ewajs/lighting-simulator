@@ -70,6 +70,12 @@ const MISTAKES = [
     slip: 'const arm = subtract(lightOrigin, headPivot);',
   },
   {
+    name: 'tall openings not split in height',
+    file: 'src/analysis/sources.ts',
+    correct: 'const layers = Math.max(1, Math.ceil(height / SOURCE_CELL_M));',
+    slip: 'const layers = 1;',
+  },
+  {
     name: 'no maintenance factor',
     file: 'src/analysis/analyse-direct.ts',
     correct: 'level * settings.maintenanceFactor,',

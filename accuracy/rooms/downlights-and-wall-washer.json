@@ -1,0 +1,20 @@
+{
+  "description": "Four downlights on a grid, and a wall washer (Lightolier, asymmetric) 0.5 m from the wall at x = −2.5, its beam turned onto that wall.",
+  "room": { "width": 5, "depth": 4, "height": 2.7 },
+  "luminaires": [
+    { "ies": "LX6C15D010-EX6C159030-6LBMH.ies", "origin": { "x": -1.25, "y": 2.67, "z": -1 } },
+    { "ies": "LX6C15D010-EX6C159030-6LBMH.ies", "origin": { "x": 1.25, "y": 2.67, "z": -1 } },
+    { "ies": "LX6C15D010-EX6C159030-6LBMH.ies", "origin": { "x": -1.25, "y": 2.67, "z": 1 } },
+    { "ies": "LX6C15D010-EX6C159030-6LBMH.ies", "origin": { "x": 1.25, "y": 2.67, "z": 1 } },
+    {
+      "ies": "C3L10935NZ10U-C3RLWCC.ies",
+      "origin": { "x": -2, "y": 2.67, "z": 0 },
+      "panDeg": -90
+    }
+  ],
+  "grids": [
+    { "surface": "work-plane", "heightM": 0.8, "spacingM": 0.25 },
+    { "surface": "floor", "spacingM": 0.25 },
+    { "surface": "wall-x-", "spacingM": 0.2 }
+  ]
+}

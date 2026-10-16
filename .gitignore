@@ -12,5 +12,14 @@ playwright-report
 
 # Unit test coverage reports (npm run coverage)
 coverage/
-# The analysis benchmark's bundle (npm run bench -w packages/core)
+# Bundles built to run in Node: the analysis benchmark and the accuracy report
 .bench/
+.report/
+
+# The accuracy checks' Python environment and downloaded Radiance
+accuracy/python/.venv/
+accuracy/python/.cache/
+accuracy/python/.mypy_cache/
+accuracy/python/.pytest_cache/
+accuracy/python/.ruff_cache/
+__pycache__/

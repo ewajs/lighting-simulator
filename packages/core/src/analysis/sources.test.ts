@@ -65,6 +65,19 @@ describe('luminaireSources', () => {
     expect(luminaireSources(frame, distribution, opening(0.5, 0.5), 1)).toHaveLength(25);
   });
 
+  it('splits a tall opening in height too: a 23 × 13 × 51 cm box becomes 3 × 2 × 6 cells', () => {
+    // A sconce's glowing box (Visa Colonnade). Without height layers, points
+    // close to it read up to 60 % off Radiance's (ADR 0058).
+    const box = { widthM: 0.235, lengthM: 0.131, heightM: 0.509, round: false };
+    const sources = luminaireSources(frame, distribution, box, 1);
+    expect(sources).toHaveLength(36);
+    const heights = [...new Set(sources.map((source) => source.position.y.toFixed(6)))].map(Number);
+    expect(heights).toHaveLength(6);
+    // Layers centred on the photometric centre (2.7 m), 0.509 / 6 m apart.
+    expect(Math.min(...heights)).toBeCloseTo(2.7 - 0.509 / 2 + 0.509 / 12, 6);
+    expect(Math.max(...heights)).toBeCloseTo(2.7 + 0.509 / 2 - 0.509 / 12, 6);
+  });
+
   it('keeps every cell no larger than SOURCE_CELL_M', () => {
     const sources = luminaireSources(frame, distribution, opening(0.35, 0.21), 1);
     // ceil(0.35 / 0.1) = 4 across, ceil(0.21 / 0.1) = 3 along.
