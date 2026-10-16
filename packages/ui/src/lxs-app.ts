@@ -499,8 +499,17 @@ export class LxsApp extends LitElement {
   }
 
   #openPhoneTab(tab: PhoneTab | null): void {
-    this.phoneTab = tab;
     this.#sheetOpenedBySelection = false;
+    if (tab !== null || this.phoneTab === null) {
+      this.phoneTab = tab;
+      return;
+    }
+    // Closing: the sheet slides out before it's removed, unless another tab opened meanwhile.
+    const closing = this.phoneTab;
+    const sheet = this.renderRoot.querySelector('lxs-sheet');
+    void (sheet ? sheet.leave() : Promise.resolve()).then(() => {
+      if (this.phoneTab === closing) this.phoneTab = null;
+    });
   }
 
   override connectedCallback(): void {
@@ -519,6 +528,10 @@ export class LxsApp extends LitElement {
 
   protected override firstUpdated(): void {
     void this.#openSharedLink();
+    // Panels animate from the next frames on, after the starting layout (say, a collapsed library) settles.
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => this.toggleAttribute('panel-motion', true)),
+    );
     // Marked seen as soon as it's shown: "once" holds even if the page is reloaded before closing it.
     if (this.helpOnStart && !helpSeen()) {
       this.helpOpen = true;

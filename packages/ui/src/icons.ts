@@ -7,10 +7,11 @@ import type { MountType } from '@luxstudio/core';
 const markup = new WeakMap<IconNode, string>();
 
 /**
- * Renders a Lucide icon (ADR 0023) inheriting the text colour. Icon data comes
- * from the lucide package, so building SVG markup from it is safe.
+ * A Lucide icon's shapes as SVG markup for a 24 × 24 viewBox, e.g. to place
+ * one inside a larger drawing. Icon data comes from the lucide package, so
+ * the markup is safe to render.
  */
-export function icon(node: IconNode): TemplateResult {
+export function iconMarkup(node: IconNode): string {
   let inner = markup.get(node);
   if (inner === undefined) {
     inner = node
@@ -24,6 +25,15 @@ export function icon(node: IconNode): TemplateResult {
       .join('');
     markup.set(node, inner);
   }
+  return inner;
+}
+
+/**
+ * Renders a Lucide icon (ADR 0023) inheriting the text colour. Icon data comes
+ * from the lucide package, so building SVG markup from it is safe.
+ */
+export function icon(node: IconNode): TemplateResult {
+  const inner = iconMarkup(node);
   return html`<svg
     class="icon"
     viewBox="0 0 24 24"

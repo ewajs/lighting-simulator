@@ -89,6 +89,15 @@ export class LxsViewport extends LitElement {
       font: var(--lxs-fs-xs) var(--lxs-font-ui);
       transform: translateX(-50%);
       pointer-events: none;
+      animation: fade-in var(--lxs-t-med) var(--lxs-ease);
+    }
+    .loader {
+      animation: fade-in var(--lxs-t-med) var(--lxs-ease);
+    }
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+      }
     }
     .spinner {
       width: 22px;

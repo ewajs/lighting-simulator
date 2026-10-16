@@ -47,6 +47,15 @@ export class LxsNotice extends LitElement {
         font-size: var(--lxs-fs-sm);
         pointer-events: auto;
       }
+      .notice {
+        animation: rise var(--lxs-t-med) var(--lxs-ease);
+      }
+      @keyframes rise {
+        from {
+          transform: translateY(8px);
+          opacity: 0;
+        }
+      }
       .notice[data-kind='error'] {
         border-color: var(--lxs-danger);
       }

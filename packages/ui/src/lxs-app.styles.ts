@@ -21,6 +21,11 @@ export const appStyles = css`
     font: var(--lxs-fs-md) / 1.45 var(--lxs-font-ui);
     -webkit-font-smoothing: antialiased;
   }
+  /* Side panels ease open and closed, once the first layout is in place: an
+     animated start would frame the 3D view mid-slide. */
+  :host([panel-motion]) {
+    transition: grid-template-columns var(--lxs-t-med) var(--lxs-ease);
+  }
   :host([library-collapsed]) {
     --lxs-left-w: 48px;
   }

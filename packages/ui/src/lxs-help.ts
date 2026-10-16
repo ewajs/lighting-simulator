@@ -38,7 +38,36 @@ export class LxsHelp extends LitElement {
         font-family: var(--lxs-font-ui);
       }
       dialog::backdrop {
-        background: rgb(0 0 0 / 0.5);
+        background-color: rgb(0 0 0 / 0.5);
+      }
+      /* Fades and settles in, and out again on closing (where supported). */
+      dialog {
+        transition:
+          opacity var(--lxs-t-med) var(--lxs-ease),
+          transform var(--lxs-t-med) var(--lxs-ease),
+          overlay var(--lxs-t-med) allow-discrete,
+          display var(--lxs-t-med) allow-discrete;
+      }
+      dialog:not([open]) {
+        opacity: 0;
+        transform: scale(0.97);
+      }
+      @starting-style {
+        dialog[open] {
+          opacity: 0;
+          transform: scale(0.97);
+        }
+      }
+      dialog::backdrop {
+        transition:
+          background-color var(--lxs-t-med) var(--lxs-ease),
+          overlay var(--lxs-t-med) allow-discrete,
+          display var(--lxs-t-med) allow-discrete;
+      }
+      @starting-style {
+        dialog[open]::backdrop {
+          background-color: transparent;
+        }
       }
       .close {
         position: absolute;

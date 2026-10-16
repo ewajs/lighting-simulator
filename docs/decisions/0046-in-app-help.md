@@ -1,6 +1,6 @@
 # 0046. In-app help: a getting-started carousel
 
-- **Status:** Accepted
+- **Status:** Accepted; its cards and illustrations were redone in ADR 0055
 - **Date:** 2026-10-12
 
 ## Context

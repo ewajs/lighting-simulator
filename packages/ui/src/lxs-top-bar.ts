@@ -79,6 +79,24 @@ export class LxsTopBar extends LitElement {
       .icon-btn[aria-pressed='false'] {
         color: var(--lxs-text-faint);
       }
+      /* The ⋯ menu drops in and out (where supported). */
+      [popover] {
+        transition:
+          opacity var(--lxs-t-fast) var(--lxs-ease),
+          transform var(--lxs-t-fast) var(--lxs-ease),
+          overlay var(--lxs-t-fast) allow-discrete,
+          display var(--lxs-t-fast) allow-discrete;
+      }
+      [popover]:not(:popover-open) {
+        opacity: 0;
+        transform: translateY(-4px);
+      }
+      @starting-style {
+        [popover]:popover-open {
+          opacity: 0;
+          transform: translateY(-4px);
+        }
+      }
       [popover] {
         position: fixed;
         inset: auto;
