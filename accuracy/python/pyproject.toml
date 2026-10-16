@@ -42,4 +42,6 @@ files = ["src", "tests"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Say why a test skipped (the Radiance tests, off macOS).
+addopts = "-rs"
 markers = ["radiance: runs Radiance (downloads it on first use); skip with -m 'not radiance'"]
