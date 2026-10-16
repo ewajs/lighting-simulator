@@ -13,8 +13,9 @@ type Tab = 'catalog' | 'scene';
 
 /**
  * The left panel: an icon rail switching between the catalog and the scene
- * list. When `collapsed`, only the rail shows. Clicking the active tab asks to
- * collapse; clicking any tab while collapsed asks to expand.
+ * list. When `collapsed`, only the rail shows; the host narrows the library
+ * to the rail's 48 px, and the panel slides out as it does. Clicking the
+ * active tab asks to collapse; clicking any tab while collapsed asks to expand.
  *
  * @fires lxs-collapse-request - `detail: { collapsed }`
  */
@@ -29,8 +30,13 @@ export class LxsLibrary extends LitElement {
         grid-template-columns: 48px minmax(0, 1fr);
         min-height: 0;
         background: var(--lxs-surface-1);
+        overflow: clip;
       }
       nav {
+        /* Above the panel, which slides out underneath it. */
+        position: relative;
+        z-index: 1;
+        background: var(--lxs-surface-1);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -38,12 +44,22 @@ export class LxsLibrary extends LitElement {
         padding: var(--lxs-sp-2) 0;
         border-right: 1px solid var(--lxs-line);
       }
+      /* The panel keeps its width while the host's column eases shut, so it
+         slides out under the rail rather than squeezing, and hides once out
+         of sight. The host sizes the library: the rail's width when collapsed.
+         The panel draws the library's right edge, so its width is exact. */
       lxs-catalog-panel,
       lxs-scene-panel {
         min-height: 0;
+        justify-self: end;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: calc(var(--lxs-panel-w) - 48px);
+        border-right: 1px solid var(--lxs-line);
       }
-      :host([collapsed]) {
-        grid-template-columns: 48px;
+      :host([collapsed]) :is(lxs-catalog-panel, lxs-scene-panel) {
+        visibility: hidden;
+        transition: visibility 0s var(--lxs-t-panel);
       }
     `,
   ];
@@ -66,23 +82,21 @@ export class LxsLibrary extends LitElement {
         ${this.#tabButton('scene', msg('Scene'), icon(Layers))}
       </nav>
       ${
-        this.collapsed
-          ? ''
-          : this.tab === 'catalog'
-            ? html`<lxs-catalog-panel
-                role="tabpanel"
-                .display=${this.display}
-                .products=${this.products}
-                .iesImport=${this.iesImport}
-              ></lxs-catalog-panel>`
-            : html`<lxs-scene-panel
-                role="tabpanel"
-                .scene=${this.scene}
-                .products=${this.products}
-                .display=${this.display}
-                .selection=${this.selection}
-                @lxs-open-catalog=${() => (this.tab = 'catalog')}
-              ></lxs-scene-panel>`
+        this.tab === 'catalog'
+          ? html`<lxs-catalog-panel
+              role="tabpanel"
+              .display=${this.display}
+              .products=${this.products}
+              .iesImport=${this.iesImport}
+            ></lxs-catalog-panel>`
+          : html`<lxs-scene-panel
+              role="tabpanel"
+              .scene=${this.scene}
+              .products=${this.products}
+              .display=${this.display}
+              .selection=${this.selection}
+              @lxs-open-catalog=${() => (this.tab = 'catalog')}
+            ></lxs-scene-panel>`
       }
     `;
   }

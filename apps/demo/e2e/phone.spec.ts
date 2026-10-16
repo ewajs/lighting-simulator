@@ -13,6 +13,14 @@ async function openDemo(page: Page): Promise<void> {
 const sheetHeading = (page: Page, name: string) =>
   page.locator('lxs-sheet').getByRole('heading', { name, exact: true });
 
+/** Closes the open sheet with ✕ and reports, a frame later, whether it's still there sliding out. */
+const closeSheetAndLook = (page: Page) =>
+  page.locator('lxs-sheet').evaluate(async (sheet) => {
+    sheet.shadowRoot!.querySelector<HTMLButtonElement>('button[aria-label="Cerrar"]')!.click();
+    await new Promise(requestAnimationFrame);
+    return sheet.isConnected && sheet.getAnimations().some((a) => a.playState === 'running');
+  });
+
 test(
   'full-screen viewport with a tab bar instead of side panels',
   { tag: '@all-browsers' },
@@ -53,7 +61,7 @@ test(
       await openDemo(page);
       await page.getByRole('tab', { name: 'Escena' }).tap();
       await expect(sheetHeading(page, 'Escena')).toBeVisible();
-      await page.getByRole('button', { name: 'Cerrar' }).tap();
+      expect(await closeSheetAndLook(page)).toBe(motion === 'no-preference');
       await expect(page.locator('lxs-sheet')).toHaveCount(0);
     }
   },

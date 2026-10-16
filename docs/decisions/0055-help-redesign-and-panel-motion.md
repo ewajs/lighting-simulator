@@ -47,14 +47,21 @@ nothing decorative.
   New).
 
 **Panel motion**
-- Short slides and fades, `--lxs-t-fast` / `--lxs-t-med` with `--lxs-ease`,
-  which the theme already sets to 0 under `prefers-reduced-motion`.
+- Short slides and fades with `--lxs-ease`. Panels and sheets take
+  `--lxs-t-panel` (250 ms, slow enough to follow by eye); dialogs, menus and
+  notices `--lxs-t-fast` / `--lxs-t-med`. The theme sets all three to 0
+  under `prefers-reduced-motion`.
 - **Side panels** ease the grid's columns open and closed. This only
   switches on after the first layout: an animated start, such as a tablet's
-  collapsed library, would frame the 3D view mid-slide.
+  collapsed library, would frame the 3D view mid-slide. A panel keeps its
+  full width while its column changes, so it slides in and out under the
+  edge (the library's panel under the rail, the inspector past the window's
+  edge) instead of squeezing; it's hidden once the column has closed.
 - **Phone sheets** slide up (from the right in landscape). On closing they
-  slide out first: `<lxs-sheet>.leave()` resolves when they're out of sight,
-  and the app removes them then.
+  slide out the same way at the same speed: `<lxs-sheet>.leave()` resolves
+  when they're out of sight, and the app removes them then. The way out has
+  keyframes of its own: reusing the arrival's name would only update that
+  finished animation, and nothing would play.
 - **The tablet's properties sheet** folds its body through a grid row
   easing from `1fr` to `0fr`. Its contents are inert while folded and hidden
   once the fold ends.
@@ -62,6 +69,10 @@ nothing decorative.
   `@starting-style` and discrete transitions. Where unsupported, they just
   appear.
 - **Notices and the loading pill** rise or fade in.
+
+*Revised after review:* panels slowed from 200 to 250 ms with their own
+token, and side panels made to slide out as they slide in (at first their
+contents vanished at once on closing).
 
 ## Consequences
 

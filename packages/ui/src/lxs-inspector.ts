@@ -36,7 +36,7 @@ export class LxsInspector extends LitElement {
         flex: 1;
         min-height: 0;
         grid-template-rows: 1fr;
-        transition: grid-template-rows var(--lxs-t-med) var(--lxs-ease);
+        transition: grid-template-rows var(--lxs-t-panel) var(--lxs-ease);
       }
       :host([collapsed]) .fold {
         grid-template-rows: 0fr;
@@ -48,7 +48,7 @@ export class LxsInspector extends LitElement {
       /* Out of sight once folded: hidden after the fold, shown at once on opening. */
       :host([collapsed]) .body {
         visibility: hidden;
-        transition: visibility 0s var(--lxs-t-med);
+        transition: visibility 0s var(--lxs-t-panel);
       }
       button.panel-header {
         width: 100%;
