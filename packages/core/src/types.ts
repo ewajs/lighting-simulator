@@ -186,8 +186,24 @@ export interface Photometry {
   readonly candela: readonly (readonly number[])[];
   /** Input power in W, as stated in the file. */
   readonly power: number;
+  /** The size of the opening the light leaves from, for calculations close to the luminaire. */
+  readonly luminousOpening: LuminousOpening;
   /** Header keywords without brackets, e.g. `LUMINAIRE` or `LUMCAT`. */
   readonly keywords: Readonly<Record<string, string>>;
+}
+
+/**
+ * The size of a luminaire's light-emitting opening, in m, from its IES file.
+ * In the luminaire's own frame: width runs along horizontal 90°–270° (x),
+ * length along 0°–180° (z) and height up (y). All zero for a point source,
+ * which is what most files state.
+ */
+export interface LuminousOpening {
+  readonly widthM: number;
+  readonly lengthM: number;
+  readonly heightM: number;
+  /** A circle or ellipse seen from below, rather than a rectangle. */
+  readonly round: boolean;
 }
 
 /** Synchronous product lookup supplied by the host. */

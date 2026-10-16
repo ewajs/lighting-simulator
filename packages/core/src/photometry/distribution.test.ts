@@ -7,7 +7,14 @@ function photometry(
   horizontalDeg: number[],
   candela: number[][],
 ): Photometry {
-  return { verticalDeg, horizontalDeg, candela, power: 10, keywords: {} };
+  return {
+    verticalDeg,
+    horizontalDeg,
+    candela,
+    power: 10,
+    luminousOpening: { widthM: 0, lengthM: 0, heightM: 0, round: false },
+    keywords: {},
+  };
 }
 
 /** 100 cd in every direction. */

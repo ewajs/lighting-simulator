@@ -2,7 +2,7 @@
 // text in, plain data out. Decoding the bytes (often Latin-1) is the host's
 // job. What is and isn't supported is recorded in ADR 0033.
 
-import type { Photometry } from '../types';
+import type { LuminousOpening, Photometry } from '../types';
 import { horizontalSymmetry } from './distribution';
 
 /** Photometric type code for Type C, the system indoor luminaires are measured in. */
@@ -20,6 +20,8 @@ const KEYWORD_LINE = /^\s*\[([^\]]+)\]\s*(.*)$/;
 /** LM-63 keyword that continues the previous keyword's text. */
 const MORE_KEYWORD = 'MORE';
 const BYTE_ORDER_MARK = /^\uFEFF/;
+/** LM-63 units type codes for the luminous opening, and their size in m. */
+const OPENING_UNIT_M: Readonly<Record<number, number>> = { 1: 0.3048, 2: 1 };
 
 /**
  * Parses the text of an IES LM-63 photometric file. Only Type C photometry
@@ -54,10 +56,11 @@ export function parseIes(text: string): Photometry {
         : `unknown photometric type ${type}`,
     );
   }
-  data.number('units type');
-  data.number('luminous opening width');
-  data.number('luminous opening length');
-  data.number('luminous opening height');
+  const unitsType = data.number('units type');
+  const width = data.number('luminous opening width');
+  const length = data.number('luminous opening length');
+  const height = data.number('luminous opening height');
+  const luminousOpening = openingFrom(unitsType, width, length, height);
   const ballastFactor = data.positive('ballast factor');
   const secondFactor = hasLampFactor
     ? data.positive('ballast-lamp photometric factor')
@@ -80,7 +83,42 @@ export function parseIes(text: string): Photometry {
     fail('all candela values are zero');
   }
 
-  return { verticalDeg, horizontalDeg, candela, power, keywords: parseKeywords(header) };
+  return {
+    verticalDeg,
+    horizontalDeg,
+    candela,
+    power,
+    luminousOpening,
+    keywords: parseKeywords(header),
+  };
+}
+
+/**
+ * The luminous opening in m. LM-63 gives its size in feet (units type 1) or
+ * metres (2), and encodes its shape in the signs: zero everywhere for a
+ * point, positive width and length for a rectangle, negative width and
+ * length for a circle or ellipse (with a negative height too for a sphere,
+ * or a positive one for a vertical cylinder). Only the size and whether the
+ * footprint is round matter here, so rarer shapes keep their extents.
+ */
+function openingFrom(
+  unitsType: number,
+  width: number,
+  length: number,
+  height: number,
+): LuminousOpening {
+  const point = width === 0 && length === 0 && height === 0;
+  const toMetres = OPENING_UNIT_M[unitsType];
+  if (toMetres === undefined && !point) {
+    fail(`units type must be 1 (feet) or 2 (metres), got ${unitsType}`);
+  }
+  const scale = toMetres ?? 1;
+  return {
+    widthM: Math.abs(width) * scale,
+    lengthM: Math.abs(length) * scale,
+    heightM: Math.abs(height) * scale,
+    round: width < 0 && length < 0,
+  };
 }
 
 /** Header lines like `[LUMINAIRE] Downlight`; free-text lines (1986 files) are ignored. */

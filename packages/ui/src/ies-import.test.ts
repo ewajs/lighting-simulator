@@ -3,7 +3,14 @@ import { describe, expect, it } from 'vitest';
 import { importedCct, importedName, suggestedMount } from './ies-import';
 
 function photometry(verticalDeg: number[], values: number[]): Photometry {
-  return { verticalDeg, horizontalDeg: [0], candela: [values], power: 10, keywords: {} };
+  return {
+    verticalDeg,
+    horizontalDeg: [0],
+    candela: [values],
+    power: 10,
+    luminousOpening: { widthM: 0, lengthM: 0, heightM: 0, round: false },
+    keywords: {},
+  };
 }
 
 describe('importedName', () => {

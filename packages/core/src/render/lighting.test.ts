@@ -44,6 +44,7 @@ describe('lightingProduct', () => {
       horizontalDeg: [0],
       candela: [[100, 0]],
       power: 10,
+      luminousOpening: { widthM: 0, lengthM: 0, heightM: 0, round: false },
       keywords: {},
     };
     const lit = lightingProduct(product('recessed', { flux: 5000, beamDeg: 10 }), photometry);

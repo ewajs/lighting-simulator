@@ -1,6 +1,14 @@
 // Shared test data: synthetic products, one per mount type. Not exported from the package.
 import { DEFAULT_ROOM } from './room';
-import type { Catalog, MountType, Product, Room, Scene } from './types';
+import type {
+  Catalog,
+  LuminousOpening,
+  MountType,
+  Photometry,
+  Product,
+  Room,
+  Scene,
+} from './types';
 
 export function product(mount: MountType, extra: Partial<Product> = {}): Product {
   return { id: `test-${mount}`, mount, power: 10, flux: 800, cct: 3000, beamDeg: 36, ...extra };
@@ -23,3 +31,24 @@ export const catalog: Catalog = {
 export const room: Room = DEFAULT_ROOM;
 
 export const emptyScene: Scene = { room, luminaires: [], furniture: [] };
+
+/** A point source's opening: what most IES files state. */
+export const POINT_OPENING: LuminousOpening = { widthM: 0, lengthM: 0, heightM: 0, round: false };
+
+/** Photometry from a candela table, one row per horizontal angle. */
+export function photometry(
+  verticalDeg: readonly number[],
+  horizontalDeg: readonly number[],
+  candela: readonly (readonly number[])[],
+  luminousOpening: LuminousOpening = POINT_OPENING,
+): Photometry {
+  return { verticalDeg, horizontalDeg, candela, power: 10, luminousOpening, keywords: {} };
+}
+
+/** The same intensity, `cd`, in every direction: its flux is 4π · cd. */
+export function isotropic(
+  cd: number,
+  luminousOpening: LuminousOpening = POINT_OPENING,
+): Photometry {
+  return photometry([0, 180], [0], [[cd, cd]], luminousOpening);
+}

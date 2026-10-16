@@ -11,6 +11,7 @@ const ASYMMETRIC: Photometry = {
     [200, 0],
   ],
   power: 10,
+  luminousOpening: { widthM: 0, lengthM: 0, heightM: 0, round: false },
   keywords: {},
 };
 

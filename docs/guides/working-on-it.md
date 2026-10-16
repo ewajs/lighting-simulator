@@ -20,6 +20,7 @@ npm test              # unit tests (Vitest)
 npm run test:e2e      # end-to-end tests (Playwright), all three browser projects
 npm run test:e2e:quick -- <specs>   # just those specs, on Chrome
 npm run coverage      # unit-test coverage, into coverage/
+npm run mutation-check -w packages/core   # proves the tests catch known mistakes in the lux maths
 npm run docs          # this site, into apps/demo/dist/docs
 npm run manual        # the user manual, into apps/demo/dist/manual
 npm run manual:screenshots   # retake the manual's screenshots after UI changes
