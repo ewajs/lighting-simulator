@@ -17,7 +17,7 @@ jobs:
           cache: npm
       - run: npm ci
       # Python for the accuracy checks and their docs, pinned by accuracy/python/uv.lock.
-      - uses: astral-sh/setup-uv@v10
+      - uses: astral-sh/setup-uv@v10.2.0
       - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck
