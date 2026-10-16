@@ -30,36 +30,40 @@ async function openDemo(page: Page): Promise<string[]> {
   return problems;
 }
 
-test('a visitor loads their own IES file, adjusts it and places it', async ({ page }) => {
-  const problems = await openDemo(page);
-  // A real manufacturer file from the demo.
-  await chooseFile(page, 'qg63_b35q.ies', { url: '/ies/qg63_b35q.ies' });
+test(
+  'a visitor loads their own IES file, adjusts it and places it',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    const problems = await openDemo(page);
+    // A real manufacturer file from the demo.
+    await chooseFile(page, 'qg63_b35q.ies', { url: '/ies/qg63_b35q.ies' });
 
-  // Prefilled from the file: [LUMINAIRE], downward light → recessed, "3000K" in the text.
-  const name = page.getByRole('textbox', { name: 'Nombre' });
-  await expect(name).toHaveValue(/^Palco: Medium body spotlight/);
-  await expect(page.getByText('Archivo: qg63_b35q.ies')).toBeVisible();
-  const mount = page.locator('lxs-ies-import select');
-  await expect(mount).toHaveValue('recessed');
-  await expect(page.locator('lxs-ies-import lxs-number-field input')).toHaveValue('3000');
-  await expect(page.locator('lxs-ies-import')).toHaveScreenshot('ies-import-form.png');
+    // Prefilled from the file: [LUMINAIRE], downward light → recessed, "3000K" in the text.
+    const name = page.getByRole('textbox', { name: 'Nombre' });
+    await expect(name).toHaveValue(/^Palco: Medium body spotlight/);
+    await expect(page.getByText('Archivo: qg63_b35q.ies')).toBeVisible();
+    const mount = page.locator('lxs-ies-import select');
+    await expect(mount).toHaveValue('recessed');
+    await expect(page.locator('lxs-ies-import lxs-number-field input')).toHaveValue('3000');
+    await expect(page.locator('lxs-ies-import')).toHaveScreenshot('ies-import-form.png');
 
-  await name.fill('Mi spot');
-  await mount.selectOption('track');
-  await page.getByRole('button', { name: 'Agregar al catálogo' }).click();
+    await name.fill('Mi spot');
+    await mount.selectOption('track');
+    await page.getByRole('button', { name: 'Agregar al catálogo' }).click();
 
-  await expect(page.getByRole('button', { name: 'Tus archivos IES' })).toBeVisible();
-  await page.getByRole('button', { name: /Mi spot/ }).click();
-  await expect(page.getByText('Luminarias: 6')).toBeVisible();
-  await expect(page.getByText('Mi spot 1', { exact: true })).toBeVisible();
-  // Flux and power come from the file (2913 lm, 40.2 W); the mount from the form.
-  const inspector = page.locator('lxs-luminaire-inspector');
-  await expect(inspector.getByText('De riel', { exact: true })).toBeVisible();
-  await expect(inspector).toContainText('2.913 lm');
-  await expect(inspector).toContainText('40,2 W');
-  await expect(page).toHaveScreenshot('ies-imported-placed.png');
-  expect(problems).toEqual([]);
-});
+    await expect(page.getByRole('button', { name: 'Tus archivos IES' })).toBeVisible();
+    await page.getByRole('button', { name: /Mi spot/ }).click();
+    await expect(page.getByText('Luminarias: 6')).toBeVisible();
+    await expect(page.getByText('Mi spot 1', { exact: true })).toBeVisible();
+    // Flux and power come from the file (2913 lm, 40.2 W); the mount from the form.
+    const inspector = page.locator('lxs-luminaire-inspector');
+    await expect(inspector.getByText('De riel', { exact: true })).toBeVisible();
+    await expect(inspector).toContainText('2.913 lm');
+    await expect(inspector).toContainText('40,2 W');
+    await expect(page.locator('lxs-viewport')).toHaveScreenshot('ies-imported-placed.png');
+    expect(problems).toEqual([]);
+  },
+);
 
 test('a file that isn’t IES shows why', async ({ page }) => {
   await openDemo(page);

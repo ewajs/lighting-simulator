@@ -59,3 +59,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0053 | [Share links through a scene storage; the demo's links carry the scene](0053-share-links.md) | Accepted |
 | 0054 | [Loading without stand-ins, and no page zoom on phones](0054-loading-without-stand-ins.md) | Accepted |
 | 0055 | [Help redesign, and panels that slide](0055-help-redesign-and-panel-motion.md) | Accepted |
+| 0056 | [Leaner test runs: tests where they matter, screenshots of their subject](0056-leaner-test-runs.md) | Accepted |

@@ -10,6 +10,7 @@
   "scripts": {
     "typecheck": "tsc -p .",
     "test": "vitest run",
+    "coverage": "vitest run --coverage --coverage.include='src/**/*.ts' --coverage.exclude='src/**/*.test.ts' --coverage.exclude='src/generated/**' --coverage.exclude='src/dev/**' --coverage.reporter=text-summary --coverage.reporter=html",
     "i18n:extract": "lit-localize extract",
     "i18n:build": "lit-localize build",
     "i18n:check": "lit-localize extract && lit-localize build 2>&1 | tee /dev/stderr | (! grep -q 'is missing')"

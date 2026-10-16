@@ -22,52 +22,64 @@ async function openDemo(page: Page): Promise<string[]> {
 
 const selectedCount = (page: Page) => page.getByText(/^Seleccionadas: \d+$/);
 
-test('renders the shell in Spanish with the starter scene', async ({ page }) => {
-  const errors = await openDemo(page);
-  await expect(page.getByRole('heading', { name: 'Catálogo' })).toBeVisible();
-  await expect(page.getByText('Luminarias: 5')).toBeVisible();
-  await expect(selectedCount(page)).toHaveText('Seleccionadas: 0');
-  await expect(page).toHaveScreenshot('starter-scene.png');
-  expect(errors).toEqual([]);
-});
+test(
+  'renders the shell in Spanish with the starter scene',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    const errors = await openDemo(page);
+    await expect(page.getByRole('heading', { name: 'Catálogo' })).toBeVisible();
+    await expect(page.getByText('Luminarias: 5')).toBeVisible();
+    await expect(selectedCount(page)).toHaveText('Seleccionadas: 0');
+    await expect(page).toHaveScreenshot('starter-scene.png');
+    expect(errors).toEqual([]);
+  },
+);
 
-test('click selects, Shift-click adds, empty space and Esc clear', async ({ page }) => {
-  const errors = await openDemo(page);
+test(
+  'click selects, Shift-click adds, empty space and Esc clear',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    const errors = await openDemo(page);
 
-  await page.mouse.click(PENDANT.x, PENDANT.y);
-  await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
-  await expect(page).toHaveScreenshot('pendant-highlighted.png');
+    await page.mouse.click(PENDANT.x, PENDANT.y);
+    await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+    await expect(page.locator('lxs-viewport')).toHaveScreenshot('pendant-highlighted.png');
 
-  await page.keyboard.down('Shift');
-  await page.mouse.click(WALL_LIGHT.x, WALL_LIGHT.y);
-  await page.keyboard.up('Shift');
-  await expect(selectedCount(page)).toHaveText('Seleccionadas: 2');
+    await page.keyboard.down('Shift');
+    await page.mouse.click(WALL_LIGHT.x, WALL_LIGHT.y);
+    await page.keyboard.up('Shift');
+    await expect(selectedCount(page)).toHaveText('Seleccionadas: 2');
 
-  await page.keyboard.press('Escape');
-  await expect(selectedCount(page)).toHaveText('Seleccionadas: 0');
+    await page.keyboard.press('Escape');
+    await expect(selectedCount(page)).toHaveText('Seleccionadas: 0');
 
-  await page.mouse.click(PENDANT.x, PENDANT.y);
-  await page.mouse.click(EMPTY_SPACE.x, EMPTY_SPACE.y);
-  await expect(selectedCount(page)).toHaveText('Seleccionadas: 0');
-  await expect(page).toHaveScreenshot('starter-scene.png');
-  expect(errors).toEqual([]);
-});
+    await page.mouse.click(PENDANT.x, PENDANT.y);
+    await page.mouse.click(EMPTY_SPACE.x, EMPTY_SPACE.y);
+    await expect(selectedCount(page)).toHaveText('Seleccionadas: 0');
+    await expect(page.locator('lxs-viewport')).toHaveScreenshot('starter-view.png');
+    expect(errors).toEqual([]);
+  },
+);
 
-test('adds products from the catalog by click and by drag and drop', async ({ page }) => {
-  const errors = await openDemo(page);
+test(
+  'adds products from the catalog by click and by drag and drop',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    const errors = await openDemo(page);
 
-  await page.getByRole('button', { name: /Lámpara de mesa 5 W/ }).click();
-  await expect(page.getByText('Luminarias: 6')).toBeVisible();
-  await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+    await page.getByRole('button', { name: /Lámpara de mesa 5 W/ }).click();
+    await expect(page.getByText('Luminarias: 6')).toBeVisible();
+    await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
 
-  await page
-    .getByRole('button', { name: /Colgante 48 W/ })
-    .dragTo(page.locator('lxs-viewport'), { targetPosition: { x: 200, y: 600 } });
-  await expect(page.getByText('Luminarias: 7')).toBeVisible();
-  expect(errors).toEqual([]);
-});
+    await page
+      .getByRole('button', { name: /Colgante 48 W/ })
+      .dragTo(page.locator('lxs-viewport'), { targetPosition: { x: 200, y: 600 } });
+    await expect(page.getByText('Luminarias: 7')).toBeVisible();
+    expect(errors).toEqual([]);
+  },
+);
 
-test('IES products load their real photometry', async ({ page }) => {
+test('IES products load their real photometry', { tag: '@all-browsers' }, async ({ page }) => {
   // Status of every IES file request, from page load on: the starter scene uses four of them.
   const iesStatus = new Map<string, number>();
   page.on('response', (response) => {
@@ -101,7 +113,7 @@ test('IES products load their real photometry', async ({ page }) => {
       'qg63_b35q.ies': 200,
       'CB3326-L35K-H.ies': 200,
     });
-  await expect(page).toHaveScreenshot('ies-products-added.png');
+  await expect(page.locator('lxs-viewport')).toHaveScreenshot('ies-products-added.png');
   expect(photometryWarnings).toEqual([]);
   expect(errors).toEqual([]);
 });
@@ -129,7 +141,7 @@ test('the scene tab shows totals and selects from the list', async ({ page }) =>
   await row.click();
   await expect(row).toHaveAttribute('aria-selected', 'true');
   await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
-  await expect(page).toHaveScreenshot('scene-tab-pendant-selected.png');
+  await expect(page.locator('lxs-viewport')).toHaveScreenshot('scene-tab-pendant-selected.png');
 });
 
 test('the inspector edits the room when nothing is selected', async ({ page }) => {
@@ -156,7 +168,7 @@ test('the inspector edits, duplicates and deletes the selected luminaire', async
   await expect(
     page.getByRole('option', { name: /Colgante lineal directo\/indirecto 47 W \(IES\) 1/ }),
   ).toContainText('50%');
-  await expect(page).toHaveScreenshot('inspector-pendant-dimmed.png');
+  await expect(page.locator('lxs-viewport')).toHaveScreenshot('inspector-pendant-dimmed.png');
 
   await page.getByRole('button', { name: 'Duplicar' }).click();
   await expect(page.getByText('Luminarias: 6')).toBeVisible();
@@ -187,21 +199,25 @@ test('several selected luminaires share one inspector', async ({ page }) => {
   ).toContainText('apagada');
 });
 
-test('dimming to zero, or switching off, and back keeps rendering', async ({ page }) => {
-  // Regression: a light losing its shadow made three.js throw every frame.
-  const errors = await openDemo(page);
-  await page.mouse.click(PENDANT.x, PENDANT.y);
-  const slider = page.getByRole('slider', { name: 'Atenuación' });
-  await slider.fill('0');
-  await expect(page).not.toHaveScreenshot('pendant-highlighted.png');
-  await slider.fill('1');
-  await slider.blur(); // The focus ring isn't part of what's compared.
-  await page.keyboard.press('h');
-  await page.keyboard.press('h');
-  // Back to full output: the same image as before.
-  await expect(page).toHaveScreenshot('pendant-highlighted.png');
-  expect(errors).toEqual([]);
-});
+test(
+  'dimming to zero, or switching off, and back keeps rendering',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    // Regression: a light losing its shadow made three.js throw every frame.
+    const errors = await openDemo(page);
+    await page.mouse.click(PENDANT.x, PENDANT.y);
+    const slider = page.getByRole('slider', { name: 'Atenuación' });
+    await slider.fill('0');
+    await expect(page).not.toHaveScreenshot('pendant-highlighted.png');
+    await slider.fill('1');
+    await slider.blur(); // The focus ring isn't part of what's compared.
+    await page.keyboard.press('h');
+    await page.keyboard.press('h');
+    // Back to full output: the same image as before.
+    await expect(page.locator('lxs-viewport')).toHaveScreenshot('pendant-highlighted.png');
+    expect(errors).toEqual([]);
+  },
+);
 
 test('the starter scene is where undo stops', async ({ page }) => {
   // Regression: it was built from undoable edits, so ⌘Z took it apart.
@@ -209,7 +225,7 @@ test('the starter scene is where undo stops', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Deshacer' })).toBeDisabled();
   await page.keyboard.press('ControlOrMeta+z');
   await expect(page.getByText('Luminarias: 5')).toBeVisible();
-  await expect(page).toHaveScreenshot('starter-scene.png');
+  await expect(page.locator('lxs-viewport')).toHaveScreenshot('starter-view.png');
 });
 
 test('undo and redo, with one slider drag as one undo step', async ({ page }) => {
@@ -258,80 +274,90 @@ test('keyboard shortcuts delete, undo, duplicate and switch off', async ({ page 
   ).toContainText('100%');
 });
 
-test('theme, language, collapsed panels and the plan view', async ({ page }) => {
-  const errors = await openDemo(page);
-  await page.getByRole('button', { name: 'Tema claro' }).click();
-  await expect(page.locator('lxs-app')).toHaveAttribute('data-lxs-theme', 'light');
+test(
+  'theme, language, collapsed panels and the plan view',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    const errors = await openDemo(page);
+    await page.getByRole('button', { name: 'Tema claro' }).click();
+    await expect(page.locator('lxs-app')).toHaveAttribute('data-lxs-theme', 'light');
 
-  await page.getByRole('radio', { name: 'EN', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Catalog' })).toBeVisible();
-  // The host swaps product names on lxs-locale-change.
-  await expect(page.getByRole('button', { name: /Pendant 48 W/ })).toBeVisible();
+    await page.getByRole('radio', { name: 'EN', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'Catalog' })).toBeVisible();
+    // The host swaps product names on lxs-locale-change.
+    await expect(page.getByRole('button', { name: /Pendant 48 W/ })).toBeVisible();
 
-  await page.getByRole('button', { name: 'Show library' }).click();
-  await page.getByRole('button', { name: 'Show inspector' }).click();
-  await page.getByRole('button', { name: 'Plan', exact: true }).click();
-  await expect(page).toHaveScreenshot('light-en-collapsed-plan.png');
-  expect(errors).toEqual([]);
-});
+    await page.getByRole('button', { name: 'Show library' }).click();
+    await page.getByRole('button', { name: 'Show inspector' }).click();
+    await page.getByRole('button', { name: 'Plan', exact: true }).click();
+    await expect(page).toHaveScreenshot('light-en-collapsed-plan.png');
+    expect(errors).toEqual([]);
+  },
+);
 
-test('screenshot downloads with a neutral, localised file name', async ({ page }) => {
-  await openDemo(page);
-  const [download] = await Promise.all([
-    page.waitForEvent('download'),
-    page.getByRole('button', { name: 'Captura' }).click(),
-  ]);
-  expect(download.suggestedFilename()).toMatch(/^escena-\d{4}-\d{2}-\d{2}-\d{4}\.png$/);
-});
+test(
+  'screenshots download as neutrally named PNGs of the canvas, without the outline; hosts can cancel them',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    await openDemo(page);
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('button', { name: 'Captura' }).click(),
+    ]);
+    expect(download.suggestedFilename()).toMatch(/^escena-\d{4}-\d{2}-\d{2}-\d{4}\.png$/);
 
-test('screenshots are PNGs of the canvas without the outline, and hosts can cancel the download', async ({
-  page,
-}) => {
-  await openDemo(page);
-  let downloads = 0;
-  page.on('download', () => downloads++);
+    let downloads = 0;
+    page.on('download', () => downloads++);
 
-  /** Takes a screenshot through the UI, cancelling the download like a host would, and describes the PNG. */
-  const capture = async () => {
-    const result = page.evaluate(
-      () =>
-        new Promise<{ type: string; width: number; height: number; sha256: string }>((resolve) => {
-          document.querySelector('lxs-app')!.addEventListener(
-            'lxs-screenshot',
-            (event) => {
-              event.preventDefault();
-              const { png } = (event as CustomEvent<{ png: Blob }>).detail;
-              void Promise.all([createImageBitmap(png), png.arrayBuffer()]).then(
-                async ([bitmap, bytes]) => {
-                  const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
-                  const sha256 = Array.from(digest, (b) => b.toString(16).padStart(2, '0')).join(
-                    '',
+    /** Takes a screenshot through the UI, cancelling the download like a host would, and describes the PNG. */
+    const capture = async () => {
+      const result = page.evaluate(
+        () =>
+          new Promise<{ type: string; width: number; height: number; sha256: string }>(
+            (resolve) => {
+              document.querySelector('lxs-app')!.addEventListener(
+                'lxs-screenshot',
+                (event) => {
+                  event.preventDefault();
+                  const { png } = (event as CustomEvent<{ png: Blob }>).detail;
+                  void Promise.all([createImageBitmap(png), png.arrayBuffer()]).then(
+                    async ([bitmap, bytes]) => {
+                      const digest = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+                      const sha256 = Array.from(digest, (b) =>
+                        b.toString(16).padStart(2, '0'),
+                      ).join('');
+                      resolve({
+                        type: png.type,
+                        width: bitmap.width,
+                        height: bitmap.height,
+                        sha256,
+                      });
+                    },
                   );
-                  resolve({ type: png.type, width: bitmap.width, height: bitmap.height, sha256 });
                 },
+                { once: true },
               );
             },
-            { once: true },
-          );
-        }),
-    );
-    await page.getByRole('button', { name: 'Captura' }).click();
-    return result;
-  };
+          ),
+      );
+      await page.getByRole('button', { name: 'Captura' }).click();
+      return result;
+    };
 
-  const plain = await capture();
-  const canvas = await page
-    .locator('lxs-viewport canvas')
-    .evaluate((c: HTMLCanvasElement) => [c.width, c.height]);
-  expect(plain.type).toBe('image/png');
-  expect([plain.width, plain.height]).toEqual(canvas);
+    const plain = await capture();
+    const canvas = await page
+      .locator('lxs-viewport canvas')
+      .evaluate((c: HTMLCanvasElement) => [c.width, c.height]);
+    expect(plain.type).toBe('image/png');
+    expect([plain.width, plain.height]).toEqual(canvas);
 
-  await page.mouse.click(PENDANT.x, PENDANT.y);
-  await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
-  // Renders are deterministic, so without the outline the two PNGs are byte-identical.
-  expect((await capture()).sha256).toBe(plain.sha256);
-  expect(downloads).toBe(0);
-});
+    await page.mouse.click(PENDANT.x, PENDANT.y);
+    await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+    // Renders are deterministic, so without the outline the two PNGs are byte-identical.
+    expect((await capture()).sha256).toBe(plain.sha256);
+    expect(downloads).toBe(0);
+  },
+);
 
 test('the catalog filters by mount type and colour temperature', async ({ page }) => {
   await openDemo(page);
@@ -349,15 +375,19 @@ test('the catalog filters by mount type and colour temperature', async ({ page }
   await expect(page.getByText('Ningún producto coincide con la búsqueda.')).toBeVisible();
 });
 
-test('renders with the backend this project targets', async ({ page, browserName }, testInfo) => {
-  await openDemo(page);
-  const backend = await page
-    .locator('lxs-viewport')
-    .evaluate((el) => (el as unknown as { backend?: string }).backend);
-  // WebKit (Safari) has no WebGPU here, so it falls back like the chrome-webgl2 project.
-  const expected = testInfo.project.name === 'chrome' ? 'WebGPU' : 'WebGL 2';
-  expect(backend, `${testInfo.project.name} on ${browserName}`).toBe(expected);
-});
+test(
+  'renders with the backend this project targets',
+  { tag: '@all-browsers' },
+  async ({ page, browserName }, testInfo) => {
+    await openDemo(page);
+    const backend = await page
+      .locator('lxs-viewport')
+      .evaluate((el) => (el as unknown as { backend?: string }).backend);
+    // WebKit (Safari) has no WebGPU here, so it falls back like the chrome-webgl2 project.
+    const expected = testInfo.project.name === 'chrome' ? 'WebGPU' : 'WebGL 2';
+    expect(backend, `${testInfo.project.name} on ${browserName}`).toBe(expected);
+  },
+);
 
 test('?debug logs each step and shows diagnostics', async ({ page }) => {
   const debugLines: string[] = [];
