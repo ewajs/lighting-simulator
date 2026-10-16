@@ -17,16 +17,26 @@ npm run dev           # the demo, with hot reload
 npm run lint          # ESLint, including the demo → ui → core boundary
 npm run typecheck     # TypeScript in every package
 npm test              # unit tests (Vitest)
-npm run test:e2e      # end-to-end tests (Playwright); add `-- --project chrome` for a quick run
+npm run test:e2e      # end-to-end tests (Playwright), all three browser projects
+npm run test:e2e:quick -- <specs>   # just those specs, on Chrome
+npm run coverage      # unit-test coverage, into coverage/
 npm run docs          # this site, into apps/demo/dist/docs
 npm run manual        # the user manual, into apps/demo/dist/manual
 npm run manual:screenshots   # retake the manual's screenshots after UI changes
+                             # (`npm run screenshots -w apps/manual -- --grep <name>` for some)
 npm run build         # the demo, into apps/demo/dist
 ```
 
-CI runs format, lint, typecheck, unit tests, the docs and the build on every
-pull request. The end-to-end tests run locally
+CI runs format, lint, typecheck, unit tests, the build, the docs, the manual
+and the translation check on every pull request. The end-to-end tests run
+locally
 ([ADR 0015](../decisions/0015-ci-without-playwright.md)).
+
+**While working,** run the unit tests and only the end-to-end specs for the
+area you changed, with `test:e2e:quick`. Run the full `test:e2e` once, before
+the pull request. When screenshots change on purpose, update them with
+`--update-snapshots=changed` and look at each one
+([ADR 0056](../decisions/0056-leaner-test-runs.md)).
 
 ## How changes are made
 

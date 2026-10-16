@@ -108,29 +108,35 @@ integrators can use the full shell or only the pieces they need.
 
 ## Components
 
-These are the visual building blocks. Their element names and APIs are
-defined when the ui package is built (roadmap step 0.6).
+These are the visual building blocks. The ones that are elements of their
+own carry an `lxs-` name (`<lxs-number-field>`, `<lxs-sheet>`…); the rest are
+shared styles in `packages/ui/src/styles.ts` and `field-styles.ts`.
 
 | Component | Notes |
 |---|---|
 | **Icon button** | 32×32, ghost by default, `aria-pressed` for toggles, tooltip and `aria-label` from a localised string. |
 | **Button** | Ghost / primary (accent) / subtle. 32 px tall. |
-| **Segmented control** | Mutually exclusive modes (render mode). Arrow keys move the selection. |
+| **Segmented control** | Mutually exclusive modes (render mode, language, the catalog's Luminaires / Furniture switch). Arrow keys move the selection. |
 | **Rail tabs** | Left panel: Catalog · Scene. Clicking the active tab collapses the panel. |
 | **Field** | Label on top (xs, muted). Input with unit suffix inside (`m`, `lx`, `K`, `%`). ↑/↓ steps, Shift ×10. Accepts the locale's decimal separator. |
 | **Slider + value** | For dimming, exposure, CCT. The track shows the value. The CCT track shows a warm→cool gradient. |
-| **Swatch** | Surface colour + reflectance, with presets. |
+| **Swatch** | A surface's colour (a colour picker) or its texture's thumbnail, beside its reflectance slider. |
+| **Chip** | A preset to pick with one tap: a colour dot or a texture thumbnail, and a name. `aria-pressed` marks the current one. |
 | **Product card** | Thumbnail, name, short spec line (power · CCT · flux). Click to add, drag to place. |
 | **Section** | Collapsible group inside panels, uppercase xs heading. |
 | **Legend** | Vertical gradient bar with lux ticks. |
 | **Status item** | Icon + mono value, separated by hairlines. |
+| **Notice** | `<lxs-notice>`, bottom left of the viewport: a line or two of info or error. It rises in, and closes itself after 7 s or with ✕. |
+| **Dialog** | A native `<dialog>` (New scene, Help), centred, fading and scaling in. |
+| **Sheet** | `<lxs-sheet>`: a panel that slides up over the viewport on phones, with buttons for half or full height and ✕ to close it. |
 
 ## Touch
 
 - Under `(pointer: coarse)` the size tokens grow towards 44 px touch targets,
   and hover-only hints are always visible.
 - Tap = click (10 px movement allowed). Long press (500 ms) = Shift-click:
-  it adds or removes a luminaire from the selection, in 3D and in the scene list.
+  it adds or removes a luminaire or piece of furniture from the selection, in
+  3D and in the scene list.
 - Dragging products from the catalog is mouse-only; on touch, tap to add.
 
 ## States

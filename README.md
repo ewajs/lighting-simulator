@@ -2,9 +2,10 @@
 
 A client-agnostic library for building 3D lighting simulators on the web,
 using [three.js](https://threejs.org) (WebGPU with a WebGL 2 fallback). With
-an app built on it, users lay out a room, place luminaires from a catalog the
-host app provides, and see a believable, photometrically based preview of the
-light: real IES distributions, aimed and moved directly in 3D.
+an app built on it, users lay out and furnish a room, place luminaires from a
+catalog the host app provides, and see a believable, photometrically based
+preview of the light: real IES distributions, aimed and moved directly in 3D.
+Scenes save themselves, and go to files or share links.
 
 - **Live demo:** <https://ewajs.github.io/lighting-simulator/>. Add `?debug` to
   the URL for step-by-step logs and a diagnostics overlay.
@@ -14,8 +15,9 @@ light: real IES distributions, aimed and moved directly in 3D.
 ## Packages (npm workspaces)
 
 - **`@luxstudio/core`:** the headless engine. Scene model and undo, IES
-  photometry, three.js rendering, direct manipulation. All data is injected
-  through providers.
+  photometry, three.js rendering, direct manipulation, furniture, scene
+  files. All data (products, IES files, models, textures) is injected through
+  providers.
 - **`@luxstudio/ui`:** optional Lit web components, the full editor
   (`<lxs-app>`), in `es-AR` and `en`.
 - **`apps/demo`:** the reference integration, with sample data. It's deployed
@@ -24,18 +26,17 @@ light: real IES distributions, aimed and moved directly in 3D.
 ## Status
 
 Done:
-- the editor shell;
+- the editor shell, on desktop, tablets and phones;
 - IES photometry;
 - direct manipulation: drag, move and aim handles, snapping, distances;
-- fixture models;
-- loud failures: logging and console checks in every test.
+- fixture models, furniture and surface textures;
+- persistence: autosave, room templates, `.luxstudio.json` files and share links;
+- loud failures, loading without stand-ins, in-app help and a user manual.
 
 Next:
-- the docs site;
-- furniture;
-- surface textures;
-- saving;
-- the illuminance analysis.
+- M5, analysis: illuminance with inter-reflections, a lux probe, a heatmap
+  and plane statistics;
+- M6, distribution: how clients receive the library.
 
 The [roadmap](docs/ROADMAP.md) has the details.
 

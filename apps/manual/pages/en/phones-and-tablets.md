@@ -4,7 +4,8 @@
 
 The 3D view fills the screen. At the bottom, four tabs open panels:
 **Catalog**, **Scene**, **Properties** and **View** (tools, modes, views and
-exposure). Language, theme and **Help** are under **⋯**, top right.
+exposure). **New**, **Open**, **Save**, **Share**, **Screenshot**, theme,
+**Help** and language are under **⋯**, top right.
 
 <div class="side-by-side">
 
@@ -21,9 +22,9 @@ close it with ✕.
 
 | Gesture | What it does |
 |---|---|
-| Tap a luminaire | Picks it |
+| Tap a luminaire or a piece of furniture | Picks it |
 | Press and hold | Adds it to, or removes it from, the selection |
-| One finger on a luminaire | Drags it |
+| One finger on a luminaire or a piece | Drags it |
 | One finger on empty space | Orbits the view |
 | Two fingers | Pan, and pinch to zoom |
 | Tap a product in the catalog | Adds it |

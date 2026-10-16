@@ -4,6 +4,9 @@
 
 ![El catálogo con categorías, búsqueda y filtros](/screenshots/es/catalog.png)
 
+Arriba, el selector cambia entre **Luminarias** y
+[**Mobiliario**](./mobiliario).
+
 - **Buscá** por nombre; no importan las tildes.
 - **Filtrá** por **Montaje** (embutida, colgante, de riel, aplique, de pie o
   de mesa) y por **Temperatura** de color, o tocá una categoría.

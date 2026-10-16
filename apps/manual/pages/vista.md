@@ -25,5 +25,7 @@
 
 ![La barra superior](/screenshots/es/top-bar.png)
 
-Deshacer y rehacer, **captura**, mostrar u ocultar los paneles, **tema**
-claro u oscuro, **idioma** y **?**, la guía rápida de inicio.
+Deshacer y rehacer; **Nuevo**, **Abrir**, **Guardar** y **Compartir** (ver
+[Guardar, abrir y compartir](./guardar)); **captura**, mostrar u ocultar los
+paneles, **tema** claro u oscuro, **idioma** y **?**, la guía rápida de
+inicio.
