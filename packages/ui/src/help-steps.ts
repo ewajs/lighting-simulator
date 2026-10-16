@@ -27,25 +27,29 @@ export function helpSteps({ touch, iesImport }: HelpContext): HelpStep[] {
       illustration: 'welcome',
       title: msg('Welcome to Lux Studio'),
       body: msg(
-        'Lay out a room, place luminaires and see how they light it, with their real light.',
+        'Lay out a room with luminaires and furniture, and see how each product lights it, with its real light.',
       ),
     },
     {
       illustration: 'add',
-      title: msg('Add luminaires'),
+      title: msg('Add luminaires and furniture'),
       body: touch
-        ? msg('Tap a product in the catalog and it appears in the room.')
-        : msg('Click a product in the catalog, or drag it into the room.'),
+        ? msg(
+            'Tap a product in the catalog and it appears in the room. The switch at the top shows furniture.',
+          )
+        : msg(
+            'Click a product in the catalog, or drag it into the room. The switch at the top shows furniture.',
+          ),
     },
     {
       illustration: 'move',
-      title: msg('Pick and move'),
+      title: msg('Pick, move and turn'),
       body: touch
         ? msg(
-            'Tap a luminaire to pick it, and drag it with one finger. The arrows move it in one direction.',
+            'Tap something to pick it, and drag it with one finger. The arrows move it in one direction; the ring on the floor turns furniture.',
           )
         : msg(
-            'Click a luminaire to pick it, and drag it. The arrows (W) move it in one direction.',
+            'Click something to pick it, and drag it. The arrows (W) move it in one direction; the ring on the floor turns furniture.',
           ),
     },
     {
@@ -59,6 +63,13 @@ export function helpSteps({ touch, iesImport }: HelpContext): HelpStep[] {
       illustration: 'light',
       title: msg('Adjust the light'),
       body: msg('In Properties: dimming, colour temperature, and on or off.'),
+    },
+    {
+      illustration: 'room',
+      title: msg('The room'),
+      body: msg(
+        'With nothing picked, Properties shows the room: its size, and a colour or a material for the floor, walls and ceiling.',
+      ),
     },
     {
       illustration: 'view',
@@ -75,6 +86,17 @@ export function helpSteps({ touch, iesImport }: HelpContext): HelpStep[] {
       body: touch
         ? msg('The magnet snaps to 10 cm and lines things up. Undo is at the top.')
         : msg('The magnet snaps to 10 cm and lines things up; hold Alt to move freely. ⌘Z undoes.'),
+    },
+    {
+      illustration: 'files',
+      title: msg('Save, share, start over'),
+      body: touch
+        ? msg(
+            'Your work saves itself in this browser. In the ⋯ menu, New starts from a template, Save and Open use files, and Share sends a link.',
+          )
+        : msg(
+            'Your work saves itself in this browser. At the top, New starts from a template, Save and Open use files, and Share makes a link.',
+          ),
     },
   ];
   if (iesImport) {

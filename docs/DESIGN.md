@@ -19,7 +19,9 @@ and data (the false-colour scale).
    for live readouts. Formatting follows the active locale: `2,70 m` in
    `es-AR`, `2.70 m` in `en`.
 5. **Nothing moves without reason.** 120–200 ms ease-out transitions on
-   panels and hovers only. No decorative animation.
+   panels and hovers only: side panels ease open, sheets and dialogs slide
+   or fade in and out, notices rise ([ADR 0055](./decisions/0055-help-redesign-and-panel-motion.md)).
+   No decorative animation.
 
 ## Theming
 

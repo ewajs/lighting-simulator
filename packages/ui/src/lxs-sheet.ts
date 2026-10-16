@@ -30,8 +30,10 @@ export class LxsSheet extends LitElement {
         border-radius: var(--lxs-r-lg) var(--lxs-r-lg) 0 0;
         box-shadow: var(--lxs-shadow);
         overflow: hidden;
+        animation: rise var(--lxs-t-med) var(--lxs-ease);
       }
       :host([side]) {
+        animation-name: arrive;
         border-top: 0;
         border-left: 1px solid var(--lxs-line);
         border-radius: var(--lxs-r-lg) 0 0 var(--lxs-r-lg);
@@ -61,8 +63,36 @@ export class LxsSheet extends LitElement {
         flex: 1;
         min-height: 0;
       }
+      /* A short slide and fade: noticeable, not a whoosh. leave() plays it backwards. */
+      :host([leaving]) {
+        animation: rise var(--lxs-t-fast) ease-in reverse forwards;
+      }
+      :host([side][leaving]) {
+        animation-name: arrive;
+      }
+      @keyframes rise {
+        from {
+          transform: translateY(24px);
+          opacity: 0;
+        }
+      }
+      @keyframes arrive {
+        from {
+          transform: translateX(24px);
+          opacity: 0;
+        }
+      }
     `,
   ];
+
+  /**
+   * Slides the sheet out, resolving once it's out of sight, so the host can
+   * remove it then. At once with reduced motion.
+   */
+  async leave(): Promise<void> {
+    this.toggleAttribute('leaving', true);
+    await Promise.all(this.getAnimations().map((animation) => animation.finished.catch(() => {})));
+  }
 
   /** Shown in the title bar. */
   @property() heading = '';

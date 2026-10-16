@@ -30,12 +30,25 @@ export class LxsInspector extends LitElement {
         min-height: 0;
         background: var(--lxs-surface-1);
       }
-      .body {
+      /* In sheet mode the body folds away; the row eases between its height and none. */
+      .fold {
+        display: grid;
         flex: 1;
+        min-height: 0;
+        grid-template-rows: 1fr;
+        transition: grid-template-rows var(--lxs-t-med) var(--lxs-ease);
+      }
+      :host([collapsed]) .fold {
+        grid-template-rows: 0fr;
+      }
+      .body {
+        min-height: 0;
         overflow-y: auto;
       }
+      /* Out of sight once folded: hidden after the fold, shown at once on opening. */
       :host([collapsed]) .body {
-        display: none;
+        visibility: hidden;
+        transition: visibility 0s var(--lxs-t-med);
       }
       button.panel-header {
         width: 100%;
@@ -87,7 +100,9 @@ export class LxsInspector extends LitElement {
               <h2>${heading}</h2>
             </div>`
       }
-      <div class="body">${this.#body(kind)}</div>
+      <div class="fold" ?inert=${this.collapsed}>
+        <div class="body">${this.#body(kind)}</div>
+      </div>
     `;
   }
 

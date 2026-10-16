@@ -36,6 +36,17 @@ test('tabs open sheets; the active tab, ✕ and the size toggle behave', async (
   await expect(page.locator('lxs-sheet')).toHaveCount(0);
 });
 
+test('sheets slide out before they go, and go at once with reduced motion', async ({ page }) => {
+  for (const motion of ['no-preference', 'reduce'] as const) {
+    await page.emulateMedia({ reducedMotion: motion });
+    await openDemo(page);
+    await page.getByRole('tab', { name: 'Escena' }).tap();
+    await expect(sheetHeading(page, 'Escena')).toBeVisible();
+    await page.getByRole('button', { name: 'Cerrar' }).tap();
+    await expect(page.locator('lxs-sheet')).toHaveCount(0);
+  }
+});
+
 test('adding from the catalog switches to the new luminaire’s properties', async ({ page }) => {
   await openDemo(page);
   await page.getByRole('tab', { name: 'Catálogo' }).tap();

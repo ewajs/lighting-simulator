@@ -19,5 +19,7 @@ export default defineConfig({
     baseURL: 'http://localhost:4175',
     channel: 'chrome',
     viewport: { width: 1280, height: 800 },
+    // Still shots: panels and dialogs appear at once, help illustrations in their rest pose.
+    contextOptions: { reducedMotion: 'reduce' },
   },
 });

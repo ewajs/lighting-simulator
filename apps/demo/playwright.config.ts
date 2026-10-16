@@ -25,6 +25,10 @@ export default defineConfig<SuiteOptions>({
     baseURL: 'http://localhost:4173',
     // Fixed size keeps the camera framing, and so the screenshots, deterministic.
     viewport: { width: 1280, height: 800 },
+    // Still screenshots: panels, dialogs and help illustrations don't move, so
+    // a busy machine can't catch them mid-slide (ADR 0055). Tests about motion
+    // turn it back on with page.emulateMedia.
+    contextOptions: { reducedMotion: 'reduce' },
   },
   projects: [
     // System Chrome with WebGPU, like most desktop users.

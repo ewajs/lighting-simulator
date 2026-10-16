@@ -447,34 +447,6 @@
   <source>Welcome to Lux Studio</source>
   <target>Te damos la bienvenida a Lux Studio</target>
 </trans-unit>
-<trans-unit id="s9b378ddf3205da1a">
-  <source>Lay out a room, place luminaires and see how they light it, with their real light.</source>
-  <target>Armá un ambiente, poné luminarias y mirá cómo ilumina cada una, con su luz real.</target>
-</trans-unit>
-<trans-unit id="s3c206e6b2780f883">
-  <source>Add luminaires</source>
-  <target>Agregá luminarias</target>
-</trans-unit>
-<trans-unit id="seaf411acb35c7f62">
-  <source>Tap a product in the catalog and it appears in the room.</source>
-  <target>Tocá un producto del catálogo y aparece en el ambiente.</target>
-</trans-unit>
-<trans-unit id="s1738309e97fb0a12">
-  <source>Click a product in the catalog, or drag it into the room.</source>
-  <target>Hacé clic en un producto del catálogo, o arrastralo al ambiente.</target>
-</trans-unit>
-<trans-unit id="s2d483e8a9a8f04fa">
-  <source>Pick and move</source>
-  <target>Elegí y mové</target>
-</trans-unit>
-<trans-unit id="s5391e88da1b805b2">
-  <source>Tap a luminaire to pick it, and drag it with one finger. The arrows move it in one direction.</source>
-  <target>Tocá una luminaria para elegirla y arrastrala con un dedo. Las flechas la mueven en una sola dirección.</target>
-</trans-unit>
-<trans-unit id="sc814d4047216e3aa">
-  <source>Click a luminaire to pick it, and drag it. The arrows (W) move it in one direction.</source>
-  <target>Hacé clic en una luminaria para elegirla y arrastrala. Las flechas (W) la mueven en una sola dirección.</target>
-</trans-unit>
 <trans-unit id="s7164e9b82a3e7ebd">
   <source>Aim the light</source>
   <target>Orientá la luz</target>
@@ -866,6 +838,54 @@
 <trans-unit id="s6ebc9bd6feae62a3">
   <source>Loading…</source>
   <target>Cargando…</target>
+</trans-unit>
+<trans-unit id="s28a8e94b4a415f91">
+  <source>Lay out a room with luminaires and furniture, and see how each product lights it, with its real light.</source>
+  <target>Armá un ambiente con luminarias y muebles, y mirá cómo lo ilumina cada producto, con su luz real.</target>
+</trans-unit>
+<trans-unit id="seb04ebf6768e4e7c">
+  <source>Add luminaires and furniture</source>
+  <target>Agregá luminarias y muebles</target>
+</trans-unit>
+<trans-unit id="s38c608ee61c5583a">
+  <source>Tap a product in the catalog and it appears in the room. The switch at the top shows furniture.</source>
+  <target>Tocá un producto del catálogo y aparece en el ambiente. El selector de arriba muestra los muebles.</target>
+</trans-unit>
+<trans-unit id="se27818b8294729ca">
+  <source>Click a product in the catalog, or drag it into the room. The switch at the top shows furniture.</source>
+  <target>Hacé clic en un producto del catálogo, o arrastralo al ambiente. El selector de arriba muestra los muebles.</target>
+</trans-unit>
+<trans-unit id="s9f8a1d51a1473db3">
+  <source>Pick, move and turn</source>
+  <target>Elegí, mové y girá</target>
+</trans-unit>
+<trans-unit id="s6b9afc6c1bfd5ff7">
+  <source>Tap something to pick it, and drag it with one finger. The arrows move it in one direction; the ring on the floor turns furniture.</source>
+  <target>Tocá algo para elegirlo y arrastralo con un dedo. Las flechas lo mueven en una sola dirección; el aro en el piso gira los muebles.</target>
+</trans-unit>
+<trans-unit id="sd88fa0db7809df4b">
+  <source>Click something to pick it, and drag it. The arrows (W) move it in one direction; the ring on the floor turns furniture.</source>
+  <target>Hacé clic en algo para elegirlo y arrastralo. Las flechas (W) lo mueven en una sola dirección; el aro en el piso gira los muebles.</target>
+</trans-unit>
+<trans-unit id="sfc80cf31c92145af">
+  <source>The room</source>
+  <target>El ambiente</target>
+</trans-unit>
+<trans-unit id="s38beef456da369b2">
+  <source>With nothing picked, Properties shows the room: its size, and a colour or a material for the floor, walls and ceiling.</source>
+  <target>Sin nada elegido, Propiedades muestra el ambiente: sus medidas, y un color o un material para el piso, las paredes y el cielorraso.</target>
+</trans-unit>
+<trans-unit id="s590ad0c01fab2139">
+  <source>Save, share, start over</source>
+  <target>Guardá, compartí, empezá de nuevo</target>
+</trans-unit>
+<trans-unit id="sec03b178ce8d3711">
+  <source>Your work saves itself in this browser. In the ⋯ menu, New starts from a template, Save and Open use files, and Share sends a link.</source>
+  <target>Tu trabajo se guarda solo en este navegador. En el menú ⋯, Nuevo empieza desde una plantilla, Guardar y Abrir usan archivos, y Compartir manda un enlace.</target>
+</trans-unit>
+<trans-unit id="s683a4a4b18ab2866">
+  <source>Your work saves itself in this browser. At the top, New starts from a template, Save and Open use files, and Share makes a link.</source>
+  <target>Tu trabajo se guarda solo en este navegador. Arriba, Nuevo empieza desde una plantilla, Guardar y Abrir usan archivos, y Compartir crea un enlace.</target>
 </trans-unit>
 </body>
 </file>

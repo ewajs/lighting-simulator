@@ -16,15 +16,15 @@ test.describe('first visit', () => {
     await expect(page).toHaveScreenshot('help-welcome.png');
 
     await page.getByRole('button', { name: 'Siguiente' }).click();
-    await expect(title(page)).toHaveText('Agregá luminarias');
+    await expect(title(page)).toHaveText('Agregá luminarias y muebles');
     await expect(dialog(page)).toContainText('Hacé clic en un producto del catálogo');
     await page.keyboard.press('ArrowRight');
-    await expect(title(page)).toHaveText('Elegí y mové');
+    await expect(title(page)).toHaveText('Elegí, mové y girá');
     await page.keyboard.press('ArrowLeft');
-    await expect(title(page)).toHaveText('Agregá luminarias');
+    await expect(title(page)).toHaveText('Agregá luminarias y muebles');
 
     // The last card, through its dot: the IES step (the demo has import on) and the manual.
-    await page.getByRole('button', { name: 'Paso 8 de 8' }).click();
+    await page.getByRole('button', { name: 'Paso 10 de 10' }).click();
     await expect(title(page)).toHaveText('Probá tu propio archivo IES');
     await expect(page.getByRole('link', { name: /Ver el manual completo/ })).toHaveAttribute(
       'href',
