@@ -171,11 +171,13 @@ Properties worth knowing on `<lxs-app>`:
 - `manualUrls`: your user manual per language, such as
   `{ 'es-AR': '…', en: '…' }`. The help's last card links to it.
 - `library-collapsed` and `inspector-collapsed`.
+- `autosave` and `storage`: see [Saving and opening scenes](#saving-and-opening-scenes).
 
 Events:
 
 | Event | When | What to do |
 |---|---|---|
+| `lxs-ready` | the scene is first shown, or the renderer couldn't start | remove your page's loader (see [Loading](#loading)) |
 | `lxs-locale-change` | the user switched language | update `catalog` names |
 | `lxs-screenshot` | the user took a screenshot | cancelable: `preventDefault()` and use `detail.png` instead of the download |
 | `lxs-import-ies` | the user added their own IES file (with `ies-import`) | add the product to your catalogs ([ADR 0037](../decisions/0037-ies-import.md)) |

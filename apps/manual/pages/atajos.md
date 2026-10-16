@@ -9,7 +9,7 @@ En Windows y Linux, **Ctrl** en lugar de **⌘**.
 | **⌘S** | Guardar la escena en un archivo |
 | **⌘O** | Abrir un archivo de escena |
 | **⌘D** | Duplicar lo seleccionado |
-| **⌘A** | Elegir todas |
+| **⌘A** | Elegir todas las luminarias, o todos los muebles si hay uno elegido |
 | **Supr** o **⌫** | Eliminar lo seleccionado |
 | **Esc** | No elegir ninguna |
 | **H** | Encender o apagar lo seleccionado |

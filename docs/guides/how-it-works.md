@@ -19,9 +19,10 @@ the [decision records](../decisions/README.md).
 
 ![How the pieces fit: the host supplies data to core's Simulator; the Viewport draws the scene; the UI owns UI state and edits through the Simulator.](./media/architecture.svg)
 
-- **`@luxstudio/core`** has no UI. It holds the scene (a room plus luminaires),
-  every edit and its undo history, IES photometry, and three.js rendering.
-  Everything the host knows (products, IES files, 3D models, where logs go)
+- **`@luxstudio/core`** has no UI. It holds the scene (a room, luminaires and
+  furniture), every edit and its undo history, IES photometry, scene files
+  and three.js rendering. Everything the host knows (products, IES files, 3D
+  models, textures, where logs go)
   is **injected** through small interfaces. Core never fetches anything itself
   ([ADR 0002](../decisions/0002-client-agnostic-library.md)).
 - **`@luxstudio/ui`** is optional: Lit web components (`<lxs-app>` and its
@@ -75,10 +76,21 @@ That's cheap, because unchanged parts of the scene are shared between
 snapshots. Edits that pass the same `mergeKey`, such as every pointer move of
 one drag, become **one** undo step.
 
-The Simulator also holds the host's providers. `simulator.photometry(id)` and
-`simulator.model(id)` answer synchronously. On the first request they start
-loading through the provider, then announce the result with `onPhotometry` and
-`onModel`.
+The Simulator also holds the host's providers. `simulator.photometry(id)`,
+`simulator.model(id)` and `simulator.texture(id)` answer synchronously. On the
+first request they start loading through the provider, then announce the
+result with `onPhotometry`, `onModel` and `onTexture`. One
+[`AssetCache`](https://github.com/ewajs/lighting-simulator/blob/master/packages/core/src/asset-cache.ts)
+per kind does the loading, logging and 15 s timeout.
+`productSettled` and `textureSettled` say when nothing more is coming, so the
+viewport can wait instead of showing stand-ins
+([ADR 0054](../decisions/0054-loading-without-stand-ins.md)).
+
+Scenes go in and out as files: `serializeScene` and `parseScene`
+([`scene-file.ts`](https://github.com/ewajs/lighting-simulator/blob/master/packages/core/src/scene-file.ts))
+write and validate the versioned `.luxstudio.json` format, and
+`simulator.setScene` replaces the whole scene as one undo step
+([ADR 0051](../decisions/0051-scene-files.md)).
 
 ### The Viewport draws, and turns input into edits
 
@@ -88,16 +100,18 @@ its helpers in `render/`:
 
 | File | Job |
 |---|---|
-| `RoomMeshes.ts` | the room's six surfaces |
-| `LuminaireMeshes.ts` | one fixture per luminaire: model or placeholder, its light, outline, and the shadow budget |
+| `RoomMeshes.ts`, `SurfaceTextures.ts` | the room's six surfaces, and their textures with brightness matched to reflectance |
+| `LuminaireMeshes.ts` | one fixture per luminaire, once its product's files have settled: model, light, outline, and the shadow budget |
 | `fixtures.ts`, `FixtureModels.ts` | building a fixture from a glTF model or simple shapes |
 | `IesLight.ts` | the light that follows an IES distribution in every direction |
+| `FurnitureMeshes.ts`, `furniture/` | one procedural model per piece of furniture, by kind |
 | `PointerGestures.ts` | pointer events → click, long press, or drag |
-| `Manipulator.ts` | the move and aim handles, and starting drags |
-| `MoveHandle.ts`, `AimHandle.ts`, `SnapGuides.ts`, `DimensionLines.ts` | what the handles and guides look like |
+| `Manipulator.ts` | the move, aim and rotate handles, and starting drags |
+| `MoveHandle.ts`, `AimHandle.ts`, `RotateHandle.ts`, `SnapGuides.ts`, `DimensionLines.ts`, `overlay.ts` | what the handles, guides and outlines look like |
 
 The maths behind them stays pure and outside `render/`: `drag.ts`,
-`move-handle.ts`, `aim.ts`, `snap.ts`, `measure.ts`, `placement.ts`.
+`turn.ts`, `item-rules.ts`, `move-handle.ts`, `aim.ts`, `snap.ts`,
+`measure.ts`, `placement.ts`, and `render/lighting.ts`.
 
 The viewport keeps **no selection** of its own
 ([ADR 0019](../decisions/0019-viewport-host-owned-selection.md)). It reports
@@ -127,8 +141,8 @@ shape all the components:
    It asks the Manipulator what's under the pointer (`targetAt`):
    - a handle arrow;
    - else part of the aim handle;
-   - else a fixture, by ray hit or within 10 px on screen.
-
+   - else the rotation ring around a selected piece of furniture;
+   - else a fixture, by ray hit or within 10 px on screen;
    - else a piece of furniture.
 
    On any of them, it switches the camera controls off, so the camera won't orbit.
@@ -173,10 +187,11 @@ shape all the components:
 
 1. **The fixture asks for its photometry.**
    [`LuminaireMeshes`](https://github.com/ewajs/lighting-simulator/blob/master/packages/core/src/render/LuminaireMeshes.ts)
-   builds a fixture and calls `simulator.photometry(productId)`. The
-   [`PhotometryCache`](https://github.com/ewajs/lighting-simulator/blob/master/packages/core/src/photometry/cache.ts)
-   has nothing yet, so it calls the host's provider. The fixture is drawn
-   meanwhile with a light estimated from the product's flux and beam angle.
+   asks `simulator.productSettled(productId)`. The photometry
+   [`AssetCache`](https://github.com/ewajs/lighting-simulator/blob/master/packages/core/src/asset-cache.ts)
+   has nothing yet, so it calls the host's provider, and the model cache does
+   the same. Until both settle, the luminaire isn't drawn, and the viewport
+   reports `loading` so the UI can show a spinner.
 2. **The host's provider fetches the file** and returns its text. The demo's
    is [`sample-photometry.ts`](https://github.com/ewajs/lighting-simulator/blob/master/apps/demo/src/sample-photometry.ts).
 3. **The file is parsed and announced.** `parseIes`
@@ -184,8 +199,10 @@ shape all the components:
    turns it into a {@link @luxstudio/core!Photometry}: candela values by
    vertical and horizontal angle
    ([ADR 0033](../decisions/0033-ies-support-scope.md)). The cache logs a
-   summary and calls `onPhotometry`, and the Viewport re-syncs.
-4. **The fixture is rebuilt, because its photometry changed:**
+   summary and calls `onPhotometry`, and the Viewport re-syncs. A product
+   without an IES file is lit with a light estimated from its flux and beam
+   angle.
+4. **The fixture is built with its photometry:**
    - `lightingProduct` takes flux and beam angle from the file.
    - `candelaGrid` ([`photometry/grid.ts`](https://github.com/ewajs/lighting-simulator/blob/master/packages/core/src/photometry/grid.ts))
      samples the whole sphere every 0.5° × 1° using `candelaAt`, which

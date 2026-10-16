@@ -4,7 +4,9 @@
 
 La vista 3D ocupa toda la pantalla. Abajo, cuatro pestañas abren paneles:
 **Catálogo**, **Escena**, **Propiedades** y **Vista** (herramientas, modos,
-vistas y exposición). El idioma, el tema y la **Ayuda** están en **⋯**, arriba a la derecha.
+vistas y exposición). **Nuevo**, **Abrir**, **Guardar**, **Compartir**, la
+**Captura**, el tema, la **Ayuda** y el idioma están en **⋯**, arriba a la
+derecha.
 
 <div class="side-by-side">
 
@@ -21,9 +23,9 @@ cerrarlo con ✕.
 
 | Gesto | Qué hace |
 |---|---|
-| Tocar una luminaria | La elige |
-| Mantener apretada | La suma o la saca de la selección |
-| Un dedo sobre una luminaria | La arrastra |
+| Tocar una luminaria o un mueble | Lo elige |
+| Mantener apretado | Lo suma o lo saca de la selección |
+| Un dedo sobre una luminaria o un mueble | Lo arrastra |
 | Un dedo en un lugar vacío | Gira la vista |
 | Dos dedos | Desplazan y, pellizcando, acercan o alejan |
 | Tocar un producto del catálogo | Lo agrega |

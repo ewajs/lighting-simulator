@@ -9,7 +9,7 @@ On Windows and Linux, use **Ctrl** instead of **⌘**.
 | **⌘S** | Save the scene to a file |
 | **⌘O** | Open a scene file |
 | **⌘D** | Duplicate the selection |
-| **⌘A** | Pick all |
+| **⌘A** | Pick all luminaires, or all furniture when a piece is picked |
 | **Delete** or **⌫** | Delete the selection |
 | **Esc** | Pick none |
 | **H** | Switch the selection on or off |

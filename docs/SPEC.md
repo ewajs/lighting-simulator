@@ -54,16 +54,22 @@ customer-facing mode comes later, on the same engine.
 
 ```
 Scene
- ├─ Room            dimensions, surfaces (floor / ceiling / walls), materials
- ├─ Objects[]       optional furniture / props (boxes, tables, imported glTF)
+ ├─ Room            width × depth × height; six surfaces, each a colour,
+ │                  a reflectance (ρ) and an optional texture id
  ├─ Luminaires[]    instances of catalog Products
  │    ├─ productId
- │    ├─ transform  position, aim, mount type
- │    ├─ dimming    0–1
- │    └─ cct        colour temperature override (if the product allows it)
+ │    ├─ position, aim (tilt, pan)
+ │    ├─ dimming    0–1, and on / off
+ │    └─ cct        colour temperature (if the product allows a choice)
+ └─ Furniture[]     built-in pieces: kind, position, rotation, size, finish
+
+Planned (M5 and later):
  ├─ CalcPlanes[]    work planes / surfaces where illuminance is sampled
  └─ View            camera bookmarks, exposure, render mode
 ```
+
+Ids are unique across luminaires and furniture. A scene is saved as a
+`.luxstudio.json` file ([ADR 0051](./decisions/0051-scene-files.md)).
 
 **Product** comes from the host's catalog and has two halves:
 
@@ -89,11 +95,15 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
 
 - P0: Rectangular room from width × depth × height (defaults 5 × 4 × 2.7 m).
 - P0: Per-surface material: colour + reflectance (ρ), with presets
-  (white paint 0.8, concrete 0.4, wood floor 0.3, dark 0.1).
+  (white paint 0.8, concrete 0.4, wood floor 0.3, dark 0.1). A surface can
+  also show a texture from the host, its brightness matched to ρ
+  ([ADR 0050](./decisions/0050-surface-textures.md)).
 - P1: L-shaped / polygon floor plans drawn in a 2D plan view.
 - P1: Openings (doors, windows) as cut-outs.
 - P1: Simple parametric furniture and props (table, sofa, desk, shelf) for
-  scale and to catch light.
+  scale and to catch light: 14 procedural pieces, moved, turned and measured
+  like luminaires ([ADRs 0047](./decisions/0047-furniture.md),
+  [0049](./decisions/0049-furniture-in-the-editing-tools.md)).
 - P1: Room templates: starter scenes (living room, kitchen, office, shop)
   with sizes, finishes and a lighting layout, offered by New
   ([ADR 0052](./decisions/0052-autosave-and-templates.md)).
@@ -193,14 +203,16 @@ UI package:
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│ Top bar: host logo · project name · undo/redo · share         │
+│ Top bar: host logo · undo/redo · new/open/save/share · shot · │
+│          panels · theme · language · help                     │
 ├──────────┬───────────────────────────────────────┬────────────┤
 │ Left     │                                       │ Right      │
 │ panel    │            3D viewport                │ inspector  │
 │ (rail +  │                                       │ (context:  │
 │ tabs:    │   floating: render mode, views,       │ room /     │
 │ Catalog, │   exposure, heatmap legend, hints     │ luminaire /│
-│ Scene)   │                                       │ multi-sel) │
+│ Scene)   │                                       │ furniture /│
+│          │                                       │ multi-sel) │
 ├──────────┴───────────────────────────────────────┴────────────┤
 │ Status bar: selection · cursor lux · fixtures · W · fps       │
 └───────────────────────────────────────────────────────────────┘
@@ -213,8 +225,10 @@ Key interaction rules:
 - **Direct manipulation first.** Place from the catalog, move with handles.
   Numeric fields in the inspector are there for precision.
 - **Inspector is contextual.** Nothing selected shows the room (size and
-  surfaces). One luminaire shows its product and instance settings. Several
-  selected show the shared fields.
+  surfaces). One luminaire shows its product and instance settings, one
+  piece of furniture its size, finish and rotation. Several of one kind
+  selected show the shared fields; luminaires and furniture are never
+  selected together.
 - **Every scene edit is undoable.** History lives in core
   ([ADR 0016](./decisions/0016-undo-redo-in-core.md)).
 - **All UI text is localised**: `es-AR` default, `en` always available
@@ -224,7 +238,7 @@ Key interaction rules:
   `Esc` deselect, `1/2` render modes (`3` for illuminance in M5), `0/7/8/9` perspective / top / front
   / side, `W/E` move/aim handles.
 - Touch: tap = click, long press = Shift-click (add to or remove from the
-  selection), one finger on a fixture drags it.
+  selection), one finger on a luminaire or piece drags it.
 - Help: a getting-started carousel from the **?** button, optionally shown on
   a first visit, linking to the user manual
   ([ADR 0046](./decisions/0046-in-app-help.md)). On tablets the library starts collapsed and the inspector

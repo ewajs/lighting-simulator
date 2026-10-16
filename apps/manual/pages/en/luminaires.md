@@ -4,6 +4,9 @@
 
 ![The catalog with categories, search and filters](/screenshots/en/catalog.png)
 
+At the top, the switch changes between **Luminaires** and
+[**Furniture**](./furniture).
+
 - **Search** by name; accents don't matter.
 - **Filter** by **Mount** (recessed, pendant, track, wall, floor or table)
   and by colour **Temperature**, or tap a category.

@@ -25,5 +25,7 @@
 
 ![The top bar](/screenshots/en/top-bar.png)
 
-Undo and redo, **screenshot**, show or hide the panels, light or dark
-**theme**, **language**, and **?**, the quick getting-started guide.
+Undo and redo; **New**, **Open**, **Save** and **Share** (see
+[Saving, opening and sharing](./saving)); **screenshot**, show or hide the
+panels, light or dark **theme**, **language**, and **?**, the quick
+getting-started guide.
