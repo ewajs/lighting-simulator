@@ -1,19 +1,28 @@
 // Mutation check for the illuminance calculation (ADR 0057): plants one
-// deliberate mistake at a time in the source, runs the analysis tests, and
-// restores the file. Every mistake must make at least one test fail; a
-// mistake the tests miss would let the same bug through for real.
+// deliberate mistake at a time and runs the analysis tests. Every mistake must
+// make at least one test fail; a mistake the tests miss would let the same bug
+// through for real.
 //
-// Run with `npm run mutation-check -w packages/core` from a clean tree. It
-// prints one line per mistake and exits with 1 if any went unnoticed.
+// It works on a copy of core's src/ in a temporary folder, never on the files
+// in the repo: an interrupted run leaves nothing behind but that folder, which
+// the system cleans. The copy reaches the repo's dependencies through a
+// node_modules link.
+//
+// Run with `npm run mutation-check -w packages/core`. It checks the source as
+// it is now, committed or not. It prints one line per mistake and exits with 1
+// if any went unnoticed.
 
 // A Node script; ESLint here only knows browser-neutral globals.
 /* global console, process, URL */
 
 import { spawnSync } from 'node:child_process';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const CORE = fileURLToPath(new URL('..', import.meta.url));
+const REPO_MODULES = fileURLToPath(new URL('../../../node_modules', import.meta.url));
 const TESTS = ['src/analysis', 'src/luminaire-frame.test.ts', 'src/glb.test.ts'];
 
 /** Each mistake: the file, the correct code, and the plausible slip that replaces it. */
@@ -27,38 +36,38 @@ const MISTAKES = [
   {
     name: 'no cosine of incidence',
     file: 'src/analysis/direct.ts',
-    correct: 'lux += (candela * cosIncidence) / distanceSquared;',
-    slip: 'lux += candela / distanceSquared;',
+    correct: 'lux += (candela * cosIncidence) / distance ** 2;',
+    slip: 'lux += candela / distance ** 2;',
   },
   {
     name: 'distance not squared',
     file: 'src/analysis/direct.ts',
-    correct: 'lux += (candela * cosIncidence) / distanceSquared;',
+    correct: 'lux += (candela * cosIncidence) / distance ** 2;',
     slip: 'lux += (candela * cosIncidence) / distance;',
   },
   {
     name: 'split cells not sharing the intensity',
     file: 'src/analysis/sources.ts',
-    correct: 'const scale = level / offsets.length;',
-    slip: 'const scale = level;',
+    correct: 'const share = level / offsets.length;',
+    slip: 'const share = level;',
   },
   {
     name: 'tilt turned the wrong way',
-    file: 'src/luminaire-frame.ts',
-    correct: 'return rotateY(rotateX(v, -tiltRad), panRad);',
-    slip: 'return rotateY(rotateX(v, tiltRad), panRad);',
+    file: 'src/aim.ts',
+    correct: 'return rotateY(rotateX(v, -tiltDeg * DEG), panDeg * DEG);',
+    slip: 'return rotateY(rotateX(v, tiltDeg * DEG), panDeg * DEG);',
   },
   {
     name: 'wall lights not turned from their wall',
     file: 'src/luminaire-frame.ts',
-    correct: "const wallYaw = mount === 'wall' ? yawAwayFromWall(luminaire.position, room) : 0;",
-    slip: 'const wallYaw = 0;',
+    correct: "return mount === 'wall' ? yawAwayFromWall(luminaire.position, room) : 0;",
+    slip: 'return 0;',
   },
   {
     name: 'a head’s light not carried round its pivot',
     file: 'src/luminaire-frame.ts',
-    correct: 'tiltRad,\n    panRad,\n  );',
-    slip: '0,\n    0,\n  );',
+    correct: 'const arm = aimed(subtract(lightOrigin, headPivot), luminaire.aim);',
+    slip: 'const arm = subtract(lightOrigin, headPivot);',
   },
   {
     name: 'no maintenance factor',
@@ -80,36 +89,40 @@ const MISTAKES = [
   },
 ];
 
-let restore;
+const sandbox = mkdtempSync(join(tmpdir(), 'luxstudio-mutation-'));
+const removeSandbox = () => rmSync(sandbox, { recursive: true, force: true });
 process.on('SIGINT', () => {
-  restore?.();
+  removeSandbox();
   process.exit(130);
 });
 
 let unnoticed = 0;
-for (const { name, file, correct, slip } of MISTAKES) {
-  const path = `${CORE}${file}`;
-  const original = readFileSync(path, 'utf8');
-  if (original.split(correct).length !== 2) {
-    console.log(`✗ ${name}: the code it changes isn't in ${file} once; update this script`);
-    unnoticed++;
-    continue;
+try {
+  cpSync(join(CORE, 'src'), join(sandbox, 'src'), { recursive: true });
+  symlinkSync(REPO_MODULES, join(sandbox, 'node_modules'), 'dir');
+  for (const { name, file, correct, slip } of MISTAKES) {
+    const path = join(sandbox, file);
+    const original = readFileSync(path, 'utf8');
+    if (original.split(correct).length !== 2) {
+      console.log(`✗ ${name}: the code it changes isn't in ${file} once; update this script`);
+      unnoticed++;
+      continue;
+    }
+    writeFileSync(path, original.replace(correct, slip));
+    const result = spawnSync('npx', ['vitest', 'run', ...TESTS], {
+      cwd: sandbox,
+      encoding: 'utf8',
+    });
+    writeFileSync(path, original);
+    const failed = /Tests\s+(\d+) failed/.exec(result.stdout)?.[1];
+    if (failed) {
+      console.log(`✓ ${name}: ${failed} tests fail`);
+    } else {
+      console.log(`✗ ${name}: no test noticed`);
+      unnoticed++;
+    }
   }
-  restore = () => writeFileSync(path, original);
-  writeFileSync(path, original.replace(correct, slip));
-  let result;
-  try {
-    result = spawnSync('npx', ['vitest', 'run', ...TESTS], { cwd: CORE, encoding: 'utf8' });
-  } finally {
-    restore();
-    restore = undefined;
-  }
-  const failed = /Tests\s+(\d+) failed/.exec(result.stdout)?.[1];
-  if (failed) {
-    console.log(`✓ ${name}: ${failed} tests fail`);
-  } else {
-    console.log(`✗ ${name}: no test noticed`);
-    unnoticed++;
-  }
+} finally {
+  removeSandbox();
 }
 process.exit(unnoticed > 0 ? 1 : 0);

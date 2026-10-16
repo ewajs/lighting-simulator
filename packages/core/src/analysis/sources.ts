@@ -5,8 +5,9 @@
 // close to large luminaires too.
 
 import { candelaAt } from '../photometry/distribution';
-import { candela, isSpot } from '../render/lighting';
+import { candela, isSpot } from '../photometry/estimate';
 import type { LuminaireFrame } from '../luminaire-frame';
+import { add, scale } from '../math';
 import type { LuminousOpening, Photometry, Product, Vec3 } from '../types';
 
 /**
@@ -72,16 +73,12 @@ export function luminaireSources(
 ): PointSource[] {
   if (level <= 0) return [];
   const offsets = cellOffsets(opening);
-  const scale = level / offsets.length;
+  const share = level / offsets.length;
   return offsets.map(({ across, along }) => ({
-    position: {
-      x: frame.origin.x + frame.side.x * across + frame.forward.x * along,
-      y: frame.origin.y + frame.side.y * across + frame.forward.y * along,
-      z: frame.origin.z + frame.side.z * across + frame.forward.z * along,
-    },
+    position: add(frame.origin, add(scale(frame.side, across), scale(frame.forward, along))),
     frame,
     distribution,
-    scale,
+    scale: share,
   }));
 }
 

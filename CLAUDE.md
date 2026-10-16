@@ -43,6 +43,8 @@ npm run coverage      unit test coverage over all source files, per workspace
 npm run mutation-check -w packages/core   plants known mistakes in the
                       illuminance maths one at a time; each must fail a test
                       (ADR 0057). Run after changing analysis/ or the frame
+npm run bench -w packages/core   times a furnished room's illuminance
+                      calculation, bundled as the app ships it
 npm run test:e2e      Playwright e2e: every test on chrome, @all-browsers tests
                       also on chrome-webgl2 and webkit (local only; ADRs 0032, 0056)
 npm run test:e2e:quick   the e2e suite on chrome only (~1 min); add spec files

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, onTestFinished, vi } from 'vitest';
 import { fixtureLayout, modelLayout, placeholderLayout } from './fixture-layout';
 import { glbNodePositions } from './glb';
 import { product } from './test-fixtures';
@@ -94,5 +94,58 @@ describe('fixture layouts', () => {
     const track = product('track');
     expect(fixtureLayout(track)).toEqual(placeholderLayout('track'));
     expect(fixtureLayout(track, new ArrayBuffer(4))).toEqual(placeholderLayout('track'));
+  });
+});
+
+describe('agreement with three.js', () => {
+  it('finds nodes where three.js’ loader puts them, in a file three.js wrote', async () => {
+    const { GLTFExporter } = await import('three/addons/exporters/GLTFExporter.js');
+    const { GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js');
+    const THREE = await import('three');
+    // The exporter reads its output Blob with FileReader, which Node lacks.
+    const NodeFileReader = class {
+      result: ArrayBuffer | null = null;
+      onloadend: (() => void) | null = null;
+      readAsArrayBuffer(blob: Blob) {
+        void blob.arrayBuffer().then((buffer) => {
+          this.result = buffer;
+          this.onloadend?.();
+        });
+      }
+    };
+    vi.stubGlobal('FileReader', NodeFileReader);
+    onTestFinished(() => {
+      vi.unstubAllGlobals();
+    });
+
+    // A track spot as a manufacturer might model it: turned and scaled at the
+    // root, a head turned on its pivot, and the light inside the head.
+    const root = new THREE.Group();
+    root.position.set(0.2, -0.01, 0.05);
+    root.rotation.set(0.1, 0.7, -0.05);
+    root.scale.set(1.1, 0.9, 1);
+    const head = new THREE.Group();
+    head.name = 'head';
+    head.position.set(0, -0.1, 0);
+    head.rotation.set(-0.4, 0.3, 0);
+    const light = new THREE.Object3D();
+    light.name = 'light';
+    light.position.set(0.01, -0.08, 0.02);
+    // A mesh so the exporter writes a real model, not just empty nodes.
+    head.add(light, new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.1, 0.05)));
+    root.add(head);
+    const scene = new THREE.Scene().add(root);
+
+    const file = (await new GLTFExporter().parseAsync(scene, { binary: true })) as ArrayBuffer;
+    const loaded = (await new GLTFLoader().parseAsync(file, '')).scene;
+    loaded.updateMatrixWorld(true);
+    const positions = glbNodePositions(file, ['light', 'head']);
+    for (const name of ['light', 'head']) {
+      const expected = loaded.getObjectByName(name)!.getWorldPosition(new THREE.Vector3());
+      const found = positions.get(name)!;
+      expect(found.x).toBeCloseTo(expected.x, 9);
+      expect(found.y).toBeCloseTo(expected.y, 9);
+      expect(found.z).toBeCloseTo(expected.z, 9);
+    }
   });
 });

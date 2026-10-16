@@ -6,7 +6,8 @@ import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../ty
 import { candelaGrid } from '../photometry/grid';
 import { buildFixture, type Fixture } from './fixtures';
 import { IesLight, profileTexture } from './IesLight';
-import { candela, kelvinToRgb, lightingProduct } from './lighting';
+import { candela } from '../photometry/estimate';
+import { kelvinToRgb, lightingProduct } from './lighting';
 import { selectionOutline, tagItem } from './overlay';
 import type { RenderMode } from './RoomMeshes';
 

@@ -3,33 +3,12 @@ import { DEFAULT_ROOM } from '../room';
 import { product } from '../test-fixtures';
 import {
   BASE_EXPOSURE,
-  candela,
   indirectIlluminance,
-  isSpot,
   kelvinToRgb,
   lightingProduct,
-  typeCAngles,
   toneMappingExposure,
   viewPose,
-  WIDE_BEAM_DEG,
 } from './lighting';
-
-describe('candela', () => {
-  it('spreads a spot’s flux over its beam cone', () => {
-    // 1000 lm over a 60° beam: Ω = 2π(1 − cos 30°) = 0.84179 sr → 1187.95 cd.
-    expect(candela(product('recessed', { flux: 1000, beamDeg: 60 }))).toBeCloseTo(1187.95, 1);
-  });
-
-  it('treats wide products as isotropic', () => {
-    // 1000 lm / 4π sr = 79.58 cd.
-    expect(candela(product('pendant', { flux: 1000, beamDeg: 140 }))).toBeCloseTo(79.58, 2);
-  });
-
-  it('switches at WIDE_BEAM_DEG', () => {
-    expect(isSpot(product('recessed', { beamDeg: WIDE_BEAM_DEG }))).toBe(true);
-    expect(isSpot(product('recessed', { beamDeg: WIDE_BEAM_DEG + 1 }))).toBe(false);
-  });
-});
 
 describe('lightingProduct', () => {
   it('keeps the catalog values without photometry', () => {
@@ -51,25 +30,6 @@ describe('lightingProduct', () => {
     expect(lit.flux).toBeCloseTo(200 * Math.PI - 400, 9);
     expect(lit.beamDeg).toBeCloseTo(90, 9);
     expect(lit.mount).toBe('recessed');
-  });
-});
-
-describe('typeCAngles', () => {
-  it('maps the luminaire frame to Type C angles', () => {
-    const cases: [{ x: number; y: number; z: number }, number, number][] = [
-      [{ x: 0, y: -1, z: 0 }, 0, 0], // straight down the aim
-      [{ x: 0, y: 1, z: 0 }, 180, 0], // straight up
-      [{ x: 0, y: 0, z: 1 }, 90, 0], // forward is C0
-      [{ x: 1, y: 0, z: 0 }, 90, 90], // anticlockwise from above
-      [{ x: 0, y: 0, z: -1 }, 90, 180],
-      [{ x: -1, y: 0, z: 0 }, 90, 270],
-      [{ x: 0, y: -1, z: 1 }, 45, 0], // 45° down, forward; length doesn't matter
-    ];
-    for (const [direction, verticalDeg, horizontalDeg] of cases) {
-      const angles = typeCAngles(direction);
-      expect(angles.verticalDeg).toBeCloseTo(verticalDeg, 9);
-      expect(angles.horizontalDeg).toBeCloseTo(horizontalDeg, 9);
-    }
   });
 });
 

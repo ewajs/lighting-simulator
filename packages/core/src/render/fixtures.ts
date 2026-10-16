@@ -9,7 +9,7 @@ import {
 import { DEG } from '../math';
 import type { Product } from '../types';
 import { IesLight } from './IesLight';
-import { isSpot } from './lighting';
+import { isSpot } from '../photometry/estimate';
 
 const BODY_COLOR = 0x1b1b1d;
 /**

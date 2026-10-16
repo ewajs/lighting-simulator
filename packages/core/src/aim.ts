@@ -2,7 +2,7 @@
 // ring turns pan through turn.ts. Rays are plain data, so this runs without three.js.
 // See ADR 0040.
 
-import { DEG } from './math';
+import { DEG, rotateX, rotateY } from './math';
 import type { Ray } from './placement';
 import { roomSurfaceHit } from './placement';
 import type { Simulator } from './simulator';
@@ -22,19 +22,20 @@ export function isAimable(product: Product): boolean {
 }
 
 /**
- * The unit vector a luminaire points along: straight down at zero tilt,
- * tilted towards +z, then turned around the vertical by pan (the renderer's
- * Euler order YXZ).
+ * `v` turned by an aim, as the renderer turns a light: tilted from straight
+ * down towards +z (a turn of −tilt about x), then panned about the vertical
+ * (three.js' Euler order YXZ).
  */
-export function aimDirection({ tiltDeg, panDeg }: Aim): Vec3 {
-  const tilt = tiltDeg * DEG;
-  const pan = panDeg * DEG;
-  return {
-    x: Math.sin(tilt) * Math.sin(pan),
-    y: -Math.cos(tilt),
-    z: Math.sin(tilt) * Math.cos(pan),
-  };
+export function aimed(v: Vec3, { tiltDeg, panDeg }: Aim): Vec3 {
+  return rotateY(rotateX(v, -tiltDeg * DEG), panDeg * DEG);
 }
+
+/** The unit vector a luminaire points along: straight down, turned by its aim. */
+export function aimDirection(aim: Aim): Vec3 {
+  return aimed(STRAIGHT_DOWN, aim);
+}
+
+const STRAIGHT_DOWN: Vec3 = { x: 0, y: -1, z: 0 };
 
 /**
  * Where a luminaire's beam centre meets the room, leaving from `position`

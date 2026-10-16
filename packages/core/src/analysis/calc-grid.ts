@@ -2,6 +2,7 @@
 // as EN 12464-1 asks so that minimum and average values are comparable with
 // other tools (ADR 0057).
 
+import { add, scale } from '../math';
 import type { Room, Vec3 } from '../types';
 
 /**
@@ -67,11 +68,7 @@ export function rectangleGrid(
     const along = borderM + ((row + 0.5) / rows) * sizeV;
     for (let column = 0; column < columns; column++) {
       const across = borderM + ((column + 0.5) / columns) * sizeU;
-      points.push({
-        x: corner.x + u.x * across + v.x * along,
-        y: corner.y + u.y * across + v.y * along,
-        z: corner.z + u.z * across + v.z * along,
-      });
+      points.push(add(corner, add(scale(u, across), scale(v, along))));
     }
   }
   return { surface, points, normal, columns, rows, cellArea: (sizeU / columns) * (sizeV / rows) };
@@ -87,7 +84,7 @@ export function roomGrids(room: Room, workPlaneHeightM: number, borderM: number)
   const X = { x: 1, y: 0, z: 0 };
   const Y = { x: 0, y: 1, z: 0 };
   const Z = { x: 0, y: 0, z: 1 };
-  const flip = (n: Vec3) => ({ x: -n.x, y: -n.y, z: -n.z });
+  const flip = (n: Vec3) => scale(n, -1);
   return [
     rectangleGrid(
       'work-plane',

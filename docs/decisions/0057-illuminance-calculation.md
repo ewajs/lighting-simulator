@@ -129,13 +129,32 @@ Every check is committed, so it can be rerun as evidence.
      flux; the hand references and the agreement tests cover those.
 3. **Agreement.** The real `LuminaireMeshes` and `luminaireFrame` place
    and turn every mount type identically. The pure .glb reader finds the
-   same `light` and `head` nodes as three.js in all five demo models.
+   same `light` and `head` nodes as three.js, in a model three.js wrote
+   (core) and in all five demo models (the demo).
 4. **A mutation check** (`npm run mutation-check -w packages/core`).
    - It plants ten plausible mistakes one at a time: a mirrored angle, no
      cosine, an unsquared distance, cells not sharing intensity, tilt the
      wrong way, no wall turn, a head's light left behind, no maintenance
      factor, no furniture shadow, the grid from the wrong side.
-   - Each must fail at least one test, and today each fails 3 to 17.
+   - Each must fail at least one test, and today each fails 1 to 18.
+   - It works on a copy of `src/` in a temporary folder, linked to the
+     repo's dependencies, never on the repo's files. An interrupted run
+     can't leave a planted mistake behind.
+
+**Where the tests live.**
+- Core's tests prove the maths with made-up data, and are complete on their
+  own: the mutation check runs only them.
+- The demo's `assets.test.ts` checks its own files: its IES files' openings,
+  and where core finds the light in its models.
+- `analysis-evidence.test.ts` repeats the hand values and conservation with
+  the demo's real manufacturer files. It is evidence rather than a test of
+  the demo, and moves to `validation/` in M5.2a.
+
+**Measured, not guessed.** `npm run bench -w packages/core` bundles a
+furnished room's calculation with Vite and times it in Node, as the app
+ships it: about 16 ms for 6 luminaires split into 72 sources. Under Vitest
+every import goes through a getter, which doubled the time and would have
+misled.
 5. **Independent references (M5.2).** Radiance 6.0P2 runs reference rooms
    from the same IES files.
    - Its own IES reader, `ies2rad`, is independent of ours.
@@ -175,3 +194,7 @@ Every check is committed, so it can be rerun as evidence.
   - a luminous opening's height isn't split (sconces, lamp shades).
 - `apps/demo`'s Vite config lists `.glb` as an asset, so tests can import
   the demo's models.
+- Shared vector maths lives in `math.ts` (`scale`, `length`, `distance`,
+  `rotateX`, `rotateY`), and pure photometry in `photometry/`: the Type C
+  angles moved out of `render/lighting.ts`, and the estimate for products
+  without IES files into `photometry/estimate.ts`.

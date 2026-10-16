@@ -11,6 +11,7 @@
 // furniture, adds nothing.
 
 import { frameAngles } from '../luminaire-frame';
+import { dot, length, scale, subtract } from '../math';
 import type { Vec3 } from '../types';
 import { segmentBlocked, type Blocker } from './occlusion';
 import { intensityAt, type PointSource } from './sources';
@@ -24,27 +25,17 @@ export function directIlluminance(
 ): number {
   let lux = 0;
   for (const source of sources) {
-    const toSource = {
-      x: source.position.x - point.x,
-      y: source.position.y - point.y,
-      z: source.position.z - point.z,
-    };
-    const distanceSquared = toSource.x ** 2 + toSource.y ** 2 + toSource.z ** 2;
-    if (distanceSquared === 0) continue;
-    const distance = Math.sqrt(distanceSquared);
-    const cosIncidence =
-      (normal.x * toSource.x + normal.y * toSource.y + normal.z * toSource.z) / distance;
+    const toSource = subtract(source.position, point);
+    const distance = length(toSource);
+    if (distance === 0) continue;
+    const cosIncidence = dot(normal, toSource) / distance;
     if (cosIncidence <= 0) continue; // The source is behind the surface.
-    const fromSource = {
-      x: -toSource.x / distance,
-      y: -toSource.y / distance,
-      z: -toSource.z / distance,
-    };
+    const fromSource = scale(toSource, -1 / distance);
     const { verticalDeg, horizontalDeg } = frameAngles(source.frame, fromSource);
     const candela = intensityAt(source.distribution, verticalDeg, horizontalDeg) * source.scale;
     if (candela === 0) continue;
     if (segmentBlocked(point, source.position, blockers)) continue;
-    lux += (candela * cosIncidence) / distanceSquared;
+    lux += (candela * cosIncidence) / distance ** 2;
   }
   return lux;
 }

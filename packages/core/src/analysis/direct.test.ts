@@ -143,3 +143,36 @@ describe('directIlluminance: an asymmetric distribution', () => {
     expect(directIlluminance(point, UP, sources, [])).toBeCloseTo(200 / (8 * Math.SQRT2), 6);
   });
 });
+
+describe('directIlluminance: a distribution with no symmetry', () => {
+  // Measured all the way round (0–360°): at 45° below the horizon, 1000 cd
+  // forward, 500 cd at 90° and only 100 cd at 270°, so left and right differ
+  // and a mirrored reading would show.
+  const lopsided = photometry(
+    [0, 45, 90],
+    [0, 90, 180, 270, 360],
+    [
+      [600, 1000, 0],
+      [600, 500, 0],
+      [600, 200, 0],
+      [600, 100, 0],
+      [600, 1000, 0],
+    ],
+  );
+  const sources = sourcesAt({ x: 0, y: 2, z: 0 }, lopsided);
+  const d2 = 8; // (2 m down, 2 m across)²: the point is 45° below the source.
+
+  it('sends 500 cd to its 90° side, +x: 500 / (8 √2) = 44.194 lx', () => {
+    expect(directIlluminance({ x: 2, y: 0, z: 0 }, UP, sources, [])).toBeCloseTo(
+      500 / (d2 * Math.SQRT2),
+      6,
+    );
+  });
+
+  it('sends 100 cd to its 270° side, −x: 100 / (8 √2) = 8.839 lx', () => {
+    expect(directIlluminance({ x: -2, y: 0, z: 0 }, UP, sources, [])).toBeCloseTo(
+      100 / (d2 * Math.SQRT2),
+      6,
+    );
+  });
+});

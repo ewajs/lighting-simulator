@@ -7,9 +7,10 @@
 // about x, it turns +y towards +z. The aim tilts the light from straight down
 // towards its local +z, then pans it about the vertical (Euler order YXZ).
 
+import { aimed } from './aim';
 import type { FixtureLayout } from './fixture-layout';
-import { add, DEG, dot } from './math';
-import { typeCAngles } from './render/lighting';
+import { add, DEG, dot, rotateY, subtract } from './math';
+import { typeCAngles } from './photometry/distribution';
 import type { Luminaire, MountType, Room, Vec3 } from './types';
 
 /**
@@ -54,20 +55,13 @@ export function fixturePose(
 ): FixturePose {
   const tiltRad = luminaire.aim.tiltDeg * DEG;
   const panRad = luminaire.aim.panDeg * DEG;
-  const wallYaw = mount === 'wall' ? yawAwayFromWall(luminaire.position, room) : 0;
+  const wallYaw = wallYawOf(luminaire, mount, room);
   const { headPivot, lightOrigin } = layout;
   if (!headPivot) {
     return { rootYawRad: wallYaw + panRad, tiltRad, lightPanRad: 0, lightPosition: lightOrigin };
   }
-  const arm = turn(
-    {
-      x: lightOrigin.x - headPivot.x,
-      y: lightOrigin.y - headPivot.y,
-      z: lightOrigin.z - headPivot.z,
-    },
-    tiltRad,
-    panRad,
-  );
+  // The light swings round the head's pivot as the head turns.
+  const arm = aimed(subtract(lightOrigin, headPivot), luminaire.aim);
   return {
     rootYawRad: wallYaw,
     head: { tiltRad, panRad },
@@ -85,7 +79,9 @@ export function luminaireFrame(
   layout: FixtureLayout,
 ): LuminaireFrame {
   const pose = fixturePose(luminaire, mount, room, layout);
-  const toWorld = (v: Vec3) => rotateY(turn(v, pose.tiltRad, pose.lightPanRad), pose.rootYawRad);
+  // The light turns by its aim, then by the wall's yaw: the root's yaw and the
+  // light's own pan always add up to wall + pan, whichever carries the pan.
+  const toWorld = (v: Vec3) => rotateY(aimed(v, luminaire.aim), wallYawOf(luminaire, mount, room));
   return {
     origin: add(luminaire.position, rotateY(pose.lightPosition, pose.rootYawRad)),
     down: toWorld({ x: 0, y: -1, z: 0 }),
@@ -121,21 +117,7 @@ export function yawAwayFromWall(position: Vec3, room: Room): number {
   return distances.reduce((best, next) => (next[0] < best[0] ? next : best))[1];
 }
 
-/** `v` tilted by `tiltRad` about x (as rotation −tilt), then panned by `panRad` about y: order YXZ. */
-function turn(v: Vec3, tiltRad: number, panRad: number): Vec3 {
-  return rotateY(rotateX(v, -tiltRad), panRad);
-}
-
-/** `v` turned about the y axis by `angle` radians: +z towards +x. */
-function rotateY(v: Vec3, angle: number): Vec3 {
-  const c = Math.cos(angle);
-  const s = Math.sin(angle);
-  return { x: v.x * c + v.z * s, y: v.y, z: -v.x * s + v.z * c };
-}
-
-/** `v` turned about the x axis by `angle` radians: +y towards +z. */
-function rotateX(v: Vec3, angle: number): Vec3 {
-  const c = Math.cos(angle);
-  const s = Math.sin(angle);
-  return { x: v.x, y: v.y * c - v.z * s, z: v.y * s + v.z * c };
+/** A wall luminaire's turn away from its wall, in radians; 0 for other mounts. */
+function wallYawOf(luminaire: Luminaire, mount: MountType, room: Room): number {
+  return mount === 'wall' ? yawAwayFromWall(luminaire.position, room) : 0;
 }

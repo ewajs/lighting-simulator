@@ -2,6 +2,7 @@
 // shown while dragging. Pure functions over plain data. See ADRs 0042, 0049.
 
 import { furnitureBounds } from './furniture';
+import { distance } from './math';
 import { wallNormalAxis } from './placement';
 import type { Furniture, MountType, Room, Vec3 } from './types';
 
@@ -86,7 +87,7 @@ export function groupDimensions(dimensions: readonly Dimension[]): Dimension[] {
 }
 
 function dimension(from: Vec3, to: Vec3): Dimension {
-  return { from, to, lengthM: Math.hypot(to.x - from.x, to.y - from.y, to.z - from.z) };
+  return { from, to, lengthM: distance(from, to) };
 }
 
 /** Which way a dimension points, e.g. `x+` or `y-`. */

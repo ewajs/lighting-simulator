@@ -4,7 +4,7 @@
 // only; light it reflects is not counted.
 
 import type { Furniture, FurnitureKind, Vec3 } from '../types';
-import { DEG } from '../math';
+import { DEG, distance, rotateY, subtract } from '../math';
 
 /**
  * The thickness of a table or desk top, in m. Matches TOP_THICKNESS in
@@ -80,7 +80,7 @@ export function segmentBlocked(from: Vec3, to: Vec3, blockers: readonly Blocker[
 function crossesBox(from: Vec3, to: Vec3, { centre, half, yawRad }: Blocker): boolean {
   const start = toBoxFrame(from, centre, yawRad);
   const end = toBoxFrame(to, centre, yawRad);
-  const length = Math.hypot(end.x - start.x, end.y - start.y, end.z - start.z);
+  const length = distance(end, start);
   if (length === 0) return false;
   let enter = 0;
   let exit = 1;
@@ -100,9 +100,5 @@ function crossesBox(from: Vec3, to: Vec3, { centre, half, yawRad }: Blocker): bo
 
 /** A point in a box's frame: relative to its centre, turned back by its yaw. */
 function toBoxFrame(point: Vec3, centre: Vec3, yawRad: number): Vec3 {
-  const x = point.x - centre.x;
-  const z = point.z - centre.z;
-  const c = Math.cos(-yawRad);
-  const s = Math.sin(-yawRad);
-  return { x: x * c + z * s, y: point.y - centre.y, z: -x * s + z * c };
+  return rotateY(subtract(point, centre), -yawRad);
 }

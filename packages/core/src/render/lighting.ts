@@ -1,11 +1,9 @@
 // Pure lighting and camera maths for the viewport. No three.js, so it can be
 // unit-tested in Node. See SPEC §6, "Lighting model before IES".
 
+import { add, length, scale } from '../math';
 import { beamAngleDeg, totalFlux } from '../photometry/distribution';
 import type { Photometry, Product, Room, Vec3 } from '../types';
-
-/** Products with a wider beam than this are lit as isotropic point lights. */
-export const WIDE_BEAM_DEG = 120;
 
 /**
  * Display exposure at 0 EV. Scenes are lit in real units, so a white wall at
@@ -24,34 +22,6 @@ export const MIN_FILL_LUX = 1.5;
 export function lightingProduct(product: Product, photometry: Photometry | undefined): Product {
   if (!photometry) return product;
   return { ...product, flux: totalFlux(photometry), beamDeg: beamAngleDeg(photometry) };
-}
-
-/**
- * Type C angles of a direction in the luminaire's own frame (ADR 0036): −y is
- * the aim (vertical 0°), +z the forward direction (horizontal 0°) and +x
- * horizontal 90°, anticlockwise seen from above. The IES light's shader
- * computes the same mapping on the GPU.
- */
-export function typeCAngles(direction: Vec3): { verticalDeg: number; horizontalDeg: number } {
-  const length = Math.hypot(direction.x, direction.y, direction.z);
-  const verticalDeg = (Math.acos(-direction.y / length) * 180) / Math.PI;
-  const horizontalDeg = (Math.atan2(direction.x, direction.z) * 180) / Math.PI;
-  return { verticalDeg, horizontalDeg: (horizontalDeg + 360) % 360 };
-}
-
-/** Whether a product is drawn as a spotlight (true) or an isotropic point light. */
-export function isSpot(product: Product): boolean {
-  return product.beamDeg <= WIDE_BEAM_DEG;
-}
-
-/**
- * Luminous intensity in cd. A spot spreads all its flux evenly over its beam
- * cone (solid angle 2π(1 − cos(beam/2))); a wide product over the full sphere (4π).
- */
-export function candela(product: Product): number {
-  if (!isSpot(product)) return product.flux / (4 * Math.PI);
-  const halfAngle = ((product.beamDeg / 2) * Math.PI) / 180;
-  return product.flux / (2 * Math.PI * (1 - Math.cos(halfAngle)));
 }
 
 /** sRGB colour of a blackbody at `kelvin` (Tanner Helland fit), brightest channel = 1. */
@@ -120,14 +90,6 @@ export function viewPose(
   const distance = (radius / Math.sin(Math.min(verticalFov, horizontalFov) / 2)) * FRAME_MARGIN;
 
   const direction = VIEW_DIRECTIONS[view];
-  const length = Math.hypot(direction.x, direction.y, direction.z);
   const target = { x: 0, y: height / 2, z: 0 };
-  return {
-    target,
-    position: {
-      x: target.x + (direction.x / length) * distance,
-      y: target.y + (direction.y / length) * distance,
-      z: target.z + (direction.z / length) * distance,
-    },
-  };
+  return { target, position: add(target, scale(direction, distance / length(direction))) };
 }

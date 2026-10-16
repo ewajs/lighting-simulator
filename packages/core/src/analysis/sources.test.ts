@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { luminaireFrame } from '../luminaire-frame';
-import { candela } from '../render/lighting';
+import { candela } from '../photometry/estimate';
 import { isotropic, product, room } from '../test-fixtures';
 import type { LuminousOpening } from '../types';
 import { distributionOf, intensityAt, luminaireSources, SOURCE_CELL_M } from './sources';
