@@ -1,4 +1,4 @@
-import { clamp } from './math';
+import { clamp, distance } from './math';
 import type { FloorPoint, MountType, Product, Room, Vec3 } from './types';
 
 /** Pendant drop when the product doesn't specify one, in m. */
@@ -160,10 +160,9 @@ export function roomSurfaceHit(ray: Ray, room: Room): Vec3 | null {
     wallHit(ray, room, null),
     direction.y < 0 ? horizontalHit(ray, 0) : horizontalHit(ray, room.height),
   ].filter((point): point is Vec3 => point !== null && insideFootprint(point));
-  const distance = (point: Vec3) =>
-    Math.hypot(point.x - origin.x, point.y - origin.y, point.z - origin.z);
   return candidates.reduce<Vec3 | null>(
-    (best, point) => (best === null || distance(point) < distance(best) ? point : best),
+    (best, point) =>
+      best === null || distance(point, origin) < distance(best, origin) ? point : best,
     null,
   );
 }

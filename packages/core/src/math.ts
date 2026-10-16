@@ -29,3 +29,38 @@ export function subtract(a: Vec3, b: Vec3): Vec3 {
 export function dot(a: Vec3, b: Vec3): number {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
+
+/** v · k: `v` scaled by `k`. */
+export function scale(v: Vec3, k: number): Vec3 {
+  return { x: v.x * k, y: v.y * k, z: v.z * k };
+}
+
+/** |v|: the length of `v`. */
+export function length(v: Vec3): number {
+  return Math.hypot(v.x, v.y, v.z);
+}
+
+/** |a − b|: the distance between two points. */
+export function distance(a: Vec3, b: Vec3): number {
+  return Math.hypot(a.x - b.x, a.y - b.y, a.z - b.z);
+}
+
+/**
+ * `v` turned about the x axis by `angleRad`, as three.js turns it: a
+ * positive angle takes +y towards +z.
+ */
+export function rotateX(v: Vec3, angleRad: number): Vec3 {
+  const c = Math.cos(angleRad);
+  const s = Math.sin(angleRad);
+  return { x: v.x, y: v.y * c - v.z * s, z: v.y * s + v.z * c };
+}
+
+/**
+ * `v` turned about the vertical (y) axis by `angleRad`, as three.js turns
+ * it: a positive angle takes +z towards +x.
+ */
+export function rotateY(v: Vec3, angleRad: number): Vec3 {
+  const c = Math.cos(angleRad);
+  const s = Math.sin(angleRad);
+  return { x: v.x * c + v.z * s, y: v.y, z: -v.x * s + v.z * c };
+}

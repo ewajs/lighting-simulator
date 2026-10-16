@@ -101,7 +101,7 @@ its helpers in `render/`:
 | File | Job |
 |---|---|
 | `RoomMeshes.ts`, `SurfaceTextures.ts` | the room's six surfaces, and their textures with brightness matched to reflectance |
-| `LuminaireMeshes.ts` | one fixture per luminaire, once its product's files have settled: model, light, outline, and the shadow budget |
+| `LuminaireMeshes.ts` | one fixture per luminaire, once its product's files have settled: model, light, outline, and the shadow budget. It places and turns them with `fixturePose`, shared with the analysis |
 | `fixtures.ts`, `FixtureModels.ts` | building a fixture from a glTF model or simple shapes |
 | `IesLight.ts` | the light that follows an IES distribution in every direction |
 | `FurnitureMeshes.ts`, `furniture/` | one procedural model per piece of furniture, by kind |
@@ -116,6 +116,32 @@ The maths behind them stays pure and outside `render/`: `drag.ts`,
 The viewport keeps **no selection** of its own
 ([ADR 0019](../decisions/0019-viewport-host-owned-selection.md)). It reports
 clicks (`onPick`) and outlines whatever the host passes to `setHighlighted`.
+
+### Analysis: the numbers behind the lux
+
+`analysis/` computes illuminance, the light reaching each point, in lux
+([ADR 0057](../decisions/0057-illuminance-calculation.md)). It's plain
+maths over the scene, with no three.js, one formula per file:
+
+| File | Job |
+|---|---|
+| `sources.ts` | a luminaire as point sources: its IES distribution (or the estimate), split into 10 cm cells when its opening is larger |
+| `direct.ts` | E = I · cos α / d², summed over the sources: the inverse-square and cosine laws |
+| `occlusion.ts` | furniture as boxes that cast shadows |
+| `calc-grid.ts` | where to calculate: EN 12464-1 grids on the work plane and the six surfaces |
+| `stats.ts` | Ē, Emin, Emax and uniformity |
+| `analyse-direct.ts` | `directLight` (prepare once) and `analyseDirect` (every surface) |
+
+Where a luminaire's light leaves from and which way it points comes from
+`fixture-layout.ts` and `luminaire-frame.ts`. The renderer uses the same two
+files, so the picture and the numbers can't disagree. A model's `light` node
+is read from the .glb file by `glb.ts`.
+
+The tests check the maths against values worked out by hand, check that
+every lumen a luminaire emits lands somewhere in the room, and check the
+renderer and the calculation against each other.
+`npm run mutation-check -w packages/core` plants ten plausible mistakes and
+shows that the tests catch each one.
 
 ## The UI
 

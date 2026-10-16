@@ -3,8 +3,8 @@
 // Between measured angles the intensity is interpolated linearly in both
 // directions; outside the measured vertical range it is 0 cd.
 
-import { DEG } from '../math';
-import type { Photometry } from '../types';
+import { DEG, length } from '../math';
+import type { Photometry, Vec3 } from '../types';
 
 /**
  * How the measured horizontal angles cover the full circle (LM-63 Type C):
@@ -101,6 +101,18 @@ export function beamAngleDeg(photometry: Photometry): number {
     }
   }
   return pointsDown ? 2 * edgeDeg : 2 * (180 - edgeDeg);
+}
+
+/**
+ * Type C angles of a direction in the luminaire's own frame (ADR 0036): −y is
+ * the aim (vertical 0°), +z the forward direction (horizontal 0°) and +x
+ * horizontal 90°, anticlockwise seen from above. The IES light's shader
+ * computes the same mapping on the GPU.
+ */
+export function typeCAngles(direction: Vec3): { verticalDeg: number; horizontalDeg: number } {
+  const verticalDeg = (Math.acos(-direction.y / length(direction)) * 180) / Math.PI;
+  const horizontalDeg = (Math.atan2(direction.x, direction.z) * 180) / Math.PI;
+  return { verticalDeg, horizontalDeg: (horizontalDeg + 360) % 360 };
 }
 
 function symmetryOf(photometry: Photometry): HorizontalSymmetry {

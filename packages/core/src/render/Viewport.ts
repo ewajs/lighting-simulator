@@ -155,6 +155,7 @@ export class Viewport {
       ready: (productId) => this.#productReady(productId),
       photometry: (productId) => simulator.photometry(productId),
       model: (productId) => this.#models.get(productId, simulator.model(productId)),
+      modelFile: (productId) => simulator.model(productId),
       logger: simulator.logger,
     });
     // three.js picks each light's shader by its class; teach it ours.

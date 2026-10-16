@@ -1,13 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import type { Photometry } from '../types';
-import { beamAngleDeg, candelaAt, horizontalSymmetry, totalFlux } from './distribution';
+import {
+  beamAngleDeg,
+  typeCAngles,
+  candelaAt,
+  horizontalSymmetry,
+  totalFlux,
+} from './distribution';
 
 function photometry(
   verticalDeg: number[],
   horizontalDeg: number[],
   candela: number[][],
 ): Photometry {
-  return { verticalDeg, horizontalDeg, candela, power: 10, keywords: {} };
+  return {
+    verticalDeg,
+    horizontalDeg,
+    candela,
+    power: 10,
+    luminousOpening: { widthM: 0, lengthM: 0, heightM: 0, round: false },
+    keywords: {},
+  };
 }
 
 /** 100 cd in every direction. */
@@ -178,5 +191,24 @@ describe('beamAngleDeg', () => {
   it('gives the full spread when intensity never halves', () => {
     expect(beamAngleDeg(ISOTROPIC)).toBe(360);
     expect(beamAngleDeg(LINEAR_DOWN)).toBeCloseTo(90, 9);
+  });
+});
+
+describe('typeCAngles', () => {
+  it('maps the luminaire frame to Type C angles', () => {
+    const cases: [{ x: number; y: number; z: number }, number, number][] = [
+      [{ x: 0, y: -1, z: 0 }, 0, 0], // straight down the aim
+      [{ x: 0, y: 1, z: 0 }, 180, 0], // straight up
+      [{ x: 0, y: 0, z: 1 }, 90, 0], // forward is C0
+      [{ x: 1, y: 0, z: 0 }, 90, 90], // anticlockwise from above
+      [{ x: 0, y: 0, z: -1 }, 90, 180],
+      [{ x: -1, y: 0, z: 0 }, 90, 270],
+      [{ x: 0, y: -1, z: 1 }, 45, 0], // 45° down, forward; length doesn't matter
+    ];
+    for (const [direction, verticalDeg, horizontalDeg] of cases) {
+      const angles = typeCAngles(direction);
+      expect(angles.verticalDeg).toBeCloseTo(verticalDeg, 9);
+      expect(angles.horizontalDeg).toBeCloseTo(horizontalDeg, 9);
+    }
   });
 });

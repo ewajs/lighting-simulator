@@ -1,12 +1,16 @@
 import * as THREE from 'three/webgpu';
+import {
+  FLOOR_LAMP_HEIGHT,
+  HEAD_NODE,
+  LAMP_SHADE_HEIGHT_SHARE,
+  TABLE_LAMP_HEIGHT,
+  TRACK_HEAD_PIVOT_Y,
+} from '../fixture-layout';
 import { DEG } from '../math';
 import type { Product } from '../types';
 import { IesLight } from './IesLight';
-import { isSpot } from './lighting';
+import { isSpot } from '../photometry/estimate';
 
-/** Default height of a floor or table lamp when the product doesn't say, in m. */
-const FLOOR_LAMP_HEIGHT = 1.5;
-const TABLE_LAMP_HEIGHT = 0.45;
 const BODY_COLOR = 0x1b1b1d;
 /**
  * The beam angle is where intensity drops to 50%; light keeps spreading to
@@ -21,11 +25,7 @@ const SPOT_SHADOW_MAP_SIZE = 1024;
 const SPOT_PENUMBRA = 0.45;
 const CORD_RADIUS = 0.003;
 
-// Model conventions (ADR 0043).
-/** Node marking where the light sits; default: the model's origin. */
-const LIGHT_NODE = 'light';
-/** Node that turns with the aim. */
-const HEAD_NODE = 'head';
+// Model conventions (ADR 0043); `light` and `head` are in fixture-layout.ts.
 /** Nodes marking where pendant cords attach; default: one at the origin. */
 const CORD_PREFIX = 'cord';
 /** Materials that glow with the light's colour and dimming. */
@@ -41,9 +41,8 @@ export interface Cord {
 /** The three.js objects that make up one placed luminaire. */
 export interface Fixture {
   readonly root: THREE.Group;
+  /** Placed by LuminaireMeshes from the fixture's layout (fixture-layout.ts). */
   readonly light: THREE.SpotLight | THREE.PointLight | IesLight;
-  /** Light position in the root's frame, before aiming. */
-  readonly lightOrigin: THREE.Vector3;
   /** Glowing surfaces (lens, diffuser, shade). */
   readonly emissive: readonly THREE.MeshStandardMaterial[];
   /** Part that turns with the aim (track heads). */
@@ -59,7 +58,6 @@ interface Shape {
   readonly root: THREE.Group;
   readonly emissive: THREE.MeshStandardMaterial[];
   readonly head?: THREE.Object3D;
-  readonly lightOrigin: THREE.Vector3;
   readonly cordAnchors: readonly THREE.Vector3[];
   /** Geometries and materials this fixture alone uses. */
   readonly owned: { dispose(): void }[];
@@ -77,7 +75,7 @@ export function buildFixture(
   profile?: THREE.DataTexture,
   model?: THREE.Object3D,
 ): Fixture {
-  const { root, emissive, head, lightOrigin, cordAnchors, owned } = model
+  const { root, emissive, head, cordAnchors, owned } = model
     ? modelShape(model)
     : placeholderShape(product);
   const cords = product.mount === 'pendant' ? cordAnchors.map((anchor) => cord(anchor, owned)) : [];
@@ -97,14 +95,13 @@ export function buildFixture(
     light.shadow.mapSize.set(SPOT_SHADOW_MAP_SIZE, SPOT_SHADOW_MAP_SIZE);
     root.add(light.target);
   }
-  light.position.copy(lightOrigin);
   root.add(light);
 
   const dispose = () => {
     light.dispose();
     owned.forEach((item) => item.dispose());
   };
-  return { root, light, lightOrigin, emissive, ...(head && { head }), cords, dispose };
+  return { root, light, emissive, ...(head && { head }), cords, dispose };
 }
 
 /**
@@ -133,7 +130,6 @@ function modelShape(template: THREE.Object3D): Shape {
 
   root.updateMatrixWorld(true);
   const positionOf = (object: THREE.Object3D) => object.getWorldPosition(new THREE.Vector3());
-  const light = root.getObjectByName(LIGHT_NODE);
   const head = root.getObjectByName(HEAD_NODE);
   const cordAnchors: THREE.Vector3[] = [];
   root.traverse((object) => {
@@ -143,7 +139,6 @@ function modelShape(template: THREE.Object3D): Shape {
     root,
     emissive,
     ...(head && { head }),
-    lightOrigin: light ? positionOf(light) : new THREE.Vector3(),
     cordAnchors: cordAnchors.length > 0 ? cordAnchors : [new THREE.Vector3()],
     owned,
   };
@@ -176,27 +171,23 @@ function placeholderShape(product: Product): Shape {
   };
   const facingDown = (mesh: THREE.Mesh) => mesh.rotateX(Math.PI / 2);
 
-  let lightY = 0;
   let head: THREE.Object3D | undefined;
 
   switch (product.mount) {
     case 'recessed':
       add(new THREE.CylinderGeometry(0.05, 0.05, 0.012, 32), body, -0.006);
       facingDown(add(new THREE.CircleGeometry(0.032, 32), glow(), -0.013));
-      lightY = -0.03;
       break;
     case 'track':
       head = new THREE.Group();
-      head.position.y = -0.1;
+      head.position.y = TRACK_HEAD_PIVOT_Y;
       root.add(head);
       add(new THREE.CylinderGeometry(0.035, 0.035, 0.11, 24), body, 0, head);
       facingDown(add(new THREE.CircleGeometry(0.03, 24), glow(), -0.056, head));
-      lightY = -0.18;
       break;
     case 'pendant':
       add(new THREE.ConeGeometry(0.3, 0.12, 48, 1, true), body);
       facingDown(add(new THREE.CircleGeometry(0.28, 48), glow(), -0.058));
-      lightY = -0.1;
       break;
     case 'wall': {
       // Local +z points into the room; LuminaireMeshes turns the root away from its wall.
@@ -204,7 +195,6 @@ function placeholderShape(product: Product): Shape {
       box.position.z = 0.05;
       const lens = facingDown(add(new THREE.PlaneGeometry(0.06, 0.06), glow(), -0.051));
       lens.position.z = 0.05;
-      lightY = -0.07;
       break;
     }
     case 'floor':
@@ -216,9 +206,8 @@ function placeholderShape(product: Product): Shape {
       add(
         new THREE.CylinderGeometry(shadeRadius, shadeRadius * 1.15, height * 0.22, 40, 1, true),
         glow(),
-        height * 0.85,
+        height * LAMP_SHADE_HEIGHT_SHARE,
       );
-      lightY = height * 0.85;
       break;
     }
   }
@@ -230,12 +219,10 @@ function placeholderShape(product: Product): Shape {
       owned.push(mesh.geometry, mesh.material);
     }
   });
-  const lightOrigin = new THREE.Vector3(0, lightY, product.mount === 'wall' ? 0.05 : 0);
   return {
     root,
     emissive,
     ...(head && { head }),
-    lightOrigin,
     cordAnchors: [new THREE.Vector3()],
     owned,
   };

@@ -21,6 +21,26 @@ export { DEFAULT_ROOM } from './room';
 export { consoleLogger } from './logger';
 export type { Logger, LogLevel } from './logger';
 export { summarizeScene } from './summary';
+export { analyseDirect, DEFAULT_ANALYSIS_SETTINGS, directLight } from './analysis/analyse-direct';
+export type {
+  AnalysisInputs,
+  AnalysisSettings,
+  DirectAnalysis,
+  DirectLight,
+  SurfaceResult,
+} from './analysis/analyse-direct';
+export { directIlluminance } from './analysis/direct';
+export { maxGridSpacing } from './analysis/calc-grid';
+export type { CalcGrid, CalcSurfaceName } from './analysis/calc-grid';
+export { FURNITURE_BLOCKING, TABLE_TOP_M } from './analysis/occlusion';
+export type { Blocker } from './analysis/occlusion';
+export { SOURCE_CELL_M } from './analysis/sources';
+export type { Distribution, PointSource } from './analysis/sources';
+export type { IlluminanceStats } from './analysis/stats';
+export { fixtureLayout, modelLayout } from './fixture-layout';
+export type { FixtureLayout } from './fixture-layout';
+export { luminaireFrame } from './luminaire-frame';
+export type { LuminaireFrame } from './luminaire-frame';
 export type { SceneSummary } from './summary';
 export type { RoomSize } from './room';
 export type { AddLuminaireOptions, LuminairePatch } from './luminaires';
@@ -50,6 +70,7 @@ export type {
   FurnitureSize,
   ItemKind,
   Luminaire,
+  LuminousOpening,
   ModelProvider,
   MountType,
   Photometry,

@@ -3,7 +3,7 @@
 // plain data, like luminaires.ts.
 
 import { FINISHES, FURNITURE_TYPES } from './furniture-kinds';
-import { clamp, DEG, wrapDeg } from './math';
+import { clamp, DEG, rotateY, wrapDeg } from './math';
 import { GRID_STEP } from './snap';
 import type {
   FloorPoint,
@@ -159,7 +159,7 @@ export function updateFurniture(scene: Scene, id: string, patch: FurniturePatch)
 export function copyFurniture(source: Furniture, id: string, room: Room): Furniture {
   const turn = source.rotationDeg * DEG;
   // The piece's own +x (its right, seen from the front) in the room.
-  const step = { x: Math.cos(turn) * DUPLICATE_OFFSET, z: -Math.sin(turn) * DUPLICATE_OFFSET };
+  const step = rotateY({ x: DUPLICATE_OFFSET, y: 0, z: 0 }, turn);
   const { x, y, z } = source.position;
   return constrainFurniture({ ...source, id, position: { x: x + step.x, y, z: z + step.z } }, room);
 }

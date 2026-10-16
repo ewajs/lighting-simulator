@@ -12,3 +12,5 @@ playwright-report
 
 # Unit test coverage reports (npm run coverage)
 coverage/
+# The analysis benchmark's bundle (npm run bench -w packages/core)
+.bench/

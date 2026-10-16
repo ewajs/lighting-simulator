@@ -1,11 +1,13 @@
 import * as THREE from 'three/webgpu';
+import { modelLayout, placeholderLayout, type FixtureLayout } from '../fixture-layout';
 import type { Logger } from '../logger';
-import { DEG } from '../math';
+import { fixturePose } from '../luminaire-frame';
 import type { Catalog, Luminaire, Photometry, Product, Room, Scene } from '../types';
 import { candelaGrid } from '../photometry/grid';
 import { buildFixture, type Fixture } from './fixtures';
 import { IesLight, profileTexture } from './IesLight';
-import { candela, kelvinToRgb, lightingProduct } from './lighting';
+import { candela } from '../photometry/estimate';
+import { kelvinToRgb, lightingProduct } from './lighting';
 import { selectionOutline, tagItem } from './overlay';
 import type { RenderMode } from './RoomMeshes';
 
@@ -32,6 +34,8 @@ interface Item {
   /** The product as lit, with flux and beam from its photometry if any. */
   readonly product: Product;
   readonly fixture: Fixture;
+  /** Where its light sits and what turns with the aim, shared with the calculation. */
+  readonly layout: FixtureLayout;
   /** Luminous flux currently emitted, in lm (0 when off). */
   flux: number;
   outline?: THREE.Box3Helper;
@@ -46,16 +50,18 @@ export class LuminaireMeshes {
   readonly #ready: (productId: string) => boolean;
   readonly #photometry: (productId: string) => Photometry | undefined;
   readonly #model: (productId: string) => THREE.Object3D | undefined;
+  readonly #modelFile: (productId: string) => ArrayBuffer | undefined;
   readonly #logger: Logger;
   /** How many lights cast shadows, as last logged. */
   #shadowCasters = 0;
 
-  /** `photometry` and `model` look up what a product has loaded so far. */
+  /** `photometry`, `model` and `modelFile` look up what a product has loaded so far. */
   constructor({
     catalog,
     ready,
     photometry,
     model,
+    modelFile,
     logger,
   }: {
     readonly catalog: Catalog;
@@ -63,12 +69,15 @@ export class LuminaireMeshes {
     readonly ready: (productId: string) => boolean;
     readonly photometry: (productId: string) => Photometry | undefined;
     readonly model: (productId: string) => THREE.Object3D | undefined;
+    /** The model's file, read for its layout the way the calculation reads it. */
+    readonly modelFile: (productId: string) => ArrayBuffer | undefined;
     readonly logger: Logger;
   }) {
     this.#catalog = catalog;
     this.#ready = ready;
     this.#photometry = photometry;
     this.#model = model;
+    this.#modelFile = modelFile;
     this.#logger = logger;
   }
 
@@ -182,6 +191,7 @@ export class LuminaireMeshes {
       model,
       product,
       fixture: buildFixture(product, photometry && this.#profile(photometry).texture, model),
+      layout: this.#layout(product, model),
       flux: 0,
     };
     tagItem(item.fixture.root, luminaire.id);
@@ -190,29 +200,39 @@ export class LuminaireMeshes {
     return item;
   }
 
+  /** The layout of a fixture drawn from `model`, or from the placeholder when there's none. */
+  #layout(product: Product, model: THREE.Object3D | undefined): FixtureLayout {
+    const file = model && this.#modelFile(product.id);
+    if (!file) return placeholderLayout(product.mount);
+    try {
+      return modelLayout(file);
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error);
+      this.#logger.warn(
+        `[models] "${product.id}" layout unreadable, using the placeholder's: ${reason}`,
+      );
+      return placeholderLayout(product.mount);
+    }
+  }
+
   #update(item: Item, luminaire: Luminaire, room: Room, mode: RenderMode): void {
     const { product } = item;
-    const { root, light, lightOrigin, emissive, head, cords } = item.fixture;
+    const { root, light, emissive, head, cords } = item.fixture;
     const { x, y, z } = luminaire.position;
     root.position.set(x, y, z);
 
-    // Aim: tilt from straight down towards local +z, then pan around the vertical.
-    // A head (track) turns on its own. Without one, pan turns the whole fixture,
-    // its installed orientation, so a model's asymmetric parts follow its light
-    // (ADR 0043); tilt is then the light's alone.
-    const tilt = luminaire.aim.tiltDeg * DEG;
-    const pan = luminaire.aim.panDeg * DEG;
-    const wallYaw = product.mount === 'wall' ? yawAwayFromWall(luminaire, room) : 0;
-    root.rotation.set(0, wallYaw + (head ? 0 : pan), 0);
-    const lightPan = head ? pan : 0;
-    if (head) head.rotation.set(-tilt, pan, 0, 'YXZ');
+    // The turns come from fixturePose, which the calculation shares (ADR 0057).
+    const pose = fixturePose(luminaire, product.mount, room, item.layout);
+    root.rotation.set(0, pose.rootYawRad, 0);
+    if (head && pose.head) head.rotation.set(-pose.head.tiltRad, pose.head.panRad, 0, 'YXZ');
+    const { x: lx, y: ly, z: lz } = pose.lightPosition;
+    light.position.set(lx, ly, lz);
     // An IES light turns with the aim; its frame's −y is the aim, +z forward (ADR 0036).
-    if (light instanceof IesLight) light.rotation.set(-tilt, lightPan, 0, 'YXZ');
+    const lightRotation = new THREE.Euler(-pose.tiltRad, pose.lightPanRad, 0, 'YXZ');
+    if (light instanceof IesLight) light.rotation.copy(lightRotation);
     if (light instanceof THREE.SpotLight) {
-      const direction = new THREE.Vector3(0, -1, 0).applyEuler(
-        new THREE.Euler(-tilt, lightPan, 0, 'YXZ'),
-      );
-      light.target.position.copy(lightOrigin).add(direction);
+      const direction = new THREE.Vector3(0, -1, 0).applyEuler(lightRotation);
+      light.target.position.copy(light.position).add(direction);
     }
     for (const { mesh, anchor } of cords) {
       const length = Math.max(0.01, room.height - y - anchor.y);
@@ -293,17 +313,6 @@ export class LuminaireMeshes {
     item.fixture.dispose();
     this.#items.delete(id);
   }
-}
-
-/** Wall fixtures face away from the wall they sit on (their local +z points into the room). */
-function yawAwayFromWall({ position }: Luminaire, room: Room): number {
-  const distances: [number, number][] = [
-    [position.z + room.depth / 2, 0],
-    [room.depth / 2 - position.z, Math.PI],
-    [position.x + room.width / 2, Math.PI / 2],
-    [room.width / 2 - position.x, -Math.PI / 2],
-  ];
-  return distances.reduce((best, next) => (next[0] < best[0] ? next : best))[1];
 }
 
 /** A box's bounding rectangle on screen, in px; null if empty or partly behind the camera. */

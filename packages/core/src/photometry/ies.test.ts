@@ -113,6 +113,49 @@ TILT=lamp_tilt.dat
     expect(photometry.candela).toEqual([[100, 0]]);
   });
 
+  describe('reads the luminous opening', () => {
+    // QUADRANT_2002's opening line: units type 2 (metres), width 0.1, length 0.1, height 0.
+    const withOpening = (fields: string) =>
+      parseIes(QUADRANT_2002.replace('1 1000 2 3 2 1 2 0.1 0.1 0', `1 1000 2 3 2 1 ${fields}`));
+
+    it('in metres, as a rectangle', () => {
+      expect(parseIes(QUADRANT_2002).luminousOpening).toEqual({
+        widthM: 0.1,
+        lengthM: 0.1,
+        heightM: 0,
+        round: false,
+      });
+    });
+
+    it('in feet, converted to metres: a −0.5 ft disk is 0.1524 m across', () => {
+      const opening = withOpening('1 -0.5 -0.5 0').luminousOpening;
+      expect(opening.widthM).toBeCloseTo(0.1524, 12);
+      expect(opening.lengthM).toBeCloseTo(0.1524, 12);
+      expect(opening.round).toBe(true);
+    });
+
+    it('keeps a linear opening’s length along horizontal 0°', () => {
+      // 4 ft long, 0.177 ft wide.
+      const opening = withOpening('1 0.177083 4 0').luminousOpening;
+      expect(opening.lengthM).toBeCloseTo(1.2192, 12);
+      expect(opening.widthM).toBeCloseTo(0.0539749, 6);
+      expect(opening.round).toBe(false);
+    });
+
+    it('as a point when every size is 0, whatever the units', () => {
+      expect(withOpening('7 0 0 0').luminousOpening).toEqual({
+        widthM: 0,
+        lengthM: 0,
+        heightM: 0,
+        round: false,
+      });
+    });
+
+    it('rejects a sized opening in unknown units', () => {
+      expect(() => withOpening('3 0.1 0.1 0')).toThrow(/units type must be 1 \(feet\) or 2/);
+    });
+  });
+
   it('keeps the first value of a repeated keyword', () => {
     const photometry = parseIes(QUADRANT_2002.replace('[LUMCAT] TD-01', '[TEST] Again'));
     expect(photometry.keywords['TEST']).toBe('Hand-made fixture');
