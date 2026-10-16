@@ -1,0 +1,199 @@
+{
+  "brightShare": 0.1,
+  "nearM": 1,
+  "rooms": [
+    {
+      "name": "downlights-and-wall-washer",
+      "description": "Four downlights on a grid, and a wall washer (Lightolier, asymmetric) 0.5 m from the wall at x = −2.5, its beam turned onto that wall.",
+      "radianceRelease": "rad6R0P2",
+      "points": 920,
+      "surfaces": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 213.16,
+          "oursAverageLx": 213.14,
+          "averageError": -0.00007,
+          "worstFar": 0.0007,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 175.93,
+          "oursAverageLx": 175.92,
+          "averageError": -0.00004,
+          "worstFar": 0.00033,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x-",
+          "points": 280,
+          "radianceAverageLx": 64.13,
+          "oursAverageLx": 64.12,
+          "averageError": -0.00012,
+          "worstFar": 0.00213,
+          "worstNear": 0.00461
+        }
+      ]
+    },
+    {
+      "name": "linear-pendant-over-table",
+      "description": "A 1.2 m direct/indirect linear pendant (Finelite HP-2) at 1.55 m over a 1.6 × 0.9 m table top, lengthwise along it: close to a large luminaire, with a shadow on the floor and light on the ceiling.",
+      "radianceRelease": "rad6R0P2",
+      "points": 1500,
+      "surfaces": [
+        {
+          "surface": "work-plane",
+          "points": 500,
+          "radianceAverageLx": 76.33,
+          "oursAverageLx": 76.33,
+          "averageError": 0.00007,
+          "worstFar": 0.00172,
+          "worstNear": 0.00132
+        },
+        {
+          "surface": "floor",
+          "points": 500,
+          "radianceAverageLx": 26.96,
+          "oursAverageLx": 26.89,
+          "averageError": -0.00238,
+          "worstFar": 0.00006,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 500,
+          "radianceAverageLx": 126.53,
+          "oursAverageLx": 126.54,
+          "averageError": 0.00001,
+          "worstFar": 0.00081,
+          "worstNear": 0
+        }
+      ]
+    },
+    {
+      "name": "single-downlight",
+      "description": "One 6-inch recessed downlight (Cooper, 1153 lm, a 15 cm disk) in the middle of a 5 × 4 × 2.7 m room, aimed straight down.",
+      "radianceRelease": "rad6R0P2",
+      "points": 1036,
+      "surfaces": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 55.27,
+          "oursAverageLx": 55.27,
+          "averageError": -0.00004,
+          "worstFar": 0.00043,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 50.88,
+          "oursAverageLx": 50.88,
+          "averageError": -0.00002,
+          "worstFar": 0.00046,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x-",
+          "points": 176,
+          "radianceAverageLx": 1.97,
+          "oursAverageLx": 1.97,
+          "averageError": 0.00006,
+          "worstFar": 0,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z+",
+          "points": 220,
+          "radianceAverageLx": 3.47,
+          "oursAverageLx": 3.47,
+          "averageError": -0.00011,
+          "worstFar": 0,
+          "worstNear": 0
+        }
+      ]
+    },
+    {
+      "name": "track-spots",
+      "description": "Two narrow track spots (iGuzzini Palco, 17° beam, 2913 lm) hung at 2.5 m, tilted and panned: one onto the floor towards the wall at z = −2, one onto the wall at x = −2.5.",
+      "radianceRelease": "rad6R0P2",
+      "points": 1130,
+      "surfaces": [
+        {
+          "surface": "floor",
+          "points": 500,
+          "radianceAverageLx": 109.63,
+          "oursAverageLx": 109.67,
+          "averageError": 0.00035,
+          "worstFar": 0.0056,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x-",
+          "points": 280,
+          "radianceAverageLx": 268.48,
+          "oursAverageLx": 268.15,
+          "averageError": -0.00124,
+          "worstFar": 0.01902,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z-",
+          "points": 350,
+          "radianceAverageLx": 53.19,
+          "oursAverageLx": 53.17,
+          "averageError": -0.0005,
+          "worstFar": 0,
+          "worstNear": 0
+        }
+      ]
+    },
+    {
+      "name": "wall-sconce",
+      "description": "An up/down wall sconce (Visa Colonnade, a 23 × 13 × 51 cm glowing box) on the wall at x = −2.5, its light 0.25 m out from it at 1.8 m: very close to the wall behind it.",
+      "radianceRelease": "rad6R0P2",
+      "points": 1140,
+      "surfaces": [
+        {
+          "surface": "wall-x-",
+          "points": 280,
+          "radianceAverageLx": 20.33,
+          "oursAverageLx": 20.44,
+          "averageError": 0.00543,
+          "worstFar": 0.02134,
+          "worstNear": 0.12651
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 15.37,
+          "oursAverageLx": 15.4,
+          "averageError": 0.00185,
+          "worstFar": 0.02391,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 320,
+          "radianceAverageLx": 24.65,
+          "oursAverageLx": 24.79,
+          "averageError": 0.00562,
+          "worstFar": 0.03006,
+          "worstNear": 0.06859
+        },
+        {
+          "surface": "wall-z+",
+          "points": 220,
+          "radianceAverageLx": 17.75,
+          "oursAverageLx": 17.75,
+          "averageError": -0.00002,
+          "worstFar": 0.02786,
+          "worstNear": 0
+        }
+      ]
+    }
+  ]
+}

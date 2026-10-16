@@ -6,7 +6,7 @@
   "scripts": {
     "typecheck": "tsc -p .",
     "test": "vitest run",
-    "report": "vite build --ssr src/report.ts --outDir .report --emptyOutDir --logLevel warn && node .report/report.js > ../REPORT.md"
+    "report": "vite build --ssr src/report-markdown.ts --outDir .report --emptyOutDir --logLevel warn && node .report/report-markdown.js > ../REPORT.md && vite build --ssr src/report-json.ts --outDir .report --emptyOutDir --logLevel warn && node .report/report-json.js > ../summary.json"
   },
   "dependencies": {
     "@luxstudio/core": "0.0.0"

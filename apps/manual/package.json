@@ -11,6 +11,10 @@
     "typecheck": "tsc -p ."
   },
   "devDependencies": {
+    "markdown-it-mathjax3": "4.3.2",
     "vitepress": "1.6.4"
+  },
+  "dependencies": {
+    "@luxstudio/core": "0.0.0"
   }
 }
