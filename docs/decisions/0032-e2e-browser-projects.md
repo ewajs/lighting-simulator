@@ -1,6 +1,6 @@
 # 0032. E2E runs on Chrome (WebGPU), Chrome (WebGL 2) and WebKit
 
-- **Status:** Accepted
+- **Status:** Accepted; since ADR 0056 the WebGL 2 and WebKit projects run only tests tagged `@all-browsers`
 - **Date:** 2026-10-11
 
 ## Context

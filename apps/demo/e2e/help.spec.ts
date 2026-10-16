@@ -56,7 +56,7 @@ test('the ? button reopens it, and Esc closes it', async ({ page }) => {
 test.describe('phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
 
-  test('the ⋯ menu opens it, worded for touch', async ({ page }) => {
+  test('the ⋯ menu opens it, worded for touch', { tag: '@all-browsers' }, async ({ page }) => {
     await page.goto('/');
     await ready(page);
     await page.getByRole('button', { name: 'Más opciones' }).tap();

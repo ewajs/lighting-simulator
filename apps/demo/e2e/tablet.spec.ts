@@ -44,79 +44,96 @@ test.describe('landscape tablet (1024 × 768, touch)', () => {
   /** With the pendant selected: the right arm of its x (red) arrow. */
   const PENDANT_X_ARROW = { x: 420, y: 346 };
 
-  test('starts with the library collapsed and touch-sized controls', async ({ page }) => {
-    await openDemo(page);
-    await expect(page.locator('lxs-app')).toHaveAttribute('library-collapsed', '');
-    const viewButton = page.getByRole('button', { name: 'Planta', exact: true });
-    expect((await viewButton.boundingBox())!.height).toBeGreaterThanOrEqual(40);
-    await expect(page).toHaveScreenshot('tablet-landscape.png');
-  });
+  test(
+    'starts with the library collapsed and touch-sized controls',
+    { tag: '@all-browsers' },
+    async ({ page }) => {
+      await openDemo(page);
+      await expect(page.locator('lxs-app')).toHaveAttribute('library-collapsed', '');
+      const viewButton = page.getByRole('button', { name: 'Planta', exact: true });
+      expect((await viewButton.boundingBox())!.height).toBeGreaterThanOrEqual(40);
+      await expect(page).toHaveScreenshot('tablet-landscape.png');
+    },
+  );
 
-  test('tap selects, long press adds to the selection', async ({ page, browserName }) => {
-    // Long press is driven through Chrome's DevTools protocol, which WebKit doesn't have.
-    test.skip(browserName !== 'chromium', 'needs CDP touch events');
+  test(
+    'tap selects, long press adds to the selection',
+    { tag: '@all-browsers' },
+    async ({ page, browserName }) => {
+      // Long press is driven through Chrome's DevTools protocol, which WebKit doesn't have.
+      test.skip(browserName !== 'chromium', 'needs CDP touch events');
 
-    await openDemo(page);
-    await page.touchscreen.tap(PENDANT.x, PENDANT.y);
-    await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
-    await longPress(page, WALL_LIGHT.x, WALL_LIGHT.y);
-    await expect(selectedCount(page)).toHaveText('Seleccionadas: 2');
-    await expect(page.getByText('2 luminarias seleccionadas')).toBeVisible();
-  });
+      await openDemo(page);
+      await page.touchscreen.tap(PENDANT.x, PENDANT.y);
+      await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+      await longPress(page, WALL_LIGHT.x, WALL_LIGHT.y);
+      await expect(selectedCount(page)).toHaveText('Seleccionadas: 2');
+      await expect(page.getByText('2 luminarias seleccionadas')).toBeVisible();
+    },
+  );
 
-  test('a finger on a fixture moves it instead of orbiting', async ({ page, browserName }) => {
-    // Touch drags are driven through Chrome's DevTools protocol, which WebKit doesn't have.
-    test.skip(browserName !== 'chromium', 'needs CDP touch events');
+  test(
+    'a finger on a fixture moves it instead of orbiting',
+    { tag: '@all-browsers' },
+    async ({ page, browserName }) => {
+      // Touch drags are driven through Chrome's DevTools protocol, which WebKit doesn't have.
+      test.skip(browserName !== 'chromium', 'needs CDP touch events');
 
-    await openDemo(page);
-    await page.touchscreen.tap(PENDANT.x, PENDANT.y);
-    const x = page.getByRole('textbox', { name: 'X' });
-    await expect(x).toHaveValue('0,00');
-    await expect(page).toHaveScreenshot('tablet-pendant-selected.png');
+      await openDemo(page);
+      await page.touchscreen.tap(PENDANT.x, PENDANT.y);
+      const x = page.getByRole('textbox', { name: 'X' });
+      await expect(x).toHaveValue('0,00');
+      await expect(page.locator('lxs-viewport')).toHaveScreenshot('tablet-pendant-selected.png');
 
-    await touchDrag(page, PENDANT, { x: PENDANT.x + 120, y: PENDANT.y });
-    await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
-    await expect(x).not.toHaveValue('0,00');
-    // Undo restores the same image: the camera stayed where it was.
-    await page.getByRole('button', { name: 'Deshacer' }).tap();
-    await expect(x).toHaveValue('0,00');
-    await expect(page).toHaveScreenshot('tablet-pendant-selected.png');
-  });
+      await touchDrag(page, PENDANT, { x: PENDANT.x + 120, y: PENDANT.y });
+      await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+      await expect(x).not.toHaveValue('0,00');
+      // Undo restores the same image: the camera stayed where it was.
+      await page.getByRole('button', { name: 'Deshacer' }).tap();
+      await expect(x).toHaveValue('0,00');
+      await expect(page.locator('lxs-viewport')).toHaveScreenshot('tablet-pendant-selected.png');
+    },
+  );
 
-  test('a finger slides the move handle', async ({ page, browserName }) => {
-    // Touch drags are driven through Chrome's DevTools protocol, which WebKit doesn't have.
-    test.skip(browserName !== 'chromium', 'needs CDP touch events');
+  test(
+    'a finger slides the move handle',
+    { tag: '@all-browsers' },
+    async ({ page, browserName }) => {
+      // Touch drags are driven through Chrome's DevTools protocol, which WebKit doesn't have.
+      test.skip(browserName !== 'chromium', 'needs CDP touch events');
 
-    await openDemo(page);
-    await page.touchscreen.tap(PENDANT.x, PENDANT.y);
-    await touchDrag(page, PENDANT_X_ARROW, { x: PENDANT_X_ARROW.x + 80, y: PENDANT_X_ARROW.y });
-    await expect(page.getByRole('textbox', { name: 'X' })).not.toHaveValue('0,00');
-    await expect(page.getByRole('textbox', { name: 'Z' })).toHaveValue('0,00');
-    await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
-  });
+      await openDemo(page);
+      await page.touchscreen.tap(PENDANT.x, PENDANT.y);
+      await touchDrag(page, PENDANT_X_ARROW, { x: PENDANT_X_ARROW.x + 80, y: PENDANT_X_ARROW.y });
+      await expect(page.getByRole('textbox', { name: 'X' })).not.toHaveValue('0,00');
+      await expect(page.getByRole('textbox', { name: 'Z' })).toHaveValue('0,00');
+      await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+    },
+  );
 
-  test('tapping a product adds it; long press on a list row toggles it', async ({
-    page,
-    browserName,
-  }) => {
-    // Long press is driven through Chrome's DevTools protocol, which WebKit doesn't have.
-    test.skip(browserName !== 'chromium', 'needs CDP touch events');
+  test(
+    'tapping a product adds it; long press on a list row toggles it',
+    { tag: '@all-browsers' },
+    async ({ page, browserName }) => {
+      // Long press is driven through Chrome's DevTools protocol, which WebKit doesn't have.
+      test.skip(browserName !== 'chromium', 'needs CDP touch events');
 
-    await openDemo(page);
-    await page.getByRole('tab', { name: 'Catálogo' }).tap();
-    await page.getByRole('button', { name: /Lámpara de mesa 5 W/ }).tap();
-    await expect(page.getByText('Luminarias: 6')).toBeVisible();
-    await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
+      await openDemo(page);
+      await page.getByRole('tab', { name: 'Catálogo' }).tap();
+      await page.getByRole('button', { name: /Lámpara de mesa 5 W/ }).tap();
+      await expect(page.getByText('Luminarias: 6')).toBeVisible();
+      await expect(selectedCount(page)).toHaveText('Seleccionadas: 1');
 
-    await page.getByRole('tab', { name: 'Escena' }).tap();
-    const row = page.getByRole('option', {
-      name: /Colgante lineal directo\/indirecto 47 W \(IES\) 1/,
-    });
-    const box = (await row.boundingBox())!;
-    await longPress(page, box.x + box.width / 2, box.y + box.height / 2);
-    await expect(row).toHaveAttribute('aria-selected', 'true');
-    await expect(selectedCount(page)).toHaveText('Seleccionadas: 2');
-  });
+      await page.getByRole('tab', { name: 'Escena' }).tap();
+      const row = page.getByRole('option', {
+        name: /Colgante lineal directo\/indirecto 47 W \(IES\) 1/,
+      });
+      const box = (await row.boundingBox())!;
+      await longPress(page, box.x + box.width / 2, box.y + box.height / 2);
+      await expect(row).toHaveAttribute('aria-selected', 'true');
+      await expect(selectedCount(page)).toHaveText('Seleccionadas: 2');
+    },
+  );
 });
 
 test.describe('portrait tablet (820 × 1180, touch)', () => {
@@ -124,26 +141,28 @@ test.describe('portrait tablet (820 × 1180, touch)', () => {
   const PENDANT = { x: 434, y: 536 };
   const EMPTY_SPACE = { x: 420, y: 250 };
 
-  test('the inspector sheet starts folded, opens on selection and folds when cleared', async ({
-    page,
-  }) => {
-    await openDemo(page);
-    const header = page.getByRole('button', { name: 'Ambiente' });
-    await expect(header).toHaveAttribute('aria-expanded', 'false');
-    await expect(page.getByRole('textbox', { name: 'Ancho' })).toBeHidden();
+  test(
+    'the inspector sheet starts folded, opens on selection and folds when cleared',
+    { tag: '@all-browsers' },
+    async ({ page }) => {
+      await openDemo(page);
+      const header = page.getByRole('button', { name: 'Ambiente' });
+      await expect(header).toHaveAttribute('aria-expanded', 'false');
+      await expect(page.getByRole('textbox', { name: 'Ancho' })).toBeHidden();
 
-    await page.touchscreen.tap(PENDANT.x, PENDANT.y);
-    await expect(page.getByRole('button', { name: 'Luminaria' })).toHaveAttribute(
-      'aria-expanded',
-      'true',
-    );
-    await expect(page.getByRole('slider', { name: 'Atenuación' })).toBeVisible();
-    await expect(page).toHaveScreenshot('tablet-portrait-sheet-open.png');
+      await page.touchscreen.tap(PENDANT.x, PENDANT.y);
+      await expect(page.getByRole('button', { name: 'Luminaria' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+      );
+      await expect(page.getByRole('slider', { name: 'Atenuación' })).toBeVisible();
+      await expect(page).toHaveScreenshot('tablet-portrait-sheet-open.png');
 
-    await page.touchscreen.tap(EMPTY_SPACE.x, EMPTY_SPACE.y);
-    await expect(header).toHaveAttribute('aria-expanded', 'false');
+      await page.touchscreen.tap(EMPTY_SPACE.x, EMPTY_SPACE.y);
+      await expect(header).toHaveAttribute('aria-expanded', 'false');
 
-    await header.tap();
-    await expect(page.getByRole('textbox', { name: 'Ancho' })).toBeVisible();
-  });
+      await header.tap();
+      await expect(page.getByRole('textbox', { name: 'Ancho' })).toBeVisible();
+    },
+  );
 });

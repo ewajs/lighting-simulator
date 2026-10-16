@@ -9,3 +9,6 @@ playwright-report
 
 # VitePress build cache
 .vitepress/cache
+
+# Unit test coverage reports (npm run coverage)
+coverage/

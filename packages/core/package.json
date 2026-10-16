@@ -8,7 +8,8 @@
   },
   "scripts": {
     "typecheck": "tsc -p .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "coverage": "vitest run --coverage --coverage.include='src/**/*.ts' --coverage.exclude='src/**/*.test.ts' --coverage.exclude='src/generated/**' --coverage.exclude='src/dev/**' --coverage.reporter=text-summary --coverage.reporter=html"
   },
   "dependencies": {
     "three": "0.186.1"

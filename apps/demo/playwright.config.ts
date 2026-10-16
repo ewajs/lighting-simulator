@@ -31,12 +31,20 @@ export default defineConfig<SuiteOptions>({
     contextOptions: { reducedMotion: 'reduce' },
   },
   projects: [
-    // System Chrome with WebGPU, like most desktop users.
+    // System Chrome with WebGPU, like most desktop users: every test.
     { name: 'chrome', use: { channel: 'chrome' } },
+    // The other two run only tests tagged @all-browsers: those whose outcome
+    // depends on rendering, pointer and touch input, or the browser engine.
+    // UI logic (files, share links, the catalog, the inspector) behaves the
+    // same everywhere, so it runs once.
     // The same Chrome on three.js's WebGL 2 fallback.
-    { name: 'chrome-webgl2', use: { channel: 'chrome', disableWebGPU: true } },
+    {
+      name: 'chrome-webgl2',
+      use: { channel: 'chrome', disableWebGPU: true },
+      grep: /@all-browsers/,
+    },
     // Safari's engine (iPhone, iPad, Mac); it has no WebGPU here, so this also runs on WebGL 2.
-    { name: 'webkit', use: { browserName: 'webkit' } },
+    { name: 'webkit', use: { browserName: 'webkit' }, grep: /@all-browsers/ },
   ],
   expect: {
     // Refreshing a baseline takes two identical captures in a row; WebKit

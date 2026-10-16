@@ -20,17 +20,21 @@ const hiddenScene = (page: Page) => page.locator('lxs-viewport .canvas.hidden');
 const pill = (page: Page) => page.locator('lxs-viewport .pill');
 const lights = (page: Page) => page.getByText(/^\d+ luces, \d+ con sombras$/);
 
-test('the page shows its loader until the scene is drawn with its IES files', async ({ page }) => {
-  const release = await holdBack(page, '**/ies/*.ies');
-  await page.goto('/');
-  await expect(page.locator('lxs-viewport canvas')).toBeAttached();
-  await page.waitForTimeout(500);
-  await expect(page.locator('#splash')).toBeVisible();
-  await expect(hiddenScene(page)).toHaveCount(1);
-  release();
-  await ready(page);
-  await expect(hiddenScene(page)).toHaveCount(0);
-});
+test(
+  'the page shows its loader until the scene is drawn with its IES files',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    const release = await holdBack(page, '**/ies/*.ies');
+    await page.goto('/');
+    await expect(page.locator('lxs-viewport canvas')).toBeAttached();
+    await page.waitForTimeout(500);
+    await expect(page.locator('#splash')).toBeVisible();
+    await expect(hiddenScene(page)).toHaveCount(1);
+    release();
+    await ready(page);
+    await expect(hiddenScene(page)).toHaveCount(0);
+  },
+);
 
 test('a luminaire appears once its IES file is in, with a spinner meanwhile', async ({ page }) => {
   // Starts from an autosaved room with one plain downlight, so no IES file is loaded yet.
@@ -78,23 +82,27 @@ test('a luminaire appears once its IES file is in, with a spinner meanwhile', as
   await expect(pill(page)).toHaveCount(0);
 });
 
-test('a new floor keeps the old one’s look until its texture is in', async ({ page }) => {
-  await page.goto('/');
-  await ready(page);
-  const release = await holdBack(page, '**/textures/stone-tiles.jpg');
-  await page
-    .locator('lxs-room-inspector section')
-    .filter({ has: page.getByRole('heading', { name: 'Piso' }) })
-    .getByRole('button', { name: 'Baldosas de piedra' })
-    .click();
-  await expect(pill(page)).toHaveText('Cargando…');
-  // Still oak, not a plain colour: the same picture as before the click.
-  await expect(page.locator('lxs-viewport')).toHaveScreenshot('floor-waiting.png', {
-    mask: [pill(page)],
-  });
-  release();
-  await expect(pill(page)).toHaveCount(0);
-});
+test(
+  'a new floor keeps the old one’s look until its texture is in',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    await page.goto('/');
+    await ready(page);
+    const release = await holdBack(page, '**/textures/stone-tiles.jpg');
+    await page
+      .locator('lxs-room-inspector section')
+      .filter({ has: page.getByRole('heading', { name: 'Piso' }) })
+      .getByRole('button', { name: 'Baldosas de piedra' })
+      .click();
+    await expect(pill(page)).toHaveText('Cargando…');
+    // Still oak, not a plain colour: the same picture as before the click.
+    await expect(page.locator('lxs-viewport')).toHaveScreenshot('floor-waiting.png', {
+      mask: [pill(page)],
+    });
+    release();
+    await expect(pill(page)).toHaveCount(0);
+  },
+);
 
 test('a template whose files aren’t in yet opens hidden, behind a spinner', async ({ page }) => {
   await page.goto('/');

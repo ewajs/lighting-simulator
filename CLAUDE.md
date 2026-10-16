@@ -37,16 +37,21 @@ npm run dev           demo dev server (apps/demo)
 npm run build         production build of the demo → apps/demo/dist
 npm run lint          ESLint (type-aware, plus the boundary rule)
 npm run typecheck     tsc in every workspace
-npm test              Vitest in every workspace
-npm run test:e2e      Playwright e2e on chrome, chrome-webgl2 and webkit (local only;
-                      add `-- --project chrome` for a quick run; ADR 0032)
+npm test              Vitest in every workspace (seconds)
+npm run coverage      unit test coverage over all source files, per workspace
+                      (HTML report in each workspace's coverage/)
+npm run test:e2e      Playwright e2e: every test on chrome, @all-browsers tests
+                      also on chrome-webgl2 and webkit (local only; ADRs 0032, 0056)
+npm run test:e2e:quick   the e2e suite on chrome only (~1 min); add spec files
+                      to run just those, e.g. `-- furniture.spec.ts`
 npm run format        Prettier (Markdown is excluded)
 npm run docs          docs site (TypeDoc) → apps/demo/dist/docs; fails on an
                       undocumented export or a broken link
 npm run manual        user manual (VitePress) → apps/demo/dist/manual
 npm run manual:dev    user manual with hot reload
 npm run manual:screenshots   retake the manual's screenshots from the demo,
-                      in both languages; run after UI changes and commit them
+                      in both languages; `npm run screenshots -w apps/manual --
+                      --grep "<name>"` retakes just some
 npm run i18n:extract  collect msg() strings into packages/ui/xliff/
 npm run i18n:build    regenerate locale modules after editing the XLIFF
 npm run i18n:check    fail if any UI string lacks a translation
@@ -54,10 +59,42 @@ npm run i18n:check    fail if any UI string lacks a translation
 
 CI runs `format:check`, lint, typecheck, test, build, docs and manual on every PR. Run
 them locally before opening one, plus `test:e2e` (CI doesn't run it, ADR 0015).
-When rendering changes on purpose, refresh the screenshot baselines with
-`npm run test:e2e -- --update-snapshots=all` (plain `--update-snapshots` skips
-images within the tolerance, which can leave stale baselines) and review the
-new images in the PR. Run `npm run i18n:build` first if translations changed.
+Run `npm run i18n:build` first if translations changed.
+
+### Running tests while working (ADR 0056)
+
+- **While working:** `npm test`, plus the e2e specs for the area changed,
+  on chrome: `npm run test:e2e:quick -- <spec files>`.
+- **Before opening the PR:** the full `npm run test:e2e`, **once**. A failure
+  that only shows under the full run's load gets one rerun of that test
+  before being treated as real.
+- **Baselines:** refresh only what changed on purpose, with
+  `--update-snapshots=changed` on the affected specs, and look at each new
+  image. Never `=all`: it rewrites every image and buries real changes in
+  re-encoding noise.
+- **The manual's screenshots:** retake only the captures whose subject
+  changed, with `--grep`.
+
+| Area changed | e2e specs |
+|---|---|
+| Catalog, inspector, room panel, top bar, shortcuts, i18n | `smoke`, `surfaces` |
+| Selection, dragging, handles, snapping, distances | `manipulation` |
+| Furniture | `furniture` |
+| IES files, lights, models, rendering | `smoke`, `models`, `ies-import` |
+| Loading, assets, providers | `loading`, `models` |
+| Files, templates, autosave, share links | `scene-files`, `new-and-autosave`, `share` |
+| Help | `help` |
+| Phone and tablet layouts, touch | `phone`, `tablet` |
+
+### Writing e2e tests
+
+- Tag a test `{ tag: '@all-browsers' }` when its outcome depends on
+  rendering, pointer or touch input, or the browser engine; it then also
+  runs on WebGL 2 and WebKit. UI logic runs on chrome only.
+- Screenshot only what the test is about: the 3D view as
+  `page.locator('lxs-viewport')`, a panel as its element. Whole-page
+  screenshots are for layout tests only, so a change to the top bar or a
+  panel doesn't touch dozens of baselines.
 
 ## Data boundary
 
