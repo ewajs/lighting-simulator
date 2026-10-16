@@ -22,6 +22,9 @@ Scenes save themselves, and go to files or share links.
   (`<lxs-app>`), in `es-AR` and `en`.
 - **`apps/demo`:** the reference integration, with sample data. It's deployed
   to the link above.
+- **`accuracy/`:** how close Lux Studio's lux numbers are to Radiance, an
+  independent lighting simulator: reference rooms, the Python that makes the
+  references, and the comparison ([report](accuracy/REPORT.md)).
 
 ## Status
 

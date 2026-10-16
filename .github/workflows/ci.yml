@@ -6,6 +6,9 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      # Fail if accuracy/python/uv.lock is out of date, instead of updating it.
+      UV_LOCKED: '1'
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -13,6 +16,8 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      # Python for the accuracy checks and their docs, pinned by accuracy/python/uv.lock.
+      - uses: astral-sh/setup-uv@v10
       - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck
@@ -22,6 +27,9 @@ jobs:
       - run: npm run docs
       # The user manual: fails on a dead link.
       - run: npm run manual
+      # The accuracy checks' Python (ADR 0058): lint, docstrings, types and tests.
+      # Radiance runs on macOS only, so its tests skip here, saying so.
+      - run: npm run accuracy:check
       # Every UI string translated, and committed translations/generated code up to date.
       - run: npm run i18n:check
       - run: git diff --exit-code

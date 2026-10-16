@@ -21,6 +21,9 @@ packages/core   headless engine: scene model, photometry (IES), lighting,
 packages/ui     optional Lit web components built on core.
 apps/demo       uses core + ui, provides sample data, deploys to GitHub Pages.
 apps/manual     the user manual (VitePress, es-AR and en), served at /manual.
+accuracy/       Lux Studio's lux against Radiance (ADR 0058): python/ (uv
+                project) checks Radiance and writes references/;
+                typescript/ (npm workspace) compares; REPORT.md
 docs/           spec, design system, decisions (ADRs)
 ```
 
@@ -45,6 +48,11 @@ npm run mutation-check -w packages/core   plants known mistakes in the
                       (ADR 0057). Run after changing analysis/ or the frame
 npm run bench -w packages/core   times a furnished room's illuminance
                       calculation, bundled as the app ships it
+npm run accuracy:check        the accuracy Python: ruff (with docstrings),
+                      mypy strict, pytest (Radiance tests run on macOS only)
+npm run accuracy:references   check Radiance, regenerate accuracy/references
+                      and accuracy/REPORT.md; after changing a room or the maths
+npm run accuracy:docs         the Python's docs (pdoc), live
 npm run test:e2e      Playwright e2e: every test on chrome, @all-browsers tests
                       also on chrome-webgl2 and webkit (local only; ADRs 0032, 0056)
 npm run test:e2e:quick   the e2e suite on chrome only (~1 min); add spec files
@@ -86,7 +94,7 @@ Run `npm run i18n:build` first if translations changed.
 | Selection, dragging, handles, snapping, distances | `manipulation` |
 | Furniture | `furniture` |
 | IES files, lights, models, rendering | `smoke`, `models`, `ies-import` |
-| Illuminance maths (`analysis/`, `luminaire-frame.ts`) | unit tests, `mutation-check`, and `models` if the renderer's frame changed |
+| Illuminance maths (`analysis/`, `luminaire-frame.ts`) | unit tests (the Radiance comparison is among them), `mutation-check`, and `models` if the renderer's frame changed |
 | Loading, assets, providers | `loading`, `models` |
 | Files, templates, autosave, share links | `scene-files`, `new-and-autosave`, `share` |
 | Help | `help` |
@@ -181,12 +189,23 @@ Run `npm run i18n:build` first if translations changed.
   on, `error` when something fails.
 - The demo's `?debug` URL switch shows debug logs and the diagnostics overlay.
 
+### Python (accuracy/python)
+- Python 3.14 through uv; `uv.lock` committed. Run it through the npm
+  `accuracy:*` commands.
+- Every public module, class and function has a Google-style docstring
+  (ruff enforces it; pdoc publishes them at /docs/accuracy). Types pass
+  mypy --strict. Dataclasses for data, frozen.
+- No throwaway scripts: tools that produce evidence are committed, with
+  their outputs.
+
 ### Dependencies
 - Allowed runtime deps: **core → three**, **ui → core + lit + @lit/localize +
   lucide** (ADRs 0004, 0020, 0023). Anything else
   needs approval and an ADR covering why, bundle size, maintenance health,
   licence (MIT/BSD/Apache-compatible) and the alternatives considered.
 - New dev dependencies also need approval, with a one-line justification in the PR.
+  Python (accuracy/python) has dev dependencies only: ruff, mypy, pytest,
+  pdoc (ADR 0058).
 - Don't add a dependency for something that takes a few clear lines.
 - Commit the lockfile.
 

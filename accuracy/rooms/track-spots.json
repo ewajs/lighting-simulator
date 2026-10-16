@@ -1,0 +1,23 @@
+{
+  "description": "Two narrow track spots (iGuzzini Palco, 17° beam, 2913 lm) hung at 2.5 m, tilted and panned: one onto the floor towards the wall at z = −2, one onto the wall at x = −2.5.",
+  "room": { "width": 5, "depth": 4, "height": 2.7 },
+  "luminaires": [
+    {
+      "ies": "qg63_b35q.ies",
+      "origin": { "x": 1, "y": 2.5, "z": 1 },
+      "tiltDeg": 45,
+      "panDeg": 200
+    },
+    {
+      "ies": "qg63_b35q.ies",
+      "origin": { "x": -1.5, "y": 2.5, "z": -1 },
+      "tiltDeg": 60,
+      "panDeg": -60
+    }
+  ],
+  "grids": [
+    { "surface": "floor", "spacingM": 0.2 },
+    { "surface": "wall-x-", "spacingM": 0.2 },
+    { "surface": "wall-z-", "spacingM": 0.2 }
+  ]
+}

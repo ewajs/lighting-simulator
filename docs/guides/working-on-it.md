@@ -21,6 +21,8 @@ npm run test:e2e      # end-to-end tests (Playwright), all three browser project
 npm run test:e2e:quick -- <specs>   # just those specs, on Chrome
 npm run coverage      # unit-test coverage, into coverage/
 npm run mutation-check -w packages/core   # proves the tests catch known mistakes in the lux maths
+npm run accuracy:check        # the accuracy checks' Python: lint, docstrings, types, tests
+npm run accuracy:references   # regenerate the Radiance references and accuracy/REPORT.md
 npm run docs          # this site, into apps/demo/dist/docs
 npm run manual        # the user manual, into apps/demo/dist/manual
 npm run manual:screenshots   # retake the manual's screenshots after UI changes

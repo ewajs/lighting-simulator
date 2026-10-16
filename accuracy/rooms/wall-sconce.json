@@ -1,0 +1,17 @@
+{
+  "description": "An up/down wall sconce (Visa Colonnade, a 23 × 13 × 51 cm glowing box) on the wall at x = −2.5, its light 0.25 m out from it at 1.8 m: very close to the wall behind it.",
+  "room": { "width": 5, "depth": 4, "height": 2.7 },
+  "luminaires": [
+    {
+      "ies": "CB3326-L35K-H.ies",
+      "origin": { "x": -2.25, "y": 1.8, "z": 0 },
+      "panDeg": 90
+    }
+  ],
+  "grids": [
+    { "surface": "wall-x-", "spacingM": 0.2 },
+    { "surface": "floor", "spacingM": 0.25 },
+    { "surface": "ceiling", "spacingM": 0.25 },
+    { "surface": "wall-z+", "spacingM": 0.25 }
+  ]
+}

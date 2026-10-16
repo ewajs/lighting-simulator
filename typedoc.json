@@ -23,6 +23,7 @@
   "searchInComments": true,
   "navigationLinks": {
     "Demo": "https://ewajs.github.io/lighting-simulator/",
+    "Accuracy (Python)": "https://ewajs.github.io/lighting-simulator/docs/accuracy/",
     "GitHub": "https://github.com/ewajs/lighting-simulator"
   },
   "treatWarningsAsErrors": true

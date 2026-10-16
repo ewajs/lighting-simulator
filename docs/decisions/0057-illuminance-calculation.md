@@ -54,6 +54,9 @@ states its luminous opening, which the parser used to drop.
   cell is a point source with an equal share of the intensity, as DIALux
   and Relux do.
 - Round openings keep the cells whose centres fall inside them.
+- A tall opening is split in height too: a sconce's 51 cm glowing box
+  becomes 6 layers. Without them, Radiance showed points 25 cm away up to
+  60 % off (ADR 0058).
 - The 1.2 m linear pendant becomes 13 sources. 0.6 m below a 1.2 m line
   source, a single point would read 41% too high.
 
@@ -132,37 +135,36 @@ Every check is committed, so it can be rerun as evidence.
    same `light` and `head` nodes as three.js, in a model three.js wrote
    (core) and in all five demo models (the demo).
 4. **A mutation check** (`npm run mutation-check -w packages/core`).
-   - It plants ten plausible mistakes one at a time: a mirrored angle, no
-     cosine, an unsquared distance, cells not sharing intensity, tilt the
-     wrong way, no wall turn, a head's light left behind, no maintenance
-     factor, no furniture shadow, the grid from the wrong side.
+   - It plants eleven plausible mistakes one at a time: a mirrored angle,
+     no cosine, an unsquared distance, cells not sharing intensity, tilt
+     the wrong way, no wall turn, a head's light left behind, tall openings
+     not split in height, no maintenance factor, no furniture shadow, the
+     grid from the wrong side.
    - Each must fail at least one test, and today each fails 1 to 18.
    - It works on a copy of `src/` in a temporary folder, linked to the
      repo's dependencies, never on the repo's files. An interrupted run
      can't leave a planted mistake behind.
+5. **Independent references** (ADR 0058). Radiance 6.0P2 computes five
+   reference rooms from the same IES files, with its own IES reader
+   (`ies2rad`), and Lux Studio must agree: each surface's average within
+   1 %, bright points within 3.5 % (15 % within 1 m of a luminaire).
+   `accuracy/REPORT.md` has the figures. DIALux follows in M5.5, run by the
+   owner from a written guide.
 
 **Where the tests live.**
 - Core's tests prove the maths with made-up data, and are complete on their
   own: the mutation check runs only them.
 - The demo's `assets.test.ts` checks its own files: its IES files' openings,
   and where core finds the light in its models.
-- `analysis-evidence.test.ts` repeats the hand values and conservation with
-  the demo's real manufacturer files. It is evidence rather than a test of
-  the demo, and moves to `validation/` in M5.2a.
+- `accuracy/typescript` repeats the hand values and conservation with the
+  demo's real manufacturer files, next to the Radiance comparison that uses
+  the same files (ADR 0058).
 
 **Measured, not guessed.** `npm run bench -w packages/core` bundles a
 furnished room's calculation with Vite and times it in Node, as the app
 ships it: about 16 ms for 6 luminaires split into 72 sources. Under Vitest
 every import goes through a getter, which doubled the time and would have
 misled.
-5. **Independent references (M5.2).** Radiance 6.0P2 runs reference rooms
-   from the same IES files.
-   - Its own IES reader, `ies2rad`, is independent of ours.
-   - Releases from 2026-02-20 until a fix on 2026-10-15 drop `ies2rad`'s
-     multiplier, making IES lights 1/area too dark: 55× for the demo
-     downlight. So a reference is accepted only if Radiance first
-     reproduces hand-checked points.
-   - Then DIALux (M5.5), run by the owner from a written guide.
 
 ## Options considered
 
@@ -191,7 +193,8 @@ misled.
   - diffuse surfaces only;
   - furniture as boxes, blocking direct light only;
   - estimated distributions for products without IES files;
-  - a luminous opening's height isn't split (sconces, lamp shades).
+  - close to a glowing opening (within about 1 m), a point grid stands for
+    its surface: within 13 % of Radiance there, which models it differently.
 - `apps/demo`'s Vite config lists `.glb` as an asset, so tests can import
   the demo's models.
 - Shared vector maths lives in `math.ts` (`scale`, `length`, `distance`,

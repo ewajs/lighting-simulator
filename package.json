@@ -4,7 +4,8 @@
   "type": "module",
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "apps/*",
+    "accuracy/typescript"
   ],
   "engines": {
     "node": ">=24"
@@ -23,10 +24,14 @@
     "i18n:extract": "npm run i18n:extract -w packages/ui",
     "i18n:build": "npm run i18n:build -w packages/ui",
     "i18n:check": "npm run i18n:check -w packages/ui",
-    "docs": "typedoc",
+    "docs": "typedoc && uv run --directory accuracy/python pdoc luxstudio_accuracy --docformat google --footer-text 'Lux Studio accuracy' -o ../../apps/demo/dist/docs/accuracy",
     "manual": "npm run build -w apps/manual",
     "manual:dev": "npm run dev -w apps/manual",
-    "manual:screenshots": "npm run screenshots -w apps/manual"
+    "manual:screenshots": "npm run screenshots -w apps/manual",
+    "accuracy:check": "cd accuracy/python && uv run ruff check && uv run ruff format --check && uv run mypy && uv run pytest",
+    "accuracy:references": "uv run --directory accuracy/python accuracy references && npm run accuracy:report",
+    "accuracy:report": "npm run report -w accuracy/typescript",
+    "accuracy:docs": "uv run --directory accuracy/python pdoc luxstudio_accuracy --docformat google"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

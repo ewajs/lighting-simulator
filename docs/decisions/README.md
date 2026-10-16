@@ -61,3 +61,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0055 | [Help redesign, and panels that slide](0055-help-redesign-and-panel-motion.md) | Accepted |
 | 0056 | [Leaner test runs: tests where they matter, screenshots of their subject](0056-leaner-test-runs.md) | Accepted |
 | 0057 | [How illuminance is calculated, and how we know it's right](0057-illuminance-calculation.md) | Accepted |
+| 0058 | [Accuracy checks: Lux Studio against Radiance](0058-accuracy-checks.md) | Accepted |

@@ -140,8 +140,12 @@ is read from the .glb file by `glb.ts`.
 The tests check the maths against values worked out by hand, check that
 every lumen a luminaire emits lands somewhere in the room, and check the
 renderer and the calculation against each other.
-`npm run mutation-check -w packages/core` plants ten plausible mistakes and
-shows that the tests catch each one.
+`npm run mutation-check -w packages/core` plants eleven plausible mistakes
+and shows that the tests catch each one. Beyond the maths,
+[`accuracy/`](https://github.com/ewajs/lighting-simulator/tree/master/accuracy)
+compares the results with Radiance, an independent simulator, in five
+reference rooms ([ADR 0058](../decisions/0058-accuracy-checks.md)); its
+Python is documented at [/docs/accuracy](https://ewajs.github.io/lighting-simulator/docs/accuracy/).
 
 ## The UI
 

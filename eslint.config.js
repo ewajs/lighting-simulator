@@ -9,7 +9,15 @@ const appsImport = {
 };
 
 export default defineConfig(
-  { ignores: ['**/dist/**', '**/.bench/**', 'packages/ui/src/generated/**'] },
+  {
+    ignores: [
+      '**/dist/**',
+      '**/.bench/**',
+      '**/.report/**',
+      'accuracy/python/**',
+      'packages/ui/src/generated/**',
+    ],
+  },
   js.configs.recommended,
   tseslint.configs.recommendedTypeChecked,
   {
