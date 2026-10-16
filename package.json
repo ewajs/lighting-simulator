@@ -19,7 +19,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test:e2e": "playwright test -c apps/demo",
-    "test:e2e:quick": "playwright test -c apps/demo --project chrome",
+    "test:e2e:quick": "playwright test -c apps/demo --project=chrome",
     "i18n:extract": "npm run i18n:extract -w packages/ui",
     "i18n:build": "npm run i18n:build -w packages/ui",
     "i18n:check": "npm run i18n:check -w packages/ui",

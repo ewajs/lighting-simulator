@@ -2,7 +2,7 @@ import { expect, ready, test, type Page } from './fixtures';
 
 // Screen points at the fixed 1280×800 viewport (playwright.config.ts) with the
 // default perspective view. If the layout or camera changes, update these and
-// refresh the baselines with `npm run test:e2e -- --update-snapshots=all`.
+// refresh the baselines with `npm run test:e2e -- --update-snapshots=changed`.
 const PENDANT = { x: 642, y: 356 };
 const WALL_LIGHT = { x: 845, y: 437 };
 const EMPTY_SPACE = { x: 380, y: 150 };
@@ -292,6 +292,45 @@ test(
     await page.getByRole('button', { name: 'Plan', exact: true }).click();
     await expect(page).toHaveScreenshot('light-en-collapsed-plan.png');
     expect(errors).toEqual([]);
+  },
+);
+
+/**
+ * Presses a top bar button and reports, two frames later, whether `panel` is
+ * still showing on screen: true while it slides out, false once it's gone.
+ */
+function stillShowingAfter(page: Page, button: string, panel: 'catalog' | 'inspector') {
+  return page.locator('lxs-app').evaluate(
+    async (app, { button, panel }) => {
+      const root = app.shadowRoot!;
+      const topBar = root.querySelector('lxs-top-bar')!.shadowRoot!;
+      topBar.querySelector<HTMLButtonElement>(`button[aria-label="${button}"]`)!.click();
+      for (let frame = 0; frame < 2; frame++) await new Promise(requestAnimationFrame);
+      const element =
+        panel === 'catalog'
+          ? root.querySelector('lxs-library')!.shadowRoot!.querySelector('lxs-catalog-panel')
+          : root.querySelector('lxs-inspector');
+      if (!element?.checkVisibility({ visibilityProperty: true })) return false;
+      const { left, right } = element.getBoundingClientRect();
+      return panel === 'catalog' ? right > 48 : left < innerWidth;
+    },
+    { button, panel },
+  );
+}
+
+test(
+  'side panels slide out before they hide, and hide at once with reduced motion',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    for (const motion of ['no-preference', 'reduce'] as const) {
+      await page.emulateMedia({ reducedMotion: motion });
+      await openDemo(page);
+      const sliding = motion === 'no-preference';
+      expect(await stillShowingAfter(page, 'Mostrar biblioteca', 'catalog')).toBe(sliding);
+      await expect(page.locator('lxs-catalog-panel')).toBeHidden();
+      expect(await stillShowingAfter(page, 'Mostrar propiedades', 'inspector')).toBe(sliding);
+      await expect(page.locator('lxs-inspector')).toBeHidden();
+    }
   },
 );
 

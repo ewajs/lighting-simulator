@@ -18,9 +18,9 @@ and data (the false-colour scale).
 4. **Numbers are first-class.** Tabular figures, units always shown, monospace
    for live readouts. Formatting follows the active locale: `2,70 m` in
    `es-AR`, `2.70 m` in `en`.
-5. **Nothing moves without reason.** 120–200 ms ease-out transitions on
-   panels and hovers only: side panels ease open, sheets and dialogs slide
-   or fade in and out, notices rise ([ADR 0055](./decisions/0055-help-redesign-and-panel-motion.md)).
+5. **Nothing moves without reason.** Ease-out transitions on panels and
+   hovers only: side panels and sheets slide in and out (250 ms), dialogs
+   fade, notices rise (120–200 ms) ([ADR 0055](./decisions/0055-help-redesign-and-panel-motion.md)).
    No decorative animation.
 
 ## Theming
@@ -64,7 +64,7 @@ CSS variables. Below, token names are listed without the prefix.
 | Space | `--sp-1 … --sp-8` (4 px steps) |
 | Shape | `--r-sm` 4, `--r-md` 6, `--r-lg` 10, `--shadow` |
 | Layout | `--topbar-h` 48, `--statusbar-h` 28, `--panel-w` 304, `--inspector-w` 300, `--control-h` 32, `--icon-btn` 36, `--segment-h` 26, `--chip-h` 24 (the last four grow towards 44 px on touch screens) |
-| Motion | `--ease`, `--t-fast` 120 ms, `--t-med` 200 ms (0 under `prefers-reduced-motion`) |
+| Motion | `--ease`, `--t-fast` 120 ms, `--t-med` 200 ms, `--t-panel` 250 ms for panels and sheets (all 0 under `prefers-reduced-motion`) |
 
 **Fonts:** a system UI stack by default (`Inter` if installed). Hosts change
 `--font-ui` / `--font-mono` to use their own fonts.

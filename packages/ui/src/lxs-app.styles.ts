@@ -20,11 +20,13 @@ export const appStyles = css`
     touch-action: pan-x pan-y;
     font: var(--lxs-fs-md) / 1.45 var(--lxs-font-ui);
     -webkit-font-smoothing: antialiased;
+    /* A closing inspector slides out past the right edge. */
+    overflow: clip;
   }
   /* Side panels ease open and closed, once the first layout is in place: an
      animated start would frame the 3D view mid-slide. */
   :host([panel-motion]) {
-    transition: grid-template-columns var(--lxs-t-med) var(--lxs-ease);
+    transition: grid-template-columns var(--lxs-t-panel) var(--lxs-ease);
   }
   :host([library-collapsed]) {
     --lxs-left-w: 48px;
@@ -32,19 +34,29 @@ export const appStyles = css`
   :host([inspector-collapsed]) {
     --lxs-right-w: 0px;
   }
-  :host([inspector-collapsed]) .inspector {
-    display: none;
-  }
   lxs-top-bar {
     grid-area: top;
   }
   lxs-library {
     grid-area: left;
-    border-right: 1px solid var(--lxs-line);
   }
   .inspector {
     grid-area: right;
     border-left: 1px solid var(--lxs-line);
+  }
+  /* The inspector keeps its width while its column eases shut, so it slides
+     out rather than squeezing, and hides once out of sight. */
+  @media (min-width: 901px) {
+    .inspector {
+      justify-self: start;
+      box-sizing: border-box;
+      width: 100%;
+      min-width: var(--lxs-inspector-w);
+    }
+    :host([inspector-collapsed]) .inspector {
+      visibility: hidden;
+      transition: visibility 0s var(--lxs-t-panel);
+    }
   }
   .stage {
     grid-area: viewport;
@@ -90,6 +102,9 @@ export const appStyles = css`
     .stage {
       /* Keeps floating controls above the collapsed sheet: header + margins. */
       --lxs-stage-inset-bottom: calc(44px + 2 * var(--lxs-sp-2));
+    }
+    :host([inspector-collapsed]) .inspector {
+      display: none;
     }
     .inspector {
       grid-area: viewport;

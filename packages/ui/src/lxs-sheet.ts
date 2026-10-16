@@ -30,7 +30,7 @@ export class LxsSheet extends LitElement {
         border-radius: var(--lxs-r-lg) var(--lxs-r-lg) 0 0;
         box-shadow: var(--lxs-shadow);
         overflow: hidden;
-        animation: rise var(--lxs-t-med) var(--lxs-ease);
+        animation: rise var(--lxs-t-panel) var(--lxs-ease);
       }
       :host([side]) {
         animation-name: arrive;
@@ -63,12 +63,14 @@ export class LxsSheet extends LitElement {
         flex: 1;
         min-height: 0;
       }
-      /* A short slide and fade: noticeable, not a whoosh. leave() plays it backwards. */
+      /* A short slide and fade: noticeable, not a whoosh. leave() mirrors it,
+         with keyframes of their own: reusing the arrival's name would only
+         update that finished animation, and nothing would play. */
       :host([leaving]) {
-        animation: rise var(--lxs-t-fast) ease-in reverse forwards;
+        animation: sink var(--lxs-t-panel) ease-in forwards;
       }
       :host([side][leaving]) {
-        animation-name: arrive;
+        animation-name: depart;
       }
       @keyframes rise {
         from {
@@ -78,6 +80,18 @@ export class LxsSheet extends LitElement {
       }
       @keyframes arrive {
         from {
+          transform: translateX(24px);
+          opacity: 0;
+        }
+      }
+      @keyframes sink {
+        to {
+          transform: translateY(24px);
+          opacity: 0;
+        }
+      }
+      @keyframes depart {
+        to {
           transform: translateX(24px);
           opacity: 0;
         }
