@@ -298,10 +298,6 @@
   <source>Render mode</source>
   <target>Modo de visualización</target>
 </trans-unit>
-<trans-unit id="s392f667420703599">
-  <source>Coming soon</source>
-  <target>Próximamente</target>
-</trans-unit>
 <trans-unit id="s62d50a44609285f6">
   <source>Illuminance</source>
   <target>Iluminancia</target>
@@ -1002,6 +998,18 @@
 <trans-unit id="s407df2ba980f0824">
   <source>Work plane border</source>
   <target>Borde del plano de trabajo</target>
+</trans-unit>
+<trans-unit id="scc4a4b3e781de324">
+  <source>No luminaires to calculate.</source>
+  <target>No hay luminarias para calcular.</target>
+</trans-unit>
+<trans-unit id="s1b3a3c50a93313d9">
+  <source>Illuminance (lx)</source>
+  <target>Iluminancia (lx)</target>
+</trans-unit>
+<trans-unit id="s1772719ac2f6f0d6">
+  <source>False-colour scale from 0 to 2000 lx</source>
+  <target>Escala de colores falsos de 0 a 2000 lx</target>
 </trans-unit>
 </body>
 </file>

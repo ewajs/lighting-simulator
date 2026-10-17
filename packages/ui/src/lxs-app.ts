@@ -337,6 +337,7 @@ export class LxsApp extends LitElement {
       .snapping=${this.snapping}
       .diagnostics=${this.diagnostics}
       .renderMode=${this.renderMode}
+      .illuminance=${this.#analysis.state.analysis}
       .exposureEv=${this.exposureEv}
       @lxs-pick=${this.#onPick}
       @lxs-move-start=${({ detail }: CustomEvent<MoveStartEvent>) =>
@@ -507,6 +508,7 @@ export class LxsApp extends LitElement {
       .renderMode=${this.renderMode}
       .view=${this.view}
       .exposureEv=${this.exposureEv}
+      legend-note=${this.#legendNote()}
       @lxs-tool-change=${({ detail }: CustomEvent<{ tool: EditTool }>) => (this.tool = detail.tool)}
       @lxs-snapping-change=${({ detail }: CustomEvent<{ snapping: boolean }>) =>
         (this.snapping = detail.snapping)}
@@ -619,12 +621,22 @@ export class LxsApp extends LitElement {
   }
 
   protected override updated(): void {
-    // The analysis runs only while its results are on screen.
-    this.#analysis.setVisible(
-      this.phone
-        ? this.phoneTab === 'analysis'
-        : !this.libraryCollapsed && this.libraryTab === 'analysis',
-    );
+    // The analysis runs only while its results are on screen: in its panel,
+    // or drawn in the illuminance view.
+    const panelOpen = this.phone
+      ? this.phoneTab === 'analysis'
+      : !this.libraryCollapsed && this.libraryTab === 'analysis';
+    this.#analysis.setVisible(panelOpen || this.renderMode === 'illuminance');
+  }
+
+  /** Under the illuminance view's legend: how current the map is. */
+  #legendNote(): string {
+    const { state } = this.#analysis;
+    if ((this.scene?.luminaires.length ?? 0) === 0) return msg('No luminaires to calculate.');
+    if (state.calculating) return msg('Calculating…');
+    if (state.error) return msg('Calculation failed');
+    if (!state.analysis || state.stale) return msg('Out of date');
+    return '';
   }
 
   async #applyLocale(locale: Locale, announce: boolean): Promise<void> {

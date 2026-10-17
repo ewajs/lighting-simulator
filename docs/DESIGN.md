@@ -70,8 +70,10 @@ CSS variables. Below, token names are listed without the prefix.
 `--font-ui` / `--font-mono` to use their own fonts.
 
 **False-colour scale** (`--heat-*`): a perceptually ordered scale, dark
-blue → cyan → green → yellow → orange → red → white, mapped on a log scale
-from 0 to 2000 lx by default. The legend always shows the scale and the range.
+blue → cyan → green → yellow → orange → red → white, at 0, 50, 100, 200, 300,
+500, 1000 and 2000 lx (roughly logarithmic; ADR 0066). Core's
+`FALSE_COLOUR_STOPS` is the same table, which the 3D view and the legend
+read. The legend always shows the scale and the range.
 
 ## Layout
 

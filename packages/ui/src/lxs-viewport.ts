@@ -7,6 +7,7 @@ import {
   type Measurement,
   type MoveStartEvent,
   type PickEvent,
+  type IlluminanceAnalysis,
   type RenderMode,
   type Simulator,
   type ViewName,
@@ -165,6 +166,8 @@ export class LxsViewport extends LitElement {
   @property({ attribute: 'render-mode' }) renderMode: RenderMode = 'realistic';
   /** Exposure in EV stops; 0 is the calibrated default. */
   @property({ type: Number, attribute: 'exposure-ev' }) exposureEv = 0;
+  /** The calculated light the `illuminance` render mode draws (ADR 0066). */
+  @property({ attribute: false }) illuminance: IlluminanceAnalysis | undefined;
   /** Handle on the highlighted luminaires: `move` shows arrows to slide them along an axis. */
   @property() handle: HandleMode = 'none';
   /** Shows frame rate, backend, shadows and draw counts over the viewport, for debugging. */
@@ -343,6 +346,7 @@ export class LxsViewport extends LitElement {
     if (!this.#viewport) return;
     this.#viewport.setHighlighted(this.highlighted);
     this.#viewport.renderMode = this.renderMode;
+    this.#viewport.illuminance = this.illuminance;
     this.#viewport.exposureEv = this.exposureEv;
     this.#viewport.handle = this.handle;
     this.#viewport.snapping = this.snapping;
