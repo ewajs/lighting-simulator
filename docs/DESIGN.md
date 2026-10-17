@@ -117,7 +117,8 @@ shared styles in `packages/ui/src/styles.ts` and `field-styles.ts`.
 | **Icon button** | 32×32, ghost by default, `aria-pressed` for toggles, tooltip and `aria-label` from a localised string. |
 | **Button** | Ghost / primary (accent) / subtle. 32 px tall. |
 | **Segmented control** | Mutually exclusive modes (render mode, language, the catalog's Luminaires / Furniture switch). Arrow keys move the selection. |
-| **Rail tabs** | Left panel: Catalog · Scene. Clicking the active tab collapses the panel. |
+| **Rail tabs** | Left panel: Catalog · Scene · Analysis. Clicking the active tab collapses the panel. |
+| **Switch** | On/off for a setting that applies at once (a checkbox with `role="switch"`, drawn as a sliding knob): label on the left, an optional one-line hint below it. |
 | **Field** | Label on top (xs, muted). Input with unit suffix inside (`m`, `lx`, `K`, `%`). ↑/↓ steps, Shift ×10. Accepts the locale's decimal separator. |
 | **Slider + value** | For dimming, exposure, CCT. The track shows the value. The CCT track shows a warm→cool gradient. |
 | **Swatch** | A surface's colour (a colour picker) or its texture's thumbnail, beside its reflectance slider. |

@@ -29,6 +29,8 @@ export { directLight } from './analysis/direct-light';
 export type { DirectLight } from './analysis/direct-light';
 export { illuminanceAt, indirectLight, sceneLight } from './analysis/scene-light';
 export type { PointIlluminance, SceneLight } from './analysis/scene-light';
+export { analysisSnapshot, snapshotInputs } from './analysis/snapshot';
+export type { AnalysisSnapshot } from './analysis/snapshot';
 export { checkCalculationOptions, DEFAULT_CALCULATION_OPTIONS } from './analysis/options';
 export type { CalculationOptions } from './analysis/options';
 export type { IndirectLight } from './analysis/radiosity';

@@ -1,5 +1,7 @@
 import {
   serializeScene,
+  type AnalysisSettings,
+  type CalculationOptions,
   type FurnitureKind,
   type Logger,
   type MoveStartEvent,
@@ -13,7 +15,8 @@ import {
 import { localized, msg, str } from '@lit/localize';
 import { html, LitElement, nothing, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
-import { Eye, Layers, LayoutGrid, SlidersHorizontal } from 'lucide';
+import { ChartColumn, Eye, Layers, LayoutGrid, SlidersHorizontal } from 'lucide';
+import { AnalysisController } from './analysis-controller';
 import { appStyles } from './lxs-app.styles';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { newMergeKey } from './field-change';
@@ -35,7 +38,9 @@ import { DEFAULT_LOCALE, setLocale, type Locale } from './localization';
 import './lxs-catalog-panel';
 import './lxs-help';
 import './lxs-inspector';
+import './lxs-analysis-panel';
 import './lxs-library';
+import type { LibraryTab } from './lxs-library';
 import type { SetSelectionDetail } from './lxs-luminaire-inspector';
 import './lxs-scene-panel';
 import type { SelectDetail } from './lxs-scene-panel';
@@ -67,7 +72,7 @@ const PHONE_LAYOUT =
 /** Within the phone layout: tab bar as a left rail, sheets from the right. */
 const LANDSCAPE = '(orientation: landscape)';
 
-type PhoneTab = 'catalog' | 'scene' | 'properties' | 'view';
+type PhoneTab = 'catalog' | 'scene' | 'analysis' | 'properties' | 'view';
 
 /**
  * The full simulator UI: top bar, library panel, viewport with its controls,
@@ -163,6 +168,11 @@ export class LxsApp extends LitElement {
   @state() private landscape = false;
   readonly #landscapeQuery = window.matchMedia(LANDSCAPE);
 
+  /** The left panel's tab, so the analysis runs only while it's on screen. */
+  @state() private libraryTab: LibraryTab = 'catalog';
+  /** The illuminance calculation (ADR 0064). */
+  readonly #analysis = new AnalysisController(this);
+
   @query('lxs-viewport') private viewport!: LxsViewport;
   #unsubscribe: (() => void) | undefined;
 
@@ -194,9 +204,18 @@ export class LxsApp extends LitElement {
         .selection=${this.selection}
         .collapsed=${this.libraryCollapsed}
         .iesImport=${this.iesImport}
+        .analysis=${this.#analysis.state}
+        .analysisSettings=${this.#analysis.settings}
+        .calculationOptions=${this.#analysis.options}
+        .autoCalculate=${this.#analysis.auto}
         @lxs-add-product=${this.#onAddProduct}
         @lxs-add-furniture=${this.#onAddFurniture}
         @lxs-select=${this.#onSelect}
+        @lxs-library-tab=${({ detail }: CustomEvent<{ tab: LibraryTab }>) => (this.libraryTab = detail.tab)}
+        @lxs-analysis-settings=${this.#onAnalysisSettings}
+        @lxs-calculation-options=${this.#onCalculationOptions}
+        @lxs-auto-calculate=${this.#onAutoCalculate}
+        @lxs-calculate=${this.#onCalculate}
         @lxs-collapse-request=${({ detail }: CustomEvent<{ collapsed: boolean }>) =>
           (this.libraryCollapsed = detail.collapsed)}
       ></lxs-library>
@@ -213,6 +232,7 @@ export class LxsApp extends LitElement {
     const tabs: TabBarItem[] = [
       { id: 'catalog', label: msg('Catalog'), icon: LayoutGrid },
       { id: 'scene', label: msg('Scene'), icon: Layers },
+      { id: 'analysis', label: msg('Analysis'), icon: ChartColumn },
       { id: 'properties', label: msg('Properties'), icon: SlidersHorizontal },
       { id: 'view', label: msg('View'), icon: Eye },
     ];
@@ -264,6 +284,20 @@ export class LxsApp extends LitElement {
           @lxs-select=${this.#onSelect}
           @lxs-open-catalog=${() => this.#openPhoneTab('catalog')}
         ></lxs-scene-panel>`;
+      case 'analysis':
+        return html`<lxs-analysis-panel
+          .state=${this.#analysis.state}
+          .settings=${this.#analysis.settings}
+          .options=${this.#analysis.options}
+          .auto=${this.#analysis.auto}
+          .roomHeight=${this.scene?.room.height ?? 0}
+          .empty=${(this.scene?.luminaires.length ?? 0) === 0}
+          @lxs-analysis-settings=${this.#onAnalysisSettings}
+          @lxs-calculation-options=${this.#onCalculationOptions}
+          @lxs-auto-calculate=${this.#onAutoCalculate}
+          @lxs-calculate=${this.#onCalculate}
+          @lxs-open-catalog=${() => this.#openPhoneTab('catalog')}
+        ></lxs-analysis-panel>`;
       case 'properties':
         return this.#inspector(false);
       case 'view':
@@ -584,6 +618,15 @@ export class LxsApp extends LitElement {
     if (changed.has('simulator')) this.#watch(this.simulator);
   }
 
+  protected override updated(): void {
+    // The analysis runs only while its results are on screen.
+    this.#analysis.setVisible(
+      this.phone
+        ? this.phoneTab === 'analysis'
+        : !this.libraryCollapsed && this.libraryTab === 'analysis',
+    );
+  }
+
   async #applyLocale(locale: Locale, announce: boolean): Promise<void> {
     try {
       await setLocale(locale);
@@ -611,12 +654,30 @@ export class LxsApp extends LitElement {
     this.#unsubscribe?.();
     this.scene = simulator?.scene;
     this.selection = [];
+    this.#analysis.setSimulator(simulator);
     this.#unsubscribe = simulator?.subscribe((scene) => {
       this.scene = scene;
       this.selection = pruneSelection(this.selection, scene);
       if (this.autosave) this.#scheduleAutosave();
+      this.#analysis.changed();
     });
   }
+
+  #onAnalysisSettings = ({ detail }: CustomEvent<AnalysisSettings>): void => {
+    this.#analysis.setSettings(detail);
+  };
+
+  #onCalculationOptions = ({ detail }: CustomEvent<CalculationOptions>): void => {
+    this.#analysis.setOptions(detail);
+  };
+
+  #onAutoCalculate = ({ detail }: CustomEvent<{ auto: boolean }>): void => {
+    this.#analysis.setAuto(detail.auto);
+  };
+
+  #onCalculate = (): void => {
+    this.#analysis.calculate();
+  };
 
   /** Captures the viewport and, unless a host cancels `lxs-screenshot`, downloads it. */
   async #takeScreenshot(): Promise<void> {

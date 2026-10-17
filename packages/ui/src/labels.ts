@@ -1,5 +1,5 @@
 import { msg } from '@lit/localize';
-import type { FinishName, FurnitureKind, MountType, Scene } from '@luxstudio/core';
+import type { CalcSurfaceName, FinishName, FurnitureKind, MountType, Scene } from '@luxstudio/core';
 
 /** Translated name of a mount type. A function so it's evaluated at render time. */
 export const mountLabel = (mount: MountType): string =>
@@ -78,3 +78,15 @@ export function furnitureNames(scene: Scene): ReadonlyMap<string, string> {
   }
   return names;
 }
+
+/** A calculation surface's name (ADR 0064). Seen from above, x runs left to right and z back to front. */
+export const surfaceLabel = (surface: CalcSurfaceName): string =>
+  ({
+    'work-plane': msg('Work plane'),
+    floor: msg('Floor'),
+    ceiling: msg('Ceiling'),
+    'wall-x-': msg('Left wall'),
+    'wall-x+': msg('Right wall'),
+    'wall-z-': msg('Back wall'),
+    'wall-z+': msg('Front wall'),
+  })[surface];
