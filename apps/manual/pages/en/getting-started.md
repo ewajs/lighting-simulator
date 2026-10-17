@@ -10,7 +10,7 @@ install, and the scene saves itself as you work.
 
 1. **Catalog:** the luminaires and, with the switch at its top, the
    furniture you can add. Next to it, the **Scene** tab lists what you've
-   placed.
+   placed, and **Analysis** calculates how much light reaches each surface.
 2. **3D view:** the room. This is where you pick, move and aim luminaires
    and furniture.
 3. **Properties:** whatever is selected, or the room when nothing is.

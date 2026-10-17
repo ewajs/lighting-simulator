@@ -17,7 +17,8 @@
   to what you've selected.
 - **Realistic** shows the room's colours. **Clay** paints everything a
   neutral grey, so you only look at the light (keys **1** and **2**).
-  **Illuminance** is coming later.
+  **Illuminance** (key **3**) paints the calculated light in colour: see
+  [Analysing the light](./analysing).
 - **Exposure:** brightens or darkens the image, like a camera, without
   changing the luminaires. Double-click resets it to 0.
 

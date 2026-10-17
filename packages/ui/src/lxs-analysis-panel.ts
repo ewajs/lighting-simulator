@@ -70,6 +70,10 @@ export class LxsAnalysisPanel extends LitElement {
         min-height: 0;
         overflow-y: auto;
       }
+      /* Its full height, even when the results overflow and the column shrinks its items. */
+      .panel-header {
+        flex: none;
+      }
       .status {
         display: inline-flex;
         align-items: center;

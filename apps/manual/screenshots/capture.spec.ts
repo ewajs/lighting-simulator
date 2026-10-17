@@ -165,6 +165,35 @@ for (const language of LANGUAGES) {
       await page.locator('lxs-app .stage').screenshot({ path: out(language, 'views') });
     });
 
+    test('analysis panel', async ({ page }) => {
+      await open(page, language);
+      const es = language === 'es';
+      await page.getByRole('tab', { name: es ? 'Análisis' : 'Analysis' }).click();
+      const panel = page.locator('lxs-analysis-panel');
+      await expect(panel.getByText(es ? /^Calculado en/ : /^Calculated in/)).toBeVisible();
+      await page.locator('lxs-library').screenshot({ path: out(language, 'analysis-panel') });
+      await panel
+        .getByRole('switch', {
+          name: es ? /Muebles en la luz que rebota/ : /Furniture in bounced light/,
+        })
+        .scrollIntoViewIfNeeded();
+      await page.locator('lxs-library').screenshot({ path: out(language, 'analysis-settings') });
+    });
+
+    test('illuminance view, with the probe', async ({ page }) => {
+      await open(page, language);
+      await page
+        .getByRole('radio', { name: language === 'es' ? 'Iluminancia' : 'Illuminance' })
+        .click();
+      // The legend's note goes once the calculation is in.
+      await expect(page.locator('lxs-illuminance-legend .note')).toHaveCount(0);
+      await page.mouse.move(TABLE.x, TABLE.y);
+      await page.mouse.move(TABLE.x + 2, TABLE.y + 2);
+      await expect(page.locator('lxs-probe')).toBeVisible();
+      await page.waitForTimeout(300);
+      await page.locator('lxs-app .stage').screenshot({ path: out(language, 'illuminance') });
+    });
+
     test('top bar', async ({ page }) => {
       await open(page, language);
       await page.locator('lxs-top-bar').screenshot({ path: out(language, 'top-bar') });

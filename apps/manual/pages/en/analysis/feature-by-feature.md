@@ -78,7 +78,8 @@ Each step's time, averaged over the {{ h.rooms }} rooms, on an {{ h.machine }}
 </table>
 
 Almost all the time is bounced light, and in a furnished room, the furniture
-in it: every ray between two patches is tested against every piece. Later they
-can be switched off to calculate faster, at the cost of accuracy; splitting
-openings and shadows cost little and the result is worse without them, so they
-stay on.
+in it: every ray between two patches is tested against every piece. That's
+why they're the two you can switch off in the Analysis panel's settings, to
+calculate faster at the cost of accuracy
+([Analysing the light](../analysing)); splitting openings and shadows cost
+little and the result is worse without them, so they stay on.

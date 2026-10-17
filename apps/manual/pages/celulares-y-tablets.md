@@ -2,8 +2,8 @@
 
 ## En el celular
 
-La vista 3D ocupa toda la pantalla. Abajo, cuatro pestañas abren paneles:
-**Catálogo**, **Escena**, **Propiedades** y **Vista** (herramientas, modos,
+La vista 3D ocupa toda la pantalla. Abajo, cinco pestañas abren paneles:
+**Catálogo**, **Escena**, **Análisis**, **Propiedades** y **Vista** (herramientas, modos,
 vistas y exposición). **Nuevo**, **Abrir**, **Guardar**, **Compartir**, la
 **Captura**, el tema, la **Ayuda** y el idioma están en **⋯**, arriba a la
 derecha.

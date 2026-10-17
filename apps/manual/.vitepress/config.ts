@@ -25,7 +25,16 @@ function sidebar(
     { text: t.start, items: [item('start')] },
     {
       text: t.use,
-      items: ['luminaires', 'moving', 'aiming', 'light', 'furniture', 'room', 'views'].map(item),
+      items: [
+        'luminaires',
+        'moving',
+        'aiming',
+        'light',
+        'furniture',
+        'room',
+        'views',
+        'analyse',
+      ].map(item),
     },
     {
       text: t.concepts,
@@ -99,6 +108,7 @@ export default defineConfig({
             furniture: ['mobiliario', 'Mobiliario'],
             room: ['ambiente', 'El ambiente'],
             views: ['vista', 'La vista'],
+            analyse: ['analizar', 'Analizar la luz'],
             units: ['conceptos/unidades', 'Luz y unidades'],
             polar: ['conceptos/curvas-polares', 'Archivos IES y curvas polares'],
             laws: ['conceptos/distancia-y-angulo', 'Distancia y ángulo'],
@@ -154,6 +164,7 @@ export default defineConfig({
             furniture: ['furniture', 'Furniture'],
             room: ['room', 'The room'],
             views: ['views', 'The view'],
+            analyse: ['analysing', 'Analysing the light'],
             units: ['concepts/units', 'Light and its units'],
             polar: ['concepts/polar-charts', 'IES files and polar charts'],
             laws: ['concepts/distance-and-angle', 'Distance and angle'],

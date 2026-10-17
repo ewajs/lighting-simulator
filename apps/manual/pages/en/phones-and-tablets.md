@@ -2,8 +2,8 @@
 
 ## On a phone
 
-The 3D view fills the screen. At the bottom, four tabs open panels:
-**Catalog**, **Scene**, **Properties** and **View** (tools, modes, views and
+The 3D view fills the screen. At the bottom, five tabs open panels:
+**Catalog**, **Scene**, **Analysis**, **Properties** and **View** (tools, modes, views and
 exposure). **New**, **Open**, **Save**, **Share**, **Screenshot**, theme,
 **Help** and language are under **⋯**, top right.
 

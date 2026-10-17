@@ -17,7 +17,8 @@
   acerca la cámara a lo que tenés seleccionado.
 - **Realista** muestra los colores del ambiente. **Arcilla** pinta todo de un
   gris neutro para que mires solo la luz (teclas **1** y **2**).
-  **Iluminancia** llega más adelante.
+  **Iluminancia** (tecla **3**) pinta la luz calculada en colores: ver
+  [Analizar la luz](./analizar).
 - **Exposición:** aclara u oscurece la imagen, como en una cámara, sin
   cambiar las luminarias. Con doble clic vuelve a 0.
 
