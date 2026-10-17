@@ -31,6 +31,12 @@ export interface CalculationOptions {
    * Off, only direct light: in a typical room, a third or more too dark.
    */
   readonly bouncedLight: boolean;
+  /**
+   * Furniture takes part in bounced light: it hides it (a floor under a
+   * table doesn't see the ceiling) and its faces reflect it, as their finish
+   * does (ADR 0063). Needs `bouncedLight` and `furnitureShadows`.
+   */
+  readonly furnitureInBouncedLight: boolean;
 }
 
 /** The defaults: everything counted, sizes chosen by measurement against Radiance (ADR 0060, accuracy/PATCH-SIZE.md). */
@@ -41,11 +47,12 @@ export const DEFAULT_CALCULATION_OPTIONS: CalculationOptions = {
   splitOpenings: true,
   furnitureShadows: true,
   bouncedLight: true,
+  furnitureInBouncedLight: true,
 };
 
 /**
  * Checks options that may come from a user: sizes positive and finite, the
- * tolerance between 0 and 1.
+ * tolerance between 0 and 1, and no feature on without those it needs.
  *
  * @throws RangeError naming the first bad value.
  */
@@ -58,5 +65,8 @@ export function checkCalculationOptions(options: CalculationOptions): void {
   }
   if (!(options.tolerance > 0 && options.tolerance < 1)) {
     throw new RangeError(`tolerance must be between 0 and 1, not ${options.tolerance}`);
+  }
+  if (options.furnitureInBouncedLight && !(options.bouncedLight && options.furnitureShadows)) {
+    throw new RangeError('furnitureInBouncedLight needs bouncedLight and furnitureShadows');
   }
 }

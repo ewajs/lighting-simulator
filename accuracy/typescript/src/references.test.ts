@@ -19,20 +19,13 @@ const FAR_TOLERANCE = 0.035;
 const NEAR_TOLERANCE = 0.15;
 
 /**
- * Total light, rooms without furniture (furnished rooms with it taken out, on
- * both sides), by the same measures (ADR 0060). Measured worsts: averages
- * 3.29 %, far points 4.26 %, near points 15.09 %, all by the wall sconce;
- * elsewhere averages within 0.7 % and far points within 3.8 %.
+ * Total light, every room as it is, furniture and all (ADR 0060, 0063), and
+ * furnished rooms again with the furniture taken out on both sides. Measured
+ * worsts: averages 3.29 % and near points 15.09 % (the wall sconce), far
+ * points 6.54 % (the furnished living room's work plane); elsewhere averages
+ * within 0.7 %.
  */
-const TOTAL = { average: 0.04, far: 0.05, near: 0.16 };
-/**
- * Total light in furnished rooms as they are: Lux Studio's bounced light
- * passes through furniture, Radiance's doesn't (ADR 0060). Measured worsts:
- * averages 7.34 % (the ceiling over the pendant's table, missing the light the
- * table reflects), far points 43.7 % (on the wall at the furnished room's bookcase). A
- * regression bound for a known gap, to tighten when furniture blocks bounced light.
- */
-const FURNISHED = { average: 0.08, far: 0.45, near: 0.16 };
+const TOTAL = { average: 0.04, far: 0.075, near: 0.16 };
 
 describe('Lux Studio against Radiance', () => {
   it('has the six reference rooms', () => {
@@ -59,16 +52,14 @@ describe('Lux Studio against Radiance', () => {
       }
     });
 
-    it(`${name}, total: averages within 4 %, bright points within 5 % (16 % within 1 m of a luminaire)`, () => {
-      const empty = reference.withoutFurniture
-        ? compareReference(reference, IES_FILES, undefined, false)
-        : points;
-      expectWithin(name, summarize(empty, origins, 'total'), TOTAL);
+    it(`${name}, total: averages within 4 %, bright points within 7.5 % (16 % within 1 m of a luminaire)`, () => {
+      expectWithin(name, summarize(points, origins, 'total'), TOTAL);
     });
 
     if (reference.withoutFurniture) {
-      it(`${name}, total with its furniture: within the known gap's bounds`, () => {
-        expectWithin(name, summarize(points, origins, 'total'), FURNISHED);
+      it(`${name}, total without its furniture, on both sides: within the same bounds`, () => {
+        const empty = compareReference(reference, IES_FILES, undefined, false);
+        expectWithin(name, summarize(empty, origins, 'total'), TOTAL);
       });
     }
   }

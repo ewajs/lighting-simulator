@@ -126,6 +126,24 @@ const MISTAKES = [
     slip: 'values[j * count + i] = (fij * b.area) / a.area;',
   },
   {
+    name: 'furniture hiding nothing from bounced light',
+    file: 'src/analysis/visibility.ts',
+    correct: 'if (!segmentBlockedPrepared(boxes, from.x, from.y, from.z, s.x, s.y, s.z)) seen++;',
+    slip: 'seen++;',
+  },
+  {
+    name: 'furniture faces facing in',
+    file: 'src/analysis/patches.ts',
+    correct: 'face(point(-hx, hy, -hz), ax, az, 2 * hx, 2 * hz, ay),',
+    slip: 'face(point(-hx, hy, -hz), ax, az, 2 * hx, 2 * hz, neg(ay)),',
+  },
+  {
+    name: 'a turned box tested unturned',
+    file: 'src/analysis/occlusion.ts',
+    correct: 'const x0 = ax * cos - az * sin;',
+    slip: 'const x0 = ax;',
+  },
+  {
     name: 'grid spacing not from the longer side',
     file: 'src/analysis/calc-grid.ts',
     correct: 'maxGridSpacing(Math.max(sizeU, sizeV))',

@@ -387,14 +387,16 @@ describe('analyseIlluminance: features switched off', () => {
   });
 
   it('without bounced light: no patches, and nothing indirect anywhere', () => {
-    const result = withOptions({ bouncedLight: false });
+    const result = withOptions({ bouncedLight: false, furnitureInBouncedLight: false });
     expect(result.indirect).toEqual({ patches: 0, iterations: 0 });
     for (const surface of result.surfaces) expect(Math.max(...surface.indirectLx)).toBe(0);
     expect(result.surfaces[0]!.directLx).toEqual(withOptions({}).surfaces[0]!.directLx);
   });
 
   it('without furniture shadows: light reaches the floor under the sofa', () => {
-    expect(underLight(withOptions({ furnitureShadows: false })).direct).toBeGreaterThan(0);
+    expect(
+      underLight(withOptions({ furnitureShadows: false, furnitureInBouncedLight: false })).direct,
+    ).toBeGreaterThan(0);
   });
 
   it('without split openings: each luminaire is one point of light', () => {
@@ -415,5 +417,36 @@ describe('analyseIlluminance: features switched off', () => {
     expect(() => withOptions({ patchSizeM: 0 })).toThrow(/patchSizeM/);
     expect(() => withOptions({ sourceCellM: Number.NaN })).toThrow(/sourceCellM/);
     expect(() => withOptions({ tolerance: 1 })).toThrow(/tolerance/);
+  });
+
+  it('refuses furniture in bounced light without bounced light or furniture shadows', () => {
+    expect(() => withOptions({ bouncedLight: false })).toThrow(/furnitureInBouncedLight needs/);
+    expect(() => withOptions({ furnitureShadows: false })).toThrow(/furnitureInBouncedLight needs/);
+  });
+
+  it('with furniture in bounced light: a lighter table reflects more onto the ceiling', () => {
+    const table = (main: 'white' | 'charcoal'): Scene => ({
+      ...scene,
+      furniture: [
+        {
+          ...sofa,
+          id: 'table',
+          kind: 'dining-table',
+          size: { width: 1.6, depth: 0.9, height: 0.75 },
+          finish: { main, accent: main },
+        },
+      ],
+    });
+    const ceilingIndirect = (main: 'white' | 'charcoal') => {
+      const ceiling = analyseIlluminance(table(main), ies).surfaces[2]!;
+      return ceiling.indirectLx.reduce((sum, value) => sum + value, 0);
+    };
+    expect(ceilingIndirect('white')).toBeGreaterThan(1.05 * ceilingIndirect('charcoal'));
+  });
+
+  it('with furniture in bounced light: the floor under the sofa gets nothing bounced either', () => {
+    // The sofa covers the floor point, so no patch is in sight of it.
+    expect(underLight(withOptions({})).indirect).toBe(0);
+    expect(underLight(withOptions({ furnitureInBouncedLight: false })).indirect).toBeGreaterThan(0);
   });
 });

@@ -30,8 +30,9 @@ Radiance en calcular los mismos puntos.
 ## Cómo leerlo
 
 El cálculo completo de Lux Studio tarda entre {{ n(h.oursMinMs) }} y
-{{ n(h.oursMaxMs) }} ms por ambiente. Casi todo es la luz que rebota: solo con
-luz directa, un ambiente tarda alrededor de un milisegundo.
+{{ n(h.oursMaxMs) }} ms por ambiente. Casi todo es la luz que rebota, y en los
+ambientes amueblados, los muebles dentro de ella: son los que más tardan. Solo
+con luz directa, un ambiente tarda alrededor de un milisegundo.
 
 Radiance tarda entre {{ n(h.radianceMinS) }} y {{ n(h.radianceMaxS) }} s, pero
 **no es una carrera**: sus ajustes se eligieron para que sea una referencia

@@ -44,11 +44,24 @@ diferencia es del tamaño del ruido.
 
 **\+ sombras de los muebles.** En los ambientes amueblados, la diferencia
 media por punto baja de **{{ pct(f.beforeShadows) }}** a
-**{{ pct(f.afterShadows) }}**. Lo que queda es la luz que rebota, que todavía
-atraviesa los muebles ([Dónde estamos](./)). Las sombras también suben el peor
+**{{ pct(f.afterShadows) }}**. Lo que queda es la luz que rebota, que en este
+paso todavía atraviesa los muebles. Las sombras también suben el peor
 punto cercano de un ambiente en {{ pct(f.shadowsNearRise, 1) }} puntos: cada
 celda de la abertura queda tapada o no, así que el borde de una sombra sale
 escalonado, y en Radiance es suave.
+
+**\+ los muebles tapan la luz que rebota (negros).** Medio paso, que se muestra
+porque empeora: si los muebles tapan la luz que rebota pero no reflejan nada,
+son cajas negras que se la tragan. La diferencia media por punto de los
+ambientes amueblados sube a **{{ pct(f.hidesOnly) }}**: todo da menos que en
+Radiance.
+
+**\+ los muebles también la reflejan.** Cada cara de un mueble pasa a ser un
+parche más, que refleja según su terminación (el roble, un 45 %; el lino, un
+55 %). Con las dos mitades juntas, la diferencia media por punto de los
+ambientes amueblados baja a **{{ pct(f.hidesAndReflects) }}**: lo mismo que en
+los ambientes sin muebles. Por eso las dos mitades van juntas, con un solo
+interruptor.
 
 ## Lo que cuesta cada paso
 
@@ -65,6 +78,8 @@ El tiempo de cada paso, promedio de los {{ h.rooms }} ambientes, en una
   </tbody>
 </table>
 
-Casi todo el tiempo es la luz que rebota. Más adelante se podrá apagar para
-calcular más rápido, a cambio de precisión; dividir las aberturas y las
-sombras cuestan poco y sin ellas el resultado es peor, así que quedan siempre.
+Casi todo el tiempo es la luz que rebota, y en un ambiente amueblado, los
+muebles dentro de ella: cada rayo entre dos parches se prueba contra cada
+mueble. Más adelante se podrán apagar para calcular más rápido, a cambio de
+precisión; dividir las aberturas y las sombras cuestan poco y sin ellas el
+resultado es peor, así que quedan siempre.

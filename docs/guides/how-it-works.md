@@ -128,10 +128,11 @@ It's plain maths over the scene, with no three.js, one formula per file:
 |---|---|
 | `sources.ts` | a luminaire as point sources: its IES distribution (or the estimate), split into 10 cm cells when its opening is larger |
 | `direct.ts` | E = I · cos α / d², summed over the sources: the inverse-square and cosine laws |
-| `occlusion.ts` | furniture as boxes that cast shadows |
+| `occlusion.ts` | furniture as boxes that cast shadows, and the segment-against-box test |
 | `calc-grid.ts` | where to calculate: EN 12464-1 grids on the work plane and the six surfaces |
 | `stats.ts` | Ē, Emin, Emax and uniformity |
-| `patches.ts` | the room's surfaces split into patches of at most 25 cm |
+| `patches.ts` | the room's surfaces and the furniture's faces, split into patches of at most 25 cm |
+| `visibility.ts` | how much of a patch a point sees past the furniture ([ADR 0063](../decisions/0063-furniture-in-bounced-light.md)) |
 | `form-factor.ts` | how much of a patch a point sees: the exact formula for a polygon |
 | `radiosity.ts` | the patches' form factors, and the solve: each patch reflects its reflectance times all it receives |
 | `options.ts` | the calculation's tuning (cell and patch sizes, when to stop) and its features as switches, with defaults ([ADR 0061](../decisions/0061-calculation-features-and-timing.md)) |

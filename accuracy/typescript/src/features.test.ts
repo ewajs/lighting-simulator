@@ -1,5 +1,6 @@
 // Each feature must earn its place (ADR 0061): added to the steps before it,
 // it mustn't make any reference room worse on the whole.
+import { DEFAULT_CALCULATION_OPTIONS } from '@luxstudio/core';
 import { expect, it } from 'vitest';
 import { FEATURE_STEPS, featureStudy } from './features';
 import { IES_FILES, REFERENCES } from './inputs';
@@ -14,25 +15,28 @@ const SLACK = 0.005;
 it('starts from nothing and ends with every feature the calculation has', () => {
   const first = FEATURE_STEPS[0]!.options;
   const last = FEATURE_STEPS[FEATURE_STEPS.length - 1]!.options;
-  expect([first.splitOpenings, first.furnitureShadows, first.bouncedLight]).toEqual([
-    false,
-    false,
-    false,
-  ]);
-  expect([last.splitOpenings, last.furnitureShadows, last.bouncedLight]).toEqual([
-    true,
-    true,
-    true,
-  ]);
+  const features = (o: typeof first) => [
+    o.splitOpenings,
+    o.furnitureShadows,
+    o.bouncedLight,
+    o.furnitureInBouncedLight,
+  ];
+  expect(features(first)).toEqual([false, false, false, false]);
+  expect(last).toEqual(DEFAULT_CALCULATION_OPTIONS);
 });
 
 for (const [name, reference] of Object.entries(REFERENCES)) {
   it(`${name}: no feature makes the mean bright-point error worse`, () => {
     const results = featureStudy(reference, IES_FILES);
+    // A half step (black furniture, ADR 0063) is shown because it's worse;
+    // the step after it is held to the one before it.
+    let previous = results[0]!;
     for (let k = 1; k < results.length; k++) {
+      if (FEATURE_STEPS[k]!.blackFurniture) continue;
       expect(results[k]!.meanPointError, results[k]!.step).toBeLessThan(
-        results[k - 1]!.meanPointError + SLACK,
+        previous.meanPointError + SLACK,
       );
+      previous = results[k]!;
     }
   });
 }

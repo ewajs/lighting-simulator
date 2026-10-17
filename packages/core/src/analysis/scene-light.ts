@@ -5,7 +5,8 @@ import type { Room, Scene, Vec3 } from '../types';
 import { directIlluminance } from './direct';
 import { directLight, type DirectLight } from './direct-light';
 import { DEFAULT_CALCULATION_OPTIONS, type CalculationOptions } from './options';
-import { roomPatches } from './patches';
+import { boxPatches, roomPatches } from './patches';
+import { boxVisibility } from './visibility';
 import {
   formFactors,
   indirectIlluminanceAt,
@@ -50,15 +51,24 @@ export function sceneLight(
 /**
  * The light a room's floor, ceiling and walls reflect, after every bounce,
  * given its direct light: solved over patches of at most the options'
- * `patchSizeM`. None, over no patches, when the options leave bounced light out.
+ * `patchSizeM`. With furniture in bounced light, its boxes hide patches from
+ * each other and their faces reflect too. None, over no patches, when the
+ * options leave bounced light out.
  */
 export function indirectLight(
   room: Room,
   direct: DirectLight,
   options: CalculationOptions = DEFAULT_CALCULATION_OPTIONS,
 ): IndirectLight {
-  if (!options.bouncedLight) return { patches: [], exitance: new Float64Array(0), iterations: 0 };
-  const patches = roomPatches(room, options.patchSizeM);
+  if (!options.bouncedLight) {
+    return { patches: [], exitance: new Float64Array(0), iterations: 0, blockers: [] };
+  }
+  // Furniture hides and reflects bounced light when it counts (ADR 0063).
+  const blockers = options.furnitureInBouncedLight ? direct.blockers : [];
+  const patches = [
+    ...roomPatches(room, options.patchSizeM),
+    ...blockers.flatMap((blocker) => boxPatches(blocker, options.patchSizeM)),
+  ];
   // Each patch's direct light, averaged over its sample points: a spot's
   // sharp-edged pool lands partly on a patch.
   const directOnPatches = patches.map((patch) => {
@@ -68,12 +78,23 @@ export function indirectLight(
     }
     return sum / patch.samples.length;
   });
-  return solveIndirectLight(patches, formFactors(patches), directOnPatches, options.tolerance);
+  return solveIndirectLight(
+    patches,
+    formFactors(patches, boxVisibility(blockers)),
+    directOnPatches,
+    options.tolerance,
+    blockers,
+  );
 }
 
 /** The light at a point facing `normal` (a unit vector), direct and bounced. */
 export function illuminanceAt(light: SceneLight, point: Vec3, normal: Vec3): PointIlluminance {
   const directLx = directIlluminance(point, normal, light.direct.sources, light.direct.blockers);
-  const indirectLx = indirectIlluminanceAt(point, normal, light.indirect);
+  const indirectLx = indirectIlluminanceAt(
+    point,
+    normal,
+    light.indirect,
+    boxVisibility(light.indirect.blockers),
+  );
   return { directLx, indirectLx, totalLx: directLx + indirectLx };
 }

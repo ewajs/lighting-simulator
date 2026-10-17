@@ -43,9 +43,9 @@ export function roomComparison(
   iesFiles: Readonly<Record<string, string>>,
 ): RoomComparison {
   const full = compareReference(reference, iesFiles);
-  const steps = FEATURE_STEPS.map(({ id, options }) => ({
+  const steps = FEATURE_STEPS.map(({ id, options, blackFurniture }) => ({
     id,
-    points: compareReference(reference, iesFiles, options),
+    points: compareReference(reference, iesFiles, options, true, blackFurniture),
   }));
   const empty = reference.withoutFurniture
     ? compareReference(reference, iesFiles, undefined, false)

@@ -44,11 +44,23 @@ size of the noise.
 
 **\+ furniture shadows.** In the furnished rooms, the mean difference per
 point drops from **{{ pct(f.beforeShadows) }}** to **{{ pct(f.afterShadows) }}**.
-What's left is bounced light, which still passes through furniture
-([Where we stand](./)). Shadows also raise one room's worst near point by
+What's left is bounced light, which at this step still passes through
+furniture. Shadows also raise one room's worst near point by
 {{ pct(f.shadowsNearRise, 1) }} points: each cell of the opening is either
 blocked or not, so a shadow's edge comes out in steps, where Radiance's is
 smooth.
+
+**\+ furniture hides bounced light (black).** Half a step, shown because it
+makes things worse: furniture that hides bounced light but reflects none is a
+set of black boxes swallowing it. The furnished rooms' mean difference per
+point rises to **{{ pct(f.hidesOnly) }}**: everything reads lower than in
+Radiance.
+
+**\+ furniture reflects it too.** Each face of a piece becomes one more
+patch, reflecting as its finish does (oak 45 %, linen 55 %). With both halves,
+the furnished rooms' mean difference per point drops to
+**{{ pct(f.hidesAndReflects) }}**: as in the rooms without furniture. That's
+why the two halves go together, under one switch.
 
 ## What each step costs
 
@@ -65,6 +77,8 @@ Each step's time, averaged over the {{ h.rooms }} rooms, on an {{ h.machine }}
   </tbody>
 </table>
 
-Almost all the time is bounced light. Later it can be switched off to
-calculate faster, at the cost of accuracy; splitting openings and shadows cost
-little and the result is worse without them, so they stay on.
+Almost all the time is bounced light, and in a furnished room, the furniture
+in it: every ray between two patches is tested against every piece. Later they
+can be switched off to calculate faster, at the cost of accuracy; splitting
+openings and shadows cost little and the result is worse without them, so they
+stay on.

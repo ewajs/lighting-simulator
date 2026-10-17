@@ -37,6 +37,8 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 | bounced-light | 0.28 % | 0.30 % | 2.33 % | 1.63 % |
 | split-openings | 0.31 % | 0.29 % | 2.37 % | 1.66 % |
 | furniture-shadows | 0.31 % | 0.29 % | 2.37 % | 1.66 % |
+| furniture-hides-bounce | 0.31 % | 0.29 % | 2.37 % | 1.66 % |
+| furniture-in-bounce | 0.31 % | 0.29 % | 2.37 % | 1.66 % |
 
 ## furnished-living
 
@@ -48,10 +50,10 @@ Radiance rad6R0P2, 1036 points.
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 320 | 265.7 | 255.0 | -4.01 % | 18.92 % | – |
-| floor | 320 | 180.4 | 185.3 | 2.72 % | 40.93 % | – |
-| wall-x+ | 176 | 88.9 | 84.0 | -5.48 % | 43.73 % | – |
-| wall-z- | 220 | 86.0 | 87.7 | 2.02 % | 24.63 % | – |
+| work-plane | 320 | 265.7 | 265.5 | -0.07 % | 6.54 % | – |
+| floor | 320 | 180.4 | 180.6 | 0.11 % | 3.83 % | – |
+| wall-x+ | 176 | 88.9 | 89.2 | 0.34 % | 4.08 % | – |
+| wall-z- | 220 | 86.0 | 86.4 | 0.56 % | 4.92 % | – |
 
 ### Direct light
 
@@ -72,6 +74,8 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 | bounced-light | 34.10 % | 13.70 % | 531.18 % | – |
 | split-openings | 34.08 % | 13.71 % | 531.18 % | – |
 | furniture-shadows | 5.48 % | 6.48 % | 43.73 % | – |
+| furniture-hides-bounce | 28.95 % | 17.86 % | 60.95 % | – |
+| furniture-in-bounce | 0.56 % | 0.42 % | 6.54 % | – |
 
 ### Furniture and bounced light
 
@@ -82,10 +86,10 @@ columns is what letting bounced light through furniture costs.
 
 | Surface | Ē difference, furnished | Ē difference, empty | Worst far point, furnished | Worst far point, empty |
 |---|---|---|---|---|
-| work-plane | -4.01 % | 0.21 % | 18.92 % | 0.93 % |
-| floor | 2.72 % | 0.18 % | 40.93 % | 0.64 % |
-| wall-x+ | -5.48 % | 0.39 % | 43.73 % | 1.46 % |
-| wall-z- | 2.02 % | 0.38 % | 24.63 % | 1.19 % |
+| work-plane | -0.07 % | 0.21 % | 6.54 % | 0.93 % |
+| floor | 0.11 % | 0.18 % | 3.83 % | 0.64 % |
+| wall-x+ | 0.34 % | 0.39 % | 4.08 % | 1.46 % |
+| wall-z- | 0.56 % | 0.38 % | 4.92 % | 1.19 % |
 
 ## linear-pendant-over-table
 
@@ -97,9 +101,9 @@ Radiance rad6R0P2, 1500 points.
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 500 | 229.3 | 218.0 | -4.93 % | 8.98 % | 3.34 % |
-| floor | 500 | 150.5 | 154.0 | 2.33 % | 43.02 % | – |
-| ceiling | 500 | 221.8 | 205.5 | -7.34 % | 11.37 % | – |
+| work-plane | 500 | 229.3 | 230.4 | 0.48 % | 2.78 % | 1.04 % |
+| floor | 500 | 150.5 | 151.5 | 0.69 % | 4.37 % | – |
+| ceiling | 500 | 221.8 | 222.9 | 0.49 % | 3.36 % | – |
 
 ### Direct light
 
@@ -119,6 +123,8 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 | bounced-light | 31.24 % | 9.84 % | 216.94 % | 33.49 % |
 | split-openings | 30.80 % | 7.91 % | 200.92 % | 1.59 % |
 | furniture-shadows | 7.34 % | 6.80 % | 43.02 % | 3.34 % |
+| furniture-hides-bounce | 10.35 % | 10.12 % | 16.54 % | 4.55 % |
+| furniture-in-bounce | 0.69 % | 0.71 % | 4.37 % | 1.04 % |
 
 ### Furniture and bounced light
 
@@ -129,9 +135,9 @@ columns is what letting bounced light through furniture costs.
 
 | Surface | Ē difference, furnished | Ē difference, empty | Worst far point, furnished | Worst far point, empty |
 |---|---|---|---|---|
-| work-plane | -4.93 % | 0.56 % | 8.98 % | 2.60 % |
-| floor | 2.33 % | 0.67 % | 43.02 % | 2.12 % |
-| ceiling | -7.34 % | 0.63 % | 11.37 % | 3.74 % |
+| work-plane | 0.48 % | 0.56 % | 2.78 % | 2.60 % |
+| floor | 0.69 % | 0.67 % | 4.37 % | 2.12 % |
+| ceiling | 0.49 % | 0.63 % | 3.36 % | 3.74 % |
 
 ## single-downlight
 
@@ -167,6 +173,8 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 | bounced-light | 0.20 % | 0.12 % | 0.48 % | – |
 | split-openings | 0.24 % | 0.12 % | 0.56 % | – |
 | furniture-shadows | 0.24 % | 0.12 % | 0.56 % | – |
+| furniture-hides-bounce | 0.24 % | 0.12 % | 0.56 % | – |
+| furniture-in-bounce | 0.24 % | 0.12 % | 0.56 % | – |
 
 ## track-spots
 
@@ -200,6 +208,8 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 | bounced-light | 0.29 % | 0.42 % | 1.74 % | – |
 | split-openings | 0.29 % | 0.42 % | 1.74 % | – |
 | furniture-shadows | 0.29 % | 0.42 % | 1.74 % | – |
+| furniture-hides-bounce | 0.29 % | 0.42 % | 1.74 % | – |
+| furniture-in-bounce | 0.29 % | 0.42 % | 1.74 % | – |
 
 ## wall-sconce
 
@@ -235,3 +245,5 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 | bounced-light | 2.70 % | 2.99 % | 4.50 % | 55.98 % |
 | split-openings | 3.29 % | 2.62 % | 4.26 % | 15.09 % |
 | furniture-shadows | 3.29 % | 2.62 % | 4.26 % | 15.09 % |
+| furniture-hides-bounce | 3.29 % | 2.62 % | 4.26 % | 15.09 % |
+| furniture-in-bounce | 3.29 % | 2.62 % | 4.26 % | 15.09 % |

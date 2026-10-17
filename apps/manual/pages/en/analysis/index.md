@@ -19,16 +19,13 @@ is regenerated with it ([How we compare](./method)).
 
 ## In short
 
-- **What Lux Studio calculates, it calculates well.** In the rooms without
-  furniture, and in the furnished ones with the furniture taken out in both
-  programs, each surface's average is within **{{ pct(h.modelledAverage) }}**
-  of Radiance's, and no lit point more than 1 m from a luminaire is off by more
-  than **{{ pct(h.modelledFar) }}**.
-- **Furniture doesn't count for bounced light yet.** It casts shadows on
-  direct light, but bounced light passes through it and it reflects none. With
-  furniture, an average is off by up to **{{ pct(h.furnishedAverage) }}** and a
-  point next to a piece by up to **{{ pct(h.furnishedFar, 0) }}**. It's the
-  next thing to fix.
+- **It agrees with Radiance.** In all {{ h.rooms }} rooms, furniture
+  included, each surface's average is within **{{ pct(h.worstAverage) }}** of
+  Radiance's, and no lit point more than 1 m from a luminaire is off by more
+  than **{{ pct(h.worstFar) }}**.
+- **Furniture counts for bounced light too:** it hides it and reflects it, as
+  its finish does. In the furnished rooms, that took the mean difference per
+  point from {{ pct(h.furnishedBefore) }} to **{{ pct(h.furnishedAfter) }}**.
 - **Bounced light is half the story.** With direct light only, the numbers
   are off by {{ pct(h.directOnlyMin, 0) }} to {{ pct(h.directOnlyMax, 0) }}
   per point on average ([Feature by feature](./feature-by-feature)).
@@ -40,8 +37,8 @@ is regenerated with it ([How we compare](./method)).
 ## Room by room
 
 Each room's worst difference with the full calculation. In grey, the
-furnished rooms without their furniture: the gap between the two bars is what
-letting bounced light through furniture costs.
+furnished rooms with the furniture taken out in both programs: when the two
+bars look alike, the furniture is counted right.
 
 <LxStanding :summary="data.summary" />
 
@@ -55,8 +52,8 @@ Each room has its own page, with its maps point by point:
 
 ## What it doesn't count yet
 
-- **Furniture in bounced light**, measured above: the largest difference left.
-- **Luminaires don't hide bounced light either.** A large sconce right against
+- **Furniture is boxes:** a sofa is a block, a table is just its top.
+- **Luminaires don't hide bounced light.** A large sconce right against
   its wall reads a few points higher than in Radiance.
 - **Every surface reflects diffusely:** no gloss, no mirrors.
 - **Rooms are rectangular**, and there are no windows yet.
