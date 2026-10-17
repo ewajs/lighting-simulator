@@ -31,3 +31,12 @@ def test_the_sphere_check_catches_missing_bounces(tmp_path: Path) -> None:
     del capped[capped.index("-lr") : capped.index("-lr") + 2]
     capped[capped.index("-ab") + 1] = "12"
     assert not sphere_check(install(), tmp_path, tuple(capped)).passed
+
+
+@pytest.mark.radiance
+def test_the_sphere_check_needs_more_bounces_than_the_rooms(tmp_path: Path) -> None:
+    # With every surface reflecting 80 %, the references' 24 bounces leave out
+    # 0.8²⁴ ≈ 0.5 % of the bounced light: more than the check allows.
+    check = sphere_check(install(), tmp_path, BOUNCE_OPTIONS)
+    assert not check.passed
+    assert check.error == pytest.approx(-(0.8**24), abs=0.001)

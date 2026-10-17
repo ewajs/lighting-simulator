@@ -29,7 +29,7 @@ from luxstudio_accuracy.rooms import IES_DIR
 from luxstudio_accuracy.scene import (
     BOUNCE_OPTIONS,
     PlacedLuminaire,
-    RoomShell,
+    SphereShell,
     build_scene,
     direct_and_bounced,
     illuminance,
@@ -126,74 +126,92 @@ def run_checks(radiance: Radiance) -> list[Check]:
     return checks
 
 
-SPHERE_ROOM_M = 3.0
-"""The integrating-sphere check's cube room: 3 m on each side."""
+SPHERE_RADIUS_M = 1.5
+"""The integrating sphere's radius: about the size of a small room."""
+SPHERE_CENTRE = Vec3(0, 2, 0)
 SPHERE_REFLECTANCE = 0.8
 """High, as a room's walls and ceiling are, so that missing bounces show: with
 ρ = 0.8, stopping after n bounces leaves out 0.8ⁿ of the bounced light."""
 SPHERE_CANDELA = 100.0
-SPHERE_POINTS_PER_SIDE = 4
-SPHERE_TOLERANCE = 0.02
-"""Radiance samples bounced light at random, so its average carries a little noise."""
+SPHERE_POINTS = 60
+"""Points spread evenly over the inside; the light there is the same at each."""
+SPHERE_TOLERANCE = 0.001
+"""Inside the sphere every point sees the same light from every direction, so
+Radiance's random sampling has nothing to vary: release 6.0P2 gives the formula's
+177.778 lx to the last digit printed (ADR 0071). 0.1 % leaves room for rounding,
+and still fails the references' own 24 bounces, which leave out 0.5 % here."""
+SPHERE_BOUNCES = 64
+"""0.8⁶⁴ < 10⁻⁶: the bounces left out don't show. The references' 24 bounces
+would leave out 0.8²⁴ = 0.5 % here, in a room whose surfaces all reflect 80 %;
+in the reference rooms, whose floors reflect 30 %, far less."""
+
+
+def _with(options: tuple[str, ...], flag: str, value: str) -> tuple[str, ...]:
+    """``options`` with ``flag``'s value replaced."""
+    changed = list(options)
+    changed[changed.index(flag) + 1] = value
+    return tuple(changed)
+
+
+SPHERE_OPTIONS = _with(_with(BOUNCE_OPTIONS, "-ab", str(SPHERE_BOUNCES)), "-lw", "1e-7")
+"""The references' options for total light, with bounces enough for ρ = 0.8."""
 
 
 def sphere_check(
-    radiance: Radiance, work: Path, bounce_options: tuple[str, ...] = BOUNCE_OPTIONS
+    radiance: Radiance, work: Path, bounce_options: tuple[str, ...] = SPHERE_OPTIONS
 ) -> Check:
     """Radiance's bounced light against the integrating sphere.
 
-    In a closed room whose surfaces all reflect ρ, every lumen is reflected
-    again and again until absorbed, so the bounced light reaching the
-    surfaces, averaged over their area, is E = ρ Φ / (A (1 − ρ)) (the
-    integrating-sphere formula; e.g. the IES Lighting Handbook, on
-    inter-reflections). Here a uniform 100 cd point source sits in the middle
-    of a 3 m cube: Φ = 4π · 100 lm, A = 54 m².
+    Inside a hollow sphere that reflects ρ diffusely, light reflected anywhere
+    on it reaches every point of it equally. So with a point source at the
+    centre, every lumen is reflected again and again until absorbed, and the
+    bounced light is the same at every point of the inside:
+    E = ρ Φ / (A (1 − ρ)) (the integrating-sphere formula; e.g. the IES
+    Lighting Handbook, on inter-reflections). Exact at each point, unlike in a
+    cube, where the formula holds only for the average over the surfaces and
+    a few points can't give that average exactly. Here a uniform 100 cd point
+    source: Φ = 4π · 100 lm, A = 4π r².
 
     Args:
         radiance: The installed Radiance.
         work: A folder for the scene's files.
-        bounce_options: rtrace's options for total light: the references' own,
-            or others to prove the check catches a mistake.
+        bounce_options: rtrace's options for total light: SPHERE_OPTIONS, or
+            others to prove the check catches a mistake.
 
     Returns:
-        The check: Radiance's average bounced light (total less direct) on the
-        cube's surfaces against the formula.
+        The check: Radiance's mean bounced light (total less direct) over the
+        points, against the formula.
     """
     folder = work / "sphere"
     folder.mkdir()
     point_file = folder / "point.ies"
     write_ies(point_file, (0.0, 180.0), (0.0,), ((SPHERE_CANDELA, SPHERE_CANDELA),))
-    s, rho = SPHERE_ROOM_M, SPHERE_REFLECTANCE
-    room = RoomShell(s, s, s, rho, rho, rho)
-    luminaire = PlacedLuminaire(point_file, Vec3(0, s / 2, 0), 0, 0)
-    octree = build_scene(radiance, folder, [luminaire], [], room)
-    points = _cube_points(s)
+    r, rho = SPHERE_RADIUS_M, SPHERE_REFLECTANCE
+    shell = SphereShell(SPHERE_CENTRE, r, rho)
+    luminaire = PlacedLuminaire(point_file, SPHERE_CENTRE, 0, 0)
+    octree = build_scene(radiance, folder, [luminaire], [], shell)
+    points = _sphere_points()
     bounced_at = direct_and_bounced(radiance, octree, points, bounce_options).bounced
     bounced = sum(bounced_at) / len(points)
     flux = 4 * math.pi * SPHERE_CANDELA
-    area = 6 * s * s
+    area = 4 * math.pi * r * r
     return Check(
-        name=f"integrating sphere: {s:g} m cube, ρ {rho:g}, {SPHERE_CANDELA:g} cd point",
+        name=f"integrating sphere: {r:g} m radius, ρ {rho:g}, {SPHERE_CANDELA:g} cd point",
         expected_lux=rho * flux / (area * (1 - rho)),
         radiance_lux=bounced,
         tolerance=SPHERE_TOLERANCE,
     )
 
 
-def _cube_points(side: float) -> list[tuple[Vec3, Vec3]]:
-    """Points at cell centres on each face of a cube of `side` standing on the floor, facing in."""
-    n = SPHERE_POINTS_PER_SIDE
-    h = side / 2
-    cells = [(-h + (i + 0.5) * side / n) for i in range(n)]
+def _sphere_points() -> list[tuple[Vec3, Vec3]]:
+    """SPHERE_POINTS spread evenly over the inside (a Fibonacci lattice), facing the centre."""
+    golden_angle = math.pi * (3 - math.sqrt(5))
     points: list[tuple[Vec3, Vec3]] = []
-    for a in cells:
-        for b in cells:
-            points.append((Vec3(a, 0, b), Vec3(0, 1, 0)))
-            points.append((Vec3(a, side, b), Vec3(0, -1, 0)))
-            points.append((Vec3(-h, b + h, a), Vec3(1, 0, 0)))
-            points.append((Vec3(h, b + h, a), Vec3(-1, 0, 0)))
-            points.append((Vec3(a, b + h, -h), Vec3(0, 0, 1)))
-            points.append((Vec3(a, b + h, h), Vec3(0, 0, -1)))
+    for i in range(SPHERE_POINTS):
+        y = 1 - 2 * (i + 0.5) / SPHERE_POINTS
+        ring = math.sqrt(1 - y * y)
+        out = Vec3(ring * math.cos(i * golden_angle), y, ring * math.sin(i * golden_angle))
+        points.append((SPHERE_CENTRE + out.scaled(SPHERE_RADIUS_M), out.scaled(-1)))
     return points
 
 

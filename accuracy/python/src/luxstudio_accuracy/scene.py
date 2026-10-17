@@ -112,12 +112,21 @@ class RoomShell:
     ceiling: float
 
 
+@dataclass(frozen=True)
+class SphereShell:
+    """The inside of a hollow sphere that reflects diffusely: an integrating sphere."""
+
+    centre: Vec3
+    radius: float
+    reflectance: float
+
+
 def build_scene(
     radiance: Radiance,
     work_dir: Path,
     luminaires: list[PlacedLuminaire],
     boxes: list[ShadowBox],
-    room: RoomShell | None,
+    room: RoomShell | SphereShell | None,
 ) -> Path:
     """Writes a scene and compiles it to an octree.
 
@@ -126,13 +135,16 @@ def build_scene(
         work_dir: An empty folder for the scene's files.
         luminaires: The scene's luminaires.
         boxes: Boxes that block light.
-        room: The room's reflecting surfaces, or None for luminaires alone.
+        room: The reflecting surfaces around the luminaires: a room, a sphere,
+            or None for luminaires alone.
 
     Returns:
         The octree, ready for ``measure``.
     """
     lines: list[str] = []
-    if room:
+    if isinstance(room, SphereShell):
+        lines += _sphere(room)
+    elif room:
         lines += _room(room)
     for index, luminaire in enumerate(luminaires):
         lines.append(_luminaire(radiance, work_dir, luminaire, f"lum{index}"))
@@ -295,6 +307,16 @@ def _room(room: RoomShell) -> list[str]:
         lines.append(f"void plastic {name}_m 0 0 5 {rho} {rho} {rho} 0 0")
         lines.append(f"{name}_m polygon {name} 0 0 12 {coordinates}")
     return lines
+
+
+def _sphere(shell: SphereShell) -> list[str]:
+    """A grey diffuse sphere; plastic reflects from either side, so from inside too."""
+    rho = shell.reflectance
+    c = to_radiance(shell.centre)
+    return [
+        f"void plastic shell_m 0 0 5 {rho} {rho} {rho} 0 0",
+        f"shell_m sphere shell 0 0 4 {c.x} {c.y} {c.z} {shell.radius}",
+    ]
 
 
 def _luminaire(radiance: Radiance, work_dir: Path, luminaire: PlacedLuminaire, name: str) -> str:

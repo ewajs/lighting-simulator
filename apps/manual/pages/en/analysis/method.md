@@ -36,8 +36,19 @@ Radiance must pass its own tests before it writes a single reference:
 - **194 values worked out by hand** from each IES file, 20 m away, where the
   inverse-square law is exact. A Radiance release with a known bug in its IES
   reader fails every one, and a test proves it.
-- **The integrating sphere:** in a closed cube that reflects 80 %, bounced
-  light must match the formula, $E = \rho\,\Phi / (A\,(1-\rho))$, within 2 %.
+- **The integrating sphere:** in a hollow sphere 1.5 m in radius that
+  reflects 80 %, with the light at its centre, bounced light is the same at
+  every point and must match the formula, $E = \rho\,\Phi / (A\,(1-\rho))$,
+  within 0.1 %. With 64 bounces it gives 177.778 lx, exactly the formula's
+  value. With the references' 24 bounces it would read 0.5 % low, so the check
+  uses more (in the rooms, whose floors reflect 30 %, 24 are plenty).
+- **Orientation, by hand:** for the track spots, the centre of each pool of
+  light falls on its beam's vertical plane, within 1 cm, and where the tilt
+  puts it; the wall washer gives, beside its wall, what's worked out by hand
+  from its IES file, within 0.4 %. The sums come from the room's sizes and
+  the written conventions, not from either program, and are checked on both
+  programs' points: a mistake in describing the room, such as a luminaire
+  turned the wrong way, wouldn't pass.
 - **Convergence:** more rays, more bounces or fainter rays don't change the
   result, and the same run twice gives the same values but for sampling noise,
   about 0.3 % per point.
