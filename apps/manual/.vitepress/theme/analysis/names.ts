@@ -227,6 +227,7 @@ export const WORDS: Record<Lang, Record<string, string>> = {
     totalEmpty: 'Total, sin muebles',
     totalShort: 'Total',
     directShort: 'Directa',
+    bouncedShort: 'Rebotada',
     tooDark: 'Lux Studio da menos',
     tooBright: 'Lux Studio da más',
     scatterX: 'Radiance (lx)',
@@ -277,6 +278,7 @@ export const WORDS: Record<Lang, Record<string, string>> = {
     totalEmpty: 'Total, without furniture',
     totalShort: 'Total',
     directShort: 'Direct',
+    bouncedShort: 'Bounced',
     tooDark: 'Lux Studio gives less',
     tooBright: 'Lux Studio gives more',
     scatterX: 'Radiance (lx)',
@@ -316,8 +318,8 @@ export const ROOM_NOTES: Record<string, Record<Lang, string>> = {
     en: 'Close to a large luminaire, with a piece of furniture that reflects. Splitting the opening into cells fixes the points close to it. The table reflects light to the ceiling and shades the floor below from bounced light too: without counting that, the ceiling read 7 % low.',
   },
   'wall-sconce': {
-    es: 'Una caja que brilla, centrada a 25 cm de la pared. Muy cerca, los dos programas aproximan de forma distinta una abertura grande. Toda la habitación da algo más que en Radiance, probablemente porque allá el cuerpo del aplique tapa parte de la luz que rebota en la pared de atrás; en Lux Studio, las luminarias no tapan luz.',
-    en: "A glowing box centred 25 cm from its wall. Very close, the two programs approximate a large opening differently. The whole room reads a little higher than in Radiance, probably because there the sconce's body hides some of the light bouncing off the wall behind it; in Lux Studio, luminaires don't hide light.",
+    es: 'Una caja que brilla, centrada a 25 cm de la pared. Muy cerca, los dos programas aproximan de forma distinta una abertura grande. Toda la habitación da algo más que en Radiance, porque allá el cuerpo del aplique tapa parte de la luz que rebota en la pared de atrás; en Lux Studio, las luminarias no tapan luz. Una prueba que le da cuerpo lo confirma: la luz que rebota pasa de un 3,4–4,5 % de más a un 0,3 %.',
+    en: "A glowing box centred 25 cm from its wall. Very close, the two programs approximate a large opening differently. The whole room reads a little higher than in Radiance, because there the sconce's body hides some of the light bouncing off the wall behind it; in Lux Studio, luminaires don't hide light. A trial that gives it a body confirms it: bounced light goes from 3.4–4.5 % high to 0.3 %.",
   },
   'furnished-living': {
     es: 'Cuatro muebles que tapan y reflejan la luz, también la que rebota. Probalo con Paso en los mapas: si los muebles solo tapan la luz que rebota, como cajas negras, todo da menos que en Radiance; cuando además la reflejan, como su terminación, coincide. Algunos puntos del plano de trabajo caen dentro de la biblioteca, donde los dos programas dan casi 0.',

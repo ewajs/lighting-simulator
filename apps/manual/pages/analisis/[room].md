@@ -37,8 +37,9 @@ const rho = page.summary.reflectances
 ## Superficie por superficie
 
 Cada superficie medida, su promedio en Radiance y en Lux Studio, y la peor
-diferencia en un punto. Con luz total, directa o, si el ambiente tiene
-muebles, total sin muebles en los dos programas.
+diferencia en un punto. Con luz total, directa, solo la rebotada (la total
+menos la directa, en los dos programas) o, si el ambiente tiene muebles,
+total sin muebles en los dos programas.
 
 <LxSurfaceTable :page="page" />
 

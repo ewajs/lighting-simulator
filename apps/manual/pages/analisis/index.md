@@ -69,8 +69,12 @@ Cada ambiente tiene su página, con sus mapas punto por punto:
   borde de un mueble, un punto puede dar 0 o el doble que en Radiance, que ve
   una parte de la abertura. Con más detalle en las sombras (5 o 2,5 cm), esos
   puntos se acercan, a cambio de tiempo ([Analizar la luz](../analizar)).
-- **Las luminarias no tapan la luz que rebota.** Un aplique grande
-  pegado a la pared da unos puntos más que en Radiance.
+- **Las luminarias no tapan la luz que rebota.** En Radiance, el cuerpo que
+  brilla sí la tapa. Por eso la luz que rebota da en promedio un 1 % más que
+  en Radiance, y hasta un 4,5 % alrededor del aplique. En una prueba en la que
+  el cuerpo de cada luminaria tapa la luz que rebota, la diferencia media baja
+  a 0,0 %, y lo que queda se achica con el tamaño de los parches
+  ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
 - **Todas las superficies reflejan de forma difusa:** no hay brillos ni
   espejos.
 - **Los ambientes son rectangulares**, y todavía no hay ventanas.

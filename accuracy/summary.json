@@ -106,6 +106,53 @@
           "worstNear": 0.01702
         }
       ],
+      "bounced": [
+        {
+          "surface": "work-plane",
+          "points": 480,
+          "radianceAverageLx": 210.4,
+          "oursAverageLx": 211,
+          "averageError": 0.00287,
+          "worstFar": 0.13927,
+          "worstNear": 0.04839
+        },
+        {
+          "surface": "floor",
+          "points": 480,
+          "radianceAverageLx": 132.6,
+          "oursAverageLx": 132.8,
+          "averageError": 0.00189,
+          "worstFar": 0.11523,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 480,
+          "radianceAverageLx": 192,
+          "oursAverageLx": 193.1,
+          "averageError": 0.00544,
+          "worstFar": 0.02529,
+          "worstNear": 4.97443
+        },
+        {
+          "surface": "wall-x-",
+          "points": 220,
+          "radianceAverageLx": 132.3,
+          "oursAverageLx": 132.1,
+          "averageError": -0.00177,
+          "worstFar": 0.12245,
+          "worstNear": 0.00972
+        },
+        {
+          "surface": "wall-z-",
+          "points": 264,
+          "radianceAverageLx": 135.4,
+          "oursAverageLx": 137.1,
+          "averageError": 0.01303,
+          "worstFar": 0.02641,
+          "worstNear": 0.01969
+        }
+      ],
       "withoutFurniture": [
         {
           "surface": "work-plane",
@@ -398,6 +445,35 @@
           "worstNear": 0.01663
         }
       ],
+      "bounced": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 93,
+          "oursAverageLx": 93.8,
+          "averageError": 0.0083,
+          "worstFar": 0.01834,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 98.7,
+          "oursAverageLx": 99.3,
+          "averageError": 0.00598,
+          "worstFar": 0.01419,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x-",
+          "points": 280,
+          "radianceAverageLx": 92.4,
+          "oursAverageLx": 92.9,
+          "averageError": 0.00594,
+          "worstFar": 0.02373,
+          "worstNear": 0.01682
+        }
+      ],
       "withoutFurniture": [],
       "features": [
         {
@@ -611,6 +687,44 @@
           "oursAverageLx": 86.4,
           "averageError": 0.00561,
           "worstFar": 0.04917,
+          "worstNear": 0
+        }
+      ],
+      "bounced": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 72,
+          "oursAverageLx": 71.9,
+          "averageError": -0.00174,
+          "worstFar": 0.16997,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 61.7,
+          "oursAverageLx": 61.9,
+          "averageError": 0.00396,
+          "worstFar": 0.13037,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x+",
+          "points": 176,
+          "radianceAverageLx": 64.4,
+          "oursAverageLx": 64.7,
+          "averageError": 0.00528,
+          "worstFar": 0.08305,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z-",
+          "points": 220,
+          "radianceAverageLx": 59.6,
+          "oursAverageLx": 60.1,
+          "averageError": 0.00868,
+          "worstFar": 0.05228,
           "worstNear": 0
         }
       ],
@@ -873,6 +987,35 @@
           "worstNear": 0
         }
       ],
+      "bounced": [
+        {
+          "surface": "work-plane",
+          "points": 500,
+          "radianceAverageLx": 153,
+          "oursAverageLx": 154.1,
+          "averageError": 0.00726,
+          "worstFar": 0.04084,
+          "worstNear": 0.05547
+        },
+        {
+          "surface": "floor",
+          "points": 500,
+          "radianceAverageLx": 123.5,
+          "oursAverageLx": 124.6,
+          "averageError": 0.00884,
+          "worstFar": 0.05994,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 500,
+          "radianceAverageLx": 95.2,
+          "oursAverageLx": 96.3,
+          "averageError": 0.01183,
+          "worstFar": 0.0489,
+          "worstNear": 0
+        }
+      ],
       "withoutFurniture": [
         {
           "surface": "work-plane",
@@ -1117,6 +1260,44 @@
           "worstNear": 0
         }
       ],
+      "bounced": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 14.5,
+          "oursAverageLx": 14.5,
+          "averageError": 0.00446,
+          "worstFar": 0.01479,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 15.2,
+          "oursAverageLx": 15.2,
+          "averageError": 0.00323,
+          "worstFar": 0.01517,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x-",
+          "points": 176,
+          "radianceAverageLx": 15.2,
+          "oursAverageLx": 15.2,
+          "averageError": 0.00291,
+          "worstFar": 0.01205,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z+",
+          "points": 220,
+          "radianceAverageLx": 15.8,
+          "oursAverageLx": 15.8,
+          "averageError": 0.00299,
+          "worstFar": 0.01766,
+          "worstNear": 0
+        }
+      ],
       "withoutFurniture": [],
       "features": [
         {
@@ -1339,6 +1520,35 @@
           "worstNear": 0
         }
       ],
+      "bounced": [
+        {
+          "surface": "floor",
+          "points": 500,
+          "radianceAverageLx": 141.2,
+          "oursAverageLx": 141.6,
+          "averageError": 0.00279,
+          "worstFar": 0.08627,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x-",
+          "points": 280,
+          "radianceAverageLx": 110.8,
+          "oursAverageLx": 111.2,
+          "averageError": 0.00352,
+          "worstFar": 0.07459,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z-",
+          "points": 350,
+          "radianceAverageLx": 136.9,
+          "oursAverageLx": 137.5,
+          "averageError": 0.00459,
+          "worstFar": 0.05666,
+          "worstNear": 0
+        }
+      ],
       "withoutFurniture": [],
       "features": [
         {
@@ -1552,6 +1762,44 @@
           "oursAverageLx": 58.2,
           "averageError": 0.02354,
           "worstFar": 0.03564,
+          "worstNear": 0
+        }
+      ],
+      "bounced": [
+        {
+          "surface": "wall-x-",
+          "points": 280,
+          "radianceAverageLx": 47.7,
+          "oursAverageLx": 49.8,
+          "averageError": 0.0452,
+          "worstFar": 0.05219,
+          "worstNear": 0.54943
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 46.7,
+          "oursAverageLx": 48.2,
+          "averageError": 0.03368,
+          "worstFar": 0.04694,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 320,
+          "radianceAverageLx": 37.5,
+          "oursAverageLx": 38.9,
+          "averageError": 0.03733,
+          "worstFar": 0.08723,
+          "worstNear": 0.08257
+        },
+        {
+          "surface": "wall-z+",
+          "points": 220,
+          "radianceAverageLx": 39.1,
+          "oursAverageLx": 40.4,
+          "averageError": 0.03448,
+          "worstFar": 0.04621,
           "worstNear": 0
         }
       ],

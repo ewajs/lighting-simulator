@@ -64,8 +64,11 @@ Each room has its own page, with its maps point by point:
   point can read 0 or double Radiance's, which sees part of the opening. With
   finer shadow detail (5 or 2.5 cm), those points come closer, at a cost in
   time ([Analysing the light](../analysing)).
-- **Luminaires don't hide bounced light.** A large sconce right against
-  its wall reads a few points higher than in Radiance.
+- **Luminaires don't hide bounced light.** In Radiance, the glowing body
+  does. That's why bounced light reads 1 % higher than Radiance's on
+  average, and up to 4.5 % around the sconce. In a trial where each
+  luminaire's body hides bounced light, the mean difference drops to 0.0 %,
+  and what's left shrinks with the patch size ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
 - **Every surface reflects diffusely:** no gloss, no mirrors.
 - **Rooms are rectangular**, and there are no windows yet.
 

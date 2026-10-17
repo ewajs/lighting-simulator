@@ -39,8 +39,10 @@ dividir su abertura en celdas de 10 cm corrige los puntos cercanos. El peor
 punto a menos de 1 m de una luminaria pasa de
 **{{ pct(f.nearBeforeSplit, 0) }}** a **{{ pct(f.nearAfterSplit, 0) }}**. A
 cambio, algún promedio empeora, hasta {{ pct(f.splitAverageRise, 1) }}
-puntos, en el aplique de pared. Eso es más que el ruido de Radiance, y todavía
-no está explicado.
+puntos, en el aplique de pared. Es la misma causa que la luz que rebota de
+más ([Dónde estamos](./#lo-que-todavia-no-cuenta)): en una prueba en la que el
+cuerpo del aplique tapa la luz que rebota, como en Radiance, dividirlo deja de
+empeorar el promedio ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
 
 **\+ sombras de los muebles.** En los ambientes amueblados, la diferencia
 media por punto baja de **{{ pct(f.beforeShadows) }}** a

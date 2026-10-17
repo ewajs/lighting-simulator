@@ -61,6 +61,8 @@ npm run accuracy:timings      time each reference room at each feature step
 npm run accuracy:patch-size   accuracy against time per patch size → PATCH-SIZE.md
 npm run accuracy:source-cell  accuracy against time per source cell size, also
                       against an exact formula → SOURCE-CELL.md (ADR 0069)
+npm run accuracy:bounce       where bounced light differs from Radiance's, and
+                      why → BOUNCE.md (ADR 0070; about 3 min)
 npm run accuracy:docs         the Python's docs (pdoc), live
 npm run test:e2e      Playwright e2e: every test on chrome, @all-browsers tests
                       also on chrome-webgl2 and webkit (local only; ADRs 0032, 0056)

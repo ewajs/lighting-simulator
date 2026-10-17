@@ -11,14 +11,16 @@ const props = defineProps<{ page: RoomPage }>();
 
 const { lang } = useData();
 const l = computed(() => langOf(lang.value));
-const light = ref<'total' | 'direct' | 'empty'>('total');
+const light = ref<'total' | 'direct' | 'bounced' | 'empty'>('total');
 const furnished = computed(() => props.page.summary.withoutFurniture.length > 0);
 const rows = computed((): readonly SurfaceSummary[] =>
   light.value === 'direct'
     ? props.page.summary.direct
-    : light.value === 'empty'
-      ? props.page.summary.withoutFurniture
-      : props.page.summary.total,
+    : light.value === 'bounced'
+      ? props.page.summary.bounced
+      : light.value === 'empty'
+        ? props.page.summary.withoutFurniture
+        : props.page.summary.total,
 );
 /** How a difference reads: within Radiance's noise, close, or off. */
 const grade = (value: number) => {
@@ -38,6 +40,9 @@ const lx = (v: number) =>
       </button>
       <button type="button" :class="{ active: light === 'direct' }" @click="light = 'direct'">
         {{ WORDS[l].directShort }}
+      </button>
+      <button type="button" :class="{ active: light === 'bounced' }" @click="light = 'bounced'">
+        {{ WORDS[l].bouncedShort }}
       </button>
       <button
         v-if="furnished"

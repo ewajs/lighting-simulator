@@ -97,6 +97,9 @@ function panelRow(cellM: number | undefined, name: string): string {
 
 // --- 2. Every reference room against Radiance. ---
 
+/** The lights the study pools: bounced light is in BOUNCE.md (ADR 0070). */
+type PooledLight = Exclude<Light, 'bounced'>;
+
 interface Pooled {
   worstAverage: number;
   worstFar: number;
@@ -106,12 +109,12 @@ interface Pooled {
 }
 
 function roomsRow(cellM: number): {
-  line: (light: Light) => string;
+  line: (light: PooledLight) => string;
   seconds: number;
   far: number[];
 } {
   const options = { ...DEFAULT_CALCULATION_OPTIONS, sourceCellM: cellM };
-  const pooled: Record<Light, Pooled> = {
+  const pooled: Record<PooledLight, Pooled> = {
     direct: { worstAverage: 0, worstFar: 0, worstNear: 0, off: 0, bright: 0 },
     total: { worstAverage: 0, worstFar: 0, worstNear: 0, off: 0, bright: 0 },
   };
@@ -136,7 +139,7 @@ function roomsRow(cellM: number): {
     }
   }
   const seconds = (performance.now() - start) / 1000;
-  const line = (light: Light) => {
+  const line = (light: PooledLight) => {
     const p = pooled[light];
     return (
       `| ${label(cellM)} | ${percent(p.worstAverage)} | ${percent(p.worstFar)} | ` +

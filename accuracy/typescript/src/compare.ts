@@ -242,8 +242,22 @@ export interface SurfaceSummary {
   readonly worstNear: number;
 }
 
-/** Which light to summarise: straight from the luminaires, or with every bounce. */
-export type Light = 'direct' | 'total';
+/** Which light to summarise: straight from the luminaires, bounced (total less direct), or both. */
+export type Light = 'direct' | 'bounced' | 'total';
+
+/** Radiance's light at a point, in lx: direct, bounced or total. */
+export function radianceLx(point: PointComparison, light: Light): number {
+  if (light === 'direct') return point.radianceDirectLx;
+  if (light === 'total') return point.radianceTotalLx;
+  return point.radianceTotalLx - point.radianceDirectLx;
+}
+
+/** Lux Studio's light at a point, in lx: direct, bounced or total. */
+export function oursLx(point: PointComparison, light: Light): number {
+  if (light === 'direct') return point.oursDirectLx;
+  if (light === 'total') return point.oursTotalLx;
+  return point.oursTotalLx - point.oursDirectLx;
+}
 
 /**
  * Summarises a room's comparison surface by surface, for direct or total light.
@@ -255,9 +269,8 @@ export function summarize(
   origins: readonly Vec3[],
   light: Light,
 ): SurfaceSummary[] {
-  const radiance = (p: PointComparison) =>
-    light === 'direct' ? p.radianceDirectLx : p.radianceTotalLx;
-  const ours = (p: PointComparison) => (light === 'direct' ? p.oursDirectLx : p.oursTotalLx);
+  const radiance = (p: PointComparison) => radianceLx(p, light);
+  const ours = (p: PointComparison) => oursLx(p, light);
   const brightest = Math.max(...points.map(radiance));
   const near = (point: PointComparison) =>
     origins.some(
@@ -293,9 +306,8 @@ export function brightPointsOff(
   light: Light,
   beyond: number,
 ): { readonly off: number; readonly bright: number } {
-  const radiance = (p: PointComparison) =>
-    light === 'direct' ? p.radianceDirectLx : p.radianceTotalLx;
-  const ours = (p: PointComparison) => (light === 'direct' ? p.oursDirectLx : p.oursTotalLx);
+  const radiance = (p: PointComparison) => radianceLx(p, light);
+  const ours = (p: PointComparison) => oursLx(p, light);
   const brightest = Math.max(...points.map(radiance));
   const bright = points.filter((p) => radiance(p) >= BRIGHT_SHARE * brightest);
   const off = bright.filter((p) => Math.abs(ours(p) / radiance(p) - 1) > beyond).length;
