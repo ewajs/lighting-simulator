@@ -74,6 +74,18 @@ SVG attributes, which can't use CSS variables. Lux Studio is always amber,
 Radiance always blue; differences use a diverging blue–red scale centred on
 0, and illuminance the false-colour ramp of the Concepts maps.
 
+### Pictures of the rooms
+
+Each room page shows the room as the demo renders it. The manual's screenshot
+suite (`screenshots/analysis-rooms.spec.ts`, run by `npm run
+manual:screenshots`) rebuilds every reference room with core's `Simulator`
+and the demo's catalog: its luminaires at their light origins, with their
+aims, and each box as the demo piece whose usual size it has (turned a
+quarter if it lies across). It opens the scene through a share link and
+saves the demo's own screenshot, the 3D view without its controls, to
+`pages/public/analysis/`. The pictures have no text, so there's one set for
+both languages.
+
 ### Names
 
 Room, surface, step and measure names, and the words the charts use, live in
@@ -89,10 +101,6 @@ themselves rather than taking every label as a prop.
   every room's data, about 500 KB each.
 - **Fetching JSON files at run time.** Another place to publish them, and the
   pages would render empty without JavaScript.
-- **Pictures of the rooms rendered by the demo.** Planned: the demo opens a
-  scene from a link, so the manual's screenshot script can capture each
-  room, once the rooms have demo products and furniture. Until then each
-  room page draws its plan.
 
 ## Consequences
 

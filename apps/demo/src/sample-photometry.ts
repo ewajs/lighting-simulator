@@ -5,7 +5,7 @@ import type { PhotometryProvider } from '@luxstudio/core';
  * public/ies/SOURCES.md). A backend integration works the same way: map the
  * product to its file's download link and fetch it.
  */
-const FILES: Readonly<Record<string, string>> = {
+export const SAMPLE_IES_FILES: Readonly<Record<string, string>> = {
   'ies-downlight': 'LX6C15D010-EX6C159030-6LBMH.ies',
   'ies-track-spot': 'qg63_b35q.ies',
   'ies-linear-pendant': 'HP-2-ID-4ft-H-B-835-ITL85132.008.ies',
@@ -18,7 +18,7 @@ const IES_ENCODING = 'latin1';
 
 export const samplePhotometry: PhotometryProvider = {
   async load(productId) {
-    const file = FILES[productId];
+    const file = SAMPLE_IES_FILES[productId];
     if (!file) return undefined;
     const url = new URL(`ies/${file}`, document.baseURI);
     const response = await fetch(url);
