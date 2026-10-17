@@ -1,6 +1,8 @@
 <script setup>
 import LxPlot from '../../.vitepress/theme/components/LxPlot.vue'
+import LxDistanceAngle from '../../.vitepress/theme/components/LxDistanceAngle.vue'
 import { data } from '../../.vitepress/theme/diagrams/light.data'
+import { data as directions } from '../../.vitepress/theme/diagrams/directions.data'
 </script>
 
 # Distancia y ángulo
@@ -57,6 +59,31 @@ La curva punteada muestra cuánto pesa el coseno:
   x-label="Posición en el piso (m)"
   y-label="Iluminancia (lx)"
   caption="El piso 2,7 m debajo de la downlight de la demo, calculado por Lux Studio con su archivo IES."
+/>
+
+### Probalo
+
+Arrastrá el punto por el piso o la luminaria hacia arriba y abajo, o usá los
+controles. La curva alrededor de la luminaria es su curva polar: en cada
+dirección, su largo es la intensidad $I$.
+
+- El ángulo **γ**, desde la vertical de la luminaria, dice qué intensidad leer
+  del archivo IES.
+- El ángulo **α**, desde la perpendicular a la superficie (la flecha azul), da
+  el coseno.
+
+Con la superficie en el piso, los dos ángulos son iguales. Inclinala y se
+separan: girada hacia la luminaria recibe más luz; de espaldas, nada.
+
+<LxDistanceAngle
+  :profile="directions.downlight"
+  :labels="{
+    height: 'Altura de la luminaria',
+    position: 'Posición del punto',
+    tilt: 'Inclinación de la superficie',
+    away: 'la superficie le da la espalda a la luz.',
+  }"
+  caption="La downlight de la demo, con su archivo IES: la cuenta de arriba, con la luminaria como un punto."
 />
 
 ## Varias luminarias

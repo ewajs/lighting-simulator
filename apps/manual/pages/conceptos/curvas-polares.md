@@ -1,6 +1,8 @@
 <script setup>
 import LxPolar from '../../.vitepress/theme/components/LxPolar.vue'
+import LxTypeC from '../../.vitepress/theme/components/LxTypeC.vue'
 import { data } from '../../.vitepress/theme/diagrams/light.data'
+import { data as directions } from '../../.vitepress/theme/diagrams/directions.data'
 
 const chart = (key) => data.polar.find((c) => c.key === key)
 const planes = ['Plano C0–C180', 'Plano C90–C270', 'Haz', 'Anillos cada']
@@ -23,6 +25,17 @@ luminaria colgando, apuntando al piso.
   es el horizonte.
 - El **ángulo horizontal** (C) gira alrededor del eje vertical, de 0° a 360°.
   El plano C0 corre a lo largo de la luminaria; C90, a lo ancho.
+
+Cada C elige un **plano vertical** que pasa por la luminaria, como una hoja
+que gira alrededor de ella; adentro de ese plano, γ elige la dirección. Probalo
+con el bañador de pared de la demo, que no reparte igual hacia todos lados:
+girá C desde arriba y γ de costado, arrastrando los puntos o con los controles.
+
+<LxTypeC
+  :grid="directions.wallWasher"
+  :labels="{ above: 'Desde arriba', side: 'De costado, plano', c: 'Ángulo horizontal C', gamma: 'Ángulo vertical γ' }"
+  caption="Desde arriba, la curva es la intensidad en cada C para el γ elegido; de costado, en cada γ del plano elegido. El punto es la dirección (C, γ)."
+/>
 
 Muchas luminarias son simétricas, y el archivo guarda solo una parte: una
 downlight redonda es igual en todas las direcciones horizontales, así que basta

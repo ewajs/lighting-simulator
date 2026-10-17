@@ -1,5 +1,5 @@
 <script setup>
-import LxGridPlan from '../../../.vitepress/theme/components/LxGridPlan.vue'
+import LxGridExplorer from '../../../.vitepress/theme/components/LxGridExplorer.vue'
 import LxPlot from '../../../.vitepress/theme/components/LxPlot.vue'
 import { data } from '../../../.vitepress/theme/diagrams/rooms.data'
 import { formatNumber } from '../../../.vitepress/theme/diagrams/plot'
@@ -33,12 +33,15 @@ So a 1 m side gets a point every 0.2 m; 10 m, every 1 m; 100 m, every 5 m. The
 number of points is rounded up, so they're never further apart than $p$. With
 a fixed grid, minimums and averages can be compared with other programs'.
 
-<LxGridPlan
-  :room="data.room"
+Try it: change the width, depth and border, and see how the points spread.
+The grid comes from the same function Lux Studio uses.
+
+<LxGridExplorer
+  :width-m="data.room.widthM"
+  :depth-m="data.room.depthM"
   :border-m="data.borderM"
-  :points="data.gridPoints"
-  border-label="border"
-  :caption="`A 5 × 4 m room: the work plane without its ${n(data.borderM, 1)} m border, with a point every ${n(data.gridSpacingM)} m.`"
+  :labels="{ width: 'Width', depth: 'Depth', border: 'Border', cell: 'Cells of', points: 'points', none: 'The border leaves nothing to calculate.' }"
+  :caption="`It starts as a 5 × 4 m room with a ${n(data.borderM, 1)} m border: a point every ${n(data.gridSpacingM)} m, each at the centre of its cell.`"
 />
 
 <LxPlot
