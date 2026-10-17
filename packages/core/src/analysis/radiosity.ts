@@ -156,3 +156,36 @@ export function indirectIlluminanceAt(
   }
   return lux;
 }
+
+/**
+ * How much each point sees of each patch, as `indirectIlluminanceAt` weighs
+ * them: row k holds F(points[k] → j) · visibility for every patch j. The
+ * bounced light at point k is then the sum of row k times each exitance.
+ * It depends only on the geometry, so it can be kept between calculations
+ * (cache.ts).
+ */
+export function pointViews(
+  points: readonly Vec3[],
+  normal: Vec3,
+  patches: readonly Patch[],
+  visibility: Visibility = UNBLOCKED,
+): Float64Array {
+  const count = patches.length;
+  const views = new Float64Array(points.length * count);
+  points.forEach((point, k) => {
+    for (let j = 0; j < count; j++) {
+      const patch = patches[j]!;
+      const factor = pointToPolygon(point, normal, patch.vertices);
+      if (factor !== 0) views[k * count + j] = factor * visibility(point, patch);
+    }
+  });
+  return views;
+}
+
+/** The bounced light at point `k` of `views` (from `pointViews`), in lx. */
+export function indirectFromViews(views: Float64Array, k: number, light: IndirectLight): number {
+  const count = light.patches.length;
+  let lux = 0;
+  for (let j = 0; j < count; j++) lux += views[k * count + j]! * light.exitance[j]!;
+  return lux;
+}

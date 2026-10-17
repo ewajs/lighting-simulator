@@ -5,6 +5,7 @@
 import {
   analyseIlluminance,
   snapshotInputs,
+  type AnalysisCache,
   type AnalysisSettings,
   type AnalysisSnapshot,
   type CalculationOptions,
@@ -24,20 +25,37 @@ export interface AnalysisRequest {
 
 /** The answer: the analysis and how long it took, or why it failed. */
 export type AnalysisResponse =
-  | { readonly id: number; readonly analysis: IlluminanceAnalysis; readonly ms: number }
+  | {
+      readonly id: number;
+      readonly analysis: IlluminanceAnalysis;
+      readonly ms: number;
+      /** Whether the room's form factors were reused from the calculation before (ADR 0065). */
+      readonly roomReused: boolean;
+    }
   | { readonly id: number; readonly error: string };
 
-/** Runs a request: what the worker does with each message. */
-export function runAnalysis(request: AnalysisRequest, now: () => number): AnalysisResponse {
+/**
+ * Runs a request: what the worker does with each message. The `cache` it
+ * keeps between requests makes a change to the light alone several times
+ * faster (ADR 0065).
+ */
+export function runAnalysis(
+  request: AnalysisRequest,
+  now: () => number,
+  cache?: AnalysisCache,
+): AnalysisResponse {
   const start = now();
+  const hits = cache?.stats.hits ?? 0;
   try {
     const analysis = analyseIlluminance(
       request.scene,
       snapshotInputs(request.snapshot),
       request.settings,
       request.options,
+      cache,
     );
-    return { id: request.id, analysis, ms: now() - start };
+    const roomReused = (cache?.stats.hits ?? 0) > hits;
+    return { id: request.id, analysis, ms: now() - start, roomReused };
   } catch (error) {
     return { id: request.id, error: error instanceof Error ? error.message : String(error) };
   }

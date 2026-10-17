@@ -5,7 +5,11 @@
 import type { Scene } from '../types';
 import { roomGrids, type CalcGrid } from './calc-grid';
 import { DEFAULT_CALCULATION_OPTIONS, type CalculationOptions } from './options';
-import { illuminanceAt, sceneLight } from './scene-light';
+import { bounceGeometryKey, type AnalysisCache } from './cache';
+import { directIlluminance } from './direct';
+import { indirectFromViews, pointViews } from './radiosity';
+import { sceneLight } from './scene-light';
+import { boxVisibility } from './visibility';
 import { DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs, type AnalysisSettings } from './settings';
 import { illuminanceStats, type IlluminanceStats } from './stats';
 
@@ -36,7 +40,9 @@ export interface IlluminanceAnalysis {
 
 /**
  * The illuminance on the work plane and every room surface, direct and
- * bounced, in maintained lux.
+ * bounced, in maintained lux. With a `cache` held between calls, a room
+ * calculated before reuses its form factors and grid views (ADR 0065): a
+ * change to the light alone is several times faster.
  *
  * @throws RangeError if the settings don't fit the room.
  */
@@ -45,17 +51,26 @@ export function analyseIlluminance(
   inputs: AnalysisInputs,
   settings: AnalysisSettings = DEFAULT_ANALYSIS_SETTINGS,
   options: CalculationOptions = DEFAULT_CALCULATION_OPTIONS,
+  cache?: AnalysisCache,
 ): IlluminanceAnalysis {
-  const light = sceneLight(scene, inputs, settings, options);
+  const light = sceneLight(scene, inputs, settings, options, cache);
   const grids = roomGrids(scene.room, settings.workPlaneHeightM, settings.borderM);
+  const { patches, blockers } = light.indirect;
+  const key = bounceGeometryKey(scene.room, blockers, options.patchSizeM);
   const surfaces = grids.map((grid): SurfaceResult => {
-    const values = grid.points.map((point) => illuminanceAt(light, point, grid.normal));
-    const illuminanceLx = values.map((value) => value.totalLx);
+    const directLx = grid.points.map((point) =>
+      directIlluminance(point, grid.normal, light.direct.sources, light.direct.blockers),
+    );
+    // What each point sees of each patch is the same while the room is: kept in the cache.
+    const compute = () => pointViews(grid.points, grid.normal, patches, boxVisibility(blockers));
+    const views = cache ? cache.gridViews(key, grid, compute) : compute();
+    const indirectLx = grid.points.map((_, k) => indirectFromViews(views, k, light.indirect));
+    const illuminanceLx = directLx.map((direct, k) => direct + indirectLx[k]!);
     return {
       grid,
       illuminanceLx,
-      directLx: values.map((value) => value.directLx),
-      indirectLx: values.map((value) => value.indirectLx),
+      directLx,
+      indirectLx,
       stats: illuminanceLx.length > 0 ? illuminanceStats(illuminanceLx) : undefined,
     };
   });

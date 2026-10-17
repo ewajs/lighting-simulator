@@ -1,16 +1,20 @@
-// How long a direct illuminance calculation takes for a furnished room, to
-// measure before optimising (CLAUDE.md) and to size the live calculation's
-// budget (M5.4). `npm run bench -w packages/core` bundles this file with Vite
+// How long an illuminance calculation takes for a furnished room, to measure
+// before optimising (CLAUDE.md) and to size the live calculation's budget
+// (M5.4): from scratch, and with the room cached, as when only the light
+// changes (ADR 0065). `npm run bench -w packages/core` bundles this file with Vite
 // and runs it in Node, so it times the code as the app ships it: under
 // Vitest, every import goes through a getter that distorts the timing.
 import { analyseIlluminance } from '../src/analysis/analyse';
+import { AnalysisCache } from '../src/analysis/cache';
+import { DEFAULT_CALCULATION_OPTIONS } from '../src/analysis/options';
+import { DEFAULT_ANALYSIS_SETTINGS } from '../src/analysis/settings';
 import type { AnalysisInputs } from '../src/analysis/settings';
 import { catalog, photometry, room } from '../src/test-fixtures';
 import type { Furniture, Luminaire, Scene } from '../src/types';
 
 /** Runs before timing, so the JIT has compiled the hot paths. */
-const WARM_UP_RUNS = 20;
-const TIMED_RUNS = 200;
+const WARM_UP_RUNS = 3;
+const TIMED_RUNS = 20;
 
 // A downlight-like distribution, asymmetric enough to exercise every lookup,
 // with a 1.2 m opening so each luminaire is split into 12 cells.
@@ -58,17 +62,45 @@ const scene: Scene = {
 };
 const inputs: AnalysisInputs = { catalog, photometry: () => FILE, modelFile: () => undefined };
 
-for (let i = 0; i < WARM_UP_RUNS; i++) analyseIlluminance(scene, inputs);
-const times: number[] = [];
-for (let i = 0; i < TIMED_RUNS; i++) {
-  const start = performance.now();
-  analyseIlluminance(scene, inputs);
-  times.push(performance.now() - start);
+/** The median and mean of `run`'s time, in ms, after warming it up. */
+function time(run: (i: number) => void): { median: number; mean: number } {
+  for (let i = 0; i < WARM_UP_RUNS; i++) run(i);
+  const times: number[] = [];
+  for (let i = 0; i < TIMED_RUNS; i++) {
+    const start = performance.now();
+    run(i);
+    times.push(performance.now() - start);
+  }
+  times.sort((a, b) => a - b);
+  return {
+    median: times[Math.floor(times.length / 2)]!,
+    mean: times.reduce((sum, t) => sum + t, 0) / times.length,
+  };
 }
-times.sort((a, b) => a - b);
-const median = times[Math.floor(times.length / 2)]!;
-const mean = times.reduce((sum, t) => sum + t, 0) / times.length;
-console.log(
-  `analyseIlluminance, 6 luminaires × 12 cells, 3 pieces of furniture, 5 × 4 m room: ` +
-    `median ${median.toFixed(1)} ms, mean ${mean.toFixed(1)} ms over ${TIMED_RUNS} runs`,
+
+const report = (label: string, { median, mean }: { median: number; mean: number }) =>
+  console.log(
+    `${label}: median ${median.toFixed(1)} ms, mean ${mean.toFixed(1)} ms over ${TIMED_RUNS} runs`,
+  );
+
+console.log('6 luminaires × 12 cells, 3 pieces of furniture, 5 × 4 m room');
+report(
+  '  from scratch',
+  time(() => analyseIlluminance(scene, inputs)),
+);
+// A live edit: the same room, one luminaire dimmed a little more each time.
+const cache = new AnalysisCache();
+report(
+  '  the light changed, the room cached',
+  time((i) => {
+    const dimmed = { ...scene.luminaires[0]!, dimming: 1 - (i % 10) / 20 };
+    const changed = { ...scene, luminaires: [dimmed, ...scene.luminaires.slice(1)] };
+    analyseIlluminance(
+      changed,
+      inputs,
+      DEFAULT_ANALYSIS_SETTINGS,
+      DEFAULT_CALCULATION_OPTIONS,
+      cache,
+    );
+  }),
 );

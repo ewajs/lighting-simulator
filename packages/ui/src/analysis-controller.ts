@@ -137,7 +137,8 @@ export class AnalysisController implements ReactiveController {
       return;
     }
     this.#simulator?.logger.debug(
-      `[analysis] Calculated in ${Math.round(response.ms)} ms over ${response.analysis.indirect.patches} patches`,
+      `[analysis] Calculated in ${Math.round(response.ms)} ms over ${response.analysis.indirect.patches} patches` +
+        (response.roomReused ? ", reusing the room's form factors" : ''),
     );
     this.#set({
       analysis: response.analysis,

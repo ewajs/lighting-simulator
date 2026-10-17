@@ -138,6 +138,7 @@ It's plain maths over the scene, with no three.js, one formula per file:
 | `options.ts` | the calculation's tuning (cell and patch sizes, when to stop) and its features as switches, with defaults ([ADR 0061](../decisions/0061-calculation-features-and-timing.md)) |
 | `direct-light.ts`, `scene-light.ts` | a scene's light, prepared once, then read at any point: direct, bounced and total |
 | `analyse.ts` | `analyseIlluminance`: every surface's grid and its statistics |
+| `cache.ts` | `AnalysisCache`: the room's form factors and grid views, kept while only the light changes ([ADR 0065](../decisions/0065-analysis-cache.md)) |
 
 Where a luminaire's light leaves from and which way it points comes from
 `fixture-layout.ts` and `luminaire-frame.ts`. The renderer uses the same two
@@ -179,7 +180,9 @@ The Analysis tab shows the illuminance calculation
 `<lxs-app>` sends the scene, as a plain-data snapshot, to a Web Worker that
 runs core's `analyseIlluminance` from `@luxstudio/core/analysis`, an entry
 without the rendering code. It calculates only while the results are on
-screen, 250 ms after the last change, one calculation at a time.
+screen, 250 ms after the last change, one calculation at a time, and keeps
+the room's form factors in an `AnalysisCache`, so a change to the light alone
+takes a fifth of the time.
 
 ## Walkthrough 1: dragging a luminaire, from pointer to undo
 
