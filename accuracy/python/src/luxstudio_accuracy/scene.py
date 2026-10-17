@@ -1,10 +1,17 @@
-"""Radiance scenes: luminaires from IES files, shadow boxes, and illuminance at points.
+"""Radiance scenes: luminaires, a room's reflecting surfaces, boxes, and illuminance at points.
 
-Only direct light is computed for now (``-ab 0``): no room surfaces are
-needed, since nothing inside a closed box is hidden by its walls. Bounce
-light (M5.3) will add the surfaces and their reflectances.
+Direct light (``DIRECT_OPTIONS``) needs nothing but the luminaires and the
+boxes: inside a closed box nothing is hidden by its walls. Bounced light comes
+from two runs with Radiance's ordinary source sampling: total light with every
+bounce (``BOUNCE_OPTIONS``) less direct light alone (``BOUNCE_DIRECT_OPTIONS``).
+The fine source sampling direct light needs close to a luminaire would apply at
+every bounce and take hours; bounced light is smooth, and the direct part's
+sampling error cancels in the difference. The room's surfaces reflect
+diffusely (Radiance's ``plastic`` with no specularity), as Lux Studio models
+them (ADR 0060).
 """
 
+import os
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -12,13 +19,11 @@ from pathlib import Path
 from luxstudio_accuracy.geometry import Vec3, light_axes, to_radiance, xform_rotation
 from luxstudio_accuracy.radiance import LUMINOUS_EFFICACY, Radiance
 
-RTRACE_OPTIONS = (
+_COMMON = (
     "-h",  # No header.
     "-I+",  # Irradiance at each point, facing its normal.
-    "-ab",
-    "0",  # Direct light only.
     "-dj",
-    "0",  # No jitter: the same result every run.
+    "0",  # No jitter: the same direct light every run.
     "-ds",
     "0.01",  # Split area sources finely, so close to large luminaires stays right.
     "-dt",
@@ -26,7 +31,50 @@ RTRACE_OPTIONS = (
     "-dc",
     "1",  # Full certainty.
 )
-"""rtrace's options, recorded with each reference."""
+
+DIRECT_OPTIONS = (*_COMMON, "-ab", "0")
+"""rtrace's options for direct light only, recorded with each reference."""
+
+_ORDINARY_SOURCES = (
+    "-h",
+    "-I+",
+    "-dj",
+    "0",
+    "-ds",
+    "0.2",  # Radiance's default source subdivision.
+    "-dt",
+    "0.05",  # Its default source threshold.
+    "-dc",
+    "0.5",  # Its default certainty.
+)
+
+BOUNCE_DIRECT_OPTIONS = (*_ORDINARY_SOURCES, "-ab", "0")
+"""Direct light with ordinary source sampling: subtracted from BOUNCE_OPTIONS' total."""
+
+BOUNCE_OPTIONS = (
+    *_ORDINARY_SOURCES,
+    "-ab",
+    "24",  # Up to 24 bounces: doubling it changes a room's bounced light by under 0.1 %.
+    "-lr",
+    "0",  # No depth limit besides -ab: the default (-lr -10) cut bounced light by 1.3 %.
+    "-ad",
+    "4096",  # Rays per sample: doubling it changes a room's bounced light by under 0.1 %.
+    "-as",
+    "0",  # No extra super-sampling.
+    "-aa",
+    "0",  # No irradiance caching: every point sampled on its own, no interpolation error.
+    "-lw",
+    "1e-5",  # Follow rays until they carry less than this share of their light.
+)
+"""rtrace's options for total light; less BOUNCE_DIRECT_OPTIONS' direct light, the bounced light."""
+
+PROCESSES = os.cpu_count() or 1
+"""rtrace's processes (``-n``): every core. With no irradiance cache each point is
+computed on its own, so this changes how fast, not what."""
+
+OFFSET_M = 1e-3
+"""Points are lifted this far off their surface along its normal, so Radiance's
+rays start in the room, not inside the surface they measure."""
 
 
 @dataclass(frozen=True)
@@ -46,6 +94,105 @@ class ShadowBox:
     centre: Vec3
     half: Vec3
     yaw_deg: float
+    reflectance: float = 0.0
+    """The share of light it reflects, diffusely: 0 for black."""
+
+
+@dataclass(frozen=True)
+class RoomShell:
+    """A rectangular room's size and its surfaces' reflectances, as Lux Studio's ``Room``."""
+
+    width: float
+    depth: float
+    height: float
+    floor: float
+    walls: float
+    ceiling: float
+
+
+def build_scene(
+    radiance: Radiance,
+    work_dir: Path,
+    luminaires: list[PlacedLuminaire],
+    boxes: list[ShadowBox],
+    room: RoomShell | None,
+) -> Path:
+    """Writes a scene and compiles it to an octree.
+
+    Args:
+        radiance: The installed Radiance.
+        work_dir: An empty folder for the scene's files.
+        luminaires: The scene's luminaires.
+        boxes: Boxes that block light.
+        room: The room's reflecting surfaces, or None for luminaires alone.
+
+    Returns:
+        The octree, ready for ``measure``.
+    """
+    lines: list[str] = []
+    if room:
+        lines += _room(room)
+    for index, luminaire in enumerate(luminaires):
+        lines.append(_luminaire(radiance, work_dir, luminaire, f"lum{index}"))
+    for index, box in enumerate(boxes):
+        lines += _box(box, f"box{index}")
+    (work_dir / "scene.rad").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    octree = work_dir / "scene.oct"
+    radiance.run("oconv", "scene.rad", cwd=work_dir, output=octree)
+    return octree
+
+
+def measure(
+    radiance: Radiance,
+    octree: Path,
+    points: list[tuple[Vec3, Vec3]],
+    options: tuple[str, ...],
+) -> list[float]:
+    """Illuminance in lux at each point, as Radiance computes it.
+
+    Args:
+        radiance: The installed Radiance.
+        octree: From ``build_scene``.
+        points: Each point and the unit normal its surface faces with, in Lux
+            Studio's coordinates. They're lifted OFFSET_M along the normal.
+        options: DIRECT_OPTIONS, BOUNCE_OPTIONS or BOUNCE_DIRECT_OPTIONS.
+
+    Returns:
+        The illuminance at each point, in lx.
+    """
+    rays = ""
+    for point, normal in points:
+        p = to_radiance(point + normal.scaled(OFFSET_M))
+        n = to_radiance(normal)
+        rays += f"{p.x} {p.y} {p.z} {n.x} {n.y} {n.z}\n"
+    output = radiance.run(
+        "rtrace", "-n", str(PROCESSES), *options, "-ov", octree.name, cwd=octree.parent, stdin=rays
+    )
+    return [_lux(line) for line in output.splitlines() if line.strip()]
+
+
+def direct_and_bounced(
+    radiance: Radiance,
+    octree: Path,
+    points: list[tuple[Vec3, Vec3]],
+    bounce_options: tuple[str, ...] = BOUNCE_OPTIONS,
+) -> tuple[list[float], list[float]]:
+    """Direct light with fine source sampling, and bounced light, at each point.
+
+    Args:
+        radiance: The installed Radiance.
+        octree: From ``build_scene``, with the room's surfaces.
+        points: As for ``measure``.
+        bounce_options: rtrace's options for total light: BOUNCE_OPTIONS,
+            or others to test the checks with.
+
+    Returns:
+        Direct and bounced illuminance at each point, in lx.
+    """
+    direct = measure(radiance, octree, points, DIRECT_OPTIONS)
+    total = measure(radiance, octree, points, bounce_options)
+    plain = measure(radiance, octree, points, BOUNCE_DIRECT_OPTIONS)
+    return direct, [t - p for t, p in zip(total, plain, strict=True)]
 
 
 def illuminance(
@@ -55,32 +202,41 @@ def illuminance(
     boxes: list[ShadowBox],
     points: list[tuple[Vec3, Vec3]],
 ) -> list[float]:
-    """Direct illuminance in lux at each point, as Radiance computes it.
+    """Direct illuminance in lux at each point, with no room: ``build_scene`` then ``measure``."""
+    octree = build_scene(radiance, work_dir, luminaires, boxes, None)
+    return measure(radiance, octree, points, DIRECT_OPTIONS)
 
-    Args:
-        radiance: The installed Radiance.
-        work_dir: An empty folder for the scene's files.
-        luminaires: The scene's luminaires.
-        boxes: Boxes that cast shadows.
-        points: Each point and the unit normal its surface faces with,
-            in Lux Studio's coordinates.
 
-    Returns:
-        The illuminance at each point, in lx.
+def _room(room: RoomShell) -> list[str]:
+    """The room's six surfaces, as grey diffuse materials and polygons.
+
+    Radiance's plastic reflects from either side, so the polygons' winding
+    doesn't matter. Lux Studio's (x, y, z) is Radiance's (x, -z, y).
     """
-    lines = ["void plastic black 0 0 5 0 0 0 0 0"]
-    for index, luminaire in enumerate(luminaires):
-        lines.append(_luminaire(radiance, work_dir, luminaire, f"lum{index}"))
-    for index, box in enumerate(boxes):
-        lines.append(_box(box, f"box{index}"))
-    (work_dir / "scene.rad").write_text("\n".join(lines) + "\n", encoding="utf-8")
-    radiance.run("oconv", "scene.rad", cwd=work_dir, output=work_dir / "scene.oct")
-    rays = "".join(
-        f"{p.x} {p.y} {p.z} {n.x} {n.y} {n.z}\n"
-        for p, n in ((to_radiance(point), to_radiance(normal)) for point, normal in points)
-    )
-    output = radiance.run("rtrace", *RTRACE_OPTIONS, "-ov", "scene.oct", cwd=work_dir, stdin=rays)
-    return [_lux(line) for line in output.splitlines() if line.strip()]
+    w, d, h = room.width / 2, room.depth / 2, room.height
+    corners: dict[str, list[tuple[float, float, float]]] = {
+        "floor": [(-w, -d, 0), (w, -d, 0), (w, d, 0), (-w, d, 0)],
+        "ceiling": [(-w, -d, h), (-w, d, h), (w, d, h), (w, -d, h)],
+        "wall_x0": [(-w, -d, 0), (-w, d, 0), (-w, d, h), (-w, -d, h)],
+        "wall_x1": [(w, -d, 0), (w, -d, h), (w, d, h), (w, d, 0)],
+        "wall_y0": [(-w, -d, 0), (-w, -d, h), (w, -d, h), (w, -d, 0)],
+        "wall_y1": [(-w, d, 0), (w, d, 0), (w, d, h), (-w, d, h)],
+    }
+    reflectance = {
+        "floor": room.floor,
+        "ceiling": room.ceiling,
+        "wall_x0": room.walls,
+        "wall_x1": room.walls,
+        "wall_y0": room.walls,
+        "wall_y1": room.walls,
+    }
+    lines = []
+    for name, vertices in corners.items():
+        rho = reflectance[name]
+        coordinates = "  ".join(f"{x} {y} {z}" for x, y, z in vertices)
+        lines.append(f"void plastic {name}_m 0 0 5 {rho} {rho} {rho} 0 0")
+        lines.append(f"{name}_m polygon {name} 0 0 12 {coordinates}")
+    return lines
 
 
 def _luminaire(radiance: Radiance, work_dir: Path, luminaire: PlacedLuminaire, name: str) -> str:
@@ -93,8 +249,8 @@ def _luminaire(radiance: Radiance, work_dir: Path, luminaire: PlacedLuminaire, n
     return f"!xform -rx {rx} -ry {ry} -rz {rz} -t {at.x} {at.y} {at.z} {name}.rad"
 
 
-def _box(box: ShadowBox, name: str) -> str:
-    """A black box: genbox makes it from the origin, then it's centred, turned and moved.
+def _box(box: ShadowBox, name: str) -> list[str]:
+    """A diffuse box: genbox makes it from the origin, then it's centred, turned and moved.
 
     Lux Studio's box is x across, y up, z front to back, turned about its
     vertical. In Radiance that's X, Z and -Y, turned about Z by the same
@@ -102,10 +258,12 @@ def _box(box: ShadowBox, name: str) -> str:
     """
     sx, sy, sz = 2 * box.half.x, 2 * box.half.z, 2 * box.half.y
     at = to_radiance(box.centre)
-    return (
-        f"!genbox black {name} {sx} {sy} {sz} | xform -t {-sx / 2} {-sy / 2} {-sz / 2} "
-        f"-rz {box.yaw_deg} -t {at.x} {at.y} {at.z}"
-    )
+    rho = box.reflectance
+    return [
+        f"void plastic {name}_m 0 0 5 {rho} {rho} {rho} 0 0",
+        f"!genbox {name}_m {name} {sx} {sy} {sz} | xform -t {-sx / 2} {-sy / 2} {-sz / 2} "
+        f"-rz {box.yaw_deg} -t {at.x} {at.y} {at.z}",
+    ]
 
 
 def _lux(line: str) -> float:

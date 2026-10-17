@@ -63,3 +63,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0057 | [How illuminance is calculated, and how we know it's right](0057-illuminance-calculation.md) | Accepted |
 | 0058 | [Accuracy checks: Lux Studio against Radiance](0058-accuracy-checks.md) | Accepted |
 | 0059 | [The manual's Concepts section: maths, and diagrams computed by core](0059-manual-concepts-and-diagrams.md) | Accepted |
+| 0060 | [Bounced light: a room radiosity solve, checked against Radiance](0060-bounced-light.md) | Accepted |

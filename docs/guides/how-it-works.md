@@ -119,9 +119,10 @@ clicks (`onPick`) and outlines whatever the host passes to `setHighlighted`.
 
 ### Analysis: the numbers behind the lux
 
-`analysis/` computes illuminance, the light reaching each point, in lux
-([ADR 0057](../decisions/0057-illuminance-calculation.md)). It's plain
-maths over the scene, with no three.js, one formula per file:
+`analysis/` computes illuminance, the light reaching each point, in lux:
+direct from the luminaires ([ADR 0057](../decisions/0057-illuminance-calculation.md))
+and bounced off the room ([ADR 0060](../decisions/0060-bounced-light.md)).
+It's plain maths over the scene, with no three.js, one formula per file:
 
 | File | Job |
 |---|---|
@@ -130,7 +131,12 @@ maths over the scene, with no three.js, one formula per file:
 | `occlusion.ts` | furniture as boxes that cast shadows |
 | `calc-grid.ts` | where to calculate: EN 12464-1 grids on the work plane and the six surfaces |
 | `stats.ts` | Ē, Emin, Emax and uniformity |
-| `analyse-direct.ts` | `directLight` (prepare once) and `analyseDirect` (every surface) |
+| `patches.ts` | the room's surfaces split into patches of at most 25 cm |
+| `form-factor.ts` | how much of a patch a point sees: the exact formula for a polygon |
+| `radiosity.ts` | the patches' form factors, and the solve: each patch reflects its reflectance times all it receives |
+| `options.ts` | the calculation's tuning (cell and patch sizes, when to stop), with defaults |
+| `direct-light.ts`, `scene-light.ts` | a scene's light, prepared once, then read at any point: direct, bounced and total |
+| `analyse.ts` | `analyseIlluminance`: every surface's grid and its statistics |
 
 Where a luminaire's light leaves from and which way it points comes from
 `fixture-layout.ts` and `luminaire-frame.ts`. The renderer uses the same two
@@ -138,13 +144,16 @@ files, so the picture and the numbers can't disagree. A model's `light` node
 is read from the .glb file by `glb.ts`.
 
 The tests check the maths against values worked out by hand, check that
-every lumen a luminaire emits lands somewhere in the room, and check the
-renderer and the calculation against each other.
-`npm run mutation-check -w packages/core` plants eleven plausible mistakes
+every lumen a luminaire emits lands somewhere in the room, check bounced
+light against the laws a closed room obeys (reciprocity, the integrating
+sphere, light absorbed equal to light emitted), and check the renderer and
+the calculation against each other.
+`npm run mutation-check -w packages/core` plants sixteen plausible mistakes
 and shows that the tests catch each one. Beyond the maths,
 [`accuracy/`](https://github.com/ewajs/lighting-simulator/tree/master/accuracy)
-compares the results with Radiance, an independent simulator, in five
-reference rooms ([ADR 0058](../decisions/0058-accuracy-checks.md)); its
+compares the results with Radiance, an independent simulator, in six
+reference rooms ([ADR 0058](../decisions/0058-accuracy-checks.md),
+[ADR 0060](../decisions/0060-bounced-light.md)); its
 Python is documented at [/docs/accuracy](https://ewajs.github.io/lighting-simulator/docs/accuracy/).
 
 ## The UI

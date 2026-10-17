@@ -7,6 +7,7 @@ def test_every_room_loads_with_its_points() -> None:
     names = [path.stem for path in all_rooms()]
     assert names == [
         "downlights-and-wall-washer",
+        "furnished-living",
         "linear-pendant-over-table",
         "single-downlight",
         "track-spots",

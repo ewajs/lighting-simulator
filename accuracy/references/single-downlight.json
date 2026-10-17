@@ -1,6 +1,6 @@
 {
  "format": "lux-studio-accuracy-reference",
- "version": 1,
+ "version": 2,
  "room": {
   "description": "One 6-inch recessed downlight (Cooper, 1153 lm, a 15 cm disk) in the middle of a 5 \u00d7 4 \u00d7 2.7 m room, aimed straight down.",
   "room": {
@@ -40,11 +40,9 @@
  },
  "radiance": {
   "release": "rad6R0P2",
-  "rtrace": [
+  "direct": [
    "-h",
    "-I+",
-   "-ab",
-   "0",
    "-dj",
    "0",
    "-ds",
@@ -52,10 +50,52 @@
    "-dt",
    "0",
    "-dc",
-   "1"
+   "1",
+   "-ab",
+   "0"
+  ],
+  "bounced": [
+   [
+    "-h",
+    "-I+",
+    "-dj",
+    "0",
+    "-ds",
+    "0.2",
+    "-dt",
+    "0.05",
+    "-dc",
+    "0.5",
+    "-ab",
+    "24",
+    "-lr",
+    "0",
+    "-ad",
+    "4096",
+    "-as",
+    "0",
+    "-aa",
+    "0",
+    "-lw",
+    "1e-5"
+   ],
+   [
+    "-h",
+    "-I+",
+    "-dj",
+    "0",
+    "-ds",
+    "0.2",
+    "-dt",
+    "0.05",
+    "-dc",
+    "0.5",
+    "-ab",
+    "0"
+   ]
   ]
  },
- "generated": "2026-10-16",
+ "generated": "2026-10-17",
  "points": [
   {
    "surface": "work-plane",
@@ -69,7 +109,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.2153
+   "direct": 1.2137,
+   "total": 14.0335
   },
   {
    "surface": "work-plane",
@@ -83,7 +124,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.6707
+   "direct": 1.668,
+   "total": 14.836
   },
   {
    "surface": "work-plane",
@@ -97,7 +139,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.3203
+   "direct": 2.3165,
+   "total": 15.8258
   },
   {
    "surface": "work-plane",
@@ -111,7 +154,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.2363
+   "direct": 3.2312,
+   "total": 17.2801
   },
   {
    "surface": "work-plane",
@@ -125,7 +169,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.5029
+   "direct": 4.4957,
+   "total": 19.1003
   },
   {
    "surface": "work-plane",
@@ -139,7 +184,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.1585
+   "direct": 6.1474,
+   "total": 21.2885
   },
   {
    "surface": "work-plane",
@@ -153,7 +199,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.2102
+   "direct": 8.1962,
+   "total": 24.0507
   },
   {
    "surface": "work-plane",
@@ -167,7 +214,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4372
+   "direct": 10.4189,
+   "total": 26.874
   },
   {
    "surface": "work-plane",
@@ -181,7 +229,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 12.3511
+   "direct": 12.3305,
+   "total": 29.2373
   },
   {
    "surface": "work-plane",
@@ -195,7 +244,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.4825
+   "direct": 13.4605,
+   "total": 30.6615
   },
   {
    "surface": "work-plane",
@@ -209,7 +259,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.482
+   "direct": 13.4606,
+   "total": 30.6792
   },
   {
    "surface": "work-plane",
@@ -223,7 +274,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 12.3506
+   "direct": 12.3311,
+   "total": 29.1353
   },
   {
    "surface": "work-plane",
@@ -237,7 +289,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4369
+   "direct": 10.4193,
+   "total": 26.8918
   },
   {
    "surface": "work-plane",
@@ -251,7 +304,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.21
+   "direct": 8.1963,
+   "total": 24.0074
   },
   {
    "surface": "work-plane",
@@ -265,7 +319,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.1584
+   "direct": 6.1475,
+   "total": 21.3747
   },
   {
    "surface": "work-plane",
@@ -279,7 +334,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.5029
+   "direct": 4.4957,
+   "total": 19.0418
   },
   {
    "surface": "work-plane",
@@ -293,7 +349,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.2363
+   "direct": 3.2313,
+   "total": 17.1776
   },
   {
    "surface": "work-plane",
@@ -307,7 +364,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.3203
+   "direct": 2.3165,
+   "total": 15.8076
   },
   {
    "surface": "work-plane",
@@ -321,7 +379,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.6707
+   "direct": 1.668,
+   "total": 14.8757
   },
   {
    "surface": "work-plane",
@@ -335,7 +394,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.2153
+   "direct": 1.2137,
+   "total": 14.0129
   },
   {
    "surface": "work-plane",
@@ -349,7 +409,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.5445
+   "direct": 1.5419,
+   "total": 14.6965
   },
   {
    "surface": "work-plane",
@@ -363,7 +424,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.2194
+   "direct": 2.2158,
+   "total": 15.5301
   },
   {
    "surface": "work-plane",
@@ -377,7 +439,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.2363
+   "direct": 3.2313,
+   "total": 16.754
   },
   {
    "surface": "work-plane",
@@ -391,7 +454,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.7703
+   "direct": 4.763,
+   "total": 18.4977
   },
   {
    "surface": "work-plane",
@@ -405,7 +469,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.3777
   },
   {
    "surface": "work-plane",
@@ -419,7 +484,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4376
+   "direct": 10.4194,
+   "total": 25.1552
   },
   {
    "surface": "work-plane",
@@ -433,7 +499,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 14.7619
+   "direct": 14.7381,
+   "total": 29.6308
   },
   {
    "surface": "work-plane",
@@ -447,7 +514,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.6399
+   "direct": 19.6106,
+   "total": 35.0282
   },
   {
    "surface": "work-plane",
@@ -461,7 +529,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 24.1174
+   "direct": 24.0817,
+   "total": 39.6806
   },
   {
    "surface": "work-plane",
@@ -475,7 +544,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8405
+   "direct": 26.8031,
+   "total": 42.6399
   },
   {
    "surface": "work-plane",
@@ -489,7 +559,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8402
+   "direct": 26.8034,
+   "total": 42.5568
   },
   {
    "surface": "work-plane",
@@ -503,7 +574,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 24.1164
+   "direct": 24.0826,
+   "total": 39.7175
   },
   {
    "surface": "work-plane",
@@ -517,7 +589,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.6399
+   "direct": 19.6106,
+   "total": 35.028
   },
   {
    "surface": "work-plane",
@@ -531,7 +604,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 14.7619
+   "direct": 14.738,
+   "total": 29.6459
   },
   {
    "surface": "work-plane",
@@ -545,7 +619,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4374
+   "direct": 10.4196,
+   "total": 25.0519
   },
   {
    "surface": "work-plane",
@@ -559,7 +634,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.3822
   },
   {
    "surface": "work-plane",
@@ -573,7 +649,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.7703
+   "direct": 4.763,
+   "total": 18.5955
   },
   {
    "surface": "work-plane",
@@ -587,7 +664,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.2363
+   "direct": 3.2312,
+   "total": 16.8533
   },
   {
    "surface": "work-plane",
@@ -601,7 +679,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.2193
+   "direct": 2.2158,
+   "total": 15.5556
   },
   {
    "surface": "work-plane",
@@ -615,7 +694,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.5445
+   "direct": 1.5419,
+   "total": 14.6521
   },
   {
    "surface": "work-plane",
@@ -629,7 +709,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.9583
+   "direct": 1.9554,
+   "total": 15.4762
   },
   {
    "surface": "work-plane",
@@ -643,7 +724,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.9378
+   "direct": 2.9333,
+   "total": 16.4993
   },
   {
    "surface": "work-plane",
@@ -657,7 +739,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.5029
+   "direct": 4.4957,
+   "total": 18.2307
   },
   {
    "surface": "work-plane",
@@ -671,7 +754,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 20.9591
   },
   {
    "surface": "work-plane",
@@ -685,7 +769,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.3501
+   "direct": 11.3316,
+   "total": 25.5479
   },
   {
    "surface": "work-plane",
@@ -699,7 +784,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.8225
+   "direct": 17.7953,
+   "total": 32.1372
   },
   {
    "surface": "work-plane",
@@ -713,7 +799,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.843
+   "direct": 26.8051,
+   "total": 41.4544
   },
   {
    "surface": "work-plane",
@@ -727,7 +814,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 37.6094
+   "direct": 37.5637,
+   "total": 52.3934
   },
   {
    "surface": "work-plane",
@@ -741,7 +829,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6726
+   "direct": 47.6247,
+   "total": 62.7193
   },
   {
    "surface": "work-plane",
@@ -755,7 +844,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 53.8127
+   "direct": 53.763,
+   "total": 68.876
   },
   {
    "surface": "work-plane",
@@ -769,7 +859,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 53.8124
+   "direct": 53.7633,
+   "total": 68.8847
   },
   {
    "surface": "work-plane",
@@ -783,7 +874,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6733
+   "direct": 47.6241,
+   "total": 62.645
   },
   {
    "surface": "work-plane",
@@ -797,7 +889,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 37.6088
+   "direct": 37.5643,
+   "total": 52.4966
   },
   {
    "surface": "work-plane",
@@ -811,7 +904,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8423
+   "direct": 26.8059,
+   "total": 41.3916
   },
   {
    "surface": "work-plane",
@@ -825,7 +919,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.8223
+   "direct": 17.7957,
+   "total": 32.2086
   },
   {
    "surface": "work-plane",
@@ -839,7 +934,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.3501
+   "direct": 11.3316,
+   "total": 25.4615
   },
   {
    "surface": "work-plane",
@@ -853,7 +949,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 20.9857
   },
   {
    "surface": "work-plane",
@@ -867,7 +964,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.5029
+   "direct": 4.4957,
+   "total": 18.2063
   },
   {
    "surface": "work-plane",
@@ -881,7 +979,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.9378
+   "direct": 2.9333,
+   "total": 16.4269
   },
   {
    "surface": "work-plane",
@@ -895,7 +994,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.9583
+   "direct": 1.9554,
+   "total": 15.4799
   },
   {
    "surface": "work-plane",
@@ -909,7 +1009,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.4291
+   "direct": 2.4251,
+   "total": 16.2434
   },
   {
    "surface": "work-plane",
@@ -923,7 +1024,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.7914
+   "direct": 3.785,
+   "total": 17.4994
   },
   {
    "surface": "work-plane",
@@ -937,7 +1039,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.1584
+   "direct": 6.1475,
+   "total": 19.9799
   },
   {
    "surface": "work-plane",
@@ -951,7 +1054,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4374
+   "direct": 10.4196,
+   "total": 24.4919
   },
   {
    "surface": "work-plane",
@@ -965,7 +1069,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.8223
+   "direct": 17.7957,
+   "total": 31.8418
   },
   {
    "surface": "work-plane",
@@ -979,7 +1084,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.9463
+   "direct": 29.9065,
+   "total": 44.2773
   },
   {
    "surface": "work-plane",
@@ -993,7 +1099,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6699
+   "direct": 47.6217,
+   "total": 62.1632
   },
   {
    "surface": "work-plane",
@@ -1007,7 +1114,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.2543
+   "direct": 69.2014,
+   "total": 83.9214
   },
   {
    "surface": "work-plane",
@@ -1021,7 +1129,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.9326
+   "direct": 89.8886,
+   "total": 104.736
   },
   {
    "surface": "work-plane",
@@ -1035,7 +1144,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 102.1513
+   "direct": 102.1212,
+   "total": 117.0094
   },
   {
    "surface": "work-plane",
@@ -1049,7 +1159,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 102.1523
+   "direct": 102.12,
+   "total": 117.1492
   },
   {
    "surface": "work-plane",
@@ -1063,7 +1174,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.9319
+   "direct": 89.8893,
+   "total": 104.7577
   },
   {
    "surface": "work-plane",
@@ -1077,7 +1189,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.2544
+   "direct": 69.2012,
+   "total": 83.9309
   },
   {
    "surface": "work-plane",
@@ -1091,7 +1204,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6704
+   "direct": 47.6214,
+   "total": 62.0071
   },
   {
    "surface": "work-plane",
@@ -1105,7 +1219,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.9463
+   "direct": 29.9065,
+   "total": 44.2453
   },
   {
    "surface": "work-plane",
@@ -1119,7 +1234,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.8225
+   "direct": 17.7953,
+   "total": 31.8855
   },
   {
    "surface": "work-plane",
@@ -1133,7 +1249,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4376
+   "direct": 10.4194,
+   "total": 24.4936
   },
   {
    "surface": "work-plane",
@@ -1147,7 +1264,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.1585
+   "direct": 6.1474,
+   "total": 19.9345
   },
   {
    "surface": "work-plane",
@@ -1161,7 +1279,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.7914
+   "direct": 3.785,
+   "total": 17.6384
   },
   {
    "surface": "work-plane",
@@ -1175,7 +1294,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.4292
+   "direct": 2.4251,
+   "total": 16.3193
   },
   {
    "surface": "work-plane",
@@ -1189,7 +1309,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.9378
+   "direct": 2.9333,
+   "total": 17.1679
   },
   {
    "surface": "work-plane",
@@ -1203,7 +1324,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.7701
+   "direct": 4.7628,
+   "total": 18.9051
   },
   {
    "surface": "work-plane",
@@ -1217,7 +1339,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.21
+   "direct": 8.1963,
+   "total": 22.2217
   },
   {
    "surface": "work-plane",
@@ -1231,7 +1354,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 14.7619
+   "direct": 14.738,
+   "total": 28.7483
   },
   {
    "surface": "work-plane",
@@ -1245,7 +1369,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8423
+   "direct": 26.8059,
+   "total": 41.0467
   },
   {
    "surface": "work-plane",
@@ -1259,7 +1384,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6704
+   "direct": 47.6214,
+   "total": 61.9062
   },
   {
    "surface": "work-plane",
@@ -1273,7 +1399,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 78.9509
+   "direct": 78.8992,
+   "total": 93.4505
   },
   {
    "surface": "work-plane",
@@ -1287,7 +1414,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 115.4624
+   "direct": 115.4481,
+   "total": 130.0078
   },
   {
    "surface": "work-plane",
@@ -1301,7 +1429,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.2855
+   "direct": 145.3134,
+   "total": 159.9301
   },
   {
    "surface": "work-plane",
@@ -1315,7 +1444,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6893
+   "direct": 161.7502,
+   "total": 176.5451
   },
   {
    "surface": "work-plane",
@@ -1329,7 +1459,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6897
+   "direct": 161.7505,
+   "total": 176.4791
   },
   {
    "surface": "work-plane",
@@ -1343,7 +1474,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.283
+   "direct": 145.3156,
+   "total": 159.9271
   },
   {
    "surface": "work-plane",
@@ -1357,7 +1489,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 115.4617
+   "direct": 115.4484,
+   "total": 129.9956
   },
   {
    "surface": "work-plane",
@@ -1371,7 +1504,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 78.9509
+   "direct": 78.8992,
+   "total": 93.2524
   },
   {
    "surface": "work-plane",
@@ -1385,7 +1519,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6699
+   "direct": 47.6217,
+   "total": 62.0102
   },
   {
    "surface": "work-plane",
@@ -1399,7 +1534,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.843
+   "direct": 26.8051,
+   "total": 40.9383
   },
   {
    "surface": "work-plane",
@@ -1413,7 +1549,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 14.7619
+   "direct": 14.7381,
+   "total": 28.8179
   },
   {
    "surface": "work-plane",
@@ -1427,7 +1564,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.2102
+   "direct": 8.1962,
+   "total": 22.2056
   },
   {
    "surface": "work-plane",
@@ -1441,7 +1579,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.7701
+   "direct": 4.7628,
+   "total": 18.7876
   },
   {
    "surface": "work-plane",
@@ -1455,7 +1594,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.9378
+   "direct": 2.9333,
+   "total": 17.1471
   },
   {
    "surface": "work-plane",
@@ -1469,7 +1609,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.4048
+   "direct": 3.3994,
+   "total": 17.9224
   },
   {
    "surface": "work-plane",
@@ -1483,7 +1624,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 5.7516
+   "direct": 5.7414,
+   "total": 19.948
   },
   {
    "surface": "work-plane",
@@ -1497,7 +1639,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4369
+   "direct": 10.4193,
+   "total": 24.5046
   },
   {
    "surface": "work-plane",
@@ -1511,7 +1654,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.6399
+   "direct": 19.6106,
+   "total": 33.7144
   },
   {
    "surface": "work-plane",
@@ -1525,7 +1669,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 37.6088
+   "direct": 37.5643,
+   "total": 51.6202
   },
   {
    "surface": "work-plane",
@@ -1539,7 +1684,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.2544
+   "direct": 69.2012,
+   "total": 83.5626
   },
   {
    "surface": "work-plane",
@@ -1553,7 +1699,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 115.4617
+   "direct": 115.4484,
+   "total": 129.9195
   },
   {
    "surface": "work-plane",
@@ -1567,7 +1714,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6985
+   "direct": 161.7593,
+   "total": 176.2634
   },
   {
    "surface": "work-plane",
@@ -1581,7 +1729,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 196.5354
+   "direct": 196.6609,
+   "total": 211.2907
   },
   {
    "surface": "work-plane",
@@ -1595,7 +1744,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 216.5526
+   "direct": 216.7072,
+   "total": 231.3659
   },
   {
    "surface": "work-plane",
@@ -1609,7 +1759,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 216.5515
+   "direct": 216.7083,
+   "total": 231.4162
   },
   {
    "surface": "work-plane",
@@ -1623,7 +1774,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 196.5361
+   "direct": 196.6603,
+   "total": 211.3473
   },
   {
    "surface": "work-plane",
@@ -1637,7 +1789,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6985
+   "direct": 161.7593,
+   "total": 176.2432
   },
   {
    "surface": "work-plane",
@@ -1651,7 +1804,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 115.4624
+   "direct": 115.4481,
+   "total": 129.9452
   },
   {
    "surface": "work-plane",
@@ -1665,7 +1819,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.2543
+   "direct": 69.2014,
+   "total": 83.6072
   },
   {
    "surface": "work-plane",
@@ -1679,7 +1834,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 37.6094
+   "direct": 37.5637,
+   "total": 51.7274
   },
   {
    "surface": "work-plane",
@@ -1693,7 +1849,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.6399
+   "direct": 19.6106,
+   "total": 33.6909
   },
   {
    "surface": "work-plane",
@@ -1707,7 +1864,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4372
+   "direct": 10.4189,
+   "total": 24.4997
   },
   {
    "surface": "work-plane",
@@ -1721,7 +1879,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 5.7514
+   "direct": 5.7416,
+   "total": 19.9005
   },
   {
    "surface": "work-plane",
@@ -1735,7 +1894,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.4048
+   "direct": 3.3994,
+   "total": 17.8942
   },
   {
    "surface": "work-plane",
@@ -1749,7 +1909,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.7914
+   "direct": 3.7851,
+   "total": 18.4602
   },
   {
    "surface": "work-plane",
@@ -1763,7 +1924,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.6098
+   "direct": 6.598,
+   "total": 20.9511
   },
   {
    "surface": "work-plane",
@@ -1777,7 +1939,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 12.3506
+   "direct": 12.3311,
+   "total": 26.5576
   },
   {
    "surface": "work-plane",
@@ -1791,7 +1954,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 24.1164
+   "direct": 24.0826,
+   "total": 38.2513
   },
   {
    "surface": "work-plane",
@@ -1805,7 +1969,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6733
+   "direct": 47.6241,
+   "total": 61.8615
   },
   {
    "surface": "work-plane",
@@ -1819,7 +1984,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.9319
+   "direct": 89.8893,
+   "total": 104.2184
   },
   {
    "surface": "work-plane",
@@ -1833,7 +1999,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.283
+   "direct": 145.3156,
+   "total": 159.7279
   },
   {
    "surface": "work-plane",
@@ -1847,7 +2014,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 196.5361
+   "direct": 196.6603,
+   "total": 211.222
   },
   {
    "surface": "work-plane",
@@ -1861,7 +2029,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 241.0869
+   "direct": 241.278,
+   "total": 255.9229
   },
   {
    "surface": "work-plane",
@@ -1875,7 +2044,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 271.7025
+   "direct": 271.9468,
+   "total": 286.6585
   },
   {
    "surface": "work-plane",
@@ -1889,7 +2059,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 271.7025
+   "direct": 271.9466,
+   "total": 286.5493
   },
   {
    "surface": "work-plane",
@@ -1903,7 +2074,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 241.0869
+   "direct": 241.278,
+   "total": 255.9603
   },
   {
    "surface": "work-plane",
@@ -1917,7 +2089,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 196.5354
+   "direct": 196.6609,
+   "total": 211.1287
   },
   {
    "surface": "work-plane",
@@ -1931,7 +2104,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.2855
+   "direct": 145.3134,
+   "total": 159.7816
   },
   {
    "surface": "work-plane",
@@ -1945,7 +2119,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.9326
+   "direct": 89.8886,
+   "total": 104.2135
   },
   {
    "surface": "work-plane",
@@ -1959,7 +2134,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6726
+   "direct": 47.6247,
+   "total": 61.9159
   },
   {
    "surface": "work-plane",
@@ -1973,7 +2149,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 24.1174
+   "direct": 24.0817,
+   "total": 38.1229
   },
   {
    "surface": "work-plane",
@@ -1987,7 +2164,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 12.3511
+   "direct": 12.3305,
+   "total": 26.4899
   },
   {
    "surface": "work-plane",
@@ -2001,7 +2179,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.6098
+   "direct": 6.598,
+   "total": 20.8675
   },
   {
    "surface": "work-plane",
@@ -2015,7 +2194,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.7914
+   "direct": 3.785,
+   "total": 18.51
   },
   {
    "surface": "work-plane",
@@ -2029,7 +2209,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.0116
+   "direct": 4.0049,
+   "total": 18.7357
   },
   {
    "surface": "work-plane",
@@ -2043,7 +2224,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.424
   },
   {
    "surface": "work-plane",
@@ -2057,7 +2239,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.482
+   "direct": 13.4606,
+   "total": 27.6028
   },
   {
    "surface": "work-plane",
@@ -2071,7 +2254,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8402
+   "direct": 26.8034,
+   "total": 41.1253
   },
   {
    "surface": "work-plane",
@@ -2085,7 +2269,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 53.8124
+   "direct": 53.7633,
+   "total": 68.001
   },
   {
    "surface": "work-plane",
@@ -2099,7 +2284,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 102.1523
+   "direct": 102.12,
+   "total": 116.5901
   },
   {
    "surface": "work-plane",
@@ -2113,7 +2299,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6897
+   "direct": 161.7505,
+   "total": 176.1618
   },
   {
    "surface": "work-plane",
@@ -2127,7 +2314,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 216.5515
+   "direct": 216.7083,
+   "total": 231.2662
   },
   {
    "surface": "work-plane",
@@ -2141,7 +2329,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 271.7025
+   "direct": 271.9466,
+   "total": 286.4938
   },
   {
    "surface": "work-plane",
@@ -2155,7 +2344,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 312.7828
+   "direct": 313.1032,
+   "total": 327.8367
   },
   {
    "surface": "work-plane",
@@ -2169,7 +2359,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 312.7828
+   "direct": 313.1032,
+   "total": 327.7513
   },
   {
    "surface": "work-plane",
@@ -2183,7 +2374,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 271.7025
+   "direct": 271.9468,
+   "total": 286.6558
   },
   {
    "surface": "work-plane",
@@ -2197,7 +2389,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 216.5526
+   "direct": 216.7072,
+   "total": 231.3423
   },
   {
    "surface": "work-plane",
@@ -2211,7 +2404,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6893
+   "direct": 161.7502,
+   "total": 176.2525
   },
   {
    "surface": "work-plane",
@@ -2225,7 +2419,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 102.1513
+   "direct": 102.1212,
+   "total": 116.4422
   },
   {
    "surface": "work-plane",
@@ -2239,7 +2434,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 53.8127
+   "direct": 53.763,
+   "total": 68.0089
   },
   {
    "surface": "work-plane",
@@ -2253,7 +2449,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8405
+   "direct": 26.8031,
+   "total": 41.0192
   },
   {
    "surface": "work-plane",
@@ -2267,7 +2464,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.4825
+   "direct": 13.4605,
+   "total": 27.7085
   },
   {
    "surface": "work-plane",
@@ -2281,7 +2479,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.4273
   },
   {
    "surface": "work-plane",
@@ -2295,7 +2494,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.0116
+   "direct": 4.0048,
+   "total": 18.9202
   },
   {
    "surface": "work-plane",
@@ -2309,7 +2509,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.0116
+   "direct": 4.0048,
+   "total": 18.7917
   },
   {
    "surface": "work-plane",
@@ -2323,7 +2524,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.5013
   },
   {
    "surface": "work-plane",
@@ -2337,7 +2539,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.4825
+   "direct": 13.4605,
+   "total": 27.7187
   },
   {
    "surface": "work-plane",
@@ -2351,7 +2554,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8405
+   "direct": 26.8031,
+   "total": 40.9913
   },
   {
    "surface": "work-plane",
@@ -2365,7 +2569,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 53.8127
+   "direct": 53.763,
+   "total": 68.0287
   },
   {
    "surface": "work-plane",
@@ -2379,7 +2584,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 102.1513
+   "direct": 102.1212,
+   "total": 116.4327
   },
   {
    "surface": "work-plane",
@@ -2393,7 +2599,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6893
+   "direct": 161.7502,
+   "total": 176.1447
   },
   {
    "surface": "work-plane",
@@ -2407,7 +2614,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 216.5526
+   "direct": 216.7072,
+   "total": 231.2333
   },
   {
    "surface": "work-plane",
@@ -2421,7 +2629,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 271.7025
+   "direct": 271.9468,
+   "total": 286.599
   },
   {
    "surface": "work-plane",
@@ -2435,7 +2644,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 312.7828
+   "direct": 313.1032,
+   "total": 327.7959
   },
   {
    "surface": "work-plane",
@@ -2449,7 +2659,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 312.7828
+   "direct": 313.1032,
+   "total": 327.6937
   },
   {
    "surface": "work-plane",
@@ -2463,7 +2674,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 271.7025
+   "direct": 271.9466,
+   "total": 286.6191
   },
   {
    "surface": "work-plane",
@@ -2477,7 +2689,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 216.5515
+   "direct": 216.7083,
+   "total": 231.254
   },
   {
    "surface": "work-plane",
@@ -2491,7 +2704,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6897
+   "direct": 161.7505,
+   "total": 176.0897
   },
   {
    "surface": "work-plane",
@@ -2505,7 +2719,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 102.1523
+   "direct": 102.12,
+   "total": 116.4623
   },
   {
    "surface": "work-plane",
@@ -2519,7 +2734,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 53.8124
+   "direct": 53.7633,
+   "total": 68.0514
   },
   {
    "surface": "work-plane",
@@ -2533,7 +2749,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8402
+   "direct": 26.8034,
+   "total": 40.9722
   },
   {
    "surface": "work-plane",
@@ -2547,7 +2764,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.482
+   "direct": 13.4606,
+   "total": 27.6987
   },
   {
    "surface": "work-plane",
@@ -2561,7 +2779,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.5038
   },
   {
    "surface": "work-plane",
@@ -2575,7 +2794,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.0116
+   "direct": 4.0049,
+   "total": 18.8344
   },
   {
    "surface": "work-plane",
@@ -2589,7 +2809,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.7914
+   "direct": 3.785,
+   "total": 18.4088
   },
   {
    "surface": "work-plane",
@@ -2603,7 +2824,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.6098
+   "direct": 6.598,
+   "total": 20.9465
   },
   {
    "surface": "work-plane",
@@ -2617,7 +2839,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 12.3511
+   "direct": 12.3305,
+   "total": 26.4639
   },
   {
    "surface": "work-plane",
@@ -2631,7 +2854,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 24.1174
+   "direct": 24.0817,
+   "total": 38.304
   },
   {
    "surface": "work-plane",
@@ -2645,7 +2869,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6726
+   "direct": 47.6247,
+   "total": 61.8434
   },
   {
    "surface": "work-plane",
@@ -2659,7 +2884,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.9326
+   "direct": 89.8886,
+   "total": 104.2543
   },
   {
    "surface": "work-plane",
@@ -2673,7 +2899,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.2855
+   "direct": 145.3134,
+   "total": 159.9668
   },
   {
    "surface": "work-plane",
@@ -2687,7 +2914,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 196.5354
+   "direct": 196.6609,
+   "total": 211.3727
   },
   {
    "surface": "work-plane",
@@ -2701,7 +2929,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 241.0869
+   "direct": 241.278,
+   "total": 255.8372
   },
   {
    "surface": "work-plane",
@@ -2715,7 +2944,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 271.7025
+   "direct": 271.9466,
+   "total": 286.5731
   },
   {
    "surface": "work-plane",
@@ -2729,7 +2959,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 271.7025
+   "direct": 271.9468,
+   "total": 286.6166
   },
   {
    "surface": "work-plane",
@@ -2743,7 +2974,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 241.0869
+   "direct": 241.278,
+   "total": 256.096
   },
   {
    "surface": "work-plane",
@@ -2757,7 +2989,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 196.5361
+   "direct": 196.6603,
+   "total": 211.2255
   },
   {
    "surface": "work-plane",
@@ -2771,7 +3004,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.283
+   "direct": 145.3156,
+   "total": 159.7159
   },
   {
    "surface": "work-plane",
@@ -2785,7 +3019,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.9319
+   "direct": 89.8893,
+   "total": 104.1521
   },
   {
    "surface": "work-plane",
@@ -2799,7 +3034,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6733
+   "direct": 47.6241,
+   "total": 61.8264
   },
   {
    "surface": "work-plane",
@@ -2813,7 +3049,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 24.1164
+   "direct": 24.0826,
+   "total": 38.2514
   },
   {
    "surface": "work-plane",
@@ -2827,7 +3064,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 12.3506
+   "direct": 12.3311,
+   "total": 26.453
   },
   {
    "surface": "work-plane",
@@ -2841,7 +3079,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.6098
+   "direct": 6.598,
+   "total": 20.9814
   },
   {
    "surface": "work-plane",
@@ -2855,7 +3094,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.7914
+   "direct": 3.7851,
+   "total": 18.5605
   },
   {
    "surface": "work-plane",
@@ -2869,7 +3109,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.4048
+   "direct": 3.3994,
+   "total": 17.9661
   },
   {
    "surface": "work-plane",
@@ -2883,7 +3124,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 5.7514
+   "direct": 5.7416,
+   "total": 19.9092
   },
   {
    "surface": "work-plane",
@@ -2897,7 +3139,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4372
+   "direct": 10.4189,
+   "total": 24.4943
   },
   {
    "surface": "work-plane",
@@ -2911,7 +3154,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.6399
+   "direct": 19.6106,
+   "total": 33.8397
   },
   {
    "surface": "work-plane",
@@ -2925,7 +3169,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 37.6094
+   "direct": 37.5637,
+   "total": 51.7134
   },
   {
    "surface": "work-plane",
@@ -2939,7 +3184,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.2543
+   "direct": 69.2014,
+   "total": 83.6092
   },
   {
    "surface": "work-plane",
@@ -2953,7 +3199,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 115.4624
+   "direct": 115.4481,
+   "total": 129.8004
   },
   {
    "surface": "work-plane",
@@ -2967,7 +3214,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6985
+   "direct": 161.7593,
+   "total": 176.3095
   },
   {
    "surface": "work-plane",
@@ -2981,7 +3229,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 196.5361
+   "direct": 196.6603,
+   "total": 211.341
   },
   {
    "surface": "work-plane",
@@ -2995,7 +3244,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 216.5515
+   "direct": 216.7083,
+   "total": 231.4323
   },
   {
    "surface": "work-plane",
@@ -3009,7 +3259,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 216.5526
+   "direct": 216.7072,
+   "total": 231.3509
   },
   {
    "surface": "work-plane",
@@ -3023,7 +3274,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 196.5354
+   "direct": 196.6609,
+   "total": 211.2254
   },
   {
    "surface": "work-plane",
@@ -3037,7 +3289,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6985
+   "direct": 161.7593,
+   "total": 176.3721
   },
   {
    "surface": "work-plane",
@@ -3051,7 +3304,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 115.4617
+   "direct": 115.4484,
+   "total": 129.9301
   },
   {
    "surface": "work-plane",
@@ -3065,7 +3319,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.2544
+   "direct": 69.2012,
+   "total": 83.4995
   },
   {
    "surface": "work-plane",
@@ -3079,7 +3334,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 37.6088
+   "direct": 37.5643,
+   "total": 51.6733
   },
   {
    "surface": "work-plane",
@@ -3093,7 +3349,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.6399
+   "direct": 19.6106,
+   "total": 33.6928
   },
   {
    "surface": "work-plane",
@@ -3107,7 +3364,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4369
+   "direct": 10.4193,
+   "total": 24.4489
   },
   {
    "surface": "work-plane",
@@ -3121,7 +3379,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 5.7516
+   "direct": 5.7414,
+   "total": 20.0126
   },
   {
    "surface": "work-plane",
@@ -3135,7 +3394,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.4048
+   "direct": 3.3994,
+   "total": 17.992
   },
   {
    "surface": "work-plane",
@@ -3149,7 +3409,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.9378
+   "direct": 2.9333,
+   "total": 17.1245
   },
   {
    "surface": "work-plane",
@@ -3163,7 +3424,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.7701
+   "direct": 4.7628,
+   "total": 18.979
   },
   {
    "surface": "work-plane",
@@ -3177,7 +3439,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.2102
+   "direct": 8.1962,
+   "total": 22.2566
   },
   {
    "surface": "work-plane",
@@ -3191,7 +3454,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 14.7619
+   "direct": 14.7381,
+   "total": 28.8109
   },
   {
    "surface": "work-plane",
@@ -3205,7 +3469,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.843
+   "direct": 26.8051,
+   "total": 40.8757
   },
   {
    "surface": "work-plane",
@@ -3219,7 +3484,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6699
+   "direct": 47.6217,
+   "total": 61.8699
   },
   {
    "surface": "work-plane",
@@ -3233,7 +3499,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 78.9509
+   "direct": 78.8992,
+   "total": 93.3731
   },
   {
    "surface": "work-plane",
@@ -3247,7 +3514,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 115.4617
+   "direct": 115.4484,
+   "total": 130.0733
   },
   {
    "surface": "work-plane",
@@ -3261,7 +3529,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.283
+   "direct": 145.3156,
+   "total": 160.0053
   },
   {
    "surface": "work-plane",
@@ -3275,7 +3544,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6897
+   "direct": 161.7505,
+   "total": 176.6567
   },
   {
    "surface": "work-plane",
@@ -3289,7 +3559,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 161.6893
+   "direct": 161.7502,
+   "total": 176.409
   },
   {
    "surface": "work-plane",
@@ -3303,7 +3574,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.2855
+   "direct": 145.3134,
+   "total": 160.0505
   },
   {
    "surface": "work-plane",
@@ -3317,7 +3589,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 115.4624
+   "direct": 115.4481,
+   "total": 129.9859
   },
   {
    "surface": "work-plane",
@@ -3331,7 +3604,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 78.9509
+   "direct": 78.8992,
+   "total": 93.3678
   },
   {
    "surface": "work-plane",
@@ -3345,7 +3619,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6704
+   "direct": 47.6214,
+   "total": 62.062
   },
   {
    "surface": "work-plane",
@@ -3359,7 +3634,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8423
+   "direct": 26.8059,
+   "total": 40.9437
   },
   {
    "surface": "work-plane",
@@ -3373,7 +3649,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 14.7619
+   "direct": 14.738,
+   "total": 28.747
   },
   {
    "surface": "work-plane",
@@ -3387,7 +3664,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.21
+   "direct": 8.1963,
+   "total": 21.9907
   },
   {
    "surface": "work-plane",
@@ -3401,7 +3679,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.7701
+   "direct": 4.7628,
+   "total": 18.7353
   },
   {
    "surface": "work-plane",
@@ -3415,7 +3694,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.9378
+   "direct": 2.9333,
+   "total": 17.1179
   },
   {
    "surface": "work-plane",
@@ -3429,7 +3709,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.4292
+   "direct": 2.4251,
+   "total": 16.4234
   },
   {
    "surface": "work-plane",
@@ -3443,7 +3724,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.7914
+   "direct": 3.785,
+   "total": 17.5132
   },
   {
    "surface": "work-plane",
@@ -3457,7 +3739,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.1585
+   "direct": 6.1474,
+   "total": 20.1095
   },
   {
    "surface": "work-plane",
@@ -3471,7 +3754,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4376
+   "direct": 10.4194,
+   "total": 24.3409
   },
   {
    "surface": "work-plane",
@@ -3485,7 +3769,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.8225
+   "direct": 17.7953,
+   "total": 31.8637
   },
   {
    "surface": "work-plane",
@@ -3499,7 +3784,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.9463
+   "direct": 29.9065,
+   "total": 44.3094
   },
   {
    "surface": "work-plane",
@@ -3513,7 +3799,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6704
+   "direct": 47.6214,
+   "total": 62.1829
   },
   {
    "surface": "work-plane",
@@ -3527,7 +3814,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.2544
+   "direct": 69.2012,
+   "total": 83.9183
   },
   {
    "surface": "work-plane",
@@ -3541,7 +3829,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.9319
+   "direct": 89.8893,
+   "total": 104.7682
   },
   {
    "surface": "work-plane",
@@ -3555,7 +3844,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 102.1523
+   "direct": 102.12,
+   "total": 116.9339
   },
   {
    "surface": "work-plane",
@@ -3569,7 +3859,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 102.1513
+   "direct": 102.1212,
+   "total": 116.9956
   },
   {
    "surface": "work-plane",
@@ -3583,7 +3874,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.9326
+   "direct": 89.8886,
+   "total": 104.6759
   },
   {
    "surface": "work-plane",
@@ -3597,7 +3889,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.2543
+   "direct": 69.2014,
+   "total": 83.8435
   },
   {
    "surface": "work-plane",
@@ -3611,7 +3904,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6699
+   "direct": 47.6217,
+   "total": 62.1729
   },
   {
    "surface": "work-plane",
@@ -3625,7 +3919,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.9463
+   "direct": 29.9065,
+   "total": 44.2909
   },
   {
    "surface": "work-plane",
@@ -3639,7 +3934,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.8223
+   "direct": 17.7957,
+   "total": 31.9182
   },
   {
    "surface": "work-plane",
@@ -3653,7 +3949,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4374
+   "direct": 10.4196,
+   "total": 24.4093
   },
   {
    "surface": "work-plane",
@@ -3667,7 +3964,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.1584
+   "direct": 6.1475,
+   "total": 19.9276
   },
   {
    "surface": "work-plane",
@@ -3681,7 +3979,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.7914
+   "direct": 3.785,
+   "total": 17.5806
   },
   {
    "surface": "work-plane",
@@ -3695,7 +3994,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.4291
+   "direct": 2.4251,
+   "total": 16.3628
   },
   {
    "surface": "work-plane",
@@ -3709,7 +4009,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.9583
+   "direct": 1.9554,
+   "total": 15.495
   },
   {
    "surface": "work-plane",
@@ -3723,7 +4024,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.9378
+   "direct": 2.9333,
+   "total": 16.5049
   },
   {
    "surface": "work-plane",
@@ -3737,7 +4039,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.5029
+   "direct": 4.4957,
+   "total": 18.0876
   },
   {
    "surface": "work-plane",
@@ -3751,7 +4054,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.0276
   },
   {
    "surface": "work-plane",
@@ -3765,7 +4069,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.3501
+   "direct": 11.3316,
+   "total": 25.4157
   },
   {
    "surface": "work-plane",
@@ -3779,7 +4084,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.8223
+   "direct": 17.7957,
+   "total": 32.3271
   },
   {
    "surface": "work-plane",
@@ -3793,7 +4099,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8423
+   "direct": 26.8059,
+   "total": 41.4877
   },
   {
    "surface": "work-plane",
@@ -3807,7 +4114,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 37.6088
+   "direct": 37.5643,
+   "total": 52.445
   },
   {
    "surface": "work-plane",
@@ -3821,7 +4129,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6733
+   "direct": 47.6241,
+   "total": 62.6514
   },
   {
    "surface": "work-plane",
@@ -3835,7 +4144,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 53.8124
+   "direct": 53.7633,
+   "total": 68.9464
   },
   {
    "surface": "work-plane",
@@ -3849,7 +4159,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 53.8127
+   "direct": 53.763,
+   "total": 68.9125
   },
   {
    "surface": "work-plane",
@@ -3863,7 +4174,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 47.6726
+   "direct": 47.6247,
+   "total": 62.7329
   },
   {
    "surface": "work-plane",
@@ -3877,7 +4189,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 37.6094
+   "direct": 37.5637,
+   "total": 52.3386
   },
   {
    "surface": "work-plane",
@@ -3891,7 +4204,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.843
+   "direct": 26.8051,
+   "total": 41.635
   },
   {
    "surface": "work-plane",
@@ -3905,7 +4219,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.8225
+   "direct": 17.7953,
+   "total": 32.1473
   },
   {
    "surface": "work-plane",
@@ -3919,7 +4234,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.3501
+   "direct": 11.3316,
+   "total": 25.4601
   },
   {
    "surface": "work-plane",
@@ -3933,7 +4249,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.0006
   },
   {
    "surface": "work-plane",
@@ -3947,7 +4264,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.5029
+   "direct": 4.4957,
+   "total": 18.1457
   },
   {
    "surface": "work-plane",
@@ -3961,7 +4279,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.9378
+   "direct": 2.9333,
+   "total": 16.5356
   },
   {
    "surface": "work-plane",
@@ -3975,7 +4294,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.9583
+   "direct": 1.9554,
+   "total": 15.5634
   },
   {
    "surface": "work-plane",
@@ -3989,7 +4309,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.5445
+   "direct": 1.5419,
+   "total": 14.7603
   },
   {
    "surface": "work-plane",
@@ -4003,7 +4324,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.2193
+   "direct": 2.2158,
+   "total": 15.6423
   },
   {
    "surface": "work-plane",
@@ -4017,7 +4339,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.2363
+   "direct": 3.2312,
+   "total": 16.7064
   },
   {
    "surface": "work-plane",
@@ -4031,7 +4354,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.7703
+   "direct": 4.763,
+   "total": 18.6759
   },
   {
    "surface": "work-plane",
@@ -4045,7 +4369,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.45
   },
   {
    "surface": "work-plane",
@@ -4059,7 +4384,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4374
+   "direct": 10.4196,
+   "total": 25.021
   },
   {
    "surface": "work-plane",
@@ -4073,7 +4399,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 14.7619
+   "direct": 14.738,
+   "total": 29.8436
   },
   {
    "surface": "work-plane",
@@ -4087,7 +4414,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.6399
+   "direct": 19.6106,
+   "total": 34.9258
   },
   {
    "surface": "work-plane",
@@ -4101,7 +4429,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 24.1164
+   "direct": 24.0826,
+   "total": 39.6777
   },
   {
    "surface": "work-plane",
@@ -4115,7 +4444,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8402
+   "direct": 26.8034,
+   "total": 42.5028
   },
   {
    "surface": "work-plane",
@@ -4129,7 +4459,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.8405
+   "direct": 26.8031,
+   "total": 42.5886
   },
   {
    "surface": "work-plane",
@@ -4143,7 +4474,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 24.1174
+   "direct": 24.0817,
+   "total": 39.7229
   },
   {
    "surface": "work-plane",
@@ -4157,7 +4489,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.6399
+   "direct": 19.6106,
+   "total": 34.9632
   },
   {
    "surface": "work-plane",
@@ -4171,7 +4504,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 14.7619
+   "direct": 14.7381,
+   "total": 29.7981
   },
   {
    "surface": "work-plane",
@@ -4185,7 +4519,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4376
+   "direct": 10.4194,
+   "total": 25.0272
   },
   {
    "surface": "work-plane",
@@ -4199,7 +4534,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.1003
+   "direct": 7.0883,
+   "total": 21.4522
   },
   {
    "surface": "work-plane",
@@ -4213,7 +4549,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.7703
+   "direct": 4.763,
+   "total": 18.6914
   },
   {
    "surface": "work-plane",
@@ -4227,7 +4564,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.2363
+   "direct": 3.2313,
+   "total": 16.7978
   },
   {
    "surface": "work-plane",
@@ -4241,7 +4579,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.2194
+   "direct": 2.2158,
+   "total": 15.6729
   },
   {
    "surface": "work-plane",
@@ -4255,7 +4594,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.5445
+   "direct": 1.5419,
+   "total": 14.7612
   },
   {
    "surface": "work-plane",
@@ -4269,7 +4609,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.2153
+   "direct": 1.2137,
+   "total": 13.9902
   },
   {
    "surface": "work-plane",
@@ -4283,7 +4624,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.6707
+   "direct": 1.668,
+   "total": 14.835
   },
   {
    "surface": "work-plane",
@@ -4297,7 +4639,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.3203
+   "direct": 2.3165,
+   "total": 15.7342
   },
   {
    "surface": "work-plane",
@@ -4311,7 +4654,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.2363
+   "direct": 3.2313,
+   "total": 17.2662
   },
   {
    "surface": "work-plane",
@@ -4325,7 +4669,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.5029
+   "direct": 4.4957,
+   "total": 19.1791
   },
   {
    "surface": "work-plane",
@@ -4339,7 +4684,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.1584
+   "direct": 6.1475,
+   "total": 21.2125
   },
   {
    "surface": "work-plane",
@@ -4353,7 +4699,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.21
+   "direct": 8.1963,
+   "total": 24.0013
   },
   {
    "surface": "work-plane",
@@ -4367,7 +4714,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4369
+   "direct": 10.4193,
+   "total": 26.7727
   },
   {
    "surface": "work-plane",
@@ -4381,7 +4729,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 12.3506
+   "direct": 12.3311,
+   "total": 29.2419
   },
   {
    "surface": "work-plane",
@@ -4395,7 +4744,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.482
+   "direct": 13.4606,
+   "total": 30.6053
   },
   {
    "surface": "work-plane",
@@ -4409,7 +4759,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.4825
+   "direct": 13.4605,
+   "total": 30.5716
   },
   {
    "surface": "work-plane",
@@ -4423,7 +4774,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 12.3511
+   "direct": 12.3305,
+   "total": 29.1778
   },
   {
    "surface": "work-plane",
@@ -4437,7 +4789,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.4372
+   "direct": 10.4189,
+   "total": 26.8299
   },
   {
    "surface": "work-plane",
@@ -4451,7 +4804,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.2102
+   "direct": 8.1962,
+   "total": 24.0198
   },
   {
    "surface": "work-plane",
@@ -4465,7 +4819,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.1585
+   "direct": 6.1474,
+   "total": 21.1838
   },
   {
    "surface": "work-plane",
@@ -4479,7 +4834,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.5029
+   "direct": 4.4957,
+   "total": 18.9727
   },
   {
    "surface": "work-plane",
@@ -4493,7 +4849,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.2363
+   "direct": 3.2312,
+   "total": 17.1933
   },
   {
    "surface": "work-plane",
@@ -4507,7 +4864,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 2.3203
+   "direct": 2.3165,
+   "total": 15.8723
   },
   {
    "surface": "work-plane",
@@ -4521,7 +4879,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.6707
+   "direct": 1.668,
+   "total": 14.6545
   },
   {
    "surface": "work-plane",
@@ -4535,7 +4894,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 1.2153
+   "direct": 1.2137,
+   "total": 14.0219
   },
   {
    "surface": "floor",
@@ -4549,7 +4909,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.5591
+   "direct": 3.555,
+   "total": 15.4885
   },
   {
    "surface": "floor",
@@ -4563,7 +4924,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.999
+   "direct": 4.9928,
+   "total": 17.7201
   },
   {
    "surface": "floor",
@@ -4577,7 +4939,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.9915
+   "direct": 6.9835,
+   "total": 20.4742
   },
   {
    "surface": "floor",
@@ -4591,7 +4954,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 9.6873
+   "direct": 9.6772,
+   "total": 23.9565
   },
   {
    "surface": "floor",
@@ -4605,7 +4969,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.1978
+   "direct": 13.1853,
+   "total": 28.2973
   },
   {
    "surface": "floor",
@@ -4619,7 +4984,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.344
+   "direct": 17.3284,
+   "total": 33.5837
   },
   {
    "surface": "floor",
@@ -4633,7 +4999,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 21.8365
+   "direct": 21.8204,
+   "total": 39.1753
   },
   {
    "surface": "floor",
@@ -4647,7 +5014,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0944,
+   "total": 44.6093
   },
   {
    "surface": "floor",
@@ -4661,7 +5029,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.4628
+   "direct": 29.4447,
+   "total": 48.6288
   },
   {
    "surface": "floor",
@@ -4675,7 +5044,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 31.3413
+   "direct": 31.3232,
+   "total": 51.0845
   },
   {
    "surface": "floor",
@@ -4689,7 +5059,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 31.3409
+   "direct": 31.3233,
+   "total": 50.9374
   },
   {
    "surface": "floor",
@@ -4703,7 +5074,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.4622
+   "direct": 29.4454,
+   "total": 48.6625
   },
   {
    "surface": "floor",
@@ -4717,7 +5089,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0944,
+   "total": 44.4739
   },
   {
    "surface": "floor",
@@ -4731,7 +5104,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 21.8368
+   "direct": 21.8202,
+   "total": 39.1484
   },
   {
    "surface": "floor",
@@ -4745,7 +5119,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.344
+   "direct": 17.3285,
+   "total": 33.6229
   },
   {
    "surface": "floor",
@@ -4759,7 +5134,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.1978
+   "direct": 13.1853,
+   "total": 28.4623
   },
   {
    "surface": "floor",
@@ -4773,7 +5149,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 9.6869
+   "direct": 9.6776,
+   "total": 24.0006
   },
   {
    "surface": "floor",
@@ -4787,7 +5164,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.9915
+   "direct": 6.9835,
+   "total": 20.3723
   },
   {
    "surface": "floor",
@@ -4801,7 +5179,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.999
+   "direct": 4.9928,
+   "total": 17.6613
   },
   {
    "surface": "floor",
@@ -4815,7 +5194,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.5591
+   "direct": 3.555,
+   "total": 15.4541
   },
   {
    "surface": "floor",
@@ -4829,7 +5209,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.6036
+   "direct": 4.5976,
+   "total": 17.319
   },
   {
    "surface": "floor",
@@ -4843,7 +5224,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.6862
+   "direct": 6.6784,
+   "total": 20.0793
   },
   {
    "surface": "floor",
@@ -4857,7 +5239,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 9.6869
+   "direct": 9.6776,
+   "total": 23.5773
   },
   {
    "surface": "floor",
@@ -4871,7 +5254,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.9081
+   "direct": 13.8953,
+   "total": 28.3404
   },
   {
    "surface": "floor",
@@ -4885,7 +5269,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4621
+   "direct": 19.4464,
+   "total": 34.5919
   },
   {
    "surface": "floor",
@@ -4899,7 +5284,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1119
+   "direct": 26.0944,
+   "total": 41.8398
   },
   {
    "surface": "floor",
@@ -4913,7 +5299,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 33.3857
+   "direct": 33.3672,
+   "total": 49.8129
   },
   {
    "surface": "floor",
@@ -4927,7 +5314,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 40.5598
+   "direct": 40.5429,
+   "total": 57.6569
   },
   {
    "surface": "floor",
@@ -4941,7 +5329,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 46.0484
+   "direct": 46.0348,
+   "total": 63.6515
   },
   {
    "surface": "floor",
@@ -4955,7 +5344,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9997,
+   "total": 66.8183
   },
   {
    "surface": "floor",
@@ -4969,7 +5359,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9997,
+   "total": 66.8442
   },
   {
    "surface": "floor",
@@ -4983,7 +5374,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 46.0485
+   "direct": 46.0348,
+   "total": 63.7312
   },
   {
    "surface": "floor",
@@ -4997,7 +5389,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 40.5599
+   "direct": 40.5427,
+   "total": 57.4249
   },
   {
    "surface": "floor",
@@ -5011,7 +5404,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 33.3858
+   "direct": 33.3672,
+   "total": 49.7749
   },
   {
    "surface": "floor",
@@ -5025,7 +5419,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0946,
+   "total": 41.7533
   },
   {
    "surface": "floor",
@@ -5039,7 +5434,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4621
+   "direct": 19.4464,
+   "total": 34.4975
   },
   {
    "surface": "floor",
@@ -5053,7 +5449,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.9081
+   "direct": 13.8953,
+   "total": 28.2929
   },
   {
    "surface": "floor",
@@ -5067,7 +5464,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 9.6873
+   "direct": 9.6772,
+   "total": 23.6805
   },
   {
    "surface": "floor",
@@ -5081,7 +5479,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.6858
+   "direct": 6.6787,
+   "total": 20.0957
   },
   {
    "surface": "floor",
@@ -5095,7 +5494,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.6035
+   "direct": 4.5978,
+   "total": 17.3623
   },
   {
    "surface": "floor",
@@ -5109,7 +5509,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 5.8925
+   "direct": 5.8861,
+   "total": 19.2672
   },
   {
    "surface": "floor",
@@ -5123,7 +5524,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.8219
+   "direct": 8.8129,
+   "total": 22.7997
   },
   {
    "surface": "floor",
@@ -5137,7 +5539,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.1978
+   "direct": 13.1853,
+   "total": 27.3166
   },
   {
    "surface": "floor",
@@ -5151,7 +5554,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4621
+   "direct": 19.4464,
+   "total": 33.9413
   },
   {
    "surface": "floor",
@@ -5165,7 +5569,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 27.7341
+   "direct": 27.7171,
+   "total": 42.6049
   },
   {
    "surface": "floor",
@@ -5179,7 +5584,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 38.0159
+   "direct": 37.9975,
+   "total": 53.4713
   },
   {
    "surface": "floor",
@@ -5193,7 +5599,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0113
+   "direct": 48.9996,
+   "total": 64.9923
   },
   {
    "surface": "floor",
@@ -5207,7 +5614,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 58.7263
+   "direct": 58.7239,
+   "total": 75.0398
   },
   {
    "surface": "floor",
@@ -5221,7 +5629,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.788
+   "direct": 65.7926,
+   "total": 82.3594
   },
   {
    "surface": "floor",
@@ -5235,7 +5644,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.5206
+   "direct": 69.53,
+   "total": 86.3332
   },
   {
    "surface": "floor",
@@ -5249,7 +5659,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.5215
+   "direct": 69.5292,
+   "total": 86.2094
   },
   {
    "surface": "floor",
@@ -5263,7 +5674,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7882
+   "direct": 65.7925,
+   "total": 82.3934
   },
   {
    "surface": "floor",
@@ -5277,7 +5689,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 58.7265
+   "direct": 58.7239,
+   "total": 74.9218
   },
   {
    "surface": "floor",
@@ -5291,7 +5704,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9996,
+   "total": 64.8545
   },
   {
    "surface": "floor",
@@ -5305,7 +5719,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 38.0159
+   "direct": 37.9976,
+   "total": 53.3219
   },
   {
    "surface": "floor",
@@ -5319,7 +5734,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 27.7341
+   "direct": 27.7171,
+   "total": 42.6539
   },
   {
    "surface": "floor",
@@ -5333,7 +5749,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4621
+   "direct": 19.4464,
+   "total": 34.0952
   },
   {
    "surface": "floor",
@@ -5347,7 +5764,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.1978
+   "direct": 13.1853,
+   "total": 27.3591
   },
   {
    "surface": "floor",
@@ -5361,7 +5779,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.8219
+   "direct": 8.8129,
+   "total": 22.661
   },
   {
    "surface": "floor",
@@ -5375,7 +5794,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 5.8925
+   "direct": 5.8861,
+   "total": 19.2847
   },
   {
    "surface": "floor",
@@ -5389,7 +5809,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.3185
+   "direct": 7.3097,
+   "total": 21.2302
   },
   {
    "surface": "floor",
@@ -5403,7 +5824,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.2624
+   "direct": 11.2504,
+   "total": 25.3717
   },
   {
    "surface": "floor",
@@ -5417,7 +5839,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.344
+   "direct": 17.3285,
+   "total": 31.6784
   },
   {
    "surface": "floor",
@@ -5431,7 +5854,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0946,
+   "total": 40.6541
   },
   {
    "surface": "floor",
@@ -5445,7 +5869,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 38.0159
+   "direct": 37.9976,
+   "total": 52.8498
   },
   {
    "surface": "floor",
@@ -5459,7 +5884,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 52.1357
+   "direct": 52.1263,
+   "total": 67.3258
   },
   {
    "surface": "floor",
@@ -5473,7 +5899,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7871
+   "direct": 65.7917,
+   "total": 81.2667
   },
   {
    "surface": "floor",
@@ -5487,7 +5914,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 77.3662
+   "direct": 77.3846,
+   "total": 93.1822
   },
   {
    "surface": "floor",
@@ -5501,7 +5929,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 85.4707
+   "direct": 85.5007,
+   "total": 101.2868
   },
   {
    "surface": "floor",
@@ -5515,7 +5944,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.5908
+   "direct": 89.626,
+   "total": 105.569
   },
   {
    "surface": "floor",
@@ -5529,7 +5959,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.5912
+   "direct": 89.6257,
+   "total": 105.6739
   },
   {
    "surface": "floor",
@@ -5543,7 +5974,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 85.4709
+   "direct": 85.5004,
+   "total": 101.3874
   },
   {
    "surface": "floor",
@@ -5557,7 +5989,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 77.3667
+   "direct": 77.384,
+   "total": 93.1579
   },
   {
    "surface": "floor",
@@ -5571,7 +6004,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7872
+   "direct": 65.7916,
+   "total": 81.1715
   },
   {
    "surface": "floor",
@@ -5585,7 +6019,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 52.1357
+   "direct": 52.1263,
+   "total": 67.1967
   },
   {
    "surface": "floor",
@@ -5599,7 +6034,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 38.0159
+   "direct": 37.9975,
+   "total": 52.8005
   },
   {
    "surface": "floor",
@@ -5613,7 +6049,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1119
+   "direct": 26.0944,
+   "total": 40.7875
   },
   {
    "surface": "floor",
@@ -5627,7 +6064,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.344
+   "direct": 17.3284,
+   "total": 31.7193
   },
   {
    "surface": "floor",
@@ -5641,7 +6079,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.2623
+   "direct": 11.2505,
+   "total": 25.4693
   },
   {
    "surface": "floor",
@@ -5655,7 +6094,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.3181
+   "direct": 7.31,
+   "total": 21.1324
   },
   {
    "surface": "floor",
@@ -5669,7 +6109,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.8219
+   "direct": 8.8129,
+   "total": 23.2423
   },
   {
    "surface": "floor",
@@ -5683,7 +6124,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.906
+   "direct": 13.8942,
+   "total": 28.4033
   },
   {
    "surface": "floor",
@@ -5697,7 +6139,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 21.8366
+   "direct": 21.8203,
+   "total": 36.3371
   },
   {
    "surface": "floor",
@@ -5711,7 +6154,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 33.3858
+   "direct": 33.3672,
+   "total": 48.0135
   },
   {
    "surface": "floor",
@@ -5725,7 +6169,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9996,
+   "total": 63.8139
   },
   {
    "surface": "floor",
@@ -5739,7 +6184,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7872
+   "direct": 65.7916,
+   "total": 80.8749
   },
   {
    "surface": "floor",
@@ -5753,7 +6199,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 81.4161
+   "direct": 81.4399,
+   "total": 96.491
   },
   {
    "surface": "floor",
@@ -5767,7 +6214,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 93.8728
+   "direct": 93.9131,
+   "total": 109.319
   },
   {
    "surface": "floor",
@@ -5781,7 +6229,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 103.0999
+   "direct": 103.1502,
+   "total": 118.6102
   },
   {
    "surface": "floor",
@@ -5795,7 +6244,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2618
+   "direct": 108.3171,
+   "total": 123.8036
   },
   {
    "surface": "floor",
@@ -5809,7 +6259,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2615
+   "direct": 108.3175,
+   "total": 123.8149
   },
   {
    "surface": "floor",
@@ -5823,7 +6274,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 103.0999
+   "direct": 103.1503,
+   "total": 118.6772
   },
   {
    "surface": "floor",
@@ -5837,7 +6289,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 93.873
+   "direct": 93.9128,
+   "total": 109.3437
   },
   {
    "surface": "floor",
@@ -5851,7 +6304,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 81.4161
+   "direct": 81.4399,
+   "total": 96.5718
   },
   {
    "surface": "floor",
@@ -5865,7 +6319,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7871
+   "direct": 65.7917,
+   "total": 80.7538
   },
   {
    "surface": "floor",
@@ -5879,7 +6334,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0113
+   "direct": 48.9996,
+   "total": 63.8549
   },
   {
    "surface": "floor",
@@ -5893,7 +6349,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 33.3857
+   "direct": 33.3672,
+   "total": 48.0111
   },
   {
    "surface": "floor",
@@ -5907,7 +6364,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 21.8363
+   "direct": 21.8202,
+   "total": 36.415
   },
   {
    "surface": "floor",
@@ -5921,7 +6379,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.9069
+   "direct": 13.8932,
+   "total": 28.4141
   },
   {
    "surface": "floor",
@@ -5935,7 +6394,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.8219
+   "direct": 8.8129,
+   "total": 23.3108
   },
   {
    "surface": "floor",
@@ -5949,7 +6409,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.172
+   "direct": 10.161,
+   "total": 25.0493
   },
   {
    "surface": "floor",
@@ -5963,7 +6424,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 16.382
+   "direct": 16.3667,
+   "total": 31.2252
   },
   {
    "surface": "floor",
@@ -5977,7 +6439,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0944,
+   "total": 40.7678
   },
   {
    "surface": "floor",
@@ -5991,7 +6454,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 40.5599
+   "direct": 40.5427,
+   "total": 55.2852
   },
   {
    "surface": "floor",
@@ -6005,7 +6469,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 58.7265
+   "direct": 58.7239,
+   "total": 73.6105
   },
   {
    "surface": "floor",
@@ -6019,7 +6484,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 77.3667
+   "direct": 77.384,
+   "total": 92.3835
   },
   {
    "surface": "floor",
@@ -6033,7 +6499,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 93.873
+   "direct": 93.9128,
+   "total": 108.9354
   },
   {
    "surface": "floor",
@@ -6047,7 +6514,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2626
+   "direct": 108.3182,
+   "total": 123.4669
   },
   {
    "surface": "floor",
@@ -6061,7 +6529,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 120.6438
+   "direct": 120.7119,
+   "total": 135.9925
   },
   {
    "surface": "floor",
@@ -6075,7 +6544,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 127.8444
+   "direct": 127.9219,
+   "total": 143.2239
   },
   {
    "surface": "floor",
@@ -6089,7 +6559,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 127.8445
+   "direct": 127.9217,
+   "total": 143.1742
   },
   {
    "surface": "floor",
@@ -6103,7 +6574,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 120.6436
+   "direct": 120.7122,
+   "total": 135.9599
   },
   {
    "surface": "floor",
@@ -6117,7 +6589,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2626
+   "direct": 108.3182,
+   "total": 123.4149
   },
   {
    "surface": "floor",
@@ -6131,7 +6604,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 93.8728
+   "direct": 93.9131,
+   "total": 108.9457
   },
   {
    "surface": "floor",
@@ -6145,7 +6619,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 77.3662
+   "direct": 77.3846,
+   "total": 92.3541
   },
   {
    "surface": "floor",
@@ -6159,7 +6634,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 58.7263
+   "direct": 58.7239,
+   "total": 73.5786
   },
   {
    "surface": "floor",
@@ -6173,7 +6649,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 40.5598
+   "direct": 40.5429,
+   "total": 55.265
   },
   {
    "surface": "floor",
@@ -6187,7 +6664,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0944,
+   "total": 40.842
   },
   {
    "surface": "floor",
@@ -6201,7 +6679,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 16.3816
+   "direct": 16.3671,
+   "total": 31.1404
   },
   {
    "surface": "floor",
@@ -6215,7 +6694,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.1716
+   "direct": 10.1614,
+   "total": 25.0155
   },
   {
    "surface": "floor",
@@ -6229,7 +6709,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.2626
+   "direct": 11.2508,
+   "total": 26.513
   },
   {
    "surface": "floor",
@@ -6243,7 +6724,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 18.376
+   "direct": 18.3602,
+   "total": 33.3061
   },
   {
    "surface": "floor",
@@ -6257,7 +6739,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.4622
+   "direct": 29.4454,
+   "total": 44.19
   },
   {
    "surface": "floor",
@@ -6271,7 +6754,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 46.0485
+   "direct": 46.0348,
+   "total": 60.5993
   },
   {
    "surface": "floor",
@@ -6285,7 +6769,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7882
+   "direct": 65.7925,
+   "total": 80.6514
   },
   {
    "surface": "floor",
@@ -6299,7 +6784,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 85.4709
+   "direct": 85.5004,
+   "total": 100.3252
   },
   {
    "surface": "floor",
@@ -6313,7 +6799,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 103.0999
+   "direct": 103.1503,
+   "total": 118.0726
   },
   {
    "surface": "floor",
@@ -6327,7 +6814,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 120.6436
+   "direct": 120.7122,
+   "total": 135.7809
   },
   {
    "surface": "floor",
@@ -6341,7 +6829,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 135.9399
+   "direct": 136.027,
+   "total": 151.0959
   },
   {
    "surface": "floor",
@@ -6355,7 +6844,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.4214
+   "direct": 145.5212,
+   "total": 160.5963
   },
   {
    "surface": "floor",
@@ -6369,7 +6859,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.422
+   "direct": 145.5206,
+   "total": 160.6422
   },
   {
    "surface": "floor",
@@ -6383,7 +6874,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 135.9399
+   "direct": 136.027,
+   "total": 151.222
   },
   {
    "surface": "floor",
@@ -6397,7 +6889,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 120.6438
+   "direct": 120.7119,
+   "total": 135.7432
   },
   {
    "surface": "floor",
@@ -6411,7 +6904,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 103.0999
+   "direct": 103.1502,
+   "total": 118.0526
   },
   {
    "surface": "floor",
@@ -6425,7 +6919,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 85.4707
+   "direct": 85.5007,
+   "total": 100.3973
   },
   {
    "surface": "floor",
@@ -6439,7 +6934,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.788
+   "direct": 65.7926,
+   "total": 80.5193
   },
   {
    "surface": "floor",
@@ -6453,7 +6949,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 46.0484
+   "direct": 46.0348,
+   "total": 60.7905
   },
   {
    "surface": "floor",
@@ -6467,7 +6964,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.4628
+   "direct": 29.4447,
+   "total": 44.2806
   },
   {
    "surface": "floor",
@@ -6481,7 +6979,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 18.376
+   "direct": 18.3602,
+   "total": 33.3508
   },
   {
    "surface": "floor",
@@ -6495,7 +6994,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.2627
+   "direct": 11.2509,
+   "total": 26.4888
   },
   {
    "surface": "floor",
@@ -6509,7 +7009,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.8731
+   "direct": 11.8605,
+   "total": 27.259
   },
   {
    "surface": "floor",
@@ -6523,7 +7024,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4635
+   "direct": 19.4478,
+   "total": 34.4389
   },
   {
    "surface": "floor",
@@ -6537,7 +7039,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 31.3409
+   "direct": 31.3233,
+   "total": 46.2503
   },
   {
    "surface": "floor",
@@ -6551,7 +7054,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9997,
+   "total": 63.8879
   },
   {
    "surface": "floor",
@@ -6565,7 +7069,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.5215
+   "direct": 69.5292,
+   "total": 84.38
   },
   {
    "surface": "floor",
@@ -6579,7 +7084,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.5912
+   "direct": 89.6257,
+   "total": 104.4125
   },
   {
    "surface": "floor",
@@ -6593,7 +7099,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2615
+   "direct": 108.3175,
+   "total": 123.185
   },
   {
    "surface": "floor",
@@ -6607,7 +7114,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 127.8445
+   "direct": 127.9217,
+   "total": 142.8956
   },
   {
    "surface": "floor",
@@ -6621,7 +7129,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.422
+   "direct": 145.5206,
+   "total": 160.5477
   },
   {
    "surface": "floor",
@@ -6635,7 +7144,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 156.9543
+   "direct": 157.0693,
+   "total": 172.0754
   },
   {
    "surface": "floor",
@@ -6649,7 +7159,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 156.9543
+   "direct": 157.0693,
+   "total": 172.1825
   },
   {
    "surface": "floor",
@@ -6663,7 +7174,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.4214
+   "direct": 145.5212,
+   "total": 160.6229
   },
   {
    "surface": "floor",
@@ -6677,7 +7189,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 127.8444
+   "direct": 127.9219,
+   "total": 142.8523
   },
   {
    "surface": "floor",
@@ -6691,7 +7204,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2618
+   "direct": 108.3171,
+   "total": 123.1979
   },
   {
    "surface": "floor",
@@ -6705,7 +7219,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.5908
+   "direct": 89.626,
+   "total": 104.6167
   },
   {
    "surface": "floor",
@@ -6719,7 +7234,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.5206
+   "direct": 69.53,
+   "total": 84.3109
   },
   {
    "surface": "floor",
@@ -6733,7 +7249,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9997,
+   "total": 63.7945
   },
   {
    "surface": "floor",
@@ -6747,7 +7264,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 31.3413
+   "direct": 31.3232,
+   "total": 46.1881
   },
   {
    "surface": "floor",
@@ -6761,7 +7279,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4635
+   "direct": 19.4478,
+   "total": 34.6607
   },
   {
    "surface": "floor",
@@ -6775,7 +7294,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.8731
+   "direct": 11.8605,
+   "total": 27.2466
   },
   {
    "surface": "floor",
@@ -6789,7 +7309,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.8731
+   "direct": 11.8605,
+   "total": 27.2794
   },
   {
    "surface": "floor",
@@ -6803,7 +7324,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4635
+   "direct": 19.4478,
+   "total": 34.5508
   },
   {
    "surface": "floor",
@@ -6817,7 +7339,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 31.3413
+   "direct": 31.3232,
+   "total": 46.2454
   },
   {
    "surface": "floor",
@@ -6831,7 +7354,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9997,
+   "total": 63.7508
   },
   {
    "surface": "floor",
@@ -6845,7 +7369,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.5206
+   "direct": 69.53,
+   "total": 84.4233
   },
   {
    "surface": "floor",
@@ -6859,7 +7384,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.5908
+   "direct": 89.626,
+   "total": 104.597
   },
   {
    "surface": "floor",
@@ -6873,7 +7399,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2618
+   "direct": 108.3171,
+   "total": 123.195
   },
   {
    "surface": "floor",
@@ -6887,7 +7414,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 127.8444
+   "direct": 127.9219,
+   "total": 142.899
   },
   {
    "surface": "floor",
@@ -6901,7 +7429,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.4214
+   "direct": 145.5212,
+   "total": 160.5876
   },
   {
    "surface": "floor",
@@ -6915,7 +7444,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 156.9543
+   "direct": 157.0693,
+   "total": 171.966
   },
   {
    "surface": "floor",
@@ -6929,7 +7459,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 156.9543
+   "direct": 157.0693,
+   "total": 172.1479
   },
   {
    "surface": "floor",
@@ -6943,7 +7474,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.422
+   "direct": 145.5206,
+   "total": 160.6804
   },
   {
    "surface": "floor",
@@ -6957,7 +7489,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 127.8445
+   "direct": 127.9217,
+   "total": 142.8232
   },
   {
    "surface": "floor",
@@ -6971,7 +7504,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2615
+   "direct": 108.3175,
+   "total": 123.2614
   },
   {
    "surface": "floor",
@@ -6985,7 +7519,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.5912
+   "direct": 89.6257,
+   "total": 104.4423
   },
   {
    "surface": "floor",
@@ -6999,7 +7534,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.5215
+   "direct": 69.5292,
+   "total": 84.2308
   },
   {
    "surface": "floor",
@@ -7013,7 +7549,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9997,
+   "total": 63.8188
   },
   {
    "surface": "floor",
@@ -7027,7 +7564,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 31.3409
+   "direct": 31.3233,
+   "total": 46.2181
   },
   {
    "surface": "floor",
@@ -7041,7 +7579,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4635
+   "direct": 19.4478,
+   "total": 34.4573
   },
   {
    "surface": "floor",
@@ -7055,7 +7594,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.8731
+   "direct": 11.8605,
+   "total": 27.3786
   },
   {
    "surface": "floor",
@@ -7069,7 +7609,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.2627
+   "direct": 11.2509,
+   "total": 26.4999
   },
   {
    "surface": "floor",
@@ -7083,7 +7624,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 18.376
+   "direct": 18.3602,
+   "total": 33.4314
   },
   {
    "surface": "floor",
@@ -7097,7 +7639,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.4628
+   "direct": 29.4447,
+   "total": 44.2141
   },
   {
    "surface": "floor",
@@ -7111,7 +7654,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 46.0484
+   "direct": 46.0348,
+   "total": 60.6972
   },
   {
    "surface": "floor",
@@ -7125,7 +7669,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.788
+   "direct": 65.7926,
+   "total": 80.4991
   },
   {
    "surface": "floor",
@@ -7139,7 +7684,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 85.4707
+   "direct": 85.5007,
+   "total": 100.3169
   },
   {
    "surface": "floor",
@@ -7153,7 +7699,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 103.0999
+   "direct": 103.1502,
+   "total": 118.0538
   },
   {
    "surface": "floor",
@@ -7167,7 +7714,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 120.6438
+   "direct": 120.7119,
+   "total": 135.765
   },
   {
    "surface": "floor",
@@ -7181,7 +7729,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 135.9399
+   "direct": 136.027,
+   "total": 151.1093
   },
   {
    "surface": "floor",
@@ -7195,7 +7744,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.422
+   "direct": 145.5206,
+   "total": 160.7547
   },
   {
    "surface": "floor",
@@ -7209,7 +7759,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 145.4214
+   "direct": 145.5212,
+   "total": 160.6415
   },
   {
    "surface": "floor",
@@ -7223,7 +7774,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 135.9399
+   "direct": 136.027,
+   "total": 151.029
   },
   {
    "surface": "floor",
@@ -7237,7 +7789,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 120.6436
+   "direct": 120.7122,
+   "total": 135.676
   },
   {
    "surface": "floor",
@@ -7251,7 +7804,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 103.0999
+   "direct": 103.1503,
+   "total": 118.1168
   },
   {
    "surface": "floor",
@@ -7265,7 +7819,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 85.4709
+   "direct": 85.5004,
+   "total": 100.3423
   },
   {
    "surface": "floor",
@@ -7279,7 +7834,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7882
+   "direct": 65.7925,
+   "total": 80.6743
   },
   {
    "surface": "floor",
@@ -7293,7 +7849,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 46.0485
+   "direct": 46.0348,
+   "total": 60.7734
   },
   {
    "surface": "floor",
@@ -7307,7 +7864,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.4622
+   "direct": 29.4454,
+   "total": 44.3436
   },
   {
    "surface": "floor",
@@ -7321,7 +7879,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 18.376
+   "direct": 18.3602,
+   "total": 33.2422
   },
   {
    "surface": "floor",
@@ -7335,7 +7894,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.2626
+   "direct": 11.2508,
+   "total": 26.4542
   },
   {
    "surface": "floor",
@@ -7349,7 +7909,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.1716
+   "direct": 10.1614,
+   "total": 25.0872
   },
   {
    "surface": "floor",
@@ -7363,7 +7924,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 16.3816
+   "direct": 16.3671,
+   "total": 31.1747
   },
   {
    "surface": "floor",
@@ -7377,7 +7939,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0944,
+   "total": 40.7814
   },
   {
    "surface": "floor",
@@ -7391,7 +7954,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 40.5598
+   "direct": 40.5429,
+   "total": 55.252
   },
   {
    "surface": "floor",
@@ -7405,7 +7969,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 58.7263
+   "direct": 58.7239,
+   "total": 73.4815
   },
   {
    "surface": "floor",
@@ -7419,7 +7984,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 77.3662
+   "direct": 77.3846,
+   "total": 92.3914
   },
   {
    "surface": "floor",
@@ -7433,7 +7999,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 93.8728
+   "direct": 93.9131,
+   "total": 108.9635
   },
   {
    "surface": "floor",
@@ -7447,7 +8014,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2626
+   "direct": 108.3182,
+   "total": 123.4831
   },
   {
    "surface": "floor",
@@ -7461,7 +8029,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 120.6436
+   "direct": 120.7122,
+   "total": 135.9046
   },
   {
    "surface": "floor",
@@ -7475,7 +8044,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 127.8445
+   "direct": 127.9217,
+   "total": 143.3243
   },
   {
    "surface": "floor",
@@ -7489,7 +8059,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 127.8444
+   "direct": 127.9219,
+   "total": 143.168
   },
   {
    "surface": "floor",
@@ -7503,7 +8074,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 120.6438
+   "direct": 120.7119,
+   "total": 135.8709
   },
   {
    "surface": "floor",
@@ -7517,7 +8089,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2626
+   "direct": 108.3182,
+   "total": 123.4105
   },
   {
    "surface": "floor",
@@ -7531,7 +8104,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 93.873
+   "direct": 93.9128,
+   "total": 108.9538
   },
   {
    "surface": "floor",
@@ -7545,7 +8119,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 77.3667
+   "direct": 77.384,
+   "total": 92.3221
   },
   {
    "surface": "floor",
@@ -7559,7 +8134,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 58.7265
+   "direct": 58.7239,
+   "total": 73.47
   },
   {
    "surface": "floor",
@@ -7573,7 +8149,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 40.5599
+   "direct": 40.5427,
+   "total": 55.2747
   },
   {
    "surface": "floor",
@@ -7587,7 +8164,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0944,
+   "total": 40.8538
   },
   {
    "surface": "floor",
@@ -7601,7 +8179,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 16.382
+   "direct": 16.3667,
+   "total": 31.2574
   },
   {
    "surface": "floor",
@@ -7615,7 +8194,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 10.172
+   "direct": 10.161,
+   "total": 25.0673
   },
   {
    "surface": "floor",
@@ -7629,7 +8209,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.8219
+   "direct": 8.8129,
+   "total": 23.3107
   },
   {
    "surface": "floor",
@@ -7643,7 +8224,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.9069
+   "direct": 13.8932,
+   "total": 28.4603
   },
   {
    "surface": "floor",
@@ -7657,7 +8239,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 21.8363
+   "direct": 21.8202,
+   "total": 36.3189
   },
   {
    "surface": "floor",
@@ -7671,7 +8254,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 33.3857
+   "direct": 33.3672,
+   "total": 48.041
   },
   {
    "surface": "floor",
@@ -7685,7 +8269,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0113
+   "direct": 48.9996,
+   "total": 63.7172
   },
   {
    "surface": "floor",
@@ -7699,7 +8284,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7871
+   "direct": 65.7917,
+   "total": 80.7408
   },
   {
    "surface": "floor",
@@ -7713,7 +8299,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 81.4161
+   "direct": 81.4399,
+   "total": 96.5998
   },
   {
    "surface": "floor",
@@ -7727,7 +8314,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 93.873
+   "direct": 93.9128,
+   "total": 109.2688
   },
   {
    "surface": "floor",
@@ -7741,7 +8329,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 103.0999
+   "direct": 103.1503,
+   "total": 118.5645
   },
   {
    "surface": "floor",
@@ -7755,7 +8344,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2615
+   "direct": 108.3175,
+   "total": 123.8712
   },
   {
    "surface": "floor",
@@ -7769,7 +8359,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 108.2618
+   "direct": 108.3171,
+   "total": 123.9656
   },
   {
    "surface": "floor",
@@ -7783,7 +8374,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 103.0999
+   "direct": 103.1502,
+   "total": 118.746
   },
   {
    "surface": "floor",
@@ -7797,7 +8389,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 93.8728
+   "direct": 93.9131,
+   "total": 109.2738
   },
   {
    "surface": "floor",
@@ -7811,7 +8404,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 81.4161
+   "direct": 81.4399,
+   "total": 96.4596
   },
   {
    "surface": "floor",
@@ -7825,7 +8419,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7872
+   "direct": 65.7916,
+   "total": 80.7593
   },
   {
    "surface": "floor",
@@ -7839,7 +8434,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9996,
+   "total": 63.7497
   },
   {
    "surface": "floor",
@@ -7853,7 +8449,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 33.3858
+   "direct": 33.3672,
+   "total": 47.9716
   },
   {
    "surface": "floor",
@@ -7867,7 +8464,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 21.8366
+   "direct": 21.8203,
+   "total": 36.3274
   },
   {
    "surface": "floor",
@@ -7881,7 +8479,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.906
+   "direct": 13.8942,
+   "total": 28.4386
   },
   {
    "surface": "floor",
@@ -7895,7 +8494,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.8219
+   "direct": 8.8129,
+   "total": 23.2245
   },
   {
    "surface": "floor",
@@ -7909,7 +8509,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.3181
+   "direct": 7.31,
+   "total": 21.2941
   },
   {
    "surface": "floor",
@@ -7923,7 +8524,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.2623
+   "direct": 11.2505,
+   "total": 25.5223
   },
   {
    "surface": "floor",
@@ -7937,7 +8539,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.344
+   "direct": 17.3284,
+   "total": 31.6888
   },
   {
    "surface": "floor",
@@ -7951,7 +8554,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1119
+   "direct": 26.0944,
+   "total": 40.7002
   },
   {
    "surface": "floor",
@@ -7965,7 +8569,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 38.0159
+   "direct": 37.9975,
+   "total": 52.7919
   },
   {
    "surface": "floor",
@@ -7979,7 +8584,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 52.1357
+   "direct": 52.1263,
+   "total": 67.2479
   },
   {
    "surface": "floor",
@@ -7993,7 +8599,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7872
+   "direct": 65.7916,
+   "total": 81.2712
   },
   {
    "surface": "floor",
@@ -8007,7 +8614,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 77.3667
+   "direct": 77.384,
+   "total": 93.1166
   },
   {
    "surface": "floor",
@@ -8021,7 +8629,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 85.4709
+   "direct": 85.5004,
+   "total": 101.4047
   },
   {
    "surface": "floor",
@@ -8035,7 +8644,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.5912
+   "direct": 89.6257,
+   "total": 105.57
   },
   {
    "surface": "floor",
@@ -8049,7 +8659,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 89.5908
+   "direct": 89.626,
+   "total": 105.5587
   },
   {
    "surface": "floor",
@@ -8063,7 +8674,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 85.4707
+   "direct": 85.5007,
+   "total": 101.402
   },
   {
    "surface": "floor",
@@ -8077,7 +8689,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 77.3662
+   "direct": 77.3846,
+   "total": 93.1165
   },
   {
    "surface": "floor",
@@ -8091,7 +8704,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7871
+   "direct": 65.7917,
+   "total": 81.1995
   },
   {
    "surface": "floor",
@@ -8105,7 +8719,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 52.1357
+   "direct": 52.1263,
+   "total": 67.2921
   },
   {
    "surface": "floor",
@@ -8119,7 +8734,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 38.0159
+   "direct": 37.9976,
+   "total": 52.7792
   },
   {
    "surface": "floor",
@@ -8133,7 +8749,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0946,
+   "total": 40.6682
   },
   {
    "surface": "floor",
@@ -8147,7 +8764,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.344
+   "direct": 17.3285,
+   "total": 31.6965
   },
   {
    "surface": "floor",
@@ -8161,7 +8779,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 11.2624
+   "direct": 11.2504,
+   "total": 25.488
   },
   {
    "surface": "floor",
@@ -8175,7 +8794,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 7.3185
+   "direct": 7.3097,
+   "total": 21.3128
   },
   {
    "surface": "floor",
@@ -8189,7 +8809,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 5.8925
+   "direct": 5.8861,
+   "total": 19.2944
   },
   {
    "surface": "floor",
@@ -8203,7 +8824,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.8219
+   "direct": 8.8129,
+   "total": 22.7466
   },
   {
    "surface": "floor",
@@ -8217,7 +8839,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.1978
+   "direct": 13.1853,
+   "total": 27.3935
   },
   {
    "surface": "floor",
@@ -8231,7 +8854,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4621
+   "direct": 19.4464,
+   "total": 33.9507
   },
   {
    "surface": "floor",
@@ -8245,7 +8869,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 27.7341
+   "direct": 27.7171,
+   "total": 42.7156
   },
   {
    "surface": "floor",
@@ -8259,7 +8884,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 38.0159
+   "direct": 37.9976,
+   "total": 53.3017
   },
   {
    "surface": "floor",
@@ -8273,7 +8899,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9996,
+   "total": 64.7936
   },
   {
    "surface": "floor",
@@ -8287,7 +8914,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 58.7265
+   "direct": 58.7239,
+   "total": 75.0498
   },
   {
    "surface": "floor",
@@ -8301,7 +8929,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.7882
+   "direct": 65.7925,
+   "total": 82.3872
   },
   {
    "surface": "floor",
@@ -8315,7 +8944,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.5215
+   "direct": 69.5292,
+   "total": 86.2239
   },
   {
    "surface": "floor",
@@ -8329,7 +8959,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 69.5206
+   "direct": 69.53,
+   "total": 86.1079
   },
   {
    "surface": "floor",
@@ -8343,7 +8974,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 65.788
+   "direct": 65.7926,
+   "total": 82.4583
   },
   {
    "surface": "floor",
@@ -8357,7 +8989,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 58.7263
+   "direct": 58.7239,
+   "total": 74.8838
   },
   {
    "surface": "floor",
@@ -8371,7 +9004,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0113
+   "direct": 48.9996,
+   "total": 64.9335
   },
   {
    "surface": "floor",
@@ -8385,7 +9019,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 38.0159
+   "direct": 37.9975,
+   "total": 53.4315
   },
   {
    "surface": "floor",
@@ -8399,7 +9034,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 27.7341
+   "direct": 27.7171,
+   "total": 42.683
   },
   {
    "surface": "floor",
@@ -8413,7 +9049,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4621
+   "direct": 19.4464,
+   "total": 33.9565
   },
   {
    "surface": "floor",
@@ -8427,7 +9064,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.1978
+   "direct": 13.1853,
+   "total": 27.3167
   },
   {
    "surface": "floor",
@@ -8441,7 +9079,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 8.8219
+   "direct": 8.8129,
+   "total": 22.7287
   },
   {
    "surface": "floor",
@@ -8455,7 +9094,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 5.8925
+   "direct": 5.8861,
+   "total": 19.2243
   },
   {
    "surface": "floor",
@@ -8469,7 +9109,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.6035
+   "direct": 4.5978,
+   "total": 17.3551
   },
   {
    "surface": "floor",
@@ -8483,7 +9124,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.6858
+   "direct": 6.6787,
+   "total": 20.0493
   },
   {
    "surface": "floor",
@@ -8497,7 +9139,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 9.6873
+   "direct": 9.6772,
+   "total": 23.5487
   },
   {
    "surface": "floor",
@@ -8511,7 +9154,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.9081
+   "direct": 13.8953,
+   "total": 28.2041
   },
   {
    "surface": "floor",
@@ -8525,7 +9169,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4621
+   "direct": 19.4464,
+   "total": 34.5725
   },
   {
    "surface": "floor",
@@ -8539,7 +9184,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0946,
+   "total": 41.8448
   },
   {
    "surface": "floor",
@@ -8553,7 +9199,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 33.3858
+   "direct": 33.3672,
+   "total": 49.8512
   },
   {
    "surface": "floor",
@@ -8567,7 +9214,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 40.5599
+   "direct": 40.5427,
+   "total": 57.712
   },
   {
    "surface": "floor",
@@ -8581,7 +9229,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 46.0485
+   "direct": 46.0348,
+   "total": 63.6419
   },
   {
    "surface": "floor",
@@ -8595,7 +9244,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9997,
+   "total": 66.9586
   },
   {
    "surface": "floor",
@@ -8609,7 +9259,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 49.0114
+   "direct": 48.9997,
+   "total": 66.698
   },
   {
    "surface": "floor",
@@ -8623,7 +9274,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 46.0484
+   "direct": 46.0348,
+   "total": 63.5667
   },
   {
    "surface": "floor",
@@ -8637,7 +9289,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 40.5598
+   "direct": 40.5429,
+   "total": 57.7441
   },
   {
    "surface": "floor",
@@ -8651,7 +9304,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 33.3857
+   "direct": 33.3672,
+   "total": 49.7757
   },
   {
    "surface": "floor",
@@ -8665,7 +9319,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1119
+   "direct": 26.0944,
+   "total": 41.9189
   },
   {
    "surface": "floor",
@@ -8679,7 +9334,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 19.4621
+   "direct": 19.4464,
+   "total": 34.4164
   },
   {
    "surface": "floor",
@@ -8693,7 +9349,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.9081
+   "direct": 13.8953,
+   "total": 28.4306
   },
   {
    "surface": "floor",
@@ -8707,7 +9364,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 9.6869
+   "direct": 9.6776,
+   "total": 23.5906
   },
   {
    "surface": "floor",
@@ -8721,7 +9379,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.6862
+   "direct": 6.6784,
+   "total": 20.1514
   },
   {
    "surface": "floor",
@@ -8735,7 +9394,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.6036
+   "direct": 4.5976,
+   "total": 17.3125
   },
   {
    "surface": "floor",
@@ -8749,7 +9409,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.5591
+   "direct": 3.555,
+   "total": 15.4194
   },
   {
    "surface": "floor",
@@ -8763,7 +9424,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.999
+   "direct": 4.9928,
+   "total": 17.6915
   },
   {
    "surface": "floor",
@@ -8777,7 +9439,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.9915
+   "direct": 6.9835,
+   "total": 20.3628
   },
   {
    "surface": "floor",
@@ -8791,7 +9454,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 9.6869
+   "direct": 9.6776,
+   "total": 23.8373
   },
   {
    "surface": "floor",
@@ -8805,7 +9469,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.1978
+   "direct": 13.1853,
+   "total": 28.303
   },
   {
    "surface": "floor",
@@ -8819,7 +9484,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.344
+   "direct": 17.3285,
+   "total": 33.5542
   },
   {
    "surface": "floor",
@@ -8833,7 +9499,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 21.8368
+   "direct": 21.8202,
+   "total": 39.1076
   },
   {
    "surface": "floor",
@@ -8847,7 +9514,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0944,
+   "total": 44.4484
   },
   {
    "surface": "floor",
@@ -8861,7 +9529,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.4622
+   "direct": 29.4454,
+   "total": 48.6726
   },
   {
    "surface": "floor",
@@ -8875,7 +9544,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 31.3409
+   "direct": 31.3233,
+   "total": 51.0593
   },
   {
    "surface": "floor",
@@ -8889,7 +9559,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 31.3413
+   "direct": 31.3232,
+   "total": 50.9858
   },
   {
    "surface": "floor",
@@ -8903,7 +9574,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 29.4628
+   "direct": 29.4447,
+   "total": 48.7306
   },
   {
    "surface": "floor",
@@ -8917,7 +9589,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 26.1118
+   "direct": 26.0944,
+   "total": 44.4463
   },
   {
    "surface": "floor",
@@ -8931,7 +9604,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 21.8365
+   "direct": 21.8204,
+   "total": 39.256
   },
   {
    "surface": "floor",
@@ -8945,7 +9619,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 17.344
+   "direct": 17.3284,
+   "total": 33.4358
   },
   {
    "surface": "floor",
@@ -8959,7 +9634,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 13.1978
+   "direct": 13.1853,
+   "total": 28.3553
   },
   {
    "surface": "floor",
@@ -8973,7 +9649,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 9.6873
+   "direct": 9.6772,
+   "total": 23.7766
   },
   {
    "surface": "floor",
@@ -8987,7 +9664,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 6.9915
+   "direct": 6.9835,
+   "total": 20.4616
   },
   {
    "surface": "floor",
@@ -9001,7 +9679,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 4.999
+   "direct": 4.9928,
+   "total": 17.7154
   },
   {
    "surface": "floor",
@@ -9015,7 +9694,8 @@
     "y": 1,
     "z": 0
    },
-   "lux": 3.5591
+   "direct": 3.555,
+   "total": 15.5044
   },
   {
    "surface": "wall-x-",
@@ -9029,7 +9709,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.5411
+   "direct": 2.5432,
+   "total": 12.9334
   },
   {
    "surface": "wall-x-",
@@ -9043,7 +9724,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.2292
+   "direct": 3.2328,
+   "total": 14.1826
   },
   {
    "surface": "wall-x-",
@@ -9057,7 +9739,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 4.0694
+   "direct": 4.074,
+   "total": 15.6164
   },
   {
    "surface": "wall-x-",
@@ -9071,7 +9754,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 5.0003
+   "direct": 5.0072,
+   "total": 17.1292
   },
   {
    "surface": "wall-x-",
@@ -9085,7 +9769,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 5.9938
+   "direct": 6.0022,
+   "total": 18.558
   },
   {
    "surface": "wall-x-",
@@ -9099,7 +9784,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 6.8671
+   "direct": 6.8766,
+   "total": 19.764
   },
   {
    "surface": "wall-x-",
@@ -9113,7 +9799,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 7.5619
+   "direct": 7.5746,
+   "total": 20.7519
   },
   {
    "surface": "wall-x-",
@@ -9127,7 +9814,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 7.9518
+   "direct": 7.9647,
+   "total": 21.2424
   },
   {
    "surface": "wall-x-",
@@ -9141,7 +9829,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 7.9517
+   "direct": 7.9646,
+   "total": 21.3892
   },
   {
    "surface": "wall-x-",
@@ -9155,7 +9844,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 7.5627
+   "direct": 7.5738,
+   "total": 20.6563
   },
   {
    "surface": "wall-x-",
@@ -9169,7 +9859,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 6.8664
+   "direct": 6.8772,
+   "total": 19.745
   },
   {
    "surface": "wall-x-",
@@ -9183,7 +9874,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 5.9938
+   "direct": 6.0022,
+   "total": 18.5143
   },
   {
    "surface": "wall-x-",
@@ -9197,7 +9889,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 5.0003
+   "direct": 5.0073,
+   "total": 17.0778
   },
   {
    "surface": "wall-x-",
@@ -9211,7 +9904,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 4.0694
+   "direct": 4.074,
+   "total": 15.6369
   },
   {
    "surface": "wall-x-",
@@ -9225,7 +9919,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.2292
+   "direct": 3.2328,
+   "total": 14.2165
   },
   {
    "surface": "wall-x-",
@@ -9239,7 +9934,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.5411
+   "direct": 2.5432,
+   "total": 12.9375
   },
   {
    "surface": "wall-x-",
@@ -9253,7 +9949,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.0726
+   "direct": 2.0744,
+   "total": 14.3192
   },
   {
    "surface": "wall-x-",
@@ -9267,7 +9964,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.6095
+   "direct": 2.6123,
+   "total": 15.4084
   },
   {
    "surface": "wall-x-",
@@ -9281,7 +9979,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.274
+   "direct": 3.2776,
+   "total": 16.61
   },
   {
    "surface": "wall-x-",
@@ -9295,7 +9994,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.9928
+   "direct": 3.9981,
+   "total": 17.9633
   },
   {
    "surface": "wall-x-",
@@ -9309,7 +10009,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 4.8019
+   "direct": 4.809,
+   "total": 19.2541
   },
   {
    "surface": "wall-x-",
@@ -9323,7 +10024,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 5.5293
+   "direct": 5.5374,
+   "total": 20.446
   },
   {
    "surface": "wall-x-",
@@ -9337,7 +10039,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 6.096
+   "direct": 6.1064,
+   "total": 21.4403
   },
   {
    "surface": "wall-x-",
@@ -9351,7 +10054,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 6.4189
+   "direct": 6.4293,
+   "total": 21.8592
   },
   {
    "surface": "wall-x-",
@@ -9365,7 +10069,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 6.4186
+   "direct": 6.4296,
+   "total": 21.8197
   },
   {
    "surface": "wall-x-",
@@ -9379,7 +10084,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 6.0965
+   "direct": 6.1061,
+   "total": 21.283
   },
   {
    "surface": "wall-x-",
@@ -9393,7 +10099,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 5.5293
+   "direct": 5.5374,
+   "total": 20.4882
   },
   {
    "surface": "wall-x-",
@@ -9407,7 +10114,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 4.8019
+   "direct": 4.809,
+   "total": 19.267
   },
   {
    "surface": "wall-x-",
@@ -9421,7 +10129,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.9928
+   "direct": 3.9981,
+   "total": 17.9557
   },
   {
    "surface": "wall-x-",
@@ -9435,7 +10144,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.274
+   "direct": 3.2776,
+   "total": 16.7421
   },
   {
    "surface": "wall-x-",
@@ -9449,7 +10159,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.6096
+   "direct": 2.6122,
+   "total": 15.4358
   },
   {
    "surface": "wall-x-",
@@ -9463,7 +10174,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.0726
+   "direct": 2.0744,
+   "total": 14.3793
   },
   {
    "surface": "wall-x-",
@@ -9477,7 +10189,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.6554
+   "direct": 1.6569,
+   "total": 14.9079
   },
   {
    "surface": "wall-x-",
@@ -9491,7 +10204,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.0847
+   "direct": 2.0867,
+   "total": 16.0985
   },
   {
    "surface": "wall-x-",
@@ -9505,7 +10219,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.6058
+   "direct": 2.6089,
+   "total": 17.1703
   },
   {
    "surface": "wall-x-",
@@ -9519,7 +10234,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.1749
+   "direct": 3.1788,
+   "total": 18.3532
   },
   {
    "surface": "wall-x-",
@@ -9533,7 +10249,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.7705
+   "direct": 3.7763,
+   "total": 19.3638
   },
   {
    "surface": "wall-x-",
@@ -9547,7 +10264,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 4.3473
+   "direct": 4.3539,
+   "total": 20.3993
   },
   {
    "surface": "wall-x-",
@@ -9561,7 +10279,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 4.7826
+   "direct": 4.7898,
+   "total": 21.1735
   },
   {
    "surface": "wall-x-",
@@ -9575,7 +10294,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 5.0188
+   "direct": 5.0268,
+   "total": 21.4857
   },
   {
    "surface": "wall-x-",
@@ -9589,7 +10309,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 5.019
+   "direct": 5.0267,
+   "total": 21.5476
   },
   {
    "surface": "wall-x-",
@@ -9603,7 +10324,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 4.7826
+   "direct": 4.7898,
+   "total": 21.0939
   },
   {
    "surface": "wall-x-",
@@ -9617,7 +10339,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 4.3473
+   "direct": 4.3539,
+   "total": 20.4151
   },
   {
    "surface": "wall-x-",
@@ -9631,7 +10354,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.7709
+   "direct": 3.7763,
+   "total": 19.423
   },
   {
    "surface": "wall-x-",
@@ -9645,7 +10369,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.175
+   "direct": 3.1787,
+   "total": 18.3347
   },
   {
    "surface": "wall-x-",
@@ -9659,7 +10384,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.6058
+   "direct": 2.6089,
+   "total": 17.2708
   },
   {
    "surface": "wall-x-",
@@ -9673,7 +10399,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.0847
+   "direct": 2.0867,
+   "total": 16.1608
   },
   {
    "surface": "wall-x-",
@@ -9687,7 +10414,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.6554
+   "direct": 1.6569,
+   "total": 15.086
   },
   {
    "surface": "wall-x-",
@@ -9701,7 +10429,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.324
+   "direct": 1.3251,
+   "total": 15.3739
   },
   {
    "surface": "wall-x-",
@@ -9715,7 +10444,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.6528
+   "direct": 1.6543,
+   "total": 16.4423
   },
   {
    "surface": "wall-x-",
@@ -9729,7 +10459,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.0213
+   "direct": 2.0234,
+   "total": 17.3094
   },
   {
    "surface": "wall-x-",
@@ -9743,7 +10474,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.472
+   "direct": 2.4751,
+   "total": 18.316
   },
   {
    "surface": "wall-x-",
@@ -9757,7 +10489,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.9282
+   "direct": 2.9321,
+   "total": 19.3581
   },
   {
    "surface": "wall-x-",
@@ -9771,7 +10504,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.3538
+   "direct": 3.3588,
+   "total": 20.0317
   },
   {
    "surface": "wall-x-",
@@ -9785,7 +10519,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.6985
+   "direct": 3.7045,
+   "total": 20.6063
   },
   {
    "surface": "wall-x-",
@@ -9799,7 +10534,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.8909
+   "direct": 3.8972,
+   "total": 20.7672
   },
   {
    "surface": "wall-x-",
@@ -9813,7 +10549,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.8909
+   "direct": 3.8972,
+   "total": 20.9699
   },
   {
    "surface": "wall-x-",
@@ -9827,7 +10564,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.6985
+   "direct": 3.7044,
+   "total": 20.579
   },
   {
    "surface": "wall-x-",
@@ -9841,7 +10579,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 3.3537
+   "direct": 3.3588,
+   "total": 20.0309
   },
   {
    "surface": "wall-x-",
@@ -9855,7 +10594,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.9282
+   "direct": 2.932,
+   "total": 19.1524
   },
   {
    "surface": "wall-x-",
@@ -9869,7 +10609,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.472
+   "direct": 2.4751,
+   "total": 18.3877
   },
   {
    "surface": "wall-x-",
@@ -9883,7 +10624,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.0212
+   "direct": 2.0234,
+   "total": 17.4265
   },
   {
    "surface": "wall-x-",
@@ -9897,7 +10639,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.6528
+   "direct": 1.6543,
+   "total": 16.3876
   },
   {
    "surface": "wall-x-",
@@ -9911,7 +10654,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.324
+   "direct": 1.3251,
+   "total": 15.3502
   },
   {
    "surface": "wall-x-",
@@ -9925,7 +10669,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9912
+   "direct": 0.9919,
+   "total": 15.4134
   },
   {
    "surface": "wall-x-",
@@ -9939,7 +10684,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.2243
+   "direct": 1.2256,
+   "total": 16.3603
   },
   {
    "surface": "wall-x-",
@@ -9953,7 +10699,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.5536
+   "direct": 1.5555,
+   "total": 17.2668
   },
   {
    "surface": "wall-x-",
@@ -9967,7 +10714,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.9067
+   "direct": 1.9091,
+   "total": 18.0686
   },
   {
    "surface": "wall-x-",
@@ -9981,7 +10729,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.2539
+   "direct": 2.2568,
+   "total": 18.8492
   },
   {
    "surface": "wall-x-",
@@ -9995,7 +10744,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.562
+   "direct": 2.5653,
+   "total": 19.4683
   },
   {
    "surface": "wall-x-",
@@ -10009,7 +10759,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.7944
+   "direct": 2.7982,
+   "total": 19.9214
   },
   {
    "surface": "wall-x-",
@@ -10023,7 +10774,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.9225
+   "direct": 2.9267,
+   "total": 20.1411
   },
   {
    "surface": "wall-x-",
@@ -10037,7 +10789,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.9225
+   "direct": 2.9267,
+   "total": 20.0491
   },
   {
    "surface": "wall-x-",
@@ -10051,7 +10804,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.7944
+   "direct": 2.7982,
+   "total": 19.921
   },
   {
    "surface": "wall-x-",
@@ -10065,7 +10819,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.562
+   "direct": 2.5653,
+   "total": 19.4329
   },
   {
    "surface": "wall-x-",
@@ -10079,7 +10834,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.2539
+   "direct": 2.2568,
+   "total": 18.8471
   },
   {
    "surface": "wall-x-",
@@ -10093,7 +10849,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.9067
+   "direct": 1.9091,
+   "total": 18.0009
   },
   {
    "surface": "wall-x-",
@@ -10107,7 +10864,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.5536
+   "direct": 1.5555,
+   "total": 17.2849
   },
   {
    "surface": "wall-x-",
@@ -10121,7 +10879,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.2243
+   "direct": 1.2256,
+   "total": 16.3357
   },
   {
    "surface": "wall-x-",
@@ -10135,7 +10894,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9912
+   "direct": 0.9919,
+   "total": 15.2519
   },
   {
    "surface": "wall-x-",
@@ -10149,7 +10909,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.7705
+   "direct": 0.7711,
+   "total": 15.2565
   },
   {
    "surface": "wall-x-",
@@ -10163,7 +10924,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9609
+   "direct": 0.9618,
+   "total": 16.1661
   },
   {
    "surface": "wall-x-",
@@ -10177,7 +10939,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.1732
+   "direct": 1.1743,
+   "total": 16.8716
   },
   {
    "surface": "wall-x-",
@@ -10191,7 +10954,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.3975
+   "direct": 1.399,
+   "total": 17.5985
   },
   {
    "surface": "wall-x-",
@@ -10205,7 +10969,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.6182
+   "direct": 1.6199,
+   "total": 18.3136
   },
   {
    "surface": "wall-x-",
@@ -10219,7 +10984,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.8177
+   "direct": 1.8201,
+   "total": 18.6791
   },
   {
    "surface": "wall-x-",
@@ -10233,7 +10999,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.9909
+   "direct": 1.994,
+   "total": 19.1514
   },
   {
    "surface": "wall-x-",
@@ -10247,7 +11014,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.0941
+   "direct": 2.0976,
+   "total": 19.3225
   },
   {
    "surface": "wall-x-",
@@ -10261,7 +11029,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 2.094
+   "direct": 2.0977,
+   "total": 19.2967
   },
   {
    "surface": "wall-x-",
@@ -10275,7 +11044,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.9909
+   "direct": 1.994,
+   "total": 19.0804
   },
   {
    "surface": "wall-x-",
@@ -10289,7 +11059,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.8177
+   "direct": 1.82,
+   "total": 18.7181
   },
   {
    "surface": "wall-x-",
@@ -10303,7 +11074,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.6182
+   "direct": 1.6199,
+   "total": 18.1749
   },
   {
    "surface": "wall-x-",
@@ -10317,7 +11089,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.3975
+   "direct": 1.399,
+   "total": 17.6125
   },
   {
    "surface": "wall-x-",
@@ -10331,7 +11104,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.1732
+   "direct": 1.1743,
+   "total": 16.9717
   },
   {
    "surface": "wall-x-",
@@ -10345,7 +11119,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9609
+   "direct": 0.9618,
+   "total": 16.0767
   },
   {
    "surface": "wall-x-",
@@ -10359,7 +11134,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.7705
+   "direct": 0.7711,
+   "total": 15.2236
   },
   {
    "surface": "wall-x-",
@@ -10373,7 +11149,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.527
+   "direct": 0.5273,
+   "total": 14.8961
   },
   {
    "surface": "wall-x-",
@@ -10387,7 +11164,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.644
+   "direct": 0.6446,
+   "total": 15.7668
   },
   {
    "surface": "wall-x-",
@@ -10401,7 +11179,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.8047
+   "direct": 0.8057,
+   "total": 16.5482
   },
   {
    "surface": "wall-x-",
@@ -10415,7 +11194,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9894
+   "direct": 0.9907,
+   "total": 17.0929
   },
   {
    "surface": "wall-x-",
@@ -10429,7 +11209,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.1747
+   "direct": 1.1763,
+   "total": 17.7155
   },
   {
    "surface": "wall-x-",
@@ -10443,7 +11224,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.343
+   "direct": 1.3449,
+   "total": 18.0243
   },
   {
    "surface": "wall-x-",
@@ -10457,7 +11239,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.4726
+   "direct": 1.4747,
+   "total": 18.4045
   },
   {
    "surface": "wall-x-",
@@ -10471,7 +11254,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.5434
+   "direct": 1.5457,
+   "total": 18.585
   },
   {
    "surface": "wall-x-",
@@ -10485,7 +11269,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.5434
+   "direct": 1.5457,
+   "total": 18.5119
   },
   {
    "surface": "wall-x-",
@@ -10499,7 +11284,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.4726
+   "direct": 1.4747,
+   "total": 18.3906
   },
   {
    "surface": "wall-x-",
@@ -10513,7 +11299,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.343
+   "direct": 1.3449,
+   "total": 18.1239
   },
   {
    "surface": "wall-x-",
@@ -10527,7 +11314,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 1.1747
+   "direct": 1.1763,
+   "total": 17.6494
   },
   {
    "surface": "wall-x-",
@@ -10541,7 +11329,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9894
+   "direct": 0.9907,
+   "total": 17.1079
   },
   {
    "surface": "wall-x-",
@@ -10555,7 +11344,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.8047
+   "direct": 0.8057,
+   "total": 16.43
   },
   {
    "surface": "wall-x-",
@@ -10569,7 +11359,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.644
+   "direct": 0.6446,
+   "total": 15.8519
   },
   {
    "surface": "wall-x-",
@@ -10583,7 +11374,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.527
+   "direct": 0.5273,
+   "total": 14.9266
   },
   {
    "surface": "wall-x-",
@@ -10597,7 +11389,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.356
+   "direct": 0.3563,
+   "total": 14.5602
   },
   {
    "surface": "wall-x-",
@@ -10611,7 +11404,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.4444
+   "direct": 0.4448,
+   "total": 15.3435
   },
   {
    "surface": "wall-x-",
@@ -10625,7 +11419,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.5453
+   "direct": 0.5459,
+   "total": 15.971
   },
   {
    "surface": "wall-x-",
@@ -10639,7 +11434,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.654
+   "direct": 0.6547,
+   "total": 16.5843
   },
   {
    "surface": "wall-x-",
@@ -10653,7 +11449,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.7628
+   "direct": 0.7637,
+   "total": 17.1143
   },
   {
    "surface": "wall-x-",
@@ -10667,7 +11464,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.8611
+   "direct": 0.8622,
+   "total": 17.4471
   },
   {
    "surface": "wall-x-",
@@ -10681,7 +11479,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9363
+   "direct": 0.9375,
+   "total": 17.6805
   },
   {
    "surface": "wall-x-",
@@ -10695,7 +11494,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9773
+   "direct": 0.9786,
+   "total": 17.7888
   },
   {
    "surface": "wall-x-",
@@ -10709,7 +11509,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9773
+   "direct": 0.9786,
+   "total": 17.8016
   },
   {
    "surface": "wall-x-",
@@ -10723,7 +11524,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.9363
+   "direct": 0.9375,
+   "total": 17.6677
   },
   {
    "surface": "wall-x-",
@@ -10737,7 +11539,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.8611
+   "direct": 0.8622,
+   "total": 17.2845
   },
   {
    "surface": "wall-x-",
@@ -10751,7 +11554,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.7628
+   "direct": 0.7637,
+   "total": 17.0898
   },
   {
    "surface": "wall-x-",
@@ -10765,7 +11569,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.654
+   "direct": 0.6547,
+   "total": 16.6741
   },
   {
    "surface": "wall-x-",
@@ -10779,7 +11584,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.5453
+   "direct": 0.5459,
+   "total": 16.0968
   },
   {
    "surface": "wall-x-",
@@ -10793,7 +11599,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.4444
+   "direct": 0.4448,
+   "total": 15.328
   },
   {
    "surface": "wall-x-",
@@ -10807,7 +11614,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.356
+   "direct": 0.3563,
+   "total": 14.6076
   },
   {
    "surface": "wall-x-",
@@ -10821,7 +11629,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.1552
+   "direct": 0.1554,
+   "total": 14.1497
   },
   {
    "surface": "wall-x-",
@@ -10835,7 +11644,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2078
+   "direct": 0.2081,
+   "total": 14.8441
   },
   {
    "surface": "wall-x-",
@@ -10849,7 +11659,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2695
+   "direct": 0.2699,
+   "total": 15.5611
   },
   {
    "surface": "wall-x-",
@@ -10863,7 +11674,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.3377
+   "direct": 0.3382,
+   "total": 15.9913
   },
   {
    "surface": "wall-x-",
@@ -10877,7 +11689,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.4073
+   "direct": 0.4079,
+   "total": 16.4426
   },
   {
    "surface": "wall-x-",
@@ -10891,7 +11704,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.4703
+   "direct": 0.471,
+   "total": 16.7023
   },
   {
    "surface": "wall-x-",
@@ -10905,7 +11719,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.5186
+   "direct": 0.5195,
+   "total": 16.8803
   },
   {
    "surface": "wall-x-",
@@ -10919,7 +11734,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.5452
+   "direct": 0.5461,
+   "total": 16.9899
   },
   {
    "surface": "wall-x-",
@@ -10933,7 +11749,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.5452
+   "direct": 0.5461,
+   "total": 16.9815
   },
   {
    "surface": "wall-x-",
@@ -10947,7 +11764,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.5186
+   "direct": 0.5195,
+   "total": 16.8995
   },
   {
    "surface": "wall-x-",
@@ -10961,7 +11779,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.4703
+   "direct": 0.471,
+   "total": 16.7856
   },
   {
    "surface": "wall-x-",
@@ -10975,7 +11794,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.4073
+   "direct": 0.4079,
+   "total": 16.3938
   },
   {
    "surface": "wall-x-",
@@ -10989,7 +11809,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.3377
+   "direct": 0.3382,
+   "total": 15.9546
   },
   {
    "surface": "wall-x-",
@@ -11003,7 +11824,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2695
+   "direct": 0.2699,
+   "total": 15.4585
   },
   {
    "surface": "wall-x-",
@@ -11017,7 +11839,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2078
+   "direct": 0.2081,
+   "total": 14.9112
   },
   {
    "surface": "wall-x-",
@@ -11031,7 +11854,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.1552
+   "direct": 0.1554,
+   "total": 14.2194
   },
   {
    "surface": "wall-x-",
@@ -11045,7 +11869,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0605
+   "direct": 0.0606,
+   "total": 13.6302
   },
   {
    "surface": "wall-x-",
@@ -11059,7 +11884,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.087
+   "direct": 0.0872,
+   "total": 14.4626
   },
   {
    "surface": "wall-x-",
@@ -11073,7 +11899,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.1186
+   "direct": 0.1188,
+   "total": 14.8218
   },
   {
    "surface": "wall-x-",
@@ -11087,7 +11914,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.1542
+   "direct": 0.1545,
+   "total": 15.3393
   },
   {
    "surface": "wall-x-",
@@ -11101,7 +11929,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.1913
+   "direct": 0.1916,
+   "total": 15.8848
   },
   {
    "surface": "wall-x-",
@@ -11115,7 +11944,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2222
+   "direct": 0.2226,
+   "total": 16.0217
   },
   {
    "surface": "wall-x-",
@@ -11129,7 +11959,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2403
+   "direct": 0.2406,
+   "total": 16.2079
   },
   {
    "surface": "wall-x-",
@@ -11143,7 +11974,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2483
+   "direct": 0.2485,
+   "total": 16.3334
   },
   {
    "surface": "wall-x-",
@@ -11157,7 +11989,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2483
+   "direct": 0.2485,
+   "total": 16.458
   },
   {
    "surface": "wall-x-",
@@ -11171,7 +12004,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2403
+   "direct": 0.2406,
+   "total": 16.3229
   },
   {
    "surface": "wall-x-",
@@ -11185,7 +12019,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.2223
+   "direct": 0.2225,
+   "total": 16.12
   },
   {
    "surface": "wall-x-",
@@ -11199,7 +12034,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.1913
+   "direct": 0.1916,
+   "total": 15.712
   },
   {
    "surface": "wall-x-",
@@ -11213,7 +12049,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.1542
+   "direct": 0.1545,
+   "total": 15.5141
   },
   {
    "surface": "wall-x-",
@@ -11227,7 +12064,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.1186
+   "direct": 0.1188,
+   "total": 15.1237
   },
   {
    "surface": "wall-x-",
@@ -11241,7 +12079,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.087
+   "direct": 0.0872,
+   "total": 14.3524
   },
   {
    "surface": "wall-x-",
@@ -11255,7 +12094,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0605
+   "direct": 0.0606,
+   "total": 13.5686
   },
   {
    "surface": "wall-x-",
@@ -11269,7 +12109,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 13.0601
   },
   {
    "surface": "wall-x-",
@@ -11283,7 +12124,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 13.8211
   },
   {
    "surface": "wall-x-",
@@ -11297,7 +12139,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.3342
   },
   {
    "surface": "wall-x-",
@@ -11311,7 +12154,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.8602
   },
   {
    "surface": "wall-x-",
@@ -11325,7 +12169,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.9957
   },
   {
    "surface": "wall-x-",
@@ -11339,7 +12184,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.3202
   },
   {
    "surface": "wall-x-",
@@ -11353,7 +12199,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.5362
   },
   {
    "surface": "wall-x-",
@@ -11367,7 +12214,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.5228
   },
   {
    "surface": "wall-x-",
@@ -11381,7 +12229,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.6391
   },
   {
    "surface": "wall-x-",
@@ -11395,7 +12244,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.6534
   },
   {
    "surface": "wall-x-",
@@ -11409,7 +12259,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.2553
   },
   {
    "surface": "wall-x-",
@@ -11423,7 +12274,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.1063
   },
   {
    "surface": "wall-x-",
@@ -11437,7 +12289,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.6975
   },
   {
    "surface": "wall-x-",
@@ -11451,7 +12304,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.33
   },
   {
    "surface": "wall-x-",
@@ -11465,7 +12319,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 13.841
   },
   {
    "surface": "wall-x-",
@@ -11479,7 +12334,8 @@
     "y": 0,
     "z": 0
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 13.0655
   },
   {
    "surface": "wall-z+",
@@ -11493,7 +12349,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.0969
+   "direct": 2.0979,
+   "total": 12.5057
   },
   {
    "surface": "wall-z+",
@@ -11507,7 +12364,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.9016
+   "direct": 2.9037,
+   "total": 13.8238
   },
   {
    "surface": "wall-z+",
@@ -11521,7 +12379,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.0003
+   "direct": 4.0041,
+   "total": 15.5119
   },
   {
    "surface": "wall-z+",
@@ -11535,7 +12394,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 5.4933
+   "direct": 5.4983,
+   "total": 17.7651
   },
   {
    "surface": "wall-z+",
@@ -11549,7 +12409,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 7.421
+   "direct": 7.4294,
+   "total": 20.4119
   },
   {
    "surface": "wall-z+",
@@ -11563,7 +12424,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 9.6913
+   "direct": 9.7045,
+   "total": 23.6798
   },
   {
    "surface": "wall-z+",
@@ -11577,7 +12439,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 12.2186
+   "direct": 12.2353,
+   "total": 27.0938
   },
   {
    "surface": "wall-z+",
@@ -11591,7 +12454,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 14.6573
+   "direct": 14.6794,
+   "total": 30.4513
   },
   {
    "surface": "wall-z+",
@@ -11605,7 +12469,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 16.6333
+   "direct": 16.6585,
+   "total": 33.0498
   },
   {
    "surface": "wall-z+",
@@ -11619,7 +12484,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 17.714
+   "direct": 17.741,
+   "total": 34.5757
   },
   {
    "surface": "wall-z+",
@@ -11633,7 +12499,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 17.7141
+   "direct": 17.741,
+   "total": 34.5791
   },
   {
    "surface": "wall-z+",
@@ -11647,7 +12514,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 16.6333
+   "direct": 16.6585,
+   "total": 33.1078
   },
   {
    "surface": "wall-z+",
@@ -11661,7 +12529,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 14.6574
+   "direct": 14.6794,
+   "total": 30.5563
   },
   {
    "surface": "wall-z+",
@@ -11675,7 +12544,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 12.2184
+   "direct": 12.2352,
+   "total": 27.1996
   },
   {
    "surface": "wall-z+",
@@ -11689,7 +12559,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 9.6915
+   "direct": 9.7042,
+   "total": 23.6388
   },
   {
    "surface": "wall-z+",
@@ -11703,7 +12574,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 7.421
+   "direct": 7.4294,
+   "total": 20.5103
   },
   {
    "surface": "wall-z+",
@@ -11717,7 +12589,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 5.4928
+   "direct": 5.4988,
+   "total": 17.6947
   },
   {
    "surface": "wall-z+",
@@ -11731,7 +12604,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.0004
+   "direct": 4.004,
+   "total": 15.5073
   },
   {
    "surface": "wall-z+",
@@ -11745,7 +12619,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.9016
+   "direct": 2.9037,
+   "total": 13.6753
   },
   {
    "surface": "wall-z+",
@@ -11759,7 +12634,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.0969
+   "direct": 2.0979,
+   "total": 12.4401
   },
   {
    "surface": "wall-z+",
@@ -11773,7 +12649,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.7111
+   "direct": 1.712,
+   "total": 13.9115
   },
   {
    "surface": "wall-z+",
@@ -11787,7 +12664,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.3358
+   "direct": 2.3375,
+   "total": 15.0428
   },
   {
    "surface": "wall-z+",
@@ -11801,7 +12679,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.1933
+   "direct": 3.1957,
+   "total": 16.5553
   },
   {
    "surface": "wall-z+",
@@ -11815,7 +12694,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.4236
+   "direct": 4.4282,
+   "total": 18.4492
   },
   {
    "surface": "wall-z+",
@@ -11829,7 +12709,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 6.0482
+   "direct": 6.0558,
+   "total": 21.0011
   },
   {
    "surface": "wall-z+",
@@ -11843,7 +12724,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 8.0202
+   "direct": 8.0313,
+   "total": 23.9578
   },
   {
    "surface": "wall-z+",
@@ -11857,7 +12739,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 10.2829
+   "direct": 10.2982,
+   "total": 27.055
   },
   {
    "surface": "wall-z+",
@@ -11871,7 +12754,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 12.4992
+   "direct": 12.5199,
+   "total": 30.1166
   },
   {
    "surface": "wall-z+",
@@ -11885,7 +12769,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 14.3783
+   "direct": 14.4039,
+   "total": 32.6213
   },
   {
    "surface": "wall-z+",
@@ -11899,7 +12784,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 15.4349
+   "direct": 15.462,
+   "total": 34.0222
   },
   {
    "surface": "wall-z+",
@@ -11913,7 +12799,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 15.4349
+   "direct": 15.462,
+   "total": 34.0115
   },
   {
    "surface": "wall-z+",
@@ -11927,7 +12814,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 14.3783
+   "direct": 14.4039,
+   "total": 32.7167
   },
   {
    "surface": "wall-z+",
@@ -11941,7 +12829,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 12.4988
+   "direct": 12.5203,
+   "total": 30.1843
   },
   {
    "surface": "wall-z+",
@@ -11955,7 +12844,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 10.2829
+   "direct": 10.2982,
+   "total": 27.0095
   },
   {
    "surface": "wall-z+",
@@ -11969,7 +12859,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 8.0199
+   "direct": 8.0315,
+   "total": 23.8331
   },
   {
    "surface": "wall-z+",
@@ -11983,7 +12874,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 6.0481
+   "direct": 6.0559,
+   "total": 20.9181
   },
   {
    "surface": "wall-z+",
@@ -11997,7 +12889,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.4237
+   "direct": 4.4281,
+   "total": 18.422
   },
   {
    "surface": "wall-z+",
@@ -12011,7 +12904,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.1928
+   "direct": 3.1961,
+   "total": 16.3844
   },
   {
    "surface": "wall-z+",
@@ -12025,7 +12919,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.3358
+   "direct": 2.3375,
+   "total": 14.9689
   },
   {
    "surface": "wall-z+",
@@ -12039,7 +12934,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.7111
+   "direct": 1.712,
+   "total": 13.8682
   },
   {
    "surface": "wall-z+",
@@ -12053,7 +12949,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.3682
+   "direct": 1.369,
+   "total": 14.6128
   },
   {
    "surface": "wall-z+",
@@ -12067,7 +12964,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.8564
+   "direct": 1.8576,
+   "total": 15.6535
   },
   {
    "surface": "wall-z+",
@@ -12081,7 +12979,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.54
+   "direct": 2.542,
+   "total": 16.8828
   },
   {
    "surface": "wall-z+",
@@ -12095,7 +12994,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.4777
+   "direct": 3.4813,
+   "total": 18.5625
   },
   {
    "surface": "wall-z+",
@@ -12109,7 +13009,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.7034
+   "direct": 4.7094,
+   "total": 20.5583
   },
   {
    "surface": "wall-z+",
@@ -12123,7 +13024,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 6.3096
+   "direct": 6.3188,
+   "total": 22.9286
   },
   {
    "surface": "wall-z+",
@@ -12137,7 +13039,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 8.1859
+   "direct": 8.2001,
+   "total": 25.7296
   },
   {
    "surface": "wall-z+",
@@ -12151,7 +13054,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 10.0861
+   "direct": 10.1043,
+   "total": 28.4388
   },
   {
    "surface": "wall-z+",
@@ -12165,7 +13069,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 11.6882
+   "direct": 11.7104,
+   "total": 30.4745
   },
   {
    "surface": "wall-z+",
@@ -12179,7 +13084,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 12.6239
+   "direct": 12.6493,
+   "total": 31.6542
   },
   {
    "surface": "wall-z+",
@@ -12193,7 +13099,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 12.624
+   "direct": 12.6491,
+   "total": 31.6361
   },
   {
    "surface": "wall-z+",
@@ -12207,7 +13114,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 11.6878
+   "direct": 11.7108,
+   "total": 30.5931
   },
   {
    "surface": "wall-z+",
@@ -12221,7 +13129,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 10.0863
+   "direct": 10.1039,
+   "total": 28.3585
   },
   {
    "surface": "wall-z+",
@@ -12235,7 +13144,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 8.186
+   "direct": 8.2,
+   "total": 25.702
   },
   {
    "surface": "wall-z+",
@@ -12249,7 +13159,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 6.3097
+   "direct": 6.3186,
+   "total": 23.0038
   },
   {
    "surface": "wall-z+",
@@ -12263,7 +13174,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.7033
+   "direct": 4.7095,
+   "total": 20.6403
   },
   {
    "surface": "wall-z+",
@@ -12277,7 +13189,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.4777
+   "direct": 3.4813,
+   "total": 18.572
   },
   {
    "surface": "wall-z+",
@@ -12291,7 +13204,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.54
+   "direct": 2.542,
+   "total": 16.8928
   },
   {
    "surface": "wall-z+",
@@ -12305,7 +13219,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.8564
+   "direct": 1.8577,
+   "total": 15.7239
   },
   {
    "surface": "wall-z+",
@@ -12319,7 +13234,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.3682
+   "direct": 1.369,
+   "total": 14.5806
   },
   {
    "surface": "wall-z+",
@@ -12333,7 +13249,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.0928
+   "direct": 1.0934,
+   "total": 14.9235
   },
   {
    "surface": "wall-z+",
@@ -12347,7 +13264,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.4575
+   "direct": 1.4583,
+   "total": 15.8454
   },
   {
    "surface": "wall-z+",
@@ -12361,7 +13279,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.9775
+   "direct": 1.9792,
+   "total": 16.9248
   },
   {
    "surface": "wall-z+",
@@ -12375,7 +13294,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.6826
+   "direct": 2.6854,
+   "total": 18.295
   },
   {
    "surface": "wall-z+",
@@ -12389,7 +13309,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.6264
+   "direct": 3.6306,
+   "total": 19.8891
   },
   {
    "surface": "wall-z+",
@@ -12403,7 +13324,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.8107
+   "direct": 4.8177,
+   "total": 21.8348
   },
   {
    "surface": "wall-z+",
@@ -12417,7 +13339,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 6.179
+   "direct": 6.1892,
+   "total": 23.8506
   },
   {
    "surface": "wall-z+",
@@ -12431,7 +13354,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 7.6614
+   "direct": 7.6765,
+   "total": 26.0104
   },
   {
    "surface": "wall-z+",
@@ -12445,7 +13369,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 8.923
+   "direct": 8.9409,
+   "total": 27.7098
   },
   {
    "surface": "wall-z+",
@@ -12459,7 +13384,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 9.6539
+   "direct": 9.6742,
+   "total": 28.5898
   },
   {
    "surface": "wall-z+",
@@ -12473,7 +13399,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 9.654
+   "direct": 9.674,
+   "total": 28.5329
   },
   {
    "surface": "wall-z+",
@@ -12487,7 +13414,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 8.9234
+   "direct": 8.9406,
+   "total": 27.6531
   },
   {
    "surface": "wall-z+",
@@ -12501,7 +13429,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 7.6617
+   "direct": 7.6761,
+   "total": 25.9835
   },
   {
    "surface": "wall-z+",
@@ -12515,7 +13444,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 6.1791
+   "direct": 6.1892,
+   "total": 23.902
   },
   {
    "surface": "wall-z+",
@@ -12529,7 +13459,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.8107
+   "direct": 4.8177,
+   "total": 21.8496
   },
   {
    "surface": "wall-z+",
@@ -12543,7 +13474,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.6265
+   "direct": 3.6306,
+   "total": 19.9808
   },
   {
    "surface": "wall-z+",
@@ -12557,7 +13489,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.6827
+   "direct": 2.6854,
+   "total": 18.26
   },
   {
    "surface": "wall-z+",
@@ -12571,7 +13504,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.9775
+   "direct": 1.9792,
+   "total": 16.9283
   },
   {
    "surface": "wall-z+",
@@ -12585,7 +13519,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.4575
+   "direct": 1.4583,
+   "total": 15.9109
   },
   {
    "surface": "wall-z+",
@@ -12599,7 +13534,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.0928
+   "direct": 1.0934,
+   "total": 14.8911
   },
   {
    "surface": "wall-z+",
@@ -12613,7 +13549,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.8146
+   "direct": 0.8149,
+   "total": 14.9242
   },
   {
    "surface": "wall-z+",
@@ -12627,7 +13564,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.1009
+   "direct": 1.1018,
+   "total": 15.7858
   },
   {
    "surface": "wall-z+",
@@ -12641,7 +13579,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.5253
+   "direct": 1.5265,
+   "total": 16.77
   },
   {
    "surface": "wall-z+",
@@ -12655,7 +13594,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.0495
+   "direct": 2.0513,
+   "total": 17.8969
   },
   {
    "surface": "wall-z+",
@@ -12669,7 +13609,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.7127
+   "direct": 2.716,
+   "total": 19.1651
   },
   {
    "surface": "wall-z+",
@@ -12683,7 +13624,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.5897
+   "direct": 3.5946,
+   "total": 20.6261
   },
   {
    "surface": "wall-z+",
@@ -12697,7 +13639,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.6073
+   "direct": 4.6149,
+   "total": 22.3419
   },
   {
    "surface": "wall-z+",
@@ -12711,7 +13654,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 5.652
+   "direct": 5.6619,
+   "total": 23.7737
   },
   {
    "surface": "wall-z+",
@@ -12725,7 +13669,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 6.5424
+   "direct": 6.555,
+   "total": 25.0357
   },
   {
    "surface": "wall-z+",
@@ -12739,7 +13684,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 7.0734
+   "direct": 7.0879,
+   "total": 25.8434
   },
   {
    "surface": "wall-z+",
@@ -12753,7 +13699,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 7.0734
+   "direct": 7.0879,
+   "total": 25.8012
   },
   {
    "surface": "wall-z+",
@@ -12767,7 +13714,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 6.5423
+   "direct": 6.5552,
+   "total": 25.0586
   },
   {
    "surface": "wall-z+",
@@ -12781,7 +13729,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 5.6521
+   "direct": 5.6618,
+   "total": 23.7944
   },
   {
    "surface": "wall-z+",
@@ -12795,7 +13744,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.6074
+   "direct": 4.6148,
+   "total": 22.2533
   },
   {
    "surface": "wall-z+",
@@ -12809,7 +13759,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.5897
+   "direct": 3.5945,
+   "total": 20.6083
   },
   {
    "surface": "wall-z+",
@@ -12823,7 +13774,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.7127
+   "direct": 2.716,
+   "total": 19.1684
   },
   {
    "surface": "wall-z+",
@@ -12837,7 +13789,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.0495
+   "direct": 2.0513,
+   "total": 17.8669
   },
   {
    "surface": "wall-z+",
@@ -12851,7 +13804,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.5253
+   "direct": 1.5265,
+   "total": 16.7467
   },
   {
    "surface": "wall-z+",
@@ -12865,7 +13819,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.1009
+   "direct": 1.1018,
+   "total": 15.8255
   },
   {
    "surface": "wall-z+",
@@ -12879,7 +13834,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.8146
+   "direct": 0.8149,
+   "total": 14.9885
   },
   {
    "surface": "wall-z+",
@@ -12893,7 +13849,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.6357
+   "direct": 0.636,
+   "total": 14.7839
   },
   {
    "surface": "wall-z+",
@@ -12907,7 +13864,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.8483
+   "direct": 0.8487,
+   "total": 15.6712
   },
   {
    "surface": "wall-z+",
@@ -12921,7 +13879,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.118
+   "direct": 1.1187,
+   "total": 16.431
   },
   {
    "surface": "wall-z+",
@@ -12935,7 +13894,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.4543
+   "direct": 1.4555,
+   "total": 17.3262
   },
   {
    "surface": "wall-z+",
@@ -12949,7 +13909,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.9789
+   "direct": 1.9815,
+   "total": 18.4151
   },
   {
    "surface": "wall-z+",
@@ -12963,7 +13924,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.6393
+   "direct": 2.6429,
+   "total": 19.672
   },
   {
    "surface": "wall-z+",
@@ -12977,7 +13939,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.3472
+   "direct": 3.352,
+   "total": 20.7465
   },
   {
    "surface": "wall-z+",
@@ -12991,7 +13954,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.0404
+   "direct": 4.047,
+   "total": 21.8991
   },
   {
    "surface": "wall-z+",
@@ -13005,7 +13969,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.6627
+   "direct": 4.6715,
+   "total": 22.764
   },
   {
    "surface": "wall-z+",
@@ -13019,7 +13984,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 5.037
+   "direct": 5.0473,
+   "total": 23.2686
   },
   {
    "surface": "wall-z+",
@@ -13033,7 +13999,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 5.037
+   "direct": 5.0473,
+   "total": 23.2041
   },
   {
    "surface": "wall-z+",
@@ -13047,7 +14014,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.6626
+   "direct": 4.6716,
+   "total": 22.7395
   },
   {
    "surface": "wall-z+",
@@ -13061,7 +14029,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 4.0403
+   "direct": 4.0471,
+   "total": 21.8783
   },
   {
    "surface": "wall-z+",
@@ -13075,7 +14044,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.3472
+   "direct": 3.352,
+   "total": 20.6786
   },
   {
    "surface": "wall-z+",
@@ -13089,7 +14059,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.6393
+   "direct": 2.6429,
+   "total": 19.5942
   },
   {
    "surface": "wall-z+",
@@ -13103,7 +14074,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.9789
+   "direct": 1.9815,
+   "total": 18.4359
   },
   {
    "surface": "wall-z+",
@@ -13117,7 +14089,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.4543
+   "direct": 1.4555,
+   "total": 17.3185
   },
   {
    "surface": "wall-z+",
@@ -13131,7 +14104,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.118
+   "direct": 1.1187,
+   "total": 16.5234
   },
   {
    "surface": "wall-z+",
@@ -13145,7 +14119,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.8483
+   "direct": 0.8487,
+   "total": 15.6651
   },
   {
    "surface": "wall-z+",
@@ -13159,7 +14134,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.6356
+   "direct": 0.636,
+   "total": 14.8648
   },
   {
    "surface": "wall-z+",
@@ -13173,7 +14149,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.4333
+   "direct": 0.4334,
+   "total": 14.6051
   },
   {
    "surface": "wall-z+",
@@ -13187,7 +14164,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.5718
+   "direct": 0.5722,
+   "total": 15.3297
   },
   {
    "surface": "wall-z+",
@@ -13201,7 +14179,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.7915
+   "direct": 0.7922,
+   "total": 16.0785
   },
   {
    "surface": "wall-z+",
@@ -13215,7 +14194,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.0743
+   "direct": 1.0753,
+   "total": 16.8932
   },
   {
    "surface": "wall-z+",
@@ -13229,7 +14209,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.426
+   "direct": 1.4276,
+   "total": 17.7011
   },
   {
    "surface": "wall-z+",
@@ -13243,7 +14224,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.8362
+   "direct": 1.8383,
+   "total": 18.4998
   },
   {
    "surface": "wall-z+",
@@ -13257,7 +14239,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.2782
+   "direct": 2.2811,
+   "total": 19.4276
   },
   {
    "surface": "wall-z+",
@@ -13271,7 +14254,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.7158
+   "direct": 2.7202,
+   "total": 20.2744
   },
   {
    "surface": "wall-z+",
@@ -13285,7 +14269,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.1358
+   "direct": 3.1421,
+   "total": 20.7928
   },
   {
    "surface": "wall-z+",
@@ -13299,7 +14284,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.4005
+   "direct": 3.408,
+   "total": 21.3031
   },
   {
    "surface": "wall-z+",
@@ -13313,7 +14299,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.4006
+   "direct": 3.4079,
+   "total": 21.3059
   },
   {
    "surface": "wall-z+",
@@ -13327,7 +14314,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 3.1359
+   "direct": 3.142,
+   "total": 20.8388
   },
   {
    "surface": "wall-z+",
@@ -13341,7 +14329,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.7159
+   "direct": 2.7202,
+   "total": 20.2725
   },
   {
    "surface": "wall-z+",
@@ -13355,7 +14344,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.2782
+   "direct": 2.2811,
+   "total": 19.4197
   },
   {
    "surface": "wall-z+",
@@ -13369,7 +14359,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.8362
+   "direct": 1.8383,
+   "total": 18.5839
   },
   {
    "surface": "wall-z+",
@@ -13383,7 +14374,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.426
+   "direct": 1.4276,
+   "total": 17.7244
   },
   {
    "surface": "wall-z+",
@@ -13397,7 +14389,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.0743
+   "direct": 1.0753,
+   "total": 16.8961
   },
   {
    "surface": "wall-z+",
@@ -13411,7 +14404,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.7915
+   "direct": 0.7922,
+   "total": 16.0589
   },
   {
    "surface": "wall-z+",
@@ -13425,7 +14419,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.5718
+   "direct": 0.5722,
+   "total": 15.4193
   },
   {
    "surface": "wall-z+",
@@ -13439,7 +14434,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.4333
+   "direct": 0.4334,
+   "total": 14.5888
   },
   {
    "surface": "wall-z+",
@@ -13453,7 +14449,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.2936
+   "direct": 0.2937,
+   "total": 14.1717
   },
   {
    "surface": "wall-z+",
@@ -13467,7 +14464,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3931
+   "direct": 0.3934,
+   "total": 15.0461
   },
   {
    "surface": "wall-z+",
@@ -13481,7 +14479,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.5232
+   "direct": 0.5235,
+   "total": 15.6619
   },
   {
    "surface": "wall-z+",
@@ -13495,7 +14494,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.6888
+   "direct": 0.6894,
+   "total": 16.4004
   },
   {
    "surface": "wall-z+",
@@ -13509,7 +14509,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.8928
+   "direct": 0.8936,
+   "total": 16.9416
   },
   {
    "surface": "wall-z+",
@@ -13523,7 +14524,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.1379
+   "direct": 1.1393,
+   "total": 17.589
   },
   {
    "surface": "wall-z+",
@@ -13537,7 +14539,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.4657
+   "direct": 1.4682,
+   "total": 18.2817
   },
   {
    "surface": "wall-z+",
@@ -13551,7 +14554,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.8084
+   "direct": 1.8117,
+   "total": 18.9494
   },
   {
    "surface": "wall-z+",
@@ -13565,7 +14569,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.0915
+   "direct": 2.0954,
+   "total": 19.3228
   },
   {
    "surface": "wall-z+",
@@ -13579,7 +14584,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.2539
+   "direct": 2.2583,
+   "total": 19.6393
   },
   {
    "surface": "wall-z+",
@@ -13593,7 +14599,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.2539
+   "direct": 2.2583,
+   "total": 19.6112
   },
   {
    "surface": "wall-z+",
@@ -13607,7 +14614,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 2.0915
+   "direct": 2.0954,
+   "total": 19.5166
   },
   {
    "surface": "wall-z+",
@@ -13621,7 +14629,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.8084
+   "direct": 1.8117,
+   "total": 18.9691
   },
   {
    "surface": "wall-z+",
@@ -13635,7 +14644,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.4657
+   "direct": 1.4682,
+   "total": 18.3051
   },
   {
    "surface": "wall-z+",
@@ -13649,7 +14659,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.1378
+   "direct": 1.1393,
+   "total": 17.5874
   },
   {
    "surface": "wall-z+",
@@ -13663,7 +14674,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.8928
+   "direct": 0.8936,
+   "total": 16.9367
   },
   {
    "surface": "wall-z+",
@@ -13677,7 +14689,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.6888
+   "direct": 0.6894,
+   "total": 16.2577
   },
   {
    "surface": "wall-z+",
@@ -13691,7 +14704,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.5232
+   "direct": 0.5235,
+   "total": 15.6042
   },
   {
    "surface": "wall-z+",
@@ -13705,7 +14719,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3931
+   "direct": 0.3934,
+   "total": 15.0192
   },
   {
    "surface": "wall-z+",
@@ -13719,7 +14734,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.2936
+   "direct": 0.2937,
+   "total": 14.3019
   },
   {
    "surface": "wall-z+",
@@ -13733,7 +14749,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.1294
+   "direct": 0.1295,
+   "total": 13.8694
   },
   {
    "surface": "wall-z+",
@@ -13747,7 +14764,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.1891
+   "direct": 0.1893,
+   "total": 14.5816
   },
   {
    "surface": "wall-z+",
@@ -13761,7 +14779,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.2701
+   "direct": 0.2704,
+   "total": 15.1662
   },
   {
    "surface": "wall-z+",
@@ -13775,7 +14794,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3762
+   "direct": 0.3766,
+   "total": 15.7666
   },
   {
    "surface": "wall-z+",
@@ -13789,7 +14809,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.5088
+   "direct": 0.5094,
+   "total": 16.2785
   },
   {
    "surface": "wall-z+",
@@ -13803,7 +14824,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.6686
+   "direct": 0.6695,
+   "total": 16.7708
   },
   {
    "surface": "wall-z+",
@@ -13817,7 +14839,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.8474
+   "direct": 0.8487,
+   "total": 17.3453
   },
   {
    "surface": "wall-z+",
@@ -13831,7 +14854,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.0282
+   "direct": 1.0299,
+   "total": 17.8403
   },
   {
    "surface": "wall-z+",
@@ -13845,7 +14869,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.1786
+   "direct": 1.1807,
+   "total": 18.1884
   },
   {
    "surface": "wall-z+",
@@ -13859,7 +14884,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.2648
+   "direct": 1.2671,
+   "total": 18.1956
   },
   {
    "surface": "wall-z+",
@@ -13873,7 +14899,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.2648
+   "direct": 1.2671,
+   "total": 18.2473
   },
   {
    "surface": "wall-z+",
@@ -13887,7 +14914,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.1786
+   "direct": 1.1807,
+   "total": 18.0938
   },
   {
    "surface": "wall-z+",
@@ -13901,7 +14929,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 1.0282
+   "direct": 1.0299,
+   "total": 17.7302
   },
   {
    "surface": "wall-z+",
@@ -13915,7 +14944,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.8474
+   "direct": 0.8487,
+   "total": 17.3519
   },
   {
    "surface": "wall-z+",
@@ -13929,7 +14959,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.6686
+   "direct": 0.6695,
+   "total": 16.7655
   },
   {
    "surface": "wall-z+",
@@ -13943,7 +14974,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.5088
+   "direct": 0.5094,
+   "total": 16.1979
   },
   {
    "surface": "wall-z+",
@@ -13957,7 +14989,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3762
+   "direct": 0.3766,
+   "total": 15.7248
   },
   {
    "surface": "wall-z+",
@@ -13971,7 +15004,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.2701
+   "direct": 0.2704,
+   "total": 15.071
   },
   {
    "surface": "wall-z+",
@@ -13985,7 +15019,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.1891
+   "direct": 0.1893,
+   "total": 14.5988
   },
   {
    "surface": "wall-z+",
@@ -13999,7 +15034,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.1294
+   "direct": 0.1295,
+   "total": 13.8709
   },
   {
    "surface": "wall-z+",
@@ -14013,7 +15049,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.051
+   "direct": 0.0511,
+   "total": 13.3663
   },
   {
    "surface": "wall-z+",
@@ -14027,7 +15064,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0812
+   "direct": 0.0813,
+   "total": 14.1558
   },
   {
    "surface": "wall-z+",
@@ -14041,7 +15079,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.1234
+   "direct": 0.1235,
+   "total": 14.6829
   },
   {
    "surface": "wall-z+",
@@ -14055,7 +15094,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.1778
+   "direct": 0.178,
+   "total": 15.1977
   },
   {
    "surface": "wall-z+",
@@ -14069,7 +15109,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.2176
+   "direct": 0.2177,
+   "total": 15.6266
   },
   {
    "surface": "wall-z+",
@@ -14083,7 +15124,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.2566
+   "direct": 0.2567,
+   "total": 16.0461
   },
   {
    "surface": "wall-z+",
@@ -14097,7 +15139,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.297
+   "direct": 0.2972,
+   "total": 16.4709
   },
   {
    "surface": "wall-z+",
@@ -14111,7 +15154,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3349
+   "direct": 0.3351,
+   "total": 16.6892
   },
   {
    "surface": "wall-z+",
@@ -14125,7 +15169,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3648
+   "direct": 0.3652,
+   "total": 16.9244
   },
   {
    "surface": "wall-z+",
@@ -14139,7 +15184,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3815
+   "direct": 0.3819,
+   "total": 16.8948
   },
   {
    "surface": "wall-z+",
@@ -14153,7 +15199,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3815
+   "direct": 0.3819,
+   "total": 17.0798
   },
   {
    "surface": "wall-z+",
@@ -14167,7 +15214,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3648
+   "direct": 0.3652,
+   "total": 16.8805
   },
   {
    "surface": "wall-z+",
@@ -14181,7 +15229,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.3349
+   "direct": 0.3351,
+   "total": 16.7994
   },
   {
    "surface": "wall-z+",
@@ -14195,7 +15244,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.297
+   "direct": 0.2972,
+   "total": 16.4371
   },
   {
    "surface": "wall-z+",
@@ -14209,7 +15259,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.2566
+   "direct": 0.2567,
+   "total": 16.0677
   },
   {
    "surface": "wall-z+",
@@ -14223,7 +15274,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.2176
+   "direct": 0.2177,
+   "total": 15.7164
   },
   {
    "surface": "wall-z+",
@@ -14237,7 +15289,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.1778
+   "direct": 0.178,
+   "total": 15.2322
   },
   {
    "surface": "wall-z+",
@@ -14251,7 +15304,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.1234
+   "direct": 0.1235,
+   "total": 14.7642
   },
   {
    "surface": "wall-z+",
@@ -14265,7 +15319,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0812
+   "direct": 0.0813,
+   "total": 14.0746
   },
   {
    "surface": "wall-z+",
@@ -14279,7 +15334,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.051
+   "direct": 0.0511,
+   "total": 13.4334
   },
   {
    "surface": "wall-z+",
@@ -14293,7 +15349,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 12.9405
   },
   {
    "surface": "wall-z+",
@@ -14307,7 +15364,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 13.5713
   },
   {
    "surface": "wall-z+",
@@ -14321,7 +15379,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.0671
   },
   {
    "surface": "wall-z+",
@@ -14335,7 +15394,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.6084
   },
   {
    "surface": "wall-z+",
@@ -14349,7 +15409,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.903
   },
   {
    "surface": "wall-z+",
@@ -14363,7 +15424,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.263
   },
   {
    "surface": "wall-z+",
@@ -14377,7 +15439,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.6607
   },
   {
    "surface": "wall-z+",
@@ -14391,7 +15454,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.8515
   },
   {
    "surface": "wall-z+",
@@ -14405,7 +15469,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 16.0462
   },
   {
    "surface": "wall-z+",
@@ -14419,7 +15484,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 16.1475
   },
   {
    "surface": "wall-z+",
@@ -14433,7 +15499,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 16.1424
   },
   {
    "surface": "wall-z+",
@@ -14447,7 +15514,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 16.2325
   },
   {
    "surface": "wall-z+",
@@ -14461,7 +15529,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.9585
   },
   {
    "surface": "wall-z+",
@@ -14475,7 +15544,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.5352
   },
   {
    "surface": "wall-z+",
@@ -14489,7 +15559,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 15.2784
   },
   {
    "surface": "wall-z+",
@@ -14503,7 +15574,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.9569
   },
   {
    "surface": "wall-z+",
@@ -14517,7 +15589,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.6032
   },
   {
    "surface": "wall-z+",
@@ -14531,7 +15604,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 14.1203
   },
   {
    "surface": "wall-z+",
@@ -14545,7 +15619,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 13.5579
   },
   {
    "surface": "wall-z+",
@@ -14559,7 +15634,8 @@
     "y": 0,
     "z": -1
    },
-   "lux": 0.0
+   "direct": 0.0,
+   "total": 12.7562
   }
  ]
 }

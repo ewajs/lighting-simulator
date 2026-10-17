@@ -48,4 +48,4 @@ from {{ n(data.spread.uniformity, 2) }} to {{ n(data.bunched.uniformity, 2) }}:
 a brightly lit middle and dim corners. Looking at the average alone, the worse
 layout would look like the better one.
 
-These are direct light only, with no maintenance factor.
+They include the light bouncing off the walls, ceiling and floor, with no maintenance factor.

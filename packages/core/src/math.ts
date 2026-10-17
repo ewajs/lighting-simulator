@@ -30,6 +30,11 @@ export function dot(a: Vec3, b: Vec3): number {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
+/** a × b: the cross product, perpendicular to both by the right-hand rule. */
+export function cross(a: Vec3, b: Vec3): Vec3 {
+  return { x: a.y * b.z - a.z * b.y, y: a.z * b.x - a.x * b.z, z: a.x * b.y - a.y * b.x };
+}
+
 /** v · k: `v` scaled by `k`. */
 export function scale(v: Vec3, k: number): Vec3 {
   return { x: v.x * k, y: v.y * k, z: v.z * k };

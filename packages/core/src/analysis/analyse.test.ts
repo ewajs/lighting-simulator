@@ -4,7 +4,8 @@ import { luminaireFrame } from '../luminaire-frame';
 import { totalFlux } from '../photometry/distribution';
 import { catalog, isotropic, photometry, product, room } from '../test-fixtures';
 import type { Aim, Luminaire, MountType, Photometry, Product, Room, Scene, Vec3 } from '../types';
-import { analyseDirect, DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs } from './analyse-direct';
+import { analyseIlluminance } from './analyse';
+import { DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs } from './settings';
 import { directIlluminance } from './direct';
 import { distributionOf, luminaireSources, type PointSource } from './sources';
 
@@ -207,7 +208,7 @@ describe('splitting a large opening', () => {
   });
 });
 
-describe('analyseDirect', () => {
+describe('analyseIlluminance', () => {
   const ies: AnalysisInputs = {
     catalog,
     photometry: () => isotropic(100),
@@ -216,7 +217,7 @@ describe('analyseDirect', () => {
   const scene = (luminaires: Luminaire[]): Scene => ({ room, luminaires, furniture: [] });
 
   it('gives each surface its grid, values and figures, the work plane first', () => {
-    const result = analyseDirect(scene([placed('recessed', { x: 0, y: 2.7, z: 0 })]), ies);
+    const result = analyseIlluminance(scene([placed('recessed', { x: 0, y: 2.7, z: 0 })]), ies);
     expect(result.surfaces.map((surface) => surface.grid.surface)).toEqual([
       'work-plane',
       'floor',
@@ -235,23 +236,23 @@ describe('analyseDirect', () => {
 
   it('multiplies by the maintenance factor', () => {
     const luminaires = [placed('recessed', { x: 0, y: 2.7, z: 0 })];
-    const full = analyseDirect(scene(luminaires), ies, {
+    const full = analyseIlluminance(scene(luminaires), ies, {
       ...DEFAULT_ANALYSIS_SETTINGS,
       maintenanceFactor: 1,
     });
-    const maintained = analyseDirect(scene(luminaires), ies, DEFAULT_ANALYSIS_SETTINGS);
+    const maintained = analyseIlluminance(scene(luminaires), ies, DEFAULT_ANALYSIS_SETTINGS);
     expect(
       maintained.surfaces[0]!.stats!.averageLx / full.surfaces[0]!.stats!.averageLx,
     ).toBeCloseTo(0.8, 12);
   });
 
   it('counts dimming, and nothing from a luminaire switched off', () => {
-    const on = analyseDirect(scene([placed('recessed', { x: 0, y: 2.7, z: 0 })]), ies);
-    const dimmed = analyseDirect(
+    const on = analyseIlluminance(scene([placed('recessed', { x: 0, y: 2.7, z: 0 })]), ies);
+    const dimmed = analyseIlluminance(
       scene([placed('recessed', { x: 0, y: 2.7, z: 0 }, undefined, { dimming: 0.25 })]),
       ies,
     );
-    const off = analyseDirect(
+    const off = analyseIlluminance(
       scene([placed('recessed', { x: 0, y: 2.7, z: 0 }, undefined, { on: false })]),
       ies,
     );
@@ -264,7 +265,7 @@ describe('analyseDirect', () => {
       placed('recessed', { x: 0, y: 2.7, z: 0 }),
       { ...placed('track', { x: 1, y: 2.7, z: 0 }), productId: 'not-in-the-catalog' },
     ];
-    const result = analyseDirect(scene(luminaires), { ...ies, photometry: () => undefined });
+    const result = analyseIlluminance(scene(luminaires), { ...ies, photometry: () => undefined });
     expect(result.estimatedLuminaires).toEqual([luminaires[0]!.id]);
     expect(result.unknownLuminaires).toEqual([luminaires[1]!.id]);
   });
@@ -272,20 +273,66 @@ describe('analyseDirect', () => {
   it('refuses settings that don’t fit the room', () => {
     const empty = scene([]);
     const settings = DEFAULT_ANALYSIS_SETTINGS;
-    expect(() => analyseDirect(empty, ies, { ...settings, workPlaneHeightM: 3 })).toThrow(
+    expect(() => analyseIlluminance(empty, ies, { ...settings, workPlaneHeightM: 3 })).toThrow(
       /work plane/,
     );
-    expect(() => analyseDirect(empty, ies, { ...settings, borderM: -1 })).toThrow(/border/);
-    expect(() => analyseDirect(empty, ies, { ...settings, maintenanceFactor: 0 })).toThrow(
+    expect(() => analyseIlluminance(empty, ies, { ...settings, borderM: -1 })).toThrow(/border/);
+    expect(() => analyseIlluminance(empty, ies, { ...settings, maintenanceFactor: 0 })).toThrow(
       /maintenance/,
     );
-    expect(() => analyseDirect(empty, ies, { ...settings, maintenanceFactor: 1.2 })).toThrow(
+    expect(() => analyseIlluminance(empty, ies, { ...settings, maintenanceFactor: 1.2 })).toThrow(
       /maintenance/,
     );
   });
 
   it('has no figures for a work plane the border leaves empty', () => {
-    const result = analyseDirect(scene([]), ies, { ...DEFAULT_ANALYSIS_SETTINGS, borderM: 3 });
+    const result = analyseIlluminance(scene([]), ies, { ...DEFAULT_ANALYSIS_SETTINGS, borderM: 3 });
     expect(result.surfaces[0]!.stats).toBeUndefined();
+  });
+});
+
+describe('analyseIlluminance: bounced light', () => {
+  const ies: AnalysisInputs = {
+    catalog,
+    photometry: () => isotropic(100),
+    modelFile: () => undefined,
+  };
+  const one = [placed('recessed', { x: 0.5, y: 2.7, z: -0.3 })];
+  const withReflectance = (rho: number): Room => ({
+    ...room,
+    surfaces: {
+      floor: { color: '#808080', reflectance: rho },
+      walls: { color: '#808080', reflectance: rho },
+      ceiling: { color: '#808080', reflectance: rho },
+    },
+  });
+
+  it('adds the room’s reflections to the direct light at every point', () => {
+    const result = analyseIlluminance({ room, luminaires: one, furniture: [] }, ies);
+    for (const surface of result.surfaces) {
+      surface.illuminanceLx.forEach((total, k) => {
+        expect(total).toBeCloseTo(surface.directLx[k]! + surface.indirectLx[k]!, 9);
+        expect(surface.indirectLx[k]!).toBeGreaterThan(0);
+      });
+    }
+    expect(result.indirect.patches).toBeGreaterThan(0);
+    expect(result.indirect.iterations).toBeGreaterThan(1);
+  });
+
+  it('reflects nothing from a black room', () => {
+    const result = analyseIlluminance(
+      { room: withReflectance(0), luminaires: one, furniture: [] },
+      ies,
+    );
+    for (const surface of result.surfaces) expect(Math.max(...surface.indirectLx)).toBe(0);
+  });
+
+  it('reflects more from lighter surfaces', () => {
+    const average = (rho: number) =>
+      analyseIlluminance(
+        { room: withReflectance(rho), luminaires: one, furniture: [] },
+        ies,
+      ).surfaces[0]!.indirectLx.reduce((sum, value, _, all) => sum + value / all.length, 0);
+    expect(average(0.7)).toBeGreaterThan(2 * average(0.4));
   });
 });

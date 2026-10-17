@@ -3,7 +3,8 @@ import { luminaireFrame } from '../luminaire-frame';
 import { candela } from '../photometry/estimate';
 import { isotropic, product, room } from '../test-fixtures';
 import type { LuminousOpening } from '../types';
-import { distributionOf, intensityAt, luminaireSources, SOURCE_CELL_M } from './sources';
+import { DEFAULT_CALCULATION_OPTIONS } from './options';
+import { distributionOf, intensityAt, luminaireSources } from './sources';
 
 const frame = luminaireFrame(
   {
@@ -78,11 +79,11 @@ describe('luminaireSources', () => {
     expect(Math.max(...heights)).toBeCloseTo(2.7 + 0.509 / 2 - 0.509 / 12, 6);
   });
 
-  it('keeps every cell no larger than SOURCE_CELL_M', () => {
+  it('keeps every cell no larger than the options’ sourceCellM', () => {
     const sources = luminaireSources(frame, distribution, opening(0.35, 0.21), 1);
     // ceil(0.35 / 0.1) = 4 across, ceil(0.21 / 0.1) = 3 along.
     expect(sources).toHaveLength(12);
-    expect(0.35 / 4).toBeLessThanOrEqual(SOURCE_CELL_M);
+    expect(0.35 / 4).toBeLessThanOrEqual(DEFAULT_CALCULATION_OPTIONS.sourceCellM);
   });
 });
 

@@ -8,6 +8,7 @@ const rooms = {
   'track-spots': 'Two tilted track spots',
   'linear-pendant-over-table': 'A linear pendant over a table',
   'wall-sconce': 'A wall sconce',
+  'furnished-living': 'A furnished living room',
 }
 </script>
 
@@ -26,27 +27,32 @@ order:
 3. **Furniture casts shadows:** if a piece stands in the way, that source adds
    nothing. Tables block with their top only; chairs, plants and pictures
    don't block.
-4. **It multiplies by the maintenance factor** ([Maintenance factor](./maintenance)).
-5. **It sums up** each surface: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ and
+4. **It adds the light that bounces:** the floor, ceiling and walls are split
+   into 25 cm patches, and each sends back the share of the light it receives
+   that its reflectance says, bounce after bounce, until nothing changes. It's
+   the radiosity method, a classic of interior lighting calculation.
+5. **It multiplies by the maintenance factor** ([Maintenance factor](./maintenance)).
+6. **It sums up** each surface: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ and
    $U_0$ ([Uniformity](./uniformity)).
 
 ## What it doesn't count yet
 
-::: warning Direct light only, for now
-Light bouncing off the walls, ceiling and floor isn't added yet. It's a
-significant share of the total, more the lighter the surfaces, so for now the
-values come out **below** DIALux's or Relux's. It arrives in a coming version.
-:::
+Furniture casts shadows on direct light, but bounced light doesn't see it: it
+neither blocks nor reflects it. Measured with Radiance, that matters:
+- in a furnished living room, averages move by up to 5.4 %, and some points next
+  to the furniture (under a table, beside the bookcase) by up to 43 %;
+- over a table under a pendant, the ceiling gets 7 % less than it should,
+  missing the light the table reflects.
 
-Nor does it count light reflected by furniture, or shiny and mirrored
-surfaces: everything reflects diffusely.
+Without the furniture, Lux Studio's and Radiance's averages agree within 1 % in
+those same rooms. Every surface reflects diffusely: no gloss, no mirrors.
 
 ## How accurate it is
 
 It's been checked against **Radiance**, the research lighting simulator from
 Lawrence Berkeley National Laboratory, which reads IES files with its own
-code. Five test rooms, with the demo's real files, and thousands of points.
-The largest difference, room by room:
+code. Six test rooms, with the demo's real files, and thousands of points,
+bounced light included. The largest difference, room by room:
 
 <LxAccuracy
   :summary="data"
@@ -55,7 +61,10 @@ The largest difference, room by room:
 />
 
 "Points" counts only those getting at least 10 % of the room's brightest
-point's light. Very close to a large luminaire, like the sconce, the two
+point's light. The living room's and the pendant's differences are the
+furniture's, explained above. The sconce gives up to 3.3 % more on average,
+probably because in Radiance its body hides some of the light bouncing off the
+wall behind it; in Lux Studio, luminaires don't. Very close to a large luminaire, like the sconce, the two
 programs approximate a glowing opening differently, and the IES file doesn't
 say what the light is like that close.
 

@@ -1,13 +1,13 @@
 // Data for the Concepts pages on the work plane, uniformity and maintenance
 // (ADR 0059): computed by Lux Studio's own core with the demo's real
-// downlight, when the manual is built.
+// downlight, when the manual is built: direct and bounced light (ADR 0060).
 import { defineLoader } from 'vitepress';
 import {
-  analyseDirect,
+  analyseIlluminance,
   DEFAULT_ANALYSIS_SETTINGS,
-  directIlluminance,
-  directLight,
+  illuminanceAt,
   maxGridSpacing,
+  sceneLight,
   parseIes,
   type AnalysisInputs,
   type Luminaire,
@@ -70,7 +70,10 @@ const AS_INSTALLED = { ...DEFAULT_ANALYSIS_SETTINGS, maintenanceFactor: 1 };
 export default defineLoader({
   load(): RoomsData {
     const photometry = parseIes(iesText('downlight'));
-    const empty = analyseDirect({ room: ROOM, luminaires: [], furniture: [] }, inputs(photometry));
+    const empty = analyseIlluminance(
+      { room: ROOM, luminaires: [], furniture: [] },
+      inputs(photometry),
+    );
     const grid = empty.surfaces[0]!.grid;
     const spread = roomMap(photometry, [
       [-1.25, -1],
@@ -85,7 +88,7 @@ export default defineLoader({
       [0.4, 0.4],
     ]);
     const scene = { room: ROOM, luminaires: downlights(spread.luminaires), furniture: [] };
-    const maintained = analyseDirect(scene, inputs(photometry), DEFAULT_ANALYSIS_SETTINGS);
+    const maintained = analyseIlluminance(scene, inputs(photometry), DEFAULT_ANALYSIS_SETTINGS);
     const spacingRule: XY[] = [];
     for (let d = 1; d <= 30; d += 0.5) spacingRule.push([d, maxGridSpacing(d)]);
     return {
@@ -133,14 +136,14 @@ function downlights(at: readonly XY[]): Luminaire[] {
 
 function roomMap(photometry: Photometry, at: XY[]): RoomMap {
   const scene = { room: ROOM, luminaires: downlights(at), furniture: [] };
-  const stats = analyseDirect(scene, inputs(photometry), AS_INSTALLED).surfaces[0]!.stats!;
-  const light = directLight(scene, inputs(photometry), AS_INSTALLED);
+  const stats = analyseIlluminance(scene, inputs(photometry), AS_INSTALLED).surfaces[0]!.stats!;
+  const light = sceneLight(scene, inputs(photometry), AS_INSTALLED);
   const values: number[][] = [];
   for (let z = -ROOM.depth / 2 + MAP_STEP_M / 2; z < ROOM.depth / 2; z += MAP_STEP_M) {
     const row: number[] = [];
     for (let x = -ROOM.width / 2 + MAP_STEP_M / 2; x < ROOM.width / 2; x += MAP_STEP_M) {
       const point = { x, y: DEFAULT_ANALYSIS_SETTINGS.workPlaneHeightM, z };
-      row.push(directIlluminance(point, { x: 0, y: 1, z: 0 }, light.sources, light.blockers));
+      row.push(illuminanceAt(light, point, { x: 0, y: 1, z: 0 }).totalLx);
     }
     values.push(row);
   }
