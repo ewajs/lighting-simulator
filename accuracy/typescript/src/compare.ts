@@ -307,7 +307,9 @@ export function summarize(
       points: on.length,
       radianceAverageLx,
       oursAverageLx,
-      averageError: oursAverageLx / radianceAverageLx - 1,
+      // No light on either side (a ceiling above downlights, in direct light) agrees.
+      averageError:
+        radianceAverageLx === 0 && oursAverageLx === 0 ? 0 : oursAverageLx / radianceAverageLx - 1,
       worstFar: worst(bright.filter((point) => !near(point))),
       worstNear: worst(bright.filter(near)),
       radianceMinLx,

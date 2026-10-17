@@ -16,6 +16,10 @@ as a glowing surface does in Radiance.
 | busy-open-plan | ceiling | +0.54 % | -0.72 % |
 | busy-open-plan | wall-x- | -0.18 % | -0.89 % |
 | busy-open-plan | wall-z- | +1.30 % | +0.33 % |
+| dark-room | work-plane | +0.37 % | +0.07 % |
+| dark-room | floor | +0.02 % | -0.14 % |
+| dark-room | ceiling | +0.00 % | -0.02 % |
+| dark-room | wall-x- | -0.00 % | -0.06 % |
 | downlights-and-wall-washer | work-plane | +0.83 % | +0.33 % |
 | downlights-and-wall-washer | floor | +0.60 % | +0.23 % |
 | downlights-and-wall-washer | wall-x- | +0.59 % | +0.30 % |
@@ -30,6 +34,14 @@ as a glowing surface does in Radiance.
 | single-downlight | floor | +0.32 % | +0.15 % |
 | single-downlight | wall-x- | +0.29 % | +0.19 % |
 | single-downlight | wall-z+ | +0.30 % | +0.20 % |
+| small-bathroom | floor | +6.28 % | +0.67 % |
+| small-bathroom | ceiling | +9.17 % | +0.20 % |
+| small-bathroom | wall-x+ | +7.05 % | +0.51 % |
+| small-bathroom | wall-z- | +7.63 % | +0.57 % |
+| tall-hall | work-plane | +1.55 % | +0.12 % |
+| tall-hall | floor | +1.50 % | +0.07 % |
+| tall-hall | ceiling | +2.04 % | +0.59 % |
+| tall-hall | wall-x- | +1.38 % | +0.17 % |
 | track-spots | floor | +0.28 % | +0.14 % |
 | track-spots | wall-x- | +0.35 % | +0.19 % |
 | track-spots | wall-z- | +0.46 % | +0.33 % |
@@ -37,8 +49,17 @@ as a glowing surface does in Radiance.
 | wall-sconce | floor | +3.37 % | +0.39 % |
 | wall-sconce | ceiling | +3.73 % | +0.30 % |
 | wall-sconce | wall-z+ | +3.45 % | +0.32 % |
-| **Mean** | | +1.00 % | +0.01 % |
-| **Mean of the sizes** | | 1.03 % | 0.37 % |
+| wall-wash | work-plane | +0.64 % | +0.38 % |
+| wall-wash | floor | +0.74 % | +0.47 % |
+| wall-wash | ceiling | -0.16 % | -0.44 % |
+| wall-wash | wall-x- | +0.51 % | +0.27 % |
+| wall-wash | wall-z- | +0.54 % | +0.31 % |
+| white-room | work-plane | +2.24 % | +0.87 % |
+| white-room | floor | +2.06 % | +0.84 % |
+| white-room | ceiling | +1.84 % | +0.84 % |
+| white-room | wall-x- | +1.98 % | +0.89 % |
+| **Mean** | | +1.56 % | +0.16 % |
+| **Mean of the sizes** | | 1.59 % | 0.38 % |
 
 ## What's left, against the patch size
 
@@ -47,9 +68,9 @@ with the patches is the patches'; one that doesn't is elsewhere.
 
 | Patch size (m) | Mean difference | Mean size | Worst |
 |---|---|---|---|
-| 0.5 | +0.01 % | 0.95 % | 2.98 % |
-| 0.25 (default) | +0.01 % | 0.37 % | 1.03 % |
-| 0.125 | -0.07 % | 0.19 % | 0.74 % |
+| 0.5 | +0.29 % | 1.01 % | 2.98 % |
+| 0.25 (default) | +0.16 % | 0.38 % | 1.03 % |
+| 0.125 | +0.06 % | 0.21 % | 0.74 % |
 
 ## The sconce's split-openings step
 

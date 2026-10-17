@@ -1,0 +1,66 @@
+{
+  "description": "Four downlights on a grid in a dark room: every surface reflects 20 %. Little light bounces, so the light on the work plane is mostly direct.",
+  "room": {
+    "width": 5,
+    "depth": 4,
+    "height": 2.7
+  },
+  "surfaces": {
+    "floor": 0.2,
+    "walls": 0.2,
+    "ceiling": 0.2
+  },
+  "luminaires": [
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -1.25,
+        "y": 2.67,
+        "z": -1
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 1.25,
+        "y": 2.67,
+        "z": -1
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -1.25,
+        "y": 2.67,
+        "z": 1
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 1.25,
+        "y": 2.67,
+        "z": 1
+      }
+    }
+  ],
+  "grids": [
+    {
+      "surface": "work-plane",
+      "spacingM": 0.25,
+      "heightM": 0.8
+    },
+    {
+      "surface": "floor",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "ceiling",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-x-",
+      "spacingM": 0.25
+    }
+  ]
+}

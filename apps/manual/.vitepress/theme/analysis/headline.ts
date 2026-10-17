@@ -21,20 +21,30 @@ const worstMin = (surfaces: readonly SurfaceSummary[]) =>
  * for every room's.
  */
 export const BUSY_ROOM = 'busy-open-plan';
+/**
+ * The small bathroom, where every surface is near a luminaire whose body hides
+ * light in Radiance but not in Lux Studio (ADR 0070, 0073): quoted apart too.
+ */
+export const SMALL_ROOM = 'small-bathroom';
+const APART = [BUSY_ROOM, SMALL_ROOM];
 
 /** The section's headline figures. */
 export interface Headline {
   /** Reference points in all rooms. */
   readonly points: number;
   readonly rooms: number;
-  /** The worst surface average, every room as it is, furniture and all. */
+  /** The rooms not quoted apart. */
+  readonly usualRooms: number;
+  /** The worst surface average and far point, every room but BUSY_ROOM and SMALL_ROOM. */
   readonly worstAverage: number;
-  /** The worst far point, every room but BUSY_ROOM; and BUSY_ROOM's. */
   readonly worstFar: number;
+  /** BUSY_ROOM's worst far point; SMALL_ROOM's worst average. */
   readonly busyWorstFar: number;
-  /** The worst Emin or U₀ difference in total light, every room but BUSY_ROOM; and BUSY_ROOM's. */
+  readonly smallWorstAverage: number;
+  /** The worst Emin or U₀ difference in total light, every room but those two; and theirs. */
   readonly worstMin: number;
   readonly busyWorstMin: number;
+  readonly smallWorstMin: number;
   /** The furnished rooms' worst mean point error before furniture took part in bounced light, and after. */
   readonly furnishedBefore: number;
   readonly furnishedAfter: number;
@@ -57,18 +67,19 @@ export function headline(summary: AccuracySummary, timings: Timings): Headline {
   const radiance = timings.rooms.flatMap((r) =>
     r.radiance ? [r.radiance.direct.wallSeconds + r.radiance.bounced.wallSeconds] : [],
   );
+  const usual = summary.rooms.filter((r) => !APART.includes(r.name));
+  const total = (name: string) => summary.rooms.find((r) => r.name === name)?.total ?? [];
   return {
     points: summary.rooms.reduce((sum, r) => sum + r.points, 0),
     rooms: summary.rooms.length,
-    worstAverage: Math.max(...summary.rooms.map((r) => worstAverage(r.total))),
-    worstFar: Math.max(
-      ...summary.rooms.filter((r) => r.name !== BUSY_ROOM).map((r) => worstFar(r.total)),
-    ),
-    busyWorstFar: worstFar(summary.rooms.find((r) => r.name === BUSY_ROOM)?.total ?? []),
-    worstMin: Math.max(
-      ...summary.rooms.filter((r) => r.name !== BUSY_ROOM).map((r) => worstMin(r.total)),
-    ),
-    busyWorstMin: worstMin(summary.rooms.find((r) => r.name === BUSY_ROOM)?.total ?? []),
+    usualRooms: usual.length,
+    worstAverage: Math.max(...usual.map((r) => worstAverage(r.total))),
+    worstFar: Math.max(...usual.map((r) => worstFar(r.total))),
+    busyWorstFar: worstFar(total(BUSY_ROOM)),
+    smallWorstAverage: worstAverage(total(SMALL_ROOM)),
+    worstMin: Math.max(...usual.map((r) => worstMin(r.total))),
+    busyWorstMin: worstMin(total(BUSY_ROOM)),
+    smallWorstMin: worstMin(total(SMALL_ROOM)),
     furnishedBefore: Math.max(
       ...furnished.map(
         (r) => r.features.find((f) => f.step === 'furniture-shadows')!.meanPointError,

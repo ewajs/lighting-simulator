@@ -1,0 +1,77 @@
+{
+  "description": "A tall hall, 8 × 6 × 5 m, lit by six 1.2 m direct/indirect linear pendants (Finelite HP-2) hung at 3.5 m, in two rows: much of their light goes up to the ceiling first. A larger room, with patches far from everything.",
+  "room": {
+    "width": 8,
+    "depth": 6,
+    "height": 5
+  },
+  "luminaires": [
+    {
+      "ies": "HP-2-ID-4ft-H-B-835-ITL85132.008.ies",
+      "origin": {
+        "x": -2.4,
+        "y": 3.5,
+        "z": -1.5
+      }
+    },
+    {
+      "ies": "HP-2-ID-4ft-H-B-835-ITL85132.008.ies",
+      "origin": {
+        "x": 0,
+        "y": 3.5,
+        "z": -1.5
+      }
+    },
+    {
+      "ies": "HP-2-ID-4ft-H-B-835-ITL85132.008.ies",
+      "origin": {
+        "x": 2.4,
+        "y": 3.5,
+        "z": -1.5
+      }
+    },
+    {
+      "ies": "HP-2-ID-4ft-H-B-835-ITL85132.008.ies",
+      "origin": {
+        "x": -2.4,
+        "y": 3.5,
+        "z": 1.5
+      }
+    },
+    {
+      "ies": "HP-2-ID-4ft-H-B-835-ITL85132.008.ies",
+      "origin": {
+        "x": 0,
+        "y": 3.5,
+        "z": 1.5
+      }
+    },
+    {
+      "ies": "HP-2-ID-4ft-H-B-835-ITL85132.008.ies",
+      "origin": {
+        "x": 2.4,
+        "y": 3.5,
+        "z": 1.5
+      }
+    }
+  ],
+  "grids": [
+    {
+      "surface": "work-plane",
+      "spacingM": 0.4,
+      "heightM": 0.8
+    },
+    {
+      "surface": "floor",
+      "spacingM": 0.4
+    },
+    {
+      "surface": "ceiling",
+      "spacingM": 0.4
+    },
+    {
+      "surface": "wall-x-",
+      "spacingM": 0.4
+    }
+  ]
+}

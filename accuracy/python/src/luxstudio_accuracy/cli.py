@@ -64,7 +64,7 @@ def _report(checks: list[Check]) -> int:
             mark = "✓" if check.passed else "✗"
             print(
                 f"{mark} {check.name}: Radiance {check.radiance_lux:.2f} lx, formula "
-                f"{check.expected_lux:.2f} lx ({check.error:+.2%}, allowed ±{check.tolerance:.0%})"
+                f"{check.expected_lux:.2f} lx ({check.error:+.2%}, allowed ±{check.tolerance:.1%})"
             )
     return len(failed)
 

@@ -15,6 +15,9 @@ coordinates (metres, Y-up, the floor's centre at the origin):
   ``reflectance`` Radiance gives them (black when left out). Lux Studio's
   furniture blocks direct light only (ADR 0057); the reference shows what
   else it does.
+- ``bounces``: optionally, how many bounces Radiance follows (24 when left
+  out). A room that reflects more than Lux Studio's default room needs more:
+  Radiance leaves out about ρⁿ of the bounced light after n bounces.
 - ``grids``: where to measure: a ``surface`` (``floor``, ``ceiling``,
   ``work-plane`` at ``heightM``, or a wall: ``wall-x-``, ``wall-x+``,
   ``wall-z-``, ``wall-z+``) and a ``spacingM``.
@@ -30,6 +33,10 @@ from pathlib import Path
 from typing import Any
 
 from luxstudio_accuracy.geometry import Vec3
+
+DEFAULT_BOUNCES = 24
+"""Radiance's bounces for a room that doesn't say: enough for the default room's
+reflectances (doubling them changes its bounced light by under 0.1 %)."""
 
 ROOMS_DIR = Path(__file__).resolve().parents[3] / "rooms"
 """accuracy/rooms: the reference rooms."""
@@ -87,6 +94,8 @@ class Room:
     luminaires: tuple[Luminaire, ...]
     blockers: tuple[Blocker, ...]
     points: tuple[Point, ...]
+    bounces: int
+    """How many bounces Radiance follows for this room."""
     spec: dict[str, Any]
     """The room file as read, copied into its reference."""
 
@@ -135,6 +144,7 @@ def load_room(path: Path) -> Room:
         luminaires=luminaires,
         blockers=blockers,
         points=points,
+        bounces=int(spec.get("bounces", DEFAULT_BOUNCES)),
         spec=spec,
     )
 

@@ -10,6 +10,11 @@ const rooms = {
   'wall-sconce': 'Un aplique de pared',
   'furnished-living': 'Un living amueblado',
   'busy-open-plan': 'Un ambiente integrado con diez muebles',
+  'dark-room': 'Un ambiente oscuro',
+  'white-room': 'Un ambiente blanco',
+  'tall-hall': 'Un salón alto',
+  'small-bathroom': 'Un baño chico',
+  'wall-wash': 'Luz sobre las paredes',
 }
 </script>
 
@@ -53,7 +58,7 @@ este orden:
 
 Se comprobó contra **Radiance**, el simulador de iluminación de investigación del
 Lawrence Berkeley National Laboratory, que lee los archivos IES con su propio
-código. Siete ambientes de prueba, con los archivos reales de la demo, y miles
+código. Doce ambientes de prueba, con los archivos reales de la demo, y miles
 de puntos, con la luz que rebota incluida. La diferencia más grande, por
 ambiente:
 

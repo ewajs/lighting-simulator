@@ -58,14 +58,19 @@ Each luminaire is calculated as a grid of small light sources. Against the
 exact value for a panel that glows evenly, the grid is within 1 % from two
 cells away, and each time the cells halve, the difference drops about four
 times. What changes most is the **penumbra**: a point that sees a luminaire
-just past a piece of furniture's edge. Measured against Radiance in the seven
+just past a piece of furniture's edge. Measured against Radiance in the twelve
 test rooms:
 
 | Detail | Lit points more than 10 % from Radiance | Time when a light changes |
 |---|---|---|
-| 10 cm (the usual) | 31 of 6534 | 1 × |
-| 5 cm | 8 of 6534 | up to 3 × |
-| 2.5 cm | 6 of 6534 | up to 8 × |
+| 10 cm (the usual) | 59 of 11045 | 1 × |
+| 5 cm | 36 of 11045 | up to 3 × |
+| 2.5 cm | 34 of 11045 | up to 8 × |
+
+Of those points, 32 don't change with the cells: they're in the small
+bathroom and beside the sconce, where what's missing is the luminaires'
+bodies. The ones that do change are in penumbrae, in the room with ten pieces
+of furniture: 27, 4 and 2.
 
 The time grows with the size of the luminaires: with small downlights it
 barely changes, with long linear luminaires it's what the table says. A good

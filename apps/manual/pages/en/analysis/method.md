@@ -67,7 +67,9 @@ it unrepeatable; both are fixed and covered by a test.
 several together, tilted beams, a large luminaire close by, a glowing box
 against a wall, a living room with four pieces of furniture, and an
 open-plan room with ten, which shows how the difference and the time grow in
-a full room. They measure 5 × 4 × 2.7 m, except the last, at 6 × 5 m. They
+a full room. And to see other conditions: a dark room (everything reflects
+20 %) and a white one (90 %), an 8 × 6 × 5 m hall, a 2 × 1.6 m bathroom, and
+one lit almost only by bounced light. The rest measure 5 × 4 × 2.7 m. They
 use the demo's real IES files. Points are measured on grids over the work plane, the floor,
 the ceiling and the walls: {{ n(h.points) }} in all.
 

@@ -1,0 +1,73 @@
+{
+  "description": "Four narrow track spots (iGuzzini Palco, 17°) tilted 80° from straight down, each onto a wall just below the ceiling: the work plane and the floor get almost only light that has bounced.",
+  "room": {
+    "width": 5,
+    "depth": 4,
+    "height": 2.7
+  },
+  "luminaires": [
+    {
+      "ies": "qg63_b35q.ies",
+      "origin": {
+        "x": -1.5,
+        "y": 2.5,
+        "z": 0
+      },
+      "tiltDeg": 80,
+      "panDeg": -90
+    },
+    {
+      "ies": "qg63_b35q.ies",
+      "origin": {
+        "x": 1.5,
+        "y": 2.5,
+        "z": 0
+      },
+      "tiltDeg": 80,
+      "panDeg": 90
+    },
+    {
+      "ies": "qg63_b35q.ies",
+      "origin": {
+        "x": 0,
+        "y": 2.5,
+        "z": -1
+      },
+      "tiltDeg": 80,
+      "panDeg": 180
+    },
+    {
+      "ies": "qg63_b35q.ies",
+      "origin": {
+        "x": 0,
+        "y": 2.5,
+        "z": 1
+      },
+      "tiltDeg": 80,
+      "panDeg": 0
+    }
+  ],
+  "grids": [
+    {
+      "surface": "work-plane",
+      "spacingM": 0.25,
+      "heightM": 0.8
+    },
+    {
+      "surface": "floor",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "ceiling",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-x-",
+      "spacingM": 0.2
+    },
+    {
+      "surface": "wall-z-",
+      "spacingM": 0.2
+    }
+  ]
+}
