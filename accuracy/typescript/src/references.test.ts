@@ -39,6 +39,19 @@ const TOTAL = { average: 0.04, far: 0.075, near: 0.16 };
 const PENUMBRAE: Record<string, { readonly share: number; readonly worst: number }> = {
   'busy-open-plan': { share: 0.035, worst: 0.75 },
 };
+/**
+ * Emin and U₀ in total light (ADR 0072), on surfaces where Radiance's Emin is
+ * above 1 % of the average (not a point inside furniture). Measured worsts:
+ * Emin 3.2 % (the sconce), U₀ 2.5 % (the track spots' floor), both from the
+ * bounced-light excess (ADR 0070). MIN_EXCEPTIONS are left out, with why.
+ */
+const MIN_TOLERANCE = 0.04;
+const MIN_EXCEPTIONS: Record<string, string> = {
+  // Its least-lit point is right above a downlight, 3 cm below it, whose
+  // glowing body hides the room from it in Radiance: +117 % (ADR 0070).
+  'busy-open-plan ceiling': 'a luminaire body',
+};
+
 /** A point "off", for PENUMBRAE's share. */
 const OFF = 0.1;
 
@@ -67,6 +80,15 @@ describe('Lux Studio against Radiance', () => {
 
     it(`${name}, total: averages within 4 %, bright points within 7.5 % (16 % within 1 m of a luminaire)`, () => {
       expectWithin(name, summarize(points, origins, 'total'), TOTAL, penumbrae?.worst);
+    });
+
+    it(`${name}, total: Emin and U₀ within 4 % where they can be compared`, () => {
+      for (const s of summarize(points, origins, 'total')) {
+        const where = `${name} ${s.surface}`;
+        if (MIN_EXCEPTIONS[where] || s.minError === null || s.uniformityError === null) continue;
+        expect(Math.abs(s.minError), `${where}: Emin`).toBeLessThan(MIN_TOLERANCE);
+        expect(Math.abs(s.uniformityError), `${where}: U₀`).toBeLessThan(MIN_TOLERANCE);
+      }
     });
 
     if (penumbrae) {

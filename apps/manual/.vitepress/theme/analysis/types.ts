@@ -15,6 +15,20 @@ export interface SurfaceSummary {
   readonly worstFar: number;
   /** The same nearer than 1 m; 0 if none. */
   readonly worstNear: number;
+  /** Emin on each side, and ours / Radiance − 1 for Emin and U₀; null where Radiance's Emin is about 0. */
+  readonly radianceMinLx: number;
+  readonly oursMinLx: number;
+  readonly minError: number | null;
+  readonly uniformityError: number | null;
+}
+
+/** The per-point figures at one bright-point cutoff (ADR 0072). */
+export interface Cutoff {
+  readonly light: 'direct' | 'total';
+  readonly brightShare: number;
+  readonly counted: number;
+  readonly worstFar: number;
+  readonly worstNear: number;
 }
 
 /** One feature step in one room, against Radiance's full light (ADR 0061). */
@@ -45,6 +59,7 @@ export interface RoomSummary {
   /** Total light with the furniture taken out on both sides; empty without furniture. */
   readonly withoutFurniture: readonly SurfaceSummary[];
   readonly features: readonly FeatureResult[];
+  readonly cutoffs: readonly Cutoff[];
 }
 
 /** accuracy/summary.json. */

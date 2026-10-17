@@ -42,6 +42,30 @@ Radiance rad6R0P2, 1924 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85
 | wall-x- | 220 | 132.3 | 132.1 | -0.18 % | 12.24 % | 0.97 % |
 | wall-z- | 264 | 135.4 | 137.1 | 1.30 % | 2.64 % | 1.97 % |
 
+### Emin and uniformity, total light
+
+What a report quotes beside Ē: the least illuminance on each surface, and U₀ = Emin / Ē.
+
+| Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |
+|---|---|---|---|---|
+| work-plane | 0.0 | 0.0 | – | – |
+| floor | 0.0 | 0.0 | – | – |
+| ceiling | 46.2 | 100.5 | 117.25 % | 116.30 % |
+| wall-x- | 0.1 | 0.2 | – | – |
+| wall-z- | 0.0 | 0.0 | – | – |
+
+### The bright-point cutoff
+
+Per-point figures leave out points below 10 % of the room's brightest;
+here at a tenth of that too, to show what it leaves out.
+
+| Light | Cutoff | Points counted | Worst far point | Worst near point |
+|---|---|---|---|---|
+| direct | 10 % | 943 of 1924 | 68.37 % | 0.99 % |
+| direct | 1 % | 1510 of 1924 | 100.00 % | 329.58 % |
+| total | 10 % | 1643 of 1924 | 44.94 % | 4.09 % |
+| total | 1 % | 1715 of 1924 | 44.94 % | 504.67 % |
+
 ### Feature by feature
 
 Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
@@ -99,6 +123,28 @@ Radiance rad6R0P2, 920 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85,
 | floor | 320 | 98.7 | 99.3 | 0.60 % | 1.42 % | – |
 | wall-x- | 280 | 92.4 | 92.9 | 0.59 % | 2.37 % | 1.68 % |
 
+### Emin and uniformity, total light
+
+What a report quotes beside Ē: the least illuminance on each surface, and U₀ = Emin / Ē.
+
+| Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |
+|---|---|---|---|---|
+| work-plane | 135.1 | 136.3 | 0.87 % | 0.64 % |
+| floor | 158.8 | 159.9 | 0.69 % | 0.49 % |
+| wall-x- | 70.8 | 72.4 | 2.25 % | 1.93 % |
+
+### The bright-point cutoff
+
+Per-point figures leave out points below 10 % of the room's brightest;
+here at a tenth of that too, to show what it leaves out.
+
+| Light | Cutoff | Points counted | Worst far point | Worst near point |
+|---|---|---|---|---|
+| direct | 10 % | 804 of 920 | 0.25 % | 1.01 % |
+| direct | 1 % | 894 of 920 | 0.26 % | 1.01 % |
+| total | 10 % | 920 of 920 | 2.37 % | 1.66 % |
+| total | 1 % | 920 of 920 | 2.37 % | 1.66 % |
+
 ### Feature by feature
 
 Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
@@ -144,6 +190,29 @@ Radiance rad6R0P2, 1036 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85
 | floor | 320 | 61.7 | 61.9 | 0.40 % | 13.04 % | – |
 | wall-x+ | 176 | 64.4 | 64.7 | 0.53 % | 8.30 % | – |
 | wall-z- | 220 | 59.6 | 60.1 | 0.87 % | 5.23 % | – |
+
+### Emin and uniformity, total light
+
+What a report quotes beside Ē: the least illuminance on each surface, and U₀ = Emin / Ē.
+
+| Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |
+|---|---|---|---|---|
+| work-plane | 0.0 | 0.0 | – | – |
+| floor | 0.0 | 0.0 | – | – |
+| wall-x+ | 0.0 | 0.0 | – | – |
+| wall-z- | 0.0 | 0.0 | – | – |
+
+### The bright-point cutoff
+
+Per-point figures leave out points below 10 % of the room's brightest;
+here at a tenth of that too, to show what it leaves out.
+
+| Light | Cutoff | Points counted | Worst far point | Worst near point |
+|---|---|---|---|---|
+| direct | 10 % | 740 of 1036 | 0.47 % | – |
+| direct | 1 % | 873 of 1036 | 0.47 % | – |
+| total | 10 % | 954 of 1036 | 6.54 % | – |
+| total | 1 % | 956 of 1036 | 6.54 % | – |
 
 ### Feature by feature
 
@@ -200,6 +269,28 @@ Radiance rad6R0P2, 1500 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85
 | work-plane | 500 | 153.0 | 154.1 | 0.73 % | 4.08 % | 5.55 % |
 | floor | 500 | 123.5 | 124.6 | 0.88 % | 5.99 % | – |
 | ceiling | 500 | 95.2 | 96.3 | 1.18 % | 4.89 % | – |
+
+### Emin and uniformity, total light
+
+What a report quotes beside Ē: the least illuminance on each surface, and U₀ = Emin / Ē.
+
+| Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |
+|---|---|---|---|---|
+| work-plane | 101.9 | 103.3 | 1.37 % | 0.89 % |
+| floor | 64.6 | 66.2 | 2.52 % | 1.82 % |
+| ceiling | 87.1 | 89.0 | 2.25 % | 1.74 % |
+
+### The bright-point cutoff
+
+Per-point figures leave out points below 10 % of the room's brightest;
+here at a tenth of that too, to show what it leaves out.
+
+| Light | Cutoff | Points counted | Worst far point | Worst near point |
+|---|---|---|---|---|
+| direct | 10 % | 316 of 1500 | 0.15 % | 0.11 % |
+| direct | 1 % | 1274 of 1500 | 17.36 % | 0.11 % |
+| total | 10 % | 1421 of 1500 | 4.37 % | 1.04 % |
+| total | 1 % | 1500 of 1500 | 5.99 % | 1.04 % |
 
 ### Feature by feature
 
@@ -259,6 +350,29 @@ Radiance rad6R0P2, 1036 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85
 | wall-x- | 176 | 15.2 | 15.2 | 0.29 % | 1.20 % | – |
 | wall-z+ | 220 | 15.8 | 15.8 | 0.30 % | 1.77 % | – |
 
+### Emin and uniformity, total light
+
+What a report quotes beside Ē: the least illuminance on each surface, and U₀ = Emin / Ē.
+
+| Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |
+|---|---|---|---|---|
+| work-plane | 13.9 | 14.0 | 0.88 % | 0.79 % |
+| floor | 15.4 | 15.6 | 1.20 % | 1.14 % |
+| wall-x- | 12.9 | 13.0 | 0.62 % | 0.38 % |
+| wall-z+ | 12.4 | 12.6 | 1.21 % | 1.00 % |
+
+### The bright-point cutoff
+
+Per-point figures leave out points below 10 % of the room's brightest;
+here at a tenth of that too, to show what it leaves out.
+
+| Light | Cutoff | Points counted | Worst far point | Worst near point |
+|---|---|---|---|---|
+| direct | 10 % | 300 of 1036 | 0.15 % | – |
+| direct | 1 % | 726 of 1036 | 0.33 % | – |
+| total | 10 % | 398 of 1036 | 0.56 % | – |
+| total | 1 % | 1036 of 1036 | 1.29 % | – |
+
 ### Feature by feature
 
 Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
@@ -301,6 +415,28 @@ Radiance rad6R0P2, 1130 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85
 | floor | 500 | 141.2 | 141.6 | 0.28 % | 8.63 % | – |
 | wall-x- | 280 | 110.8 | 111.2 | 0.35 % | 7.46 % | – |
 | wall-z- | 350 | 136.9 | 137.5 | 0.46 % | 5.67 % | – |
+
+### Emin and uniformity, total light
+
+What a report quotes beside Ē: the least illuminance on each surface, and U₀ = Emin / Ē.
+
+| Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |
+|---|---|---|---|---|
+| floor | 79.6 | 81.7 | 2.65 % | 2.49 % |
+| wall-x- | 66.6 | 67.6 | 1.51 % | 1.49 % |
+| wall-z- | 71.9 | 73.1 | 1.59 % | 1.30 % |
+
+### The bright-point cutoff
+
+Per-point figures leave out points below 10 % of the room's brightest;
+here at a tenth of that too, to show what it leaves out.
+
+| Light | Cutoff | Points counted | Worst far point | Worst near point |
+|---|---|---|---|---|
+| direct | 10 % | 37 of 1130 | 1.77 % | – |
+| direct | 1 % | 294 of 1130 | 17.23 % | – |
+| total | 10 % | 58 of 1130 | 1.74 % | – |
+| total | 1 % | 1121 of 1130 | 11.43 % | – |
 
 ### Feature by feature
 
@@ -347,6 +483,29 @@ Radiance rad6R0P2, 1140 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85
 | floor | 320 | 46.7 | 48.2 | 3.37 % | 4.69 % | – |
 | ceiling | 320 | 37.5 | 38.9 | 3.73 % | 8.72 % | 8.26 % |
 | wall-z+ | 220 | 39.1 | 40.4 | 3.45 % | 4.62 % | – |
+
+### Emin and uniformity, total light
+
+What a report quotes beside Ē: the least illuminance on each surface, and U₀ = Emin / Ē.
+
+| Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |
+|---|---|---|---|---|
+| wall-x- | 33.7 | 34.8 | 3.18 % | -0.10 % |
+| floor | 35.2 | 36.3 | 3.21 % | 0.63 % |
+| ceiling | 31.7 | 32.6 | 2.94 % | 0.48 % |
+| wall-z+ | 30.5 | 31.3 | 2.63 % | 0.27 % |
+
+### The bright-point cutoff
+
+Per-point figures leave out points below 10 % of the room's brightest;
+here at a tenth of that too, to show what it leaves out.
+
+| Light | Cutoff | Points counted | Worst far point | Worst near point |
+|---|---|---|---|---|
+| direct | 10 % | 404 of 1140 | 2.89 % | 13.34 % |
+| direct | 1 % | 1135 of 1140 | 5.40 % | 13.34 % |
+| total | 10 % | 1140 of 1140 | 4.26 % | 15.09 % |
+| total | 1 % | 1140 of 1140 | 4.26 % | 15.09 % |
 
 ### Feature by feature
 

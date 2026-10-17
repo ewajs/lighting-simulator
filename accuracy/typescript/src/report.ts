@@ -5,6 +5,7 @@ import {
   BRIGHT_SHARE,
   compareReference,
   NEAR_M,
+  radianceLx,
   referenceRoom,
   summarize,
   type SurfaceSummary,
@@ -38,7 +39,23 @@ export interface RoomSummary {
   readonly withoutFurniture: readonly SurfaceSummary[];
   /** The calculation's features added one at a time, against Radiance's full light (ADR 0061). */
   readonly features: readonly FeatureResult[];
+  /** How the per-point figures change with the bright-point cutoff (ADR 0072). */
+  readonly cutoffs: readonly Cutoff[];
 }
+
+/** The per-point figures at one bright-point cutoff, over a room's surfaces. */
+export interface Cutoff {
+  readonly light: 'direct' | 'total';
+  /** Points dimmer than this share of the room's brightest are left out. */
+  readonly brightShare: number;
+  /** How many of the room's points that leaves in. */
+  readonly counted: number;
+  readonly worstFar: number;
+  readonly worstNear: number;
+}
+
+/** The cutoffs the report compares: the one the figures use, and ten times lower. */
+const CUTOFFS = [BRIGHT_SHARE, BRIGHT_SHARE / 10];
 
 /** Every reference room's results, with the thresholds they were judged by. */
 export interface AccuracySummary {
@@ -70,6 +87,19 @@ export function accuracySummary(): AccuracySummary {
         ? summarize(compareReference(reference, IES_FILES, undefined, false), origins, 'total')
         : [],
       features: featureStudy(reference, IES_FILES),
+      cutoffs: (['direct', 'total'] as const).flatMap((light) => {
+        const brightest = Math.max(...points.map((p) => radianceLx(p, light)));
+        return CUTOFFS.map((brightShare) => {
+          const surfaces = summarize(points, origins, light, brightShare);
+          return {
+            light,
+            brightShare,
+            counted: points.filter((p) => radianceLx(p, light) >= brightShare * brightest).length,
+            worstFar: Math.max(...surfaces.map((s) => s.worstFar)),
+            worstNear: Math.max(...surfaces.map((s) => s.worstNear)),
+          };
+        });
+      }),
     };
   });
   return { brightShare: BRIGHT_SHARE, nearM: NEAR_M, rooms };
@@ -82,6 +112,21 @@ const TABLE_HEAD = [
   '| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |',
   '|---|---|---|---|---|---|---|',
 ];
+
+const MIN_HEAD = [
+  '| Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |',
+  '|---|---|---|---|---|',
+];
+
+/** Emin and U₀ rows; "–" where Radiance's Emin is about 0 (a point inside furniture). */
+function minRows(surfaces: readonly SurfaceSummary[]): string[] {
+  const maybe = (value: number | null) => (value === null ? '–' : percent(value));
+  return surfaces.map(
+    (s) =>
+      `| ${s.surface} | ${lux(s.radianceMinLx)} | ${lux(s.oursMinLx)} | ${maybe(s.minError)} | ` +
+      `${maybe(s.uniformityError)} |`,
+  );
+}
 
 function tableRows(surfaces: readonly SurfaceSummary[]): string[] {
   return surfaces.map(
@@ -129,6 +174,26 @@ export function reportMarkdown(summary: AccuracySummary): string {
       '',
       ...TABLE_HEAD,
       ...tableRows(room.bounced),
+      '',
+      '### Emin and uniformity, total light',
+      '',
+      'What a report quotes beside Ē: the least illuminance on each surface, and U₀ = Emin / Ē.',
+      '',
+      ...MIN_HEAD,
+      ...minRows(room.total),
+      '',
+      '### The bright-point cutoff',
+      '',
+      `Per-point figures leave out points below ${summary.brightShare * 100} % of the room's brightest;`,
+      'here at a tenth of that too, to show what it leaves out.',
+      '',
+      '| Light | Cutoff | Points counted | Worst far point | Worst near point |',
+      '|---|---|---|---|---|',
+      ...room.cutoffs.map(
+        (c) =>
+          `| ${c.light} | ${c.brightShare * 100} % | ${c.counted} of ${room.points} | ` +
+          `${percent(c.worstFar)} | ${c.worstNear > 0 ? percent(c.worstNear) : '–'} |`,
+      ),
       '',
       '### Feature by feature',
       '',
@@ -179,6 +244,10 @@ export function summaryJson(summary: AccuracySummary): string {
     averageError: round(surface.averageError, 5),
     worstFar: round(surface.worstFar, 5),
     worstNear: round(surface.worstNear, 5),
+    radianceMinLx: round(surface.radianceMinLx, 1),
+    oursMinLx: round(surface.oursMinLx, 1),
+    minError: surface.minError === null ? null : round(surface.minError, 5),
+    uniformityError: surface.uniformityError === null ? null : round(surface.uniformityError, 5),
   });
   const rounded = {
     ...summary,
@@ -195,6 +264,11 @@ export function summaryJson(summary: AccuracySummary): string {
         worstFar: round(f.worstFar, 5),
         worstNear: round(f.worstNear, 5),
         surfaces: f.surfaces.map((s) => ({ ...s, averageError: round(s.averageError, 5) })),
+      })),
+      cutoffs: room.cutoffs.map((c) => ({
+        ...c,
+        worstFar: round(c.worstFar, 5),
+        worstNear: round(c.worstNear, 5),
       })),
     })),
   };

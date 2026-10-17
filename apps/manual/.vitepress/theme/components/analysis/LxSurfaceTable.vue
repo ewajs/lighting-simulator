@@ -62,6 +62,8 @@ const lx = (v: number) =>
           <th class="num">{{ WORDS[l].tableDifference }}</th>
           <th class="num">{{ WORDS[l].tableFar }}</th>
           <th class="num">{{ WORDS[l].tableNear }}</th>
+          <th class="num">Emin</th>
+          <th class="num">U₀</th>
         </tr>
       </thead>
       <tbody>
@@ -83,6 +85,12 @@ const lx = (v: number) =>
           <td class="num">
             <span v-if="row.worstNear > 0" :class="['chip', grade(row.worstNear)]">{{
               percent(row.worstNear, lang, 1)
+            }}</span>
+            <span v-else>–</span>
+          </td>
+          <td v-for="(error, i) in [row.minError, row.uniformityError]" :key="i" class="num">
+            <span v-if="error !== null" :class="['chip', grade(error)]">{{
+              percent(error, lang, 1)
             }}</span>
             <span v-else>–</span>
           </td>

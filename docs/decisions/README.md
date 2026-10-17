@@ -75,3 +75,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0069 | [Shadow detail: the source cell size as a choice](0069-shadow-detail.md) | Accepted |
 | 0070 | [Where bounced light's excess comes from](0070-bounced-light-excess.md) | Accepted |
 | 0071 | [Tighter reference checks: a real sphere, and orientation by hand](0071-tighter-reference-checks.md) | Accepted |
+| 0072 | [Emin, uniformity, and what the bright-point cutoff leaves out](0072-emin-uniformity-and-the-cutoff.md) | Accepted |
