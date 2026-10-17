@@ -50,13 +50,14 @@ export function sceneLight(
 /**
  * The light a room's floor, ceiling and walls reflect, after every bounce,
  * given its direct light: solved over patches of at most the options'
- * `patchSizeM`.
+ * `patchSizeM`. None, over no patches, when the options leave bounced light out.
  */
 export function indirectLight(
   room: Room,
   direct: DirectLight,
   options: CalculationOptions = DEFAULT_CALCULATION_OPTIONS,
 ): IndirectLight {
+  if (!options.bouncedLight) return { patches: [], exitance: new Float64Array(0), iterations: 0 };
   const patches = roomPatches(room, options.patchSizeM);
   // Each patch's direct light, averaged over its sample points: a spot's
   // sharp-edged pool lands partly on a patch.

@@ -21,15 +21,15 @@ const NEAR_TOLERANCE = 0.15;
 /**
  * Total light, rooms without furniture (furnished rooms with it taken out, on
  * both sides), by the same measures (ADR 0060). Measured worsts: averages
- * 3.27 %, far points 4.35 %, near points 14.65 %, all by the wall sconce;
- * elsewhere averages within 0.7 % and far points within 3.7 %.
+ * 3.29 %, far points 4.26 %, near points 15.09 %, all by the wall sconce;
+ * elsewhere averages within 0.7 % and far points within 3.8 %.
  */
 const TOTAL = { average: 0.04, far: 0.05, near: 0.16 };
 /**
  * Total light in furnished rooms as they are: Lux Studio's bounced light
  * passes through furniture, Radiance's doesn't (ADR 0060). Measured worsts:
- * averages 7.37 % (the ceiling over the pendant's table, missing the light the
- * table reflects), far points 43.1 % (on the wall at the furnished room's bookcase). A
+ * averages 7.34 % (the ceiling over the pendant's table, missing the light the
+ * table reflects), far points 43.7 % (on the wall at the furnished room's bookcase). A
  * regression bound for a known gap, to tighten when furniture blocks bounced light.
  */
 const FURNISHED = { average: 0.08, far: 0.45, near: 0.16 };

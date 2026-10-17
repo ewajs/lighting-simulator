@@ -5,7 +5,11 @@ import { fixtureLayout } from '../fixture-layout';
 import { luminaireFrame } from '../luminaire-frame';
 import type { Scene } from '../types';
 import { furnitureBlockers, type Blocker } from './occlusion';
-import { DEFAULT_CALCULATION_OPTIONS, type CalculationOptions } from './options';
+import {
+  checkCalculationOptions,
+  DEFAULT_CALCULATION_OPTIONS,
+  type CalculationOptions,
+} from './options';
 import {
   checkSettings,
   DEFAULT_ANALYSIS_SETTINGS,
@@ -30,9 +34,10 @@ export interface DirectLight {
 
 /**
  * Prepares a scene's light for `directIlluminance`. Its values are
- * maintained: multiplied by the settings' maintenance factor.
+ * maintained: multiplied by the settings' maintenance factor. The options
+ * say whether openings are split into cells and furniture casts shadows.
  *
- * @throws RangeError if the settings don't fit the room.
+ * @throws RangeError if the settings don't fit the room, or an option is out of range.
  */
 export function directLight(
   scene: Scene,
@@ -41,6 +46,9 @@ export function directLight(
   options: CalculationOptions = DEFAULT_CALCULATION_OPTIONS,
 ): DirectLight {
   checkSettings(settings, scene.room.height);
+  checkCalculationOptions(options);
+  // One cell as large as any opening: the luminaire as a single point.
+  const cellM = options.splitOpenings ? options.sourceCellM : Number.POSITIVE_INFINITY;
   const estimatedLuminaires: string[] = [];
   const unknownLuminaires: string[] = [];
   const sources: PointSource[] = [];
@@ -61,10 +69,10 @@ export function directLight(
         distributionOf(product, photometry),
         photometry?.luminousOpening,
         level * settings.maintenanceFactor,
-        options.sourceCellM,
+        cellM,
       ),
     );
   }
-  const blockers = furnitureBlockers(scene.furniture);
+  const blockers = options.furnitureShadows ? furnitureBlockers(scene.furniture) : [];
   return { sources, blockers, estimatedLuminaires, unknownLuminaires };
 }

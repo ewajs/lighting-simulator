@@ -53,6 +53,10 @@ npm run accuracy:check        the accuracy Python: ruff (with docstrings),
                       mypy strict, pytest (Radiance tests run on macOS only)
 npm run accuracy:references   check Radiance, regenerate accuracy/references
                       and accuracy/REPORT.md; after changing a room or the maths
+npm run accuracy:report       regenerate REPORT.md and summary.json alone
+npm run accuracy:timings      time each reference room at each feature step
+                      → accuracy/timings.json (ADR 0061); on an idle machine
+npm run accuracy:patch-size   accuracy against time per patch size → PATCH-SIZE.md
 npm run accuracy:docs         the Python's docs (pdoc), live
 npm run test:e2e      Playwright e2e: every test on chrome, @all-browsers tests
                       also on chrome-webgl2 and webkit (local only; ADRs 0032, 0056)

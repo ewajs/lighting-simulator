@@ -3,10 +3,22 @@ import type { FixtureLayout } from '../fixture-layout';
 import { luminaireFrame } from '../luminaire-frame';
 import { totalFlux } from '../photometry/distribution';
 import { catalog, isotropic, photometry, product, room } from '../test-fixtures';
-import type { Aim, Luminaire, MountType, Photometry, Product, Room, Scene, Vec3 } from '../types';
-import { analyseIlluminance } from './analyse';
+import type {
+  Aim,
+  Furniture,
+  Luminaire,
+  MountType,
+  Photometry,
+  Product,
+  Room,
+  Scene,
+  Vec3,
+} from '../types';
+import { analyseIlluminance, type IlluminanceAnalysis } from './analyse';
+import { DEFAULT_CALCULATION_OPTIONS, type CalculationOptions } from './options';
 import { DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs } from './settings';
 import { directIlluminance } from './direct';
+import { directLight } from './direct-light';
 import { distributionOf, luminaireSources, type PointSource } from './sources';
 
 const placed = (
@@ -334,5 +346,74 @@ describe('analyseIlluminance: bounced light', () => {
         ies,
       ).surfaces[0]!.indirectLx.reduce((sum, value, _, all) => sum + value / all.length, 0);
     expect(average(0.7)).toBeGreaterThan(2 * average(0.4));
+  });
+});
+
+describe('analyseIlluminance: features switched off', () => {
+  const ies: AnalysisInputs = {
+    catalog,
+    photometry: () => isotropic(100, { widthM: 0, lengthM: 1.2, heightM: 0, round: false }),
+    modelFile: () => undefined,
+  };
+  const sofa: Furniture = {
+    id: 'sofa',
+    kind: 'sofa',
+    position: { x: 0, y: 0, z: 0 },
+    rotationDeg: 0,
+    size: { width: 2, depth: 1, height: 0.8 },
+    finish: { main: 'oak', accent: 'oak' },
+  };
+  const scene: Scene = {
+    room,
+    luminaires: [placed('recessed', { x: 0, y: 2.7, z: 0 })],
+    furniture: [sofa],
+  };
+  const withOptions = (changes: Partial<CalculationOptions>) =>
+    analyseIlluminance(scene, ies, DEFAULT_ANALYSIS_SETTINGS, {
+      ...DEFAULT_CALCULATION_OPTIONS,
+      ...changes,
+    });
+  /** The floor point straight under the light, which the sofa hides. */
+  const underLight = (result: IlluminanceAnalysis) => {
+    const floor = result.surfaces[1]!;
+    const k = floor.grid.points.findIndex((p) => Math.hypot(p.x, p.z) < 0.2);
+    return { direct: floor.directLx[k]!, indirect: floor.indirectLx[k]! };
+  };
+
+  it('counts everything by default', () => {
+    const result = withOptions({});
+    expect(underLight(result).direct).toBe(0);
+    expect(result.indirect.patches).toBeGreaterThan(0);
+  });
+
+  it('without bounced light: no patches, and nothing indirect anywhere', () => {
+    const result = withOptions({ bouncedLight: false });
+    expect(result.indirect).toEqual({ patches: 0, iterations: 0 });
+    for (const surface of result.surfaces) expect(Math.max(...surface.indirectLx)).toBe(0);
+    expect(result.surfaces[0]!.directLx).toEqual(withOptions({}).surfaces[0]!.directLx);
+  });
+
+  it('without furniture shadows: light reaches the floor under the sofa', () => {
+    expect(underLight(withOptions({ furnitureShadows: false })).direct).toBeGreaterThan(0);
+  });
+
+  it('without split openings: each luminaire is one point of light', () => {
+    const sources = (splitOpenings: boolean) =>
+      directLight(scene, ies, DEFAULT_ANALYSIS_SETTINGS, {
+        ...DEFAULT_CALCULATION_OPTIONS,
+        splitOpenings,
+      }).sources;
+    // The 1.2 m line in 10 cm cells, or not split at all.
+    expect(sources(true)).toHaveLength(12);
+    expect(sources(false)).toHaveLength(1);
+    // At the light's origin, which the placeholder fixture puts 3 cm below the ceiling.
+    expect(sources(false)[0]!.position.x).toBe(0);
+    expect(sources(false)[0]!.position.y).toBeCloseTo(2.67, 12);
+  });
+
+  it('refuses sizes and tolerances out of range', () => {
+    expect(() => withOptions({ patchSizeM: 0 })).toThrow(/patchSizeM/);
+    expect(() => withOptions({ sourceCellM: Number.NaN })).toThrow(/sourceCellM/);
+    expect(() => withOptions({ tolerance: 1 })).toThrow(/tolerance/);
   });
 });

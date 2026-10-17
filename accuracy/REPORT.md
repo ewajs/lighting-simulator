@@ -15,9 +15,9 @@ Radiance rad6R0P2, 920 points.
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 320 | 306.8 | 307.0 | 0.04 % | 1.22 % | – |
-| floor | 320 | 274.7 | 275.2 | 0.18 % | 0.63 % | – |
-| wall-x- | 280 | 156.5 | 157.0 | 0.31 % | 1.93 % | 1.61 % |
+| work-plane | 320 | 306.2 | 307.0 | 0.23 % | 1.13 % | – |
+| floor | 320 | 274.7 | 275.2 | 0.20 % | 0.70 % | – |
+| wall-x- | 280 | 156.6 | 157.0 | 0.31 % | 2.37 % | 1.66 % |
 
 ### Direct light
 
@@ -26,6 +26,17 @@ Radiance rad6R0P2, 920 points.
 | work-plane | 320 | 213.2 | 213.1 | -0.03 % | 0.13 % | – |
 | floor | 320 | 176.0 | 175.9 | -0.03 % | 0.06 % | – |
 | wall-x- | 280 | 64.2 | 64.1 | -0.10 % | 0.25 % | 1.01 % |
+
+### Feature by feature
+
+Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
+
+| Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
+|---|---|---|---|---|
+| point-sources | 59.06 % | 44.39 % | 99.93 % | 98.46 % |
+| bounced-light | 0.28 % | 0.30 % | 2.33 % | 1.63 % |
+| split-openings | 0.31 % | 0.29 % | 2.37 % | 1.66 % |
+| furniture-shadows | 0.31 % | 0.29 % | 2.37 % | 1.66 % |
 
 ## furnished-living
 
@@ -37,19 +48,30 @@ Radiance rad6R0P2, 1036 points.
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 320 | 265.9 | 255.0 | -4.08 % | 19.18 % | – |
-| floor | 320 | 180.4 | 185.3 | 2.72 % | 41.67 % | – |
-| wall-x+ | 176 | 88.8 | 84.0 | -5.42 % | 43.12 % | – |
-| wall-z- | 220 | 85.9 | 87.7 | 2.10 % | 24.50 % | – |
+| work-plane | 320 | 265.7 | 255.0 | -4.01 % | 18.92 % | – |
+| floor | 320 | 180.4 | 185.3 | 2.72 % | 40.93 % | – |
+| wall-x+ | 176 | 88.9 | 84.0 | -5.48 % | 43.73 % | – |
+| wall-z- | 220 | 86.0 | 87.7 | 2.02 % | 24.63 % | – |
 
 ### Direct light
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 320 | 193.7 | 193.7 | -0.03 % | 0.13 % | – |
+| work-plane | 320 | 193.7 | 193.7 | -0.03 % | 0.12 % | – |
 | floor | 320 | 118.7 | 118.7 | -0.03 % | 0.16 % | – |
-| wall-x+ | 176 | 24.5 | 24.5 | -0.16 % | 0.46 % | – |
-| wall-z- | 220 | 26.4 | 26.3 | -0.13 % | 0.42 % | – |
+| wall-x+ | 176 | 24.5 | 24.5 | -0.16 % | 0.47 % | – |
+| wall-z- | 220 | 26.4 | 26.3 | -0.13 % | 0.43 % | – |
+
+### Feature by feature
+
+Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
+
+| Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
+|---|---|---|---|---|
+| point-sources | 71.36 % | 49.49 % | 360.11 % | – |
+| bounced-light | 34.10 % | 13.70 % | 531.18 % | – |
+| split-openings | 34.08 % | 13.71 % | 531.18 % | – |
+| furniture-shadows | 5.48 % | 6.48 % | 43.73 % | – |
 
 ### Furniture and bounced light
 
@@ -60,10 +82,10 @@ columns is what letting bounced light through furniture costs.
 
 | Surface | Ē difference, furnished | Ē difference, empty | Worst far point, furnished | Worst far point, empty |
 |---|---|---|---|---|
-| work-plane | -4.08 % | 0.14 % | 19.18 % | 0.96 % |
-| floor | 2.72 % | 0.17 % | 41.67 % | 0.74 % |
-| wall-x+ | -5.42 % | 0.39 % | 43.12 % | 1.47 % |
-| wall-z- | 2.10 % | 0.38 % | 24.50 % | 1.21 % |
+| work-plane | -4.01 % | 0.21 % | 18.92 % | 0.93 % |
+| floor | 2.72 % | 0.18 % | 40.93 % | 0.64 % |
+| wall-x+ | -5.48 % | 0.39 % | 43.73 % | 1.46 % |
+| wall-z- | 2.02 % | 0.38 % | 24.63 % | 1.19 % |
 
 ## linear-pendant-over-table
 
@@ -75,9 +97,9 @@ Radiance rad6R0P2, 1500 points.
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 500 | 229.3 | 218.0 | -4.92 % | 9.14 % | 3.21 % |
-| floor | 500 | 151.0 | 154.0 | 2.01 % | 34.91 % | – |
-| ceiling | 500 | 221.9 | 205.5 | -7.37 % | 11.43 % | – |
+| work-plane | 500 | 229.3 | 218.0 | -4.93 % | 8.98 % | 3.34 % |
+| floor | 500 | 150.5 | 154.0 | 2.33 % | 43.02 % | – |
+| ceiling | 500 | 221.8 | 205.5 | -7.34 % | 11.37 % | – |
 
 ### Direct light
 
@@ -86,6 +108,17 @@ Radiance rad6R0P2, 1500 points.
 | work-plane | 500 | 76.3 | 76.3 | -0.01 % | 0.15 % | 0.11 % |
 | floor | 500 | 27.0 | 26.9 | -0.22 % | 0.02 % | – |
 | ceiling | 500 | 126.6 | 126.5 | -0.03 % | 0.11 % | – |
+
+### Feature by feature
+
+Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
+
+| Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
+|---|---|---|---|---|
+| point-sources | 66.57 % | 70.07 % | 97.92 % | 40.72 % |
+| bounced-light | 31.24 % | 9.84 % | 216.94 % | 33.49 % |
+| split-openings | 30.80 % | 7.91 % | 200.92 % | 1.59 % |
+| furniture-shadows | 7.34 % | 6.80 % | 43.02 % | 3.34 % |
 
 ### Furniture and bounced light
 
@@ -96,9 +129,9 @@ columns is what letting bounced light through furniture costs.
 
 | Surface | Ē difference, furnished | Ē difference, empty | Worst far point, furnished | Worst far point, empty |
 |---|---|---|---|---|
-| work-plane | -4.92 % | 0.57 % | 9.14 % | 2.57 % |
-| floor | 2.01 % | 0.69 % | 34.91 % | 2.03 % |
-| ceiling | -7.37 % | 0.62 % | 11.43 % | 3.61 % |
+| work-plane | -4.93 % | 0.56 % | 8.98 % | 2.60 % |
+| floor | 2.33 % | 0.67 % | 43.02 % | 2.12 % |
+| ceiling | -7.34 % | 0.63 % | 11.37 % | 3.74 % |
 
 ## single-downlight
 
@@ -110,19 +143,30 @@ Radiance rad6R0P2, 1036 points.
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 320 | 69.7 | 69.8 | 0.10 % | 0.57 % | – |
-| floor | 320 | 66.1 | 66.1 | 0.07 % | 0.64 % | – |
-| wall-x- | 176 | 17.1 | 17.2 | 0.22 % | – | – |
-| wall-z+ | 220 | 19.2 | 19.3 | 0.15 % | 0.35 % | – |
+| work-plane | 320 | 69.7 | 69.8 | 0.08 % | 0.49 % | – |
+| floor | 320 | 66.1 | 66.1 | 0.06 % | 0.56 % | – |
+| wall-x- | 176 | 17.1 | 17.2 | 0.24 % | – | – |
+| wall-z+ | 220 | 19.2 | 19.3 | 0.22 % | 0.34 % | – |
 
 ### Direct light
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 320 | 55.3 | 55.3 | -0.01 % | 0.14 % | – |
+| work-plane | 320 | 55.3 | 55.3 | -0.01 % | 0.15 % | – |
 | floor | 320 | 50.9 | 50.9 | -0.02 % | 0.10 % | – |
 | wall-x- | 176 | 2.0 | 2.0 | -0.13 % | – | – |
 | wall-z+ | 220 | 3.5 | 3.5 | -0.16 % | – | – |
+
+### Feature by feature
+
+Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
+
+| Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
+|---|---|---|---|---|
+| point-sources | 88.55 % | 22.55 % | 54.74 % | – |
+| bounced-light | 0.20 % | 0.12 % | 0.48 % | – |
+| split-openings | 0.24 % | 0.12 % | 0.56 % | – |
+| furniture-shadows | 0.24 % | 0.12 % | 0.56 % | – |
 
 ## track-spots
 
@@ -134,9 +178,9 @@ Radiance rad6R0P2, 1130 points.
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| floor | 500 | 250.8 | 251.2 | 0.19 % | 0.60 % | – |
-| wall-x- | 280 | 379.3 | 379.3 | 0.00 % | 1.69 % | – |
-| wall-z- | 350 | 190.6 | 190.7 | 0.05 % | – | – |
+| floor | 500 | 250.8 | 251.2 | 0.15 % | 0.84 % | – |
+| wall-x- | 280 | 379.3 | 379.3 | 0.01 % | 1.74 % | – |
+| wall-z- | 350 | 190.1 | 190.7 | 0.29 % | – | – |
 
 ### Direct light
 
@@ -145,6 +189,17 @@ Radiance rad6R0P2, 1130 points.
 | floor | 500 | 109.7 | 109.7 | -0.01 % | 0.59 % | – |
 | wall-x- | 280 | 268.5 | 268.1 | -0.13 % | 1.77 % | – |
 | wall-z- | 350 | 53.3 | 53.2 | -0.16 % | – | – |
+
+### Feature by feature
+
+Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
+
+| Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
+|---|---|---|---|---|
+| point-sources | 72.04 % | 14.68 % | 36.20 % | – |
+| bounced-light | 0.29 % | 0.42 % | 1.74 % | – |
+| split-openings | 0.29 % | 0.42 % | 1.74 % | – |
+| furniture-shadows | 0.29 % | 0.42 % | 1.74 % | – |
 
 ## wall-sconce
 
@@ -156,10 +211,10 @@ Radiance rad6R0P2, 1140 points.
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| wall-x- | 280 | 68.1 | 70.3 | 3.27 % | 4.35 % | 14.65 % |
-| floor | 320 | 62.1 | 63.6 | 2.54 % | 3.89 % | – |
-| ceiling | 320 | 62.1 | 63.7 | 2.45 % | 3.90 % | 3.25 % |
-| wall-z+ | 220 | 56.8 | 58.2 | 2.42 % | 4.13 % | – |
+| wall-x- | 280 | 68.0 | 70.3 | 3.29 % | 4.26 % | 15.09 % |
+| floor | 320 | 62.1 | 63.6 | 2.57 % | 3.74 % | – |
+| ceiling | 320 | 62.1 | 63.7 | 2.45 % | 3.98 % | 3.31 % |
+| wall-z+ | 220 | 56.8 | 58.2 | 2.35 % | 3.56 % | – |
 
 ### Direct light
 
@@ -169,3 +224,14 @@ Radiance rad6R0P2, 1140 points.
 | floor | 320 | 15.4 | 15.4 | 0.14 % | 2.52 % | – |
 | ceiling | 320 | 24.7 | 24.8 | 0.51 % | 2.88 % | 7.13 % |
 | wall-z+ | 220 | 17.8 | 17.7 | -0.05 % | 2.89 % | – |
+
+### Feature by feature
+
+Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
+
+| Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
+|---|---|---|---|---|
+| point-sources | 75.25 % | 74.34 % | 95.68 % | 82.35 % |
+| bounced-light | 2.70 % | 2.99 % | 4.50 % | 55.98 % |
+| split-openings | 3.29 % | 2.62 % | 4.26 % | 15.09 % |
+| furniture-shadows | 3.29 % | 2.62 % | 4.26 % | 15.09 % |

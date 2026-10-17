@@ -11,7 +11,9 @@ from luxstudio_accuracy.scene import (
     BOUNCE_OPTIONS,
     PlacedLuminaire,
     RoomShell,
+    ShadowBox,
     build_scene,
+    direct_and_bounced,
     measure,
 )
 
@@ -66,3 +68,34 @@ def test_radiance_bounced_light_is_converged() -> None:
 
 def _reflectances(values: dict[str, float]) -> dict[str, float]:
     return {"floor": values["floor"], "walls": values["walls"], "ceiling": values["ceiling"]}
+
+
+REPEAT_POINT_CHANGE = 0.03
+"""Two identical runs may differ by this much at a point: sampling noise only."""
+
+
+@pytest.mark.radiance
+def test_radiance_bounced_light_repeats() -> None:
+    # The same run twice must give the same bounced light but for sampling
+    # noise, even at bright points next to furniture, where bounced light is
+    # a small difference of two large runs (ADR 0061).
+    room = load_room(next(p for p in all_rooms() if p.stem == "furnished-living"))
+    radiance = install()
+    luminaires = [
+        PlacedLuminaire(IES_DIR / item.ies, item.origin, item.tilt_deg, item.pan_deg)
+        for item in room.luminaires
+    ]
+    boxes = [ShadowBox(b.centre, b.half, b.yaw_deg, b.reflectance) for b in room.blockers]
+    shell = RoomShell(room.width, room.depth, room.height, **_reflectances(room.reflectances))
+    floor = [p for p in room.points if p.surface == "floor"]
+    points = [(p.position, p.normal) for p in floor[:: len(floor) // POINTS]]
+    with tempfile.TemporaryDirectory() as tmp:
+        octree = build_scene(radiance, Path(tmp), luminaires, boxes, shell)
+        first = direct_and_bounced(radiance, octree, points).bounced
+        second = direct_and_bounced(radiance, octree, points).bounced
+    changes = [abs(b / a - 1) for a, b in zip(first, second, strict=True) if a > 1]
+    print(
+        f"\nbounced light, the same run twice: per point mean {statistics.mean(changes):.2%}, "
+        f"worst {max(changes):.2%}"
+    )
+    assert max(changes) < REPEAT_POINT_CHANGE
