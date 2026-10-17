@@ -13,6 +13,7 @@ The figures are in [REPORT.md](REPORT.md).
 | `python/` | The `luxstudio_accuracy` package: checks Radiance, then writes the references |
 | `typescript/` | Lux Studio's side: computes the same points with core and compares, and repeats core's hand values and conservation checks with the demo's real IES files |
 | `REPORT.md` | The comparison, room by room and surface by surface |
+| `summary.json` | The same figures as data, for the manual's accuracy page (ADR 0059) |
 
 ## Running it
 
@@ -21,7 +22,7 @@ From the repo's root, with [uv](https://docs.astral.sh/uv/) installed:
 ```
 npm run accuracy:check        ruff, mypy and pytest for the Python
 npm run accuracy:references   check Radiance, regenerate the references, then the report
-npm run accuracy:report       regenerate only REPORT.md
+npm run accuracy:report       regenerate only REPORT.md and summary.json
 npm run accuracy:docs         browse the Python's docs, live
 npm test                      includes the comparison (accuracy/typescript)
 ```
