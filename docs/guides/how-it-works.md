@@ -134,7 +134,7 @@ It's plain maths over the scene, with no three.js, one formula per file:
 | `patches.ts` | the room's surfaces split into patches of at most 25 cm |
 | `form-factor.ts` | how much of a patch a point sees: the exact formula for a polygon |
 | `radiosity.ts` | the patches' form factors, and the solve: each patch reflects its reflectance times all it receives |
-| `options.ts` | the calculation's tuning (cell and patch sizes, when to stop), with defaults |
+| `options.ts` | the calculation's tuning (cell and patch sizes, when to stop) and its features as switches, with defaults ([ADR 0061](../decisions/0061-calculation-features-and-timing.md)) |
 | `direct-light.ts`, `scene-light.ts` | a scene's light, prepared once, then read at any point: direct, bounced and total |
 | `analyse.ts` | `analyseIlluminance`: every surface's grid and its statistics |
 

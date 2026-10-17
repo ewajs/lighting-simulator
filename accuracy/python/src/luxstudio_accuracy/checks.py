@@ -168,7 +168,7 @@ def sphere_check(
     luminaire = PlacedLuminaire(point_file, Vec3(0, s / 2, 0), 0, 0)
     octree = build_scene(radiance, folder, [luminaire], [], room)
     points = _cube_points(s)
-    _, bounced_at = direct_and_bounced(radiance, octree, points, bounce_options)
+    bounced_at = direct_and_bounced(radiance, octree, points, bounce_options).bounced
     bounced = sum(bounced_at) / len(points)
     flux = 4 * math.pi * SPHERE_CANDELA
     area = 6 * s * s

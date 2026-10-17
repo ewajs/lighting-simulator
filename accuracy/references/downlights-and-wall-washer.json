@@ -92,9 +92,9 @@
     "-ds",
     "0.2",
     "-dt",
-    "0.05",
+    "0",
     "-dc",
-    "0.5",
+    "1",
     "-ab",
     "24",
     "-lr",
@@ -116,13 +116,25 @@
     "-ds",
     "0.2",
     "-dt",
-    "0.05",
+    "0",
     "-dc",
-    "0.5",
+    "1",
     "-ab",
     "0"
    ]
-  ]
+  ],
+  "timing": {
+   "machine": "Apple M1 Pro",
+   "processes": 10,
+   "direct": {
+    "wallSeconds": 0.05,
+    "cpuSeconds": 0.18
+   },
+   "bounced": {
+    "wallSeconds": 63.19,
+    "cpuSeconds": 552.03
+   }
+  }
  },
  "generated": "2026-10-17",
  "points": [
@@ -138,8 +150,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 63.3821,
-   "total": 160.7895
+   "direct": 63.384,
+   "total": 159.4855
   },
   {
    "surface": "work-plane",
@@ -154,7 +166,7 @@
     "z": 0
    },
    "direct": 93.6082,
-   "total": 194.9706
+   "total": 193.9817
   },
   {
    "surface": "work-plane",
@@ -168,8 +180,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 129.2284,
-   "total": 235.2839
+   "direct": 129.2343,
+   "total": 234.2265
   },
   {
    "surface": "work-plane",
@@ -183,8 +195,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 158.532,
-   "total": 269.3361
+   "direct": 158.5382,
+   "total": 268.2064
   },
   {
    "surface": "work-plane",
@@ -198,8 +210,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 174.2214,
-   "total": 287.6022
+   "direct": 174.2277,
+   "total": 286.4594
   },
   {
    "surface": "work-plane",
@@ -213,8 +225,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 173.8254,
-   "total": 286.0948
+   "direct": 173.8188,
+   "total": 284.7269
   },
   {
    "surface": "work-plane",
@@ -228,8 +240,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 157.8289,
-   "total": 266.4961
+   "direct": 157.8228,
+   "total": 264.9703
   },
   {
    "surface": "work-plane",
@@ -243,8 +255,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 129.9931,
-   "total": 231.4426
+   "direct": 129.9866,
+   "total": 231.2991
   },
   {
    "surface": "work-plane",
@@ -258,8 +270,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 98.7079,
-   "total": 195.0751
+   "direct": 98.7082,
+   "total": 194.0202
   },
   {
    "surface": "work-plane",
@@ -273,8 +285,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 78.4466,
-   "total": 171.0373
+   "direct": 78.445,
+   "total": 170.2015
   },
   {
    "surface": "work-plane",
@@ -288,8 +300,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 77.6653,
-   "total": 168.7509
+   "direct": 77.6663,
+   "total": 167.7972
   },
   {
    "surface": "work-plane",
@@ -303,8 +315,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 96.3367,
-   "total": 188.71
+   "direct": 96.3355,
+   "total": 187.7406
   },
   {
    "surface": "work-plane",
@@ -318,8 +330,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 125.9943,
-   "total": 221.939
+   "direct": 126.0015,
+   "total": 221.2941
   },
   {
    "surface": "work-plane",
@@ -333,8 +345,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 152.2276,
-   "total": 252.4791
+   "direct": 152.2309,
+   "total": 251.2884
   },
   {
    "surface": "work-plane",
@@ -348,8 +360,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 166.7292,
-   "total": 269.4367
+   "direct": 166.7267,
+   "total": 268.0337
   },
   {
    "surface": "work-plane",
@@ -363,8 +375,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 165.5748,
-   "total": 266.7331
+   "direct": 165.567,
+   "total": 266.9049
   },
   {
    "surface": "work-plane",
@@ -378,8 +390,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 148.3699,
-   "total": 246.4695
+   "direct": 148.3693,
+   "total": 245.6161
   },
   {
    "surface": "work-plane",
@@ -393,8 +405,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 117.9581,
-   "total": 210.8466
+   "direct": 117.9601,
+   "total": 210.5201
   },
   {
    "surface": "work-plane",
@@ -408,8 +420,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 80.9616,
-   "total": 169.4967
+   "direct": 80.9617,
+   "total": 168.7316
   },
   {
    "surface": "work-plane",
@@ -423,8 +435,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 49.3384,
-   "total": 135.1683
+   "direct": 49.3357,
+   "total": 135.5765
   },
   {
    "surface": "work-plane",
@@ -438,8 +450,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 92.7131,
-   "total": 192.1438
+   "direct": 92.7169,
+   "total": 191.2596
   },
   {
    "surface": "work-plane",
@@ -453,8 +465,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 137.2079,
-   "total": 236.4487
+   "direct": 137.2018,
+   "total": 235.8448
   },
   {
    "surface": "work-plane",
@@ -468,8 +480,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 181.9288,
-   "total": 283.6071
+   "direct": 181.9292,
+   "total": 282.5134
   },
   {
    "surface": "work-plane",
@@ -483,8 +495,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 215.797,
-   "total": 319.882
+   "direct": 215.7927,
+   "total": 318.2663
   },
   {
    "surface": "work-plane",
@@ -498,8 +510,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 234.4173,
-   "total": 339.9973
+   "direct": 234.4205,
+   "total": 337.8856
   },
   {
    "surface": "work-plane",
@@ -513,8 +525,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 233.7445,
-   "total": 338.6573
+   "direct": 233.7412,
+   "total": 336.1165
   },
   {
    "surface": "work-plane",
@@ -528,8 +540,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 213.9052,
-   "total": 316.5463
+   "direct": 213.9102,
+   "total": 313.6196
   },
   {
    "surface": "work-plane",
@@ -544,7 +556,7 @@
     "z": 0
    },
    "direct": 181.5015,
-   "total": 277.7926
+   "total": 277.1849
   },
   {
    "surface": "work-plane",
@@ -558,8 +570,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 142.4048,
-   "total": 235.9128
+   "direct": 142.411,
+   "total": 234.7109
   },
   {
    "surface": "work-plane",
@@ -573,8 +585,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 112.5216,
-   "total": 203.3704
+   "direct": 112.517,
+   "total": 201.9839
   },
   {
    "surface": "work-plane",
@@ -588,8 +600,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 111.3656,
-   "total": 200.9475
+   "direct": 111.3692,
+   "total": 199.7461
   },
   {
    "surface": "work-plane",
@@ -603,8 +615,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 138.9319,
-   "total": 228.9706
+   "direct": 138.9348,
+   "total": 228.0159
   },
   {
    "surface": "work-plane",
@@ -618,8 +630,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 175.6156,
-   "total": 267.1026
+   "direct": 175.6212,
+   "total": 265.4934
   },
   {
    "surface": "work-plane",
@@ -633,8 +645,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 205.6112,
-   "total": 298.9083
+   "direct": 205.6067,
+   "total": 297.6144
   },
   {
    "surface": "work-plane",
@@ -648,8 +660,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 223.1489,
-   "total": 317.2061
+   "direct": 223.148,
+   "total": 315.8596
   },
   {
    "surface": "work-plane",
@@ -663,8 +675,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 221.7327,
-   "total": 313.8876
+   "direct": 221.7303,
+   "total": 313.9397
   },
   {
    "surface": "work-plane",
@@ -678,8 +690,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 200.7374,
-   "total": 291.0008
+   "direct": 200.7369,
+   "total": 291.0452
   },
   {
    "surface": "work-plane",
@@ -693,8 +705,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 165.1369,
-   "total": 253.5331
+   "direct": 165.1416,
+   "total": 253.6879
   },
   {
    "surface": "work-plane",
@@ -708,8 +720,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 118.2224,
-   "total": 205.1888
+   "direct": 118.2292,
+   "total": 204.9384
   },
   {
    "surface": "work-plane",
@@ -723,8 +735,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 71.4695,
-   "total": 160.0539
+   "direct": 71.4657,
+   "total": 159.4628
   },
   {
    "surface": "work-plane",
@@ -738,8 +750,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.9355,
-   "total": 228.1485
+   "direct": 124.9328,
+   "total": 226.8024
   },
   {
    "surface": "work-plane",
@@ -753,8 +765,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 178.4225,
-   "total": 279.3681
+   "direct": 178.4172,
+   "total": 278.5587
   },
   {
    "surface": "work-plane",
@@ -768,8 +780,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 227.2469,
-   "total": 328.4462
+   "direct": 227.2514,
+   "total": 326.8692
   },
   {
    "surface": "work-plane",
@@ -784,7 +796,7 @@
     "z": 0
    },
    "direct": 269.4584,
-   "total": 370.3888
+   "total": 368.757
   },
   {
    "surface": "work-plane",
@@ -798,8 +810,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 297.5483,
-   "total": 398.4452
+   "direct": 297.549,
+   "total": 396.5752
   },
   {
    "surface": "work-plane",
@@ -813,8 +825,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 296.1392,
-   "total": 396.0865
+   "direct": 296.1389,
+   "total": 394.4791
   },
   {
    "surface": "work-plane",
@@ -829,7 +841,7 @@
     "z": 0
    },
    "direct": 264.9495,
-   "total": 361.9409
+   "total": 360.6402
   },
   {
    "surface": "work-plane",
@@ -843,8 +855,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 222.7002,
-   "total": 317.6348
+   "direct": 222.695,
+   "total": 315.6672
   },
   {
    "surface": "work-plane",
@@ -858,8 +870,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 180.1259,
-   "total": 271.7797
+   "direct": 180.1309,
+   "total": 270.4362
   },
   {
    "surface": "work-plane",
@@ -873,8 +885,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 145.8723,
-   "total": 235.7343
+   "direct": 145.8775,
+   "total": 234.198
   },
   {
    "surface": "work-plane",
@@ -888,8 +900,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 144.2148,
-   "total": 232.706
+   "direct": 144.2096,
+   "total": 231.2588
   },
   {
    "surface": "work-plane",
@@ -903,8 +915,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 175.0797,
-   "total": 263.8322
+   "direct": 175.0807,
+   "total": 262.1478
   },
   {
    "surface": "work-plane",
@@ -918,8 +930,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 214.1479,
-   "total": 302.8845
+   "direct": 214.1486,
+   "total": 301.0452
   },
   {
    "surface": "work-plane",
@@ -933,8 +945,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 252.8187,
-   "total": 342.2034
+   "direct": 252.8192,
+   "total": 340.6026
   },
   {
    "surface": "work-plane",
@@ -948,8 +960,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 280.5263,
-   "total": 368.4028
+   "direct": 280.5265,
+   "total": 368.3652
   },
   {
    "surface": "work-plane",
@@ -963,8 +975,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 278.8408,
-   "total": 366.5847
+   "direct": 278.8405,
+   "total": 365.8617
   },
   {
    "surface": "work-plane",
@@ -978,8 +990,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 246.998,
-   "total": 333.5617
+   "direct": 246.9982,
+   "total": 333.1143
   },
   {
    "surface": "work-plane",
@@ -993,8 +1005,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 201.4385,
-   "total": 287.629
+   "direct": 201.435,
+   "total": 287.3653
   },
   {
    "surface": "work-plane",
@@ -1008,8 +1020,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 149.2268,
-   "total": 235.9783
+   "direct": 149.2301,
+   "total": 236.4138
   },
   {
    "surface": "work-plane",
@@ -1023,8 +1035,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 93.0247,
-   "total": 184.0036
+   "direct": 93.025,
+   "total": 184.2896
   },
   {
    "surface": "work-plane",
@@ -1038,8 +1050,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 154.7002,
-   "total": 262.3796
+   "direct": 154.7035,
+   "total": 260.7731
   },
   {
    "surface": "work-plane",
@@ -1053,8 +1065,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 214.4839,
-   "total": 319.1427
+   "direct": 214.4765,
+   "total": 317.3192
   },
   {
    "surface": "work-plane",
@@ -1068,8 +1080,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 265.772,
-   "total": 369.1843
+   "direct": 265.7677,
+   "total": 367.0325
   },
   {
    "surface": "work-plane",
@@ -1083,8 +1095,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 314.368,
-   "total": 416.8307
+   "direct": 314.3679,
+   "total": 413.8668
   },
   {
    "surface": "work-plane",
@@ -1098,8 +1110,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 350.9009,
-   "total": 452.538
+   "direct": 350.9001,
+   "total": 449.0618
   },
   {
    "surface": "work-plane",
@@ -1113,8 +1125,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 347.5715,
-   "total": 446.5635
+   "direct": 347.5707,
+   "total": 443.6649
   },
   {
    "surface": "work-plane",
@@ -1128,8 +1140,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 304.2329,
-   "total": 402.2522
+   "direct": 304.2336,
+   "total": 398.4001
   },
   {
    "surface": "work-plane",
@@ -1143,8 +1155,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 250.3302,
-   "total": 344.4853
+   "direct": 250.3353,
+   "total": 341.962
   },
   {
    "surface": "work-plane",
@@ -1158,8 +1170,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 204.2249,
-   "total": 296.494
+   "direct": 204.2288,
+   "total": 293.7748
   },
   {
    "surface": "work-plane",
@@ -1173,8 +1185,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 168.0663,
-   "total": 257.9406
+   "direct": 168.0615,
+   "total": 256.2599
   },
   {
    "surface": "work-plane",
@@ -1188,8 +1200,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 165.7266,
-   "total": 253.563
+   "direct": 165.7323,
+   "total": 252.3185
   },
   {
    "surface": "work-plane",
@@ -1203,8 +1215,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 197.1418,
-   "total": 284.441
+   "direct": 197.1347,
+   "total": 282.6249
   },
   {
    "surface": "work-plane",
@@ -1218,8 +1230,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 238.269,
-   "total": 324.5794
+   "direct": 238.2662,
+   "total": 323.7705
   },
   {
    "surface": "work-plane",
@@ -1233,8 +1245,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 287.1273,
-   "total": 373.1276
+   "direct": 287.1271,
+   "total": 372.4611
   },
   {
    "surface": "work-plane",
@@ -1248,8 +1260,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 325.2194,
-   "total": 410.4921
+   "direct": 325.219,
+   "total": 409.9102
   },
   {
    "surface": "work-plane",
@@ -1263,8 +1275,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 323.3517,
-   "total": 408.4835
+   "direct": 323.3511,
+   "total": 408.2188
   },
   {
    "surface": "work-plane",
@@ -1279,7 +1291,7 @@
     "z": 0
    },
    "direct": 280.6276,
-   "total": 365.1412
+   "total": 364.8612
   },
   {
    "surface": "work-plane",
@@ -1293,8 +1305,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 223.9174,
-   "total": 308.9322
+   "direct": 223.9166,
+   "total": 309.1564
   },
   {
    "surface": "work-plane",
@@ -1308,8 +1320,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 167.5656,
-   "total": 255.0334
+   "direct": 167.563,
+   "total": 254.8362
   },
   {
    "surface": "work-plane",
@@ -1323,8 +1335,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 106.6605,
-   "total": 198.9429
+   "direct": 106.6627,
+   "total": 199.4186
   },
   {
    "surface": "work-plane",
@@ -1338,8 +1350,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 176.925,
-   "total": 289.2322
+   "direct": 176.9215,
+   "total": 286.6556
   },
   {
    "surface": "work-plane",
@@ -1353,8 +1365,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 239.1839,
-   "total": 348.7765
+   "direct": 239.19,
+   "total": 345.698
   },
   {
    "surface": "work-plane",
@@ -1368,8 +1380,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 290.8988,
-   "total": 398.323
+   "direct": 290.9031,
+   "total": 394.2674
   },
   {
    "surface": "work-plane",
@@ -1383,8 +1395,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 335.9433,
-   "total": 442.2131
+   "direct": 335.9422,
+   "total": 437.4234
   },
   {
    "surface": "work-plane",
@@ -1398,8 +1410,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 369.2944,
-   "total": 474.1015
+   "direct": 369.2938,
+   "total": 467.9305
   },
   {
    "surface": "work-plane",
@@ -1414,7 +1426,7 @@
     "z": 0
    },
    "direct": 362.5521,
-   "total": 458.7348
+   "total": 458.2595
   },
   {
    "surface": "work-plane",
@@ -1428,8 +1440,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 316.6476,
-   "total": 410.2664
+   "direct": 316.6465,
+   "total": 410.0756
   },
   {
    "surface": "work-plane",
@@ -1443,8 +1455,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 260.0245,
-   "total": 351.8818
+   "direct": 260.0211,
+   "total": 351.5279
   },
   {
    "surface": "work-plane",
@@ -1458,8 +1470,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 211.5485,
-   "total": 300.8566
+   "direct": 211.5395,
+   "total": 300.7245
   },
   {
    "surface": "work-plane",
@@ -1473,8 +1485,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 173.7012,
-   "total": 261.1746
+   "direct": 173.7033,
+   "total": 261.0616
   },
   {
    "surface": "work-plane",
@@ -1488,8 +1500,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 170.5897,
-   "total": 257.0926
+   "direct": 170.5904,
+   "total": 256.8131
   },
   {
    "surface": "work-plane",
@@ -1503,8 +1515,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 202.0488,
-   "total": 287.2628
+   "direct": 202.0452,
+   "total": 287.2705
   },
   {
    "surface": "work-plane",
@@ -1518,8 +1530,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 243.81,
-   "total": 328.8592
+   "direct": 243.8098,
+   "total": 328.0282
   },
   {
    "surface": "work-plane",
@@ -1533,8 +1545,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 293.3604,
-   "total": 377.7038
+   "direct": 293.3613,
+   "total": 377.7185
   },
   {
    "surface": "work-plane",
@@ -1548,8 +1560,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 331.8717,
-   "total": 415.3824
+   "direct": 331.8715,
+   "total": 415.3779
   },
   {
    "surface": "work-plane",
@@ -1563,8 +1575,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 329.9142,
-   "total": 413.1361
+   "direct": 329.9133,
+   "total": 413.1333
   },
   {
    "surface": "work-plane",
@@ -1578,8 +1590,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 286.4918,
-   "total": 369.9146
+   "direct": 286.4909,
+   "total": 369.69
   },
   {
    "surface": "work-plane",
@@ -1593,8 +1605,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 228.6662,
-   "total": 313.071
+   "direct": 228.6637,
+   "total": 312.9151
   },
   {
    "surface": "work-plane",
@@ -1608,8 +1620,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 171.0552,
-   "total": 258.3066
+   "direct": 171.0472,
+   "total": 257.5802
   },
   {
    "surface": "work-plane",
@@ -1623,8 +1635,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 109.0563,
-   "total": 201.9098
+   "direct": 109.0606,
+   "total": 201.9182
   },
   {
    "surface": "work-plane",
@@ -1638,8 +1650,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 192.1062,
-   "total": 303.9717
+   "direct": 192.1089,
+   "total": 303.8387
   },
   {
    "surface": "work-plane",
@@ -1653,8 +1665,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 250.5816,
-   "total": 360.4058
+   "direct": 250.5875,
+   "total": 360.1423
   },
   {
    "surface": "work-plane",
@@ -1668,8 +1680,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 302.4953,
-   "total": 409.3916
+   "direct": 302.4908,
+   "total": 408.7816
   },
   {
    "surface": "work-plane",
@@ -1683,8 +1695,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 337.6377,
-   "total": 440.8577
+   "direct": 337.6395,
+   "total": 440.845
   },
   {
    "surface": "work-plane",
@@ -1698,8 +1710,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 354.0352,
-   "total": 453.9363
+   "direct": 354.0405,
+   "total": 453.842
   },
   {
    "surface": "work-plane",
@@ -1713,8 +1725,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 344.386,
-   "total": 441.9959
+   "direct": 344.3865,
+   "total": 441.3168
   },
   {
    "surface": "work-plane",
@@ -1728,8 +1740,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 304.6036,
-   "total": 399.3017
+   "direct": 304.6025,
+   "total": 398.3815
   },
   {
    "surface": "work-plane",
@@ -1743,8 +1755,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 253.6079,
-   "total": 345.4866
+   "direct": 253.611,
+   "total": 344.9735
   },
   {
    "surface": "work-plane",
@@ -1758,8 +1770,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 203.4247,
-   "total": 292.8886
+   "direct": 203.4192,
+   "total": 292.974
   },
   {
    "surface": "work-plane",
@@ -1773,8 +1785,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 163.9269,
-   "total": 252.3622
+   "direct": 163.9235,
+   "total": 251.0225
   },
   {
    "surface": "work-plane",
@@ -1788,8 +1800,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 160.0295,
-   "total": 245.7213
+   "direct": 160.0339,
+   "total": 246.0811
   },
   {
    "surface": "work-plane",
@@ -1803,8 +1815,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 191.4337,
-   "total": 276.4206
+   "direct": 191.435,
+   "total": 276.0031
   },
   {
    "surface": "work-plane",
@@ -1818,8 +1830,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 232.959,
-   "total": 316.9567
+   "direct": 232.954,
+   "total": 316.84
   },
   {
    "surface": "work-plane",
@@ -1833,8 +1845,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 274.5794,
-   "total": 358.1643
+   "direct": 274.5801,
+   "total": 358.0845
   },
   {
    "surface": "work-plane",
@@ -1849,7 +1861,7 @@
     "z": 0
    },
    "direct": 304.1853,
-   "total": 386.6611
+   "total": 386.8262
   },
   {
    "surface": "work-plane",
@@ -1864,7 +1876,7 @@
     "z": 0
    },
    "direct": 302.2041,
-   "total": 384.809
+   "total": 384.3653
   },
   {
    "surface": "work-plane",
@@ -1878,8 +1890,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 267.6628,
-   "total": 350.5173
+   "direct": 267.6625,
+   "total": 350.4145
   },
   {
    "surface": "work-plane",
@@ -1893,8 +1905,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 217.8661,
-   "total": 301.8529
+   "direct": 217.8657,
+   "total": 301.1793
   },
   {
    "surface": "work-plane",
@@ -1908,8 +1920,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 161.1866,
-   "total": 247.2819
+   "direct": 161.1859,
+   "total": 247.2749
   },
   {
    "surface": "work-plane",
@@ -1923,8 +1935,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 101.1314,
-   "total": 192.8286
+   "direct": 101.1296,
+   "total": 193.2279
   },
   {
    "surface": "work-plane",
@@ -1938,8 +1950,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 200.3658,
-   "total": 314.4692
+   "direct": 200.3642,
+   "total": 314.2723
   },
   {
    "surface": "work-plane",
@@ -1953,8 +1965,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 252.4242,
-   "total": 366.1058
+   "direct": 252.4271,
+   "total": 364.875
   },
   {
    "surface": "work-plane",
@@ -1968,8 +1980,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 305.4592,
-   "total": 415.3247
+   "direct": 305.4615,
+   "total": 414.4095
   },
   {
    "surface": "work-plane",
@@ -1983,8 +1995,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 334.7203,
-   "total": 440.6971
+   "direct": 334.7225,
+   "total": 440.3955
   },
   {
    "surface": "work-plane",
@@ -1998,8 +2010,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 337.5135,
-   "total": 439.7826
+   "direct": 337.5108,
+   "total": 438.7508
   },
   {
    "surface": "work-plane",
@@ -2013,8 +2025,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 324.2635,
-   "total": 423.748
+   "direct": 324.2666,
+   "total": 421.4417
   },
   {
    "surface": "work-plane",
@@ -2028,8 +2040,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 289.2844,
-   "total": 386.6973
+   "direct": 289.281,
+   "total": 383.7278
   },
   {
    "surface": "work-plane",
@@ -2043,8 +2055,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 239.9187,
-   "total": 333.8679
+   "direct": 239.9167,
+   "total": 331.186
   },
   {
    "surface": "work-plane",
@@ -2058,8 +2070,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 185.8935,
-   "total": 278.6615
+   "direct": 185.8856,
+   "total": 275.3611
   },
   {
    "surface": "work-plane",
@@ -2073,8 +2085,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 146.2299,
-   "total": 234.0824
+   "direct": 146.2336,
+   "total": 233.9773
   },
   {
    "surface": "work-plane",
@@ -2088,8 +2100,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 141.6775,
-   "total": 227.9641
+   "direct": 141.6711,
+   "total": 227.7278
   },
   {
    "surface": "work-plane",
@@ -2103,8 +2115,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 171.855,
-   "total": 257.086
+   "direct": 171.8618,
+   "total": 256.7834
   },
   {
    "surface": "work-plane",
@@ -2118,8 +2130,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 215.5087,
-   "total": 299.2064
+   "direct": 215.513,
+   "total": 299.4496
   },
   {
    "surface": "work-plane",
@@ -2133,8 +2145,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 253.413,
-   "total": 336.5998
+   "direct": 253.4133,
+   "total": 336.6886
   },
   {
    "surface": "work-plane",
@@ -2148,8 +2160,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 275.9455,
-   "total": 358.6168
+   "direct": 275.9435,
+   "total": 358.3555
   },
   {
    "surface": "work-plane",
@@ -2163,8 +2175,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 273.9581,
-   "total": 356.0383
+   "direct": 273.957,
+   "total": 356.1481
   },
   {
    "surface": "work-plane",
@@ -2178,8 +2190,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 246.6418,
-   "total": 328.9562
+   "direct": 246.6382,
+   "total": 328.9594
   },
   {
    "surface": "work-plane",
@@ -2193,8 +2205,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 200.9606,
-   "total": 284.3556
+   "direct": 200.9647,
+   "total": 283.7071
   },
   {
    "surface": "work-plane",
@@ -2208,8 +2220,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 143.3984,
-   "total": 228.9068
+   "direct": 143.3999,
+   "total": 228.6206
   },
   {
    "surface": "work-plane",
@@ -2223,8 +2235,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 87.8361,
-   "total": 177.8532
+   "direct": 87.8364,
+   "total": 177.7001
   },
   {
    "surface": "work-plane",
@@ -2238,8 +2250,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 205.4136,
-   "total": 320.9491
+   "direct": 205.4093,
+   "total": 320.3427
   },
   {
    "surface": "work-plane",
@@ -2253,8 +2265,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 249.0679,
-   "total": 363.5825
+   "direct": 249.067,
+   "total": 364.091
   },
   {
    "surface": "work-plane",
@@ -2268,8 +2280,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 302.1429,
-   "total": 412.4613
+   "direct": 302.1362,
+   "total": 412.8911
   },
   {
    "surface": "work-plane",
@@ -2283,8 +2295,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 336.6451,
-   "total": 442.9162
+   "direct": 336.6383,
+   "total": 442.788
   },
   {
    "surface": "work-plane",
@@ -2298,8 +2310,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 337.8272,
-   "total": 440.282
+   "direct": 337.816,
+   "total": 439.2118
   },
   {
    "surface": "work-plane",
@@ -2313,8 +2325,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 322.362,
-   "total": 421.1834
+   "direct": 322.3679,
+   "total": 419.7901
   },
   {
    "surface": "work-plane",
@@ -2328,8 +2340,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 283.6536,
-   "total": 380.1731
+   "direct": 283.6579,
+   "total": 378.4746
   },
   {
    "surface": "work-plane",
@@ -2343,8 +2355,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 227.17,
-   "total": 321.6961
+   "direct": 227.1795,
+   "total": 319.1933
   },
   {
    "surface": "work-plane",
@@ -2358,8 +2370,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 170.1589,
-   "total": 260.0396
+   "direct": 170.1601,
+   "total": 259.4494
   },
   {
    "surface": "work-plane",
@@ -2373,8 +2385,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 133.3335,
-   "total": 221.351
+   "direct": 133.337,
+   "total": 221.2558
   },
   {
    "surface": "work-plane",
@@ -2388,8 +2400,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 128.3439,
-   "total": 214.2882
+   "direct": 128.3387,
+   "total": 214.5049
   },
   {
    "surface": "work-plane",
@@ -2403,8 +2415,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 154.7735,
-   "total": 240.256
+   "direct": 154.7749,
+   "total": 240.0394
   },
   {
    "surface": "work-plane",
@@ -2418,8 +2430,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 200.33,
-   "total": 284.3487
+   "direct": 200.3318,
+   "total": 283.8031
   },
   {
    "surface": "work-plane",
@@ -2433,8 +2445,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 244.2167,
-   "total": 327.3104
+   "direct": 244.2163,
+   "total": 327.0532
   },
   {
    "surface": "work-plane",
@@ -2448,8 +2460,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 269.3481,
-   "total": 351.4153
+   "direct": 269.3395,
+   "total": 351.5114
   },
   {
    "surface": "work-plane",
@@ -2463,8 +2475,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 267.3818,
-   "total": 349.4336
+   "direct": 267.3798,
+   "total": 349.2267
   },
   {
    "surface": "work-plane",
@@ -2478,8 +2490,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 237.5765,
-   "total": 318.9155
+   "direct": 237.5794,
+   "total": 319.674
   },
   {
    "surface": "work-plane",
@@ -2493,8 +2505,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 186.3077,
-   "total": 269.3352
+   "direct": 186.3148,
+   "total": 269.0998
   },
   {
    "surface": "work-plane",
@@ -2508,8 +2520,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 127.6718,
-   "total": 212.564
+   "direct": 127.6723,
+   "total": 212.1126
   },
   {
    "surface": "work-plane",
@@ -2523,8 +2535,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 78.379,
-   "total": 167.0274
+   "direct": 78.3776,
+   "total": 166.8124
   },
   {
    "surface": "work-plane",
@@ -2538,8 +2550,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 204.5587,
-   "total": 319.6335
+   "direct": 204.5646,
+   "total": 319.9437
   },
   {
    "surface": "work-plane",
@@ -2553,8 +2565,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 249.3697,
-   "total": 364.2041
+   "direct": 249.371,
+   "total": 364.2772
   },
   {
    "surface": "work-plane",
@@ -2568,8 +2580,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 302.6271,
-   "total": 414.0952
+   "direct": 302.6335,
+   "total": 413.8654
   },
   {
    "surface": "work-plane",
@@ -2583,8 +2595,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 337.1961,
-   "total": 443.9909
+   "direct": 337.1979,
+   "total": 443.2477
   },
   {
    "surface": "work-plane",
@@ -2598,8 +2610,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 338.3322,
-   "total": 440.4945
+   "direct": 338.3445,
+   "total": 440.4087
   },
   {
    "surface": "work-plane",
@@ -2613,8 +2625,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 322.8886,
-   "total": 420.5832
+   "direct": 322.8843,
+   "total": 421.1161
   },
   {
    "surface": "work-plane",
@@ -2628,8 +2640,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 284.1779,
-   "total": 378.9663
+   "direct": 284.1743,
+   "total": 378.8517
   },
   {
    "surface": "work-plane",
@@ -2643,8 +2655,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 227.6125,
-   "total": 319.2857
+   "direct": 227.6001,
+   "total": 318.826
   },
   {
    "surface": "work-plane",
@@ -2658,8 +2670,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 170.4484,
-   "total": 259.6284
+   "direct": 170.4468,
+   "total": 260.3034
   },
   {
    "surface": "work-plane",
@@ -2673,8 +2685,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 133.5264,
-   "total": 221.1381
+   "direct": 133.5265,
+   "total": 221.4715
   },
   {
    "surface": "work-plane",
@@ -2689,7 +2701,7 @@
     "z": 0
    },
    "direct": 128.4567,
-   "total": 214.5167
+   "total": 214.8026
   },
   {
    "surface": "work-plane",
@@ -2703,8 +2715,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 154.8433,
-   "total": 239.4084
+   "direct": 154.841,
+   "total": 239.51
   },
   {
    "surface": "work-plane",
@@ -2718,8 +2730,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 200.3669,
-   "total": 284.3279
+   "direct": 200.3671,
+   "total": 283.9511
   },
   {
    "surface": "work-plane",
@@ -2733,8 +2745,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 244.2349,
-   "total": 327.6867
+   "direct": 244.2348,
+   "total": 326.9927
   },
   {
    "surface": "work-plane",
@@ -2748,8 +2760,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 269.3443,
-   "total": 352.1965
+   "direct": 269.3474,
+   "total": 351.7695
   },
   {
    "surface": "work-plane",
@@ -2763,8 +2775,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 267.382,
-   "total": 349.2992
+   "direct": 267.385,
+   "total": 349.1986
   },
   {
    "surface": "work-plane",
@@ -2778,8 +2790,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 237.5812,
-   "total": 319.9614
+   "direct": 237.5799,
+   "total": 319.4695
   },
   {
    "surface": "work-plane",
@@ -2793,8 +2805,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 186.3188,
-   "total": 269.5577
+   "direct": 186.315,
+   "total": 269.3399
   },
   {
    "surface": "work-plane",
@@ -2808,8 +2820,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 127.6752,
-   "total": 212.2403
+   "direct": 127.6727,
+   "total": 212.4747
   },
   {
    "surface": "work-plane",
@@ -2823,8 +2835,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 78.3775,
-   "total": 167.4279
+   "direct": 78.377,
+   "total": 166.9053
   },
   {
    "surface": "work-plane",
@@ -2838,8 +2850,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 198.8563,
-   "total": 312.565
+   "direct": 198.8633,
+   "total": 312.3915
   },
   {
    "surface": "work-plane",
@@ -2853,8 +2865,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 253.7921,
-   "total": 366.8036
+   "direct": 253.7837,
+   "total": 366.3546
   },
   {
    "surface": "work-plane",
@@ -2868,8 +2880,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 307.4434,
-   "total": 417.1454
+   "direct": 307.4382,
+   "total": 416.792
   },
   {
    "surface": "work-plane",
@@ -2883,8 +2895,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 335.7023,
-   "total": 440.7152
+   "direct": 335.7057,
+   "total": 440.5174
   },
   {
    "surface": "work-plane",
@@ -2898,8 +2910,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 339.1101,
-   "total": 440.137
+   "direct": 339.1117,
+   "total": 439.9174
   },
   {
    "surface": "work-plane",
@@ -2913,8 +2925,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 325.7764,
-   "total": 423.7003
+   "direct": 325.7759,
+   "total": 423.5052
   },
   {
    "surface": "work-plane",
@@ -2928,8 +2940,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 290.8451,
-   "total": 385.3023
+   "direct": 290.8449,
+   "total": 385.1509
   },
   {
    "surface": "work-plane",
@@ -2943,8 +2955,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 241.1425,
-   "total": 333.1016
+   "direct": 241.1436,
+   "total": 333.0424
   },
   {
    "surface": "work-plane",
@@ -2958,8 +2970,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 186.7077,
-   "total": 276.2113
+   "direct": 186.7117,
+   "total": 276.2398
   },
   {
    "surface": "work-plane",
@@ -2973,8 +2985,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 146.7762,
-   "total": 235.0816
+   "direct": 146.7749,
+   "total": 234.5247
   },
   {
    "surface": "work-plane",
@@ -2988,8 +3000,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 142.0036,
-   "total": 228.3368
+   "direct": 142.0062,
+   "total": 228.2733
   },
   {
    "surface": "work-plane",
@@ -3003,8 +3015,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 172.0533,
-   "total": 256.9555
+   "direct": 172.0541,
+   "total": 256.6042
   },
   {
    "surface": "work-plane",
@@ -3018,8 +3030,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 215.6182,
-   "total": 300.2444
+   "direct": 215.6179,
+   "total": 299.3911
   },
   {
    "surface": "work-plane",
@@ -3033,8 +3045,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 253.4644,
-   "total": 338.5132
+   "direct": 253.466,
+   "total": 336.4017
   },
   {
    "surface": "work-plane",
@@ -3048,8 +3060,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 275.9672,
-   "total": 359.5739
+   "direct": 275.9663,
+   "total": 358.2169
   },
   {
    "surface": "work-plane",
@@ -3063,8 +3075,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 273.9676,
-   "total": 357.1782
+   "direct": 273.9665,
+   "total": 355.9573
   },
   {
    "surface": "work-plane",
@@ -3078,8 +3090,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 246.6389,
-   "total": 329.4484
+   "direct": 246.6391,
+   "total": 328.6377
   },
   {
    "surface": "work-plane",
@@ -3093,8 +3105,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 200.9656,
-   "total": 284.2719
+   "direct": 200.9662,
+   "total": 284.7527
   },
   {
    "surface": "work-plane",
@@ -3108,8 +3120,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 143.3973,
-   "total": 229.5661
+   "direct": 143.399,
+   "total": 228.6946
   },
   {
    "surface": "work-plane",
@@ -3123,8 +3135,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 87.8349,
-   "total": 178.0369
+   "direct": 87.8363,
+   "total": 177.597
   },
   {
    "surface": "work-plane",
@@ -3138,8 +3150,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 190.5208,
-   "total": 302.113
+   "direct": 190.5181,
+   "total": 302.6468
   },
   {
    "surface": "work-plane",
@@ -3153,8 +3165,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 251.3439,
-   "total": 361.1751
+   "direct": 251.3391,
+   "total": 360.5919
   },
   {
    "surface": "work-plane",
@@ -3168,8 +3180,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 303.7954,
-   "total": 410.3577
+   "direct": 303.7986,
+   "total": 410.0953
   },
   {
    "surface": "work-plane",
@@ -3183,8 +3195,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 339.0341,
-   "total": 442.1531
+   "direct": 339.0319,
+   "total": 441.7571
   },
   {
    "surface": "work-plane",
@@ -3198,8 +3210,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 356.7026,
-   "total": 456.1675
+   "direct": 356.7037,
+   "total": 456.4901
   },
   {
    "surface": "work-plane",
@@ -3213,8 +3225,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 346.9713,
-   "total": 443.5377
+   "direct": 346.972,
+   "total": 443.7743
   },
   {
    "surface": "work-plane",
@@ -3228,8 +3240,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 306.9934,
-   "total": 400.9292
+   "direct": 306.9954,
+   "total": 400.7969
   },
   {
    "surface": "work-plane",
@@ -3243,8 +3255,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 255.4081,
-   "total": 346.7744
+   "direct": 255.4065,
+   "total": 347.2985
   },
   {
    "surface": "work-plane",
@@ -3258,8 +3270,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 204.6537,
-   "total": 293.9164
+   "direct": 204.6554,
+   "total": 294.4865
   },
   {
    "surface": "work-plane",
@@ -3273,8 +3285,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 164.7313,
-   "total": 252.3769
+   "direct": 164.7342,
+   "total": 252.6241
   },
   {
    "surface": "work-plane",
@@ -3288,8 +3300,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 160.5276,
-   "total": 247.174
+   "direct": 160.5239,
+   "total": 246.4799
   },
   {
    "surface": "work-plane",
@@ -3303,8 +3315,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 191.7188,
-   "total": 276.7759
+   "direct": 191.7192,
+   "total": 276.2636
   },
   {
    "surface": "work-plane",
@@ -3318,8 +3330,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 233.1058,
-   "total": 317.5265
+   "direct": 233.1074,
+   "total": 317.0201
   },
   {
    "surface": "work-plane",
@@ -3333,8 +3345,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 274.6599,
-   "total": 357.9447
+   "direct": 274.6587,
+   "total": 358.0254
   },
   {
    "surface": "work-plane",
@@ -3348,8 +3360,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 304.2211,
-   "total": 387.4618
+   "direct": 304.2191,
+   "total": 387.1512
   },
   {
    "surface": "work-plane",
@@ -3363,8 +3375,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 302.2177,
-   "total": 384.8201
+   "direct": 302.2159,
+   "total": 384.9436
   },
   {
    "surface": "work-plane",
@@ -3378,8 +3390,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 267.6634,
-   "total": 351.2211
+   "direct": 267.6626,
+   "total": 350.8031
   },
   {
    "surface": "work-plane",
@@ -3393,8 +3405,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 217.8659,
-   "total": 302.3364
+   "direct": 217.8661,
+   "total": 301.453
   },
   {
    "surface": "work-plane",
@@ -3408,8 +3420,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 161.1849,
-   "total": 247.0166
+   "direct": 161.1856,
+   "total": 247.3354
   },
   {
    "surface": "work-plane",
@@ -3423,8 +3435,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 101.1282,
-   "total": 192.8511
+   "direct": 101.1294,
+   "total": 192.6097
   },
   {
    "surface": "work-plane",
@@ -3438,8 +3450,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 175.3427,
-   "total": 284.3581
+   "direct": 175.343,
+   "total": 284.4682
   },
   {
    "surface": "work-plane",
@@ -3453,8 +3465,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 239.2997,
-   "total": 345.158
+   "direct": 239.2978,
+   "total": 345.0053
   },
   {
    "surface": "work-plane",
@@ -3468,8 +3480,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 292.1842,
-   "total": 395.4343
+   "direct": 292.1815,
+   "total": 395.4493
   },
   {
    "surface": "work-plane",
@@ -3483,8 +3495,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 338.3358,
-   "total": 439.4699
+   "direct": 338.3351,
+   "total": 439.0394
   },
   {
    "surface": "work-plane",
@@ -3498,8 +3510,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 372.2858,
-   "total": 470.6662
+   "direct": 372.2856,
+   "total": 471.0614
   },
   {
    "surface": "work-plane",
@@ -3513,8 +3525,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 366.0453,
-   "total": 461.7783
+   "direct": 366.0437,
+   "total": 462.1748
   },
   {
    "surface": "work-plane",
@@ -3528,8 +3540,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 319.4726,
-   "total": 412.977
+   "direct": 319.4737,
+   "total": 413.2412
   },
   {
    "surface": "work-plane",
@@ -3543,8 +3555,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 262.0313,
-   "total": 353.2565
+   "direct": 262.0352,
+   "total": 353.3274
   },
   {
    "surface": "work-plane",
@@ -3558,8 +3570,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 212.9461,
-   "total": 302.4758
+   "direct": 212.9545,
+   "total": 302.3122
   },
   {
    "surface": "work-plane",
@@ -3573,8 +3585,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 174.6336,
-   "total": 261.6416
+   "direct": 174.6289,
+   "total": 261.9138
   },
   {
    "surface": "work-plane",
@@ -3588,8 +3600,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 171.1669,
-   "total": 257.181
+   "direct": 171.1691,
+   "total": 257.5424
   },
   {
    "surface": "work-plane",
@@ -3603,8 +3615,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 202.3745,
-   "total": 287.6784
+   "direct": 202.3772,
+   "total": 287.5263
   },
   {
    "surface": "work-plane",
@@ -3618,8 +3630,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 243.9917,
-   "total": 328.421
+   "direct": 243.9904,
+   "total": 328.709
   },
   {
    "surface": "work-plane",
@@ -3633,8 +3645,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 293.4531,
-   "total": 376.848
+   "direct": 293.4522,
+   "total": 376.954
   },
   {
    "surface": "work-plane",
@@ -3648,8 +3660,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 331.9075,
-   "total": 415.6888
+   "direct": 331.9091,
+   "total": 415.5745
   },
   {
    "surface": "work-plane",
@@ -3663,8 +3675,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 329.9222,
-   "total": 413.0982
+   "direct": 329.9228,
+   "total": 413.698
   },
   {
    "surface": "work-plane",
@@ -3678,8 +3690,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 286.492,
-   "total": 369.342
+   "direct": 286.4916,
+   "total": 369.8394
   },
   {
    "surface": "work-plane",
@@ -3693,8 +3705,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 228.6623,
-   "total": 312.9296
+   "direct": 228.663,
+   "total": 313.0415
   },
   {
    "surface": "work-plane",
@@ -3708,8 +3720,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 171.0483,
-   "total": 257.28
+   "direct": 171.047,
+   "total": 257.6717
   },
   {
    "surface": "work-plane",
@@ -3723,8 +3735,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 109.0614,
-   "total": 201.8244
+   "direct": 109.0607,
+   "total": 202.0238
   },
   {
    "surface": "work-plane",
@@ -3738,8 +3750,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 153.6349,
-   "total": 259.2502
+   "direct": 153.63,
+   "total": 259.8336
   },
   {
    "surface": "work-plane",
@@ -3753,8 +3765,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 213.898,
-   "total": 316.8418
+   "direct": 213.9061,
+   "total": 315.8083
   },
   {
    "surface": "work-plane",
@@ -3768,8 +3780,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 266.3989,
-   "total": 368.0315
+   "direct": 266.403,
+   "total": 366.7961
   },
   {
    "surface": "work-plane",
@@ -3783,8 +3795,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 316.7638,
-   "total": 417.1156
+   "direct": 316.7634,
+   "total": 416.7061
   },
   {
    "surface": "work-plane",
@@ -3798,8 +3810,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 353.9372,
-   "total": 453.2606
+   "direct": 353.9362,
+   "total": 451.9523
   },
   {
    "surface": "work-plane",
@@ -3813,8 +3825,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 350.6316,
-   "total": 449.07
+   "direct": 350.6304,
+   "total": 446.0241
   },
   {
    "surface": "work-plane",
@@ -3828,8 +3840,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 307.0024,
-   "total": 404.9315
+   "direct": 307.0016,
+   "total": 400.8748
   },
   {
    "surface": "work-plane",
@@ -3843,8 +3855,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 252.3551,
-   "total": 344.1128
+   "direct": 252.3526,
+   "total": 344.1277
   },
   {
    "surface": "work-plane",
@@ -3858,8 +3870,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 205.6039,
-   "total": 295.3278
+   "direct": 205.6032,
+   "total": 295.2516
   },
   {
    "surface": "work-plane",
@@ -3873,8 +3885,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 168.968,
-   "total": 257.8097
+   "direct": 168.9684,
+   "total": 256.6389
   },
   {
    "surface": "work-plane",
@@ -3888,8 +3900,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 166.2916,
-   "total": 253.9031
+   "direct": 166.2908,
+   "total": 253.0907
   },
   {
    "surface": "work-plane",
@@ -3903,8 +3915,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 197.461,
-   "total": 284.0712
+   "direct": 197.4599,
+   "total": 283.1581
   },
   {
    "surface": "work-plane",
@@ -3918,8 +3930,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 238.4498,
-   "total": 324.3872
+   "direct": 238.4511,
+   "total": 323.4065
   },
   {
    "surface": "work-plane",
@@ -3933,8 +3945,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 287.2168,
-   "total": 373.2841
+   "direct": 287.2166,
+   "total": 372.444
   },
   {
    "surface": "work-plane",
@@ -3949,7 +3961,7 @@
     "z": 0
    },
    "direct": 325.2579,
-   "total": 410.5673
+   "total": 410.0874
   },
   {
    "surface": "work-plane",
@@ -3963,8 +3975,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 323.3563,
-   "total": 407.8896
+   "direct": 323.3565,
+   "total": 407.9308
   },
   {
    "surface": "work-plane",
@@ -3979,7 +3991,7 @@
     "z": 0
    },
    "direct": 280.628,
-   "total": 364.7748
+   "total": 365.2529
   },
   {
    "surface": "work-plane",
@@ -3993,8 +4005,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 223.9174,
-   "total": 308.7997
+   "direct": 223.9168,
+   "total": 308.7992
   },
   {
    "surface": "work-plane",
@@ -4008,8 +4020,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 167.5636,
-   "total": 254.843
+   "direct": 167.5642,
+   "total": 254.4728
   },
   {
    "surface": "work-plane",
@@ -4023,8 +4035,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 106.6616,
-   "total": 199.231
+   "direct": 106.6623,
+   "total": 199.6012
   },
   {
    "surface": "work-plane",
@@ -4038,8 +4050,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.7538,
-   "total": 227.7278
+   "direct": 124.7559,
+   "total": 227.2593
   },
   {
    "surface": "work-plane",
@@ -4053,8 +4065,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 179.0301,
-   "total": 279.2555
+   "direct": 179.0337,
+   "total": 278.6574
   },
   {
    "surface": "work-plane",
@@ -4068,8 +4080,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 228.675,
-   "total": 329.3484
+   "direct": 228.6739,
+   "total": 328.4591
   },
   {
    "surface": "work-plane",
@@ -4083,8 +4095,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 271.533,
-   "total": 372.0853
+   "direct": 271.5332,
+   "total": 371.8483
   },
   {
    "surface": "work-plane",
@@ -4098,8 +4110,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 299.9202,
-   "total": 399.2482
+   "direct": 299.92,
+   "total": 399.6293
   },
   {
    "surface": "work-plane",
@@ -4114,7 +4126,7 @@
     "z": 0
    },
    "direct": 298.4147,
-   "total": 396.4286
+   "total": 396.3078
   },
   {
    "surface": "work-plane",
@@ -4128,8 +4140,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 267.0505,
-   "total": 362.5325
+   "direct": 267.0508,
+   "total": 362.6368
   },
   {
    "surface": "work-plane",
@@ -4143,8 +4155,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 224.4732,
-   "total": 317.1835
+   "direct": 224.4771,
+   "total": 317.2601
   },
   {
    "surface": "work-plane",
@@ -4158,8 +4170,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 181.3635,
-   "total": 271.763
+   "direct": 181.358,
+   "total": 272.4699
   },
   {
    "surface": "work-plane",
@@ -4173,8 +4185,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 146.6675,
-   "total": 235.1601
+   "direct": 146.6654,
+   "total": 235.1386
   },
   {
    "surface": "work-plane",
@@ -4188,8 +4200,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 144.704,
-   "total": 232.0057
+   "direct": 144.7054,
+   "total": 231.8718
   },
   {
    "surface": "work-plane",
@@ -4203,8 +4215,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 175.3713,
-   "total": 262.2133
+   "direct": 175.3718,
+   "total": 262.4366
   },
   {
    "surface": "work-plane",
@@ -4218,8 +4230,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 214.3147,
-   "total": 301.1666
+   "direct": 214.3135,
+   "total": 301.1394
   },
   {
    "surface": "work-plane",
@@ -4234,7 +4246,7 @@
     "z": 0
    },
    "direct": 252.9005,
-   "total": 340.4127
+   "total": 340.189
   },
   {
    "surface": "work-plane",
@@ -4248,8 +4260,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 280.5605,
-   "total": 368.7293
+   "direct": 280.5603,
+   "total": 368.1033
   },
   {
    "surface": "work-plane",
@@ -4263,8 +4275,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 278.8428,
-   "total": 365.9762
+   "direct": 278.843,
+   "total": 365.835
   },
   {
    "surface": "work-plane",
@@ -4278,8 +4290,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 246.9983,
-   "total": 333.5368
+   "direct": 246.9985,
+   "total": 333.2611
   },
   {
    "surface": "work-plane",
@@ -4293,8 +4305,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 201.4344,
-   "total": 287.4767
+   "direct": 201.4348,
+   "total": 287.6111
   },
   {
    "surface": "work-plane",
@@ -4308,8 +4320,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 149.2318,
-   "total": 236.217
+   "direct": 149.2302,
+   "total": 235.7683
   },
   {
    "surface": "work-plane",
@@ -4323,8 +4335,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 93.0253,
-   "total": 184.124
+   "direct": 93.0249,
+   "total": 184.3424
   },
   {
    "surface": "work-plane",
@@ -4338,8 +4350,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 92.7885,
-   "total": 191.9065
+   "direct": 92.7867,
+   "total": 191.8714
   },
   {
    "surface": "work-plane",
@@ -4353,8 +4365,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 137.922,
-   "total": 237.2519
+   "direct": 137.9234,
+   "total": 237.0595
   },
   {
    "surface": "work-plane",
@@ -4368,8 +4380,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 183.1503,
-   "total": 283.5088
+   "direct": 183.1485,
+   "total": 283.7649
   },
   {
    "surface": "work-plane",
@@ -4383,8 +4395,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 217.2956,
-   "total": 320.0153
+   "direct": 217.2997,
+   "total": 320.3309
   },
   {
    "surface": "work-plane",
@@ -4398,8 +4410,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 236.0448,
-   "total": 339.3786
+   "direct": 236.0426,
+   "total": 339.6067
   },
   {
    "surface": "work-plane",
@@ -4413,8 +4425,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 235.3342,
-   "total": 337.7291
+   "direct": 235.3374,
+   "total": 337.8441
   },
   {
    "surface": "work-plane",
@@ -4428,8 +4440,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 215.3667,
-   "total": 315.3814
+   "direct": 215.3644,
+   "total": 315.3287
   },
   {
    "surface": "work-plane",
@@ -4443,8 +4455,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 182.7604,
-   "total": 278.3557
+   "direct": 182.759,
+   "total": 278.6063
   },
   {
    "surface": "work-plane",
@@ -4458,8 +4470,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 143.3957,
-   "total": 235.6413
+   "direct": 143.3874,
+   "total": 235.8948
   },
   {
    "surface": "work-plane",
@@ -4473,8 +4485,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 113.1664,
-   "total": 203.4895
+   "direct": 113.1709,
+   "total": 202.8055
   },
   {
    "surface": "work-plane",
@@ -4488,8 +4500,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 111.7757,
-   "total": 200.9362
+   "direct": 111.7731,
+   "total": 199.7158
   },
   {
    "surface": "work-plane",
@@ -4503,8 +4515,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 139.1804,
-   "total": 228.7644
+   "direct": 139.1801,
+   "total": 228.1672
   },
   {
    "surface": "work-plane",
@@ -4518,8 +4530,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 175.7653,
-   "total": 266.5149
+   "direct": 175.7639,
+   "total": 265.5873
   },
   {
    "surface": "work-plane",
@@ -4533,8 +4545,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 205.6817,
-   "total": 298.5906
+   "direct": 205.6826,
+   "total": 297.4205
   },
   {
    "surface": "work-plane",
@@ -4548,8 +4560,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 223.1756,
-   "total": 316.5647
+   "direct": 223.1752,
+   "total": 316.1494
   },
   {
    "surface": "work-plane",
@@ -4563,8 +4575,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 221.738,
-   "total": 313.7297
+   "direct": 221.7388,
+   "total": 313.9669
   },
   {
    "surface": "work-plane",
@@ -4578,8 +4590,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 200.7404,
-   "total": 291.7161
+   "direct": 200.7403,
+   "total": 291.4467
   },
   {
    "surface": "work-plane",
@@ -4593,8 +4605,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 165.1436,
-   "total": 253.0752
+   "direct": 165.143,
+   "total": 253.2305
   },
   {
    "surface": "work-plane",
@@ -4608,8 +4620,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 118.2289,
-   "total": 205.1928
+   "direct": 118.2291,
+   "total": 205.1759
   },
   {
    "surface": "work-plane",
@@ -4623,8 +4635,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 71.465,
-   "total": 160.2209
+   "direct": 71.4652,
+   "total": 159.8956
   },
   {
    "surface": "work-plane",
@@ -4638,8 +4650,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 63.6374,
-   "total": 160.497
+   "direct": 63.6367,
+   "total": 159.6543
   },
   {
    "surface": "work-plane",
@@ -4653,8 +4665,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 94.3247,
-   "total": 194.8558
+   "direct": 94.3245,
+   "total": 195.2088
   },
   {
    "surface": "work-plane",
@@ -4668,8 +4680,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 130.2665,
-   "total": 236.231
+   "direct": 130.2584,
+   "total": 235.8321
   },
   {
    "surface": "work-plane",
@@ -4683,8 +4695,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 159.6527,
-   "total": 270.2967
+   "direct": 159.6466,
+   "total": 269.8161
   },
   {
    "surface": "work-plane",
@@ -4698,8 +4710,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 175.3314,
-   "total": 288.2799
+   "direct": 175.3305,
+   "total": 288.0529
   },
   {
    "surface": "work-plane",
@@ -4713,8 +4725,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 174.8606,
-   "total": 286.6885
+   "direct": 174.8686,
+   "total": 285.8976
   },
   {
    "surface": "work-plane",
@@ -4728,8 +4740,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 158.7908,
-   "total": 266.4098
+   "direct": 158.7942,
+   "total": 265.9279
   },
   {
    "surface": "work-plane",
@@ -4743,8 +4755,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 130.8136,
-   "total": 231.8475
+   "direct": 130.8151,
+   "total": 231.8451
   },
   {
    "surface": "work-plane",
@@ -4758,8 +4770,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 99.375,
-   "total": 195.2069
+   "direct": 99.3748,
+   "total": 194.5316
   },
   {
    "surface": "work-plane",
@@ -4773,8 +4785,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 78.9418,
-   "total": 170.516
+   "direct": 78.9447,
+   "total": 170.8324
   },
   {
    "surface": "work-plane",
@@ -4788,8 +4800,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 77.9862,
-   "total": 169.4346
+   "direct": 77.9839,
+   "total": 168.2622
   },
   {
    "surface": "work-plane",
@@ -4803,8 +4815,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 96.5362,
-   "total": 189.1496
+   "direct": 96.5374,
+   "total": 188.7487
   },
   {
    "surface": "work-plane",
@@ -4818,8 +4830,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 126.1186,
-   "total": 221.3334
+   "direct": 126.1185,
+   "total": 221.1499
   },
   {
    "surface": "work-plane",
@@ -4833,8 +4845,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 152.2961,
-   "total": 251.4442
+   "direct": 152.2943,
+   "total": 251.8519
   },
   {
    "surface": "work-plane",
@@ -4848,8 +4860,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 166.7556,
-   "total": 267.9843
+   "direct": 166.7559,
+   "total": 267.9683
   },
   {
    "surface": "work-plane",
@@ -4863,8 +4875,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 165.5819,
-   "total": 266.6474
+   "direct": 165.5802,
+   "total": 266.4736
   },
   {
    "surface": "work-plane",
@@ -4878,8 +4890,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 148.3734,
-   "total": 246.5818
+   "direct": 148.3753,
+   "total": 245.9232
   },
   {
    "surface": "work-plane",
@@ -4893,8 +4905,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 117.962,
-   "total": 210.4668
+   "direct": 117.9619,
+   "total": 210.4028
   },
   {
    "surface": "work-plane",
@@ -4909,7 +4921,7 @@
     "z": 0
    },
    "direct": 80.9618,
-   "total": 169.5186
+   "total": 169.4682
   },
   {
    "surface": "work-plane",
@@ -4923,8 +4935,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 49.3346,
-   "total": 135.1204
+   "direct": 49.3351,
+   "total": 135.0847
   },
   {
    "surface": "floor",
@@ -4938,8 +4950,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 87.5784,
-   "total": 185.3887
+   "direct": 87.5792,
+   "total": 185.1862
   },
   {
    "surface": "floor",
@@ -4953,8 +4965,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 103.0806,
-   "total": 205.2281
+   "direct": 103.0809,
+   "total": 205.4085
   },
   {
    "surface": "floor",
@@ -4968,8 +4980,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 115.5296,
-   "total": 220.4094
+   "direct": 115.5293,
+   "total": 220.9279
   },
   {
    "surface": "floor",
@@ -4983,8 +4995,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 125.2021,
-   "total": 231.3701
+   "direct": 125.2024,
+   "total": 231.5617
   },
   {
    "surface": "floor",
@@ -4998,8 +5010,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 131.1597,
-   "total": 238.5024
+   "direct": 131.1596,
+   "total": 238.2701
   },
   {
    "surface": "floor",
@@ -5013,8 +5025,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 133.1549,
-   "total": 239.6902
+   "direct": 133.1543,
+   "total": 239.026
   },
   {
    "surface": "floor",
@@ -5028,8 +5040,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 132.0154,
-   "total": 236.8915
+   "direct": 132.014,
+   "total": 236.9331
   },
   {
    "surface": "floor",
@@ -5043,8 +5055,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 129.4668,
-   "total": 232.5925
+   "direct": 129.4677,
+   "total": 231.9035
   },
   {
    "surface": "floor",
@@ -5058,8 +5070,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 127.2599,
-   "total": 228.1192
+   "direct": 127.2601,
+   "total": 227.7855
   },
   {
    "surface": "floor",
@@ -5073,8 +5085,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 125.9673,
-   "total": 224.8265
+   "direct": 125.9664,
+   "total": 224.7209
   },
   {
    "surface": "floor",
@@ -5088,8 +5100,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.8287,
-   "total": 222.5521
+   "direct": 124.8283,
+   "total": 222.1887
   },
   {
    "surface": "floor",
@@ -5103,8 +5115,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 123.8812,
-   "total": 221.0706
+   "direct": 123.8833,
+   "total": 221.0906
   },
   {
    "surface": "floor",
@@ -5118,8 +5130,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 123.9611,
-   "total": 221.3348
+   "direct": 123.9609,
+   "total": 221.4191
   },
   {
    "surface": "floor",
@@ -5133,8 +5145,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.5612,
-   "total": 222.5878
+   "direct": 124.5645,
+   "total": 222.6004
   },
   {
    "surface": "floor",
@@ -5148,8 +5160,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.0085,
-   "total": 221.669
+   "direct": 124.0079,
+   "total": 222.0686
   },
   {
    "surface": "floor",
@@ -5163,8 +5175,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 120.2145,
-   "total": 217.6291
+   "direct": 120.214,
+   "total": 217.702
   },
   {
    "surface": "floor",
@@ -5178,8 +5190,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 112.4302,
-   "total": 208.3465
+   "direct": 112.43,
+   "total": 208.3326
   },
   {
    "surface": "floor",
@@ -5193,8 +5205,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 101.3157,
-   "total": 195.7467
+   "direct": 101.316,
+   "total": 195.674
   },
   {
    "surface": "floor",
@@ -5208,8 +5220,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 87.4554,
-   "total": 178.9391
+   "direct": 87.4585,
+   "total": 178.8466
   },
   {
    "surface": "floor",
@@ -5223,8 +5235,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 70.689,
-   "total": 159.0396
+   "direct": 70.6879,
+   "total": 159.1886
   },
   {
    "surface": "floor",
@@ -5238,8 +5250,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 106.9993,
-   "total": 208.9456
+   "direct": 107.0032,
+   "total": 208.2473
   },
   {
    "surface": "floor",
@@ -5253,8 +5265,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.2632,
-   "total": 228.7587
+   "direct": 124.2628,
+   "total": 228.3992
   },
   {
    "surface": "floor",
@@ -5269,7 +5281,7 @@
     "z": 0
    },
    "direct": 138.6998,
-   "total": 244.7239
+   "total": 244.763
   },
   {
    "surface": "floor",
@@ -5283,8 +5295,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 150.7863,
-   "total": 258.2892
+   "direct": 150.7875,
+   "total": 257.6314
   },
   {
    "surface": "floor",
@@ -5298,8 +5310,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 158.0962,
-   "total": 264.8753
+   "direct": 158.0954,
+   "total": 265.1119
   },
   {
    "surface": "floor",
@@ -5313,8 +5325,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 160.3537,
-   "total": 266.2403
+   "direct": 160.3549,
+   "total": 266.3795
   },
   {
    "surface": "floor",
@@ -5328,8 +5340,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 157.7477,
-   "total": 262.0654
+   "direct": 157.7474,
+   "total": 261.6427
   },
   {
    "surface": "floor",
@@ -5343,8 +5355,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 153.2728,
-   "total": 255.7603
+   "direct": 153.2734,
+   "total": 255.1516
   },
   {
    "surface": "floor",
@@ -5358,8 +5370,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 151.5478,
-   "total": 250.9571
+   "direct": 151.5484,
+   "total": 251.1726
   },
   {
    "surface": "floor",
@@ -5373,8 +5385,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 151.5299,
-   "total": 249.8667
+   "direct": 151.5259,
+   "total": 249.7018
   },
   {
    "surface": "floor",
@@ -5388,8 +5400,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 150.0706,
-   "total": 247.243
+   "direct": 150.0703,
+   "total": 246.9131
   },
   {
    "surface": "floor",
@@ -5403,8 +5415,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 147.2332,
-   "total": 243.9457
+   "direct": 147.2325,
+   "total": 243.9641
   },
   {
    "surface": "floor",
@@ -5418,8 +5430,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 146.1827,
-   "total": 242.9705
+   "direct": 146.1829,
+   "total": 242.9643
   },
   {
    "surface": "floor",
@@ -5433,8 +5445,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 148.0455,
-   "total": 245.3235
+   "direct": 148.0459,
+   "total": 245.4855
   },
   {
    "surface": "floor",
@@ -5448,8 +5460,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 148.2733,
-   "total": 245.5435
+   "direct": 148.2717,
+   "total": 245.0684
   },
   {
    "surface": "floor",
@@ -5463,8 +5475,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 143.6854,
-   "total": 240.5682
+   "direct": 143.6856,
+   "total": 240.7394
   },
   {
    "surface": "floor",
@@ -5478,8 +5490,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 133.2352,
-   "total": 229.3058
+   "direct": 133.2345,
+   "total": 229.3097
   },
   {
    "surface": "floor",
@@ -5493,8 +5505,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 118.4283,
-   "total": 213.4872
+   "direct": 118.4292,
+   "total": 213.2487
   },
   {
    "surface": "floor",
@@ -5508,8 +5520,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 102.1516,
-   "total": 196.7914
+   "direct": 102.152,
+   "total": 196.2216
   },
   {
    "surface": "floor",
@@ -5523,8 +5535,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 84.045,
-   "total": 176.9721
+   "direct": 84.0428,
+   "total": 176.5202
   },
   {
    "surface": "floor",
@@ -5538,8 +5550,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.812,
-   "total": 229.2428
+   "direct": 124.8151,
+   "total": 228.8211
   },
   {
    "surface": "floor",
@@ -5553,8 +5565,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 144.3135,
-   "total": 249.8346
+   "direct": 144.313,
+   "total": 250.0169
   },
   {
    "surface": "floor",
@@ -5568,8 +5580,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 162.3179,
-   "total": 268.481
+   "direct": 162.3159,
+   "total": 268.9195
   },
   {
    "surface": "floor",
@@ -5583,8 +5595,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 176.905,
-   "total": 283.0164
+   "direct": 176.9046,
+   "total": 283.0868
   },
   {
    "surface": "floor",
@@ -5598,8 +5610,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 185.9443,
-   "total": 291.7679
+   "direct": 185.9431,
+   "total": 291.2206
   },
   {
    "surface": "floor",
@@ -5613,8 +5625,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 188.0391,
-   "total": 292.5261
+   "direct": 188.0415,
+   "total": 292.2196
   },
   {
    "surface": "floor",
@@ -5629,7 +5641,7 @@
     "z": 0
    },
    "direct": 183.114,
-   "total": 286.2493
+   "total": 286.013
   },
   {
    "surface": "floor",
@@ -5643,8 +5655,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 176.2865,
-   "total": 277.0886
+   "direct": 176.2869,
+   "total": 277.5762
   },
   {
    "surface": "floor",
@@ -5658,8 +5670,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 172.8823,
-   "total": 272.1764
+   "direct": 172.8827,
+   "total": 271.8837
   },
   {
    "surface": "floor",
@@ -5673,8 +5685,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 172.7735,
-   "total": 270.0501
+   "direct": 172.7717,
+   "total": 269.9947
   },
   {
    "surface": "floor",
@@ -5688,8 +5700,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 170.9341,
-   "total": 266.971
+   "direct": 170.9349,
+   "total": 266.7987
   },
   {
    "surface": "floor",
@@ -5703,8 +5715,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 167.4193,
-   "total": 263.8014
+   "direct": 167.4191,
+   "total": 262.8676
   },
   {
    "surface": "floor",
@@ -5718,8 +5730,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 167.3394,
-   "total": 262.9619
+   "direct": 167.3401,
+   "total": 263.1853
   },
   {
    "surface": "floor",
@@ -5733,8 +5745,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 170.7171,
-   "total": 266.3993
+   "direct": 170.7168,
+   "total": 266.5674
   },
   {
    "surface": "floor",
@@ -5748,8 +5760,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 172.265,
-   "total": 267.6367
+   "direct": 172.2639,
+   "total": 268.1164
   },
   {
    "surface": "floor",
@@ -5763,8 +5775,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 166.9092,
-   "total": 262.063
+   "direct": 166.9093,
+   "total": 262.0867
   },
   {
    "surface": "floor",
@@ -5778,8 +5790,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 153.4745,
-   "total": 248.3753
+   "direct": 153.4736,
+   "total": 248.4503
   },
   {
    "surface": "floor",
@@ -5793,8 +5805,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 134.9922,
-   "total": 229.9173
+   "direct": 134.9934,
+   "total": 230.3681
   },
   {
    "surface": "floor",
@@ -5808,8 +5820,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 114.8029,
-   "total": 210.0774
+   "direct": 114.8033,
+   "total": 210.5925
   },
   {
    "surface": "floor",
@@ -5823,8 +5835,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 94.8351,
-   "total": 190.075
+   "direct": 94.8346,
+   "total": 189.5588
   },
   {
    "surface": "floor",
@@ -5838,8 +5850,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 140.0093,
-   "total": 245.8992
+   "direct": 140.0097,
+   "total": 246.5075
   },
   {
    "surface": "floor",
@@ -5853,8 +5865,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 161.9126,
-   "total": 268.8372
+   "direct": 161.9151,
+   "total": 268.6957
   },
   {
    "surface": "floor",
@@ -5868,8 +5880,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 183.3513,
-   "total": 289.7727
+   "direct": 183.3504,
+   "total": 290.1191
   },
   {
    "surface": "floor",
@@ -5883,8 +5895,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 201.1543,
-   "total": 307.1148
+   "direct": 201.1572,
+   "total": 306.6578
   },
   {
    "surface": "floor",
@@ -5898,8 +5910,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 211.9666,
-   "total": 316.5536
+   "direct": 211.9654,
+   "total": 316.4401
   },
   {
    "surface": "floor",
@@ -5913,8 +5925,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 212.8777,
-   "total": 316.1199
+   "direct": 212.8763,
+   "total": 315.7723
   },
   {
    "surface": "floor",
@@ -5928,8 +5940,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 205.2149,
-   "total": 306.6807
+   "direct": 205.2146,
+   "total": 306.4707
   },
   {
    "surface": "floor",
@@ -5943,8 +5955,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 195.87,
-   "total": 295.1357
+   "direct": 195.8718,
+   "total": 295.4801
   },
   {
    "surface": "floor",
@@ -5958,8 +5970,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 190.4376,
-   "total": 288.3892
+   "direct": 190.4358,
+   "total": 288.5693
   },
   {
    "surface": "floor",
@@ -5973,8 +5985,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 189.2409,
-   "total": 285.3043
+   "direct": 189.2388,
+   "total": 285.5936
   },
   {
    "surface": "floor",
@@ -5988,8 +6000,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 186.9761,
-   "total": 282.3721
+   "direct": 186.9768,
+   "total": 281.8051
   },
   {
    "surface": "floor",
@@ -6003,8 +6015,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 183.6683,
-   "total": 278.1771
+   "direct": 183.6694,
+   "total": 278.5702
   },
   {
    "surface": "floor",
@@ -6018,8 +6030,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 184.7291,
-   "total": 278.6395
+   "direct": 184.7285,
+   "total": 279.4627
   },
   {
    "surface": "floor",
@@ -6033,8 +6045,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 189.8284,
-   "total": 284.0809
+   "direct": 189.8291,
+   "total": 283.6713
   },
   {
    "surface": "floor",
@@ -6048,8 +6060,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 192.9147,
-   "total": 287.2055
+   "direct": 192.9121,
+   "total": 286.7492
   },
   {
    "surface": "floor",
@@ -6063,8 +6075,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 186.983,
-   "total": 280.8485
+   "direct": 186.9804,
+   "total": 280.7871
   },
   {
    "surface": "floor",
@@ -6078,8 +6090,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 170.6489,
-   "total": 265.0877
+   "direct": 170.6485,
+   "total": 265.3521
   },
   {
    "surface": "floor",
@@ -6093,8 +6105,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 148.7609,
-   "total": 243.9097
+   "direct": 148.7614,
+   "total": 243.9903
   },
   {
    "surface": "floor",
@@ -6108,8 +6120,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 125.2746,
-   "total": 221.1962
+   "direct": 125.2735,
+   "total": 220.9097
   },
   {
    "surface": "floor",
@@ -6123,8 +6135,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 103.0318,
-   "total": 199.676
+   "direct": 103.0322,
+   "total": 199.4294
   },
   {
    "surface": "floor",
@@ -6138,8 +6150,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 153.5028,
-   "total": 261.2872
+   "direct": 153.503,
+   "total": 261.4062
   },
   {
    "surface": "floor",
@@ -6153,8 +6165,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 177.4001,
-   "total": 285.7172
+   "direct": 177.4008,
+   "total": 285.1332
   },
   {
    "surface": "floor",
@@ -6168,8 +6180,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 200.9855,
-   "total": 308.0699
+   "direct": 200.9848,
+   "total": 308.0683
   },
   {
    "surface": "floor",
@@ -6183,8 +6195,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 220.3699,
-   "total": 325.9017
+   "direct": 220.3696,
+   "total": 325.7179
   },
   {
    "surface": "floor",
@@ -6198,8 +6210,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 230.5133,
-   "total": 334.7679
+   "direct": 230.5132,
+   "total": 334.3813
   },
   {
    "surface": "floor",
@@ -6213,8 +6225,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 229.8471,
-   "total": 332.1329
+   "direct": 229.8482,
+   "total": 332.5877
   },
   {
    "surface": "floor",
@@ -6228,8 +6240,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 221.2726,
-   "total": 322.1885
+   "direct": 221.275,
+   "total": 322.1452
   },
   {
    "surface": "floor",
@@ -6243,8 +6255,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 210.5038,
-   "total": 309.0727
+   "direct": 210.5045,
+   "total": 309.2556
   },
   {
    "surface": "floor",
@@ -6258,8 +6270,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 203.6612,
-   "total": 300.5618
+   "direct": 203.661,
+   "total": 300.7243
   },
   {
    "surface": "floor",
@@ -6273,8 +6285,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 201.4638,
-   "total": 296.9134
+   "direct": 201.4618,
+   "total": 296.9823
   },
   {
    "surface": "floor",
@@ -6288,8 +6300,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 198.7414,
-   "total": 292.769
+   "direct": 198.7403,
+   "total": 292.841
   },
   {
    "surface": "floor",
@@ -6303,8 +6315,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 195.5213,
-   "total": 289.2482
+   "direct": 195.5197,
+   "total": 289.1743
   },
   {
    "surface": "floor",
@@ -6318,8 +6330,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 197.0806,
-   "total": 289.7799
+   "direct": 197.0813,
+   "total": 290.4551
   },
   {
    "surface": "floor",
@@ -6334,7 +6346,7 @@
     "z": 0
    },
    "direct": 202.6486,
-   "total": 294.8354
+   "total": 295.4084
   },
   {
    "surface": "floor",
@@ -6348,8 +6360,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 205.9205,
-   "total": 298.7007
+   "direct": 205.9178,
+   "total": 298.4703
   },
   {
    "surface": "floor",
@@ -6363,8 +6375,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 199.5402,
-   "total": 292.5832
+   "direct": 199.5376,
+   "total": 292.7423
   },
   {
    "surface": "floor",
@@ -6378,8 +6390,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 182.1681,
-   "total": 275.8301
+   "direct": 182.1685,
+   "total": 275.3625
   },
   {
    "surface": "floor",
@@ -6393,8 +6405,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 158.7717,
-   "total": 253.1871
+   "direct": 158.7718,
+   "total": 253.3475
   },
   {
    "surface": "floor",
@@ -6408,8 +6420,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 133.3752,
-   "total": 229.4613
+   "direct": 133.3746,
+   "total": 229.2398
   },
   {
    "surface": "floor",
@@ -6423,8 +6435,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 109.2259,
-   "total": 206.5693
+   "direct": 109.2257,
+   "total": 206.3944
   },
   {
    "surface": "floor",
@@ -6438,8 +6450,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 165.946,
-   "total": 274.6228
+   "direct": 165.9435,
+   "total": 275.0533
   },
   {
    "surface": "floor",
@@ -6454,7 +6466,7 @@
     "z": 0
    },
    "direct": 190.8609,
-   "total": 299.3938
+   "total": 300.4062
   },
   {
    "surface": "floor",
@@ -6468,8 +6480,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 215.4369,
-   "total": 322.7021
+   "direct": 215.4378,
+   "total": 322.967
   },
   {
    "surface": "floor",
@@ -6483,8 +6495,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 234.4461,
-   "total": 339.7751
+   "direct": 234.446,
+   "total": 340.4102
   },
   {
    "surface": "floor",
@@ -6498,8 +6510,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 242.9422,
-   "total": 346.5163
+   "direct": 242.9442,
+   "total": 346.5546
   },
   {
    "surface": "floor",
@@ -6513,8 +6525,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 240.6845,
-   "total": 342.441
+   "direct": 240.6827,
+   "total": 342.0899
   },
   {
    "surface": "floor",
@@ -6528,8 +6540,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 232.187,
-   "total": 331.6043
+   "direct": 232.1873,
+   "total": 332.6781
   },
   {
    "surface": "floor",
@@ -6543,8 +6555,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 221.1844,
-   "total": 319.1801
+   "direct": 221.183,
+   "total": 319.1124
   },
   {
    "surface": "floor",
@@ -6558,8 +6570,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 213.371,
-   "total": 309.9698
+   "direct": 213.3719,
+   "total": 309.774
   },
   {
    "surface": "floor",
@@ -6573,8 +6585,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 210.1823,
-   "total": 305.0758
+   "direct": 210.1848,
+   "total": 304.6546
   },
   {
    "surface": "floor",
@@ -6589,7 +6601,7 @@
     "z": 0
    },
    "direct": 207.0119,
-   "total": 300.9989
+   "total": 301.2389
   },
   {
    "surface": "floor",
@@ -6603,8 +6615,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 203.9478,
-   "total": 297.0262
+   "direct": 203.9471,
+   "total": 297.0131
   },
   {
    "surface": "floor",
@@ -6618,8 +6630,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 205.6896,
-   "total": 297.9376
+   "direct": 205.6889,
+   "total": 297.8091
   },
   {
    "surface": "floor",
@@ -6633,8 +6645,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 210.7073,
-   "total": 302.5485
+   "direct": 210.7066,
+   "total": 302.4167
   },
   {
    "surface": "floor",
@@ -6648,8 +6660,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 212.7071,
-   "total": 304.8288
+   "direct": 212.7086,
+   "total": 304.1713
   },
   {
    "surface": "floor",
@@ -6663,8 +6675,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 206.1396,
-   "total": 298.1945
+   "direct": 206.14,
+   "total": 297.9256
   },
   {
    "surface": "floor",
@@ -6678,8 +6690,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 189.5687,
-   "total": 282.4337
+   "direct": 189.5689,
+   "total": 282.3831
   },
   {
    "surface": "floor",
@@ -6694,7 +6706,7 @@
     "z": 0
    },
    "direct": 166.1977,
-   "total": 259.9745
+   "total": 259.9852
   },
   {
    "surface": "floor",
@@ -6708,8 +6720,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 139.8853,
-   "total": 235.5275
+   "direct": 139.8852,
+   "total": 235.4113
   },
   {
    "surface": "floor",
@@ -6723,8 +6735,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 113.9522,
-   "total": 211.1815
+   "direct": 113.9538,
+   "total": 211.3618
   },
   {
    "surface": "floor",
@@ -6738,8 +6750,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 175.608,
-   "total": 284.8751
+   "direct": 175.6054,
+   "total": 285.2943
   },
   {
    "surface": "floor",
@@ -6753,8 +6765,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 202.7921,
-   "total": 312.1943
+   "direct": 202.7914,
+   "total": 312.0885
   },
   {
    "surface": "floor",
@@ -6768,8 +6780,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 226.6478,
-   "total": 334.5764
+   "direct": 226.6482,
+   "total": 334.8453
   },
   {
    "surface": "floor",
@@ -6783,8 +6795,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 244.2233,
-   "total": 350.105
+   "direct": 244.2224,
+   "total": 350.4029
   },
   {
    "surface": "floor",
@@ -6798,8 +6810,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 250.825,
-   "total": 354.8202
+   "direct": 250.8263,
+   "total": 354.4483
   },
   {
    "surface": "floor",
@@ -6813,8 +6825,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 246.9151,
-   "total": 348.285
+   "direct": 246.9153,
+   "total": 348.3861
   },
   {
    "surface": "floor",
@@ -6828,8 +6840,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 239.0882,
-   "total": 338.6682
+   "direct": 239.089,
+   "total": 338.9279
   },
   {
    "surface": "floor",
@@ -6843,8 +6855,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 229.0493,
-   "total": 326.4981
+   "direct": 229.0495,
+   "total": 326.7509
   },
   {
    "surface": "floor",
@@ -6858,8 +6870,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 221.3453,
-   "total": 317.4977
+   "direct": 221.345,
+   "total": 317.1039
   },
   {
    "surface": "floor",
@@ -6873,8 +6885,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.3571,
-   "total": 311.3741
+   "direct": 216.3605,
+   "total": 311.2126
   },
   {
    "surface": "floor",
@@ -6888,8 +6900,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 212.8779,
-   "total": 306.7978
+   "direct": 212.8758,
+   "total": 306.1215
   },
   {
    "surface": "floor",
@@ -6903,8 +6915,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 211.0206,
-   "total": 303.686
+   "direct": 211.0213,
+   "total": 303.679
   },
   {
    "surface": "floor",
@@ -6918,8 +6930,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 212.0563,
-   "total": 304.068
+   "direct": 212.0565,
+   "total": 304.0372
   },
   {
    "surface": "floor",
@@ -6933,8 +6945,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 215.5633,
-   "total": 306.8796
+   "direct": 215.5638,
+   "total": 306.925
   },
   {
    "surface": "floor",
@@ -6948,8 +6960,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.0043,
-   "total": 307.6926
+   "direct": 216.0054,
+   "total": 307.4712
   },
   {
    "surface": "floor",
@@ -6963,8 +6975,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 209.3276,
-   "total": 301.3606
+   "direct": 209.3287,
+   "total": 300.4966
   },
   {
    "surface": "floor",
@@ -6978,8 +6990,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 194.1717,
-   "total": 286.9617
+   "direct": 194.172,
+   "total": 286.7342
   },
   {
    "surface": "floor",
@@ -6993,8 +7005,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 172.1053,
-   "total": 265.6512
+   "direct": 172.1067,
+   "total": 265.611
   },
   {
    "surface": "floor",
@@ -7008,8 +7020,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 146.361,
-   "total": 241.834
+   "direct": 146.3608,
+   "total": 241.7952
   },
   {
    "surface": "floor",
@@ -7023,8 +7035,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 117.7913,
-   "total": 215.0425
+   "direct": 117.7915,
+   "total": 214.9236
   },
   {
    "surface": "floor",
@@ -7038,8 +7050,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 181.5005,
-   "total": 291.3427
+   "direct": 181.4997,
+   "total": 291.5119
   },
   {
    "surface": "floor",
@@ -7053,8 +7065,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 210.1492,
-   "total": 319.3229
+   "direct": 210.1489,
+   "total": 319.7491
   },
   {
    "surface": "floor",
@@ -7068,8 +7080,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 233.7643,
-   "total": 341.5957
+   "direct": 233.7627,
+   "total": 341.8515
   },
   {
    "surface": "floor",
@@ -7083,8 +7095,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 249.2514,
-   "total": 355.2359
+   "direct": 249.2493,
+   "total": 355.2169
   },
   {
    "surface": "floor",
@@ -7098,8 +7110,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 253.9822,
-   "total": 357.5262
+   "direct": 253.9811,
+   "total": 357.821
   },
   {
    "surface": "floor",
@@ -7113,8 +7125,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 249.4489,
-   "total": 350.8686
+   "direct": 249.449,
+   "total": 351.5245
   },
   {
    "surface": "floor",
@@ -7128,8 +7140,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 242.5126,
-   "total": 342.3062
+   "direct": 242.5156,
+   "total": 342.3416
   },
   {
    "surface": "floor",
@@ -7143,8 +7155,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 234.313,
-   "total": 332.1859
+   "direct": 234.3157,
+   "total": 332.2172
   },
   {
    "surface": "floor",
@@ -7159,7 +7171,7 @@
     "z": 0
    },
    "direct": 226.0976,
-   "total": 322.6826
+   "total": 322.7008
   },
   {
    "surface": "floor",
@@ -7173,8 +7185,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 220.2097,
-   "total": 315.1683
+   "direct": 220.211,
+   "total": 314.6056
   },
   {
    "surface": "floor",
@@ -7188,8 +7200,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.522,
-   "total": 309.588
+   "direct": 216.5211,
+   "total": 309.9768
   },
   {
    "surface": "floor",
@@ -7203,8 +7215,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 215.1884,
-   "total": 307.8601
+   "direct": 215.1931,
+   "total": 307.6861
   },
   {
    "surface": "floor",
@@ -7218,8 +7230,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.4278,
-   "total": 308.1202
+   "direct": 216.4275,
+   "total": 307.7116
   },
   {
    "surface": "floor",
@@ -7233,8 +7245,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 217.8283,
-   "total": 309.4013
+   "direct": 217.8258,
+   "total": 309.2544
   },
   {
    "surface": "floor",
@@ -7248,8 +7260,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.6602,
-   "total": 307.6382
+   "direct": 216.6598,
+   "total": 308.0543
   },
   {
    "surface": "floor",
@@ -7263,8 +7275,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 209.9597,
-   "total": 301.419
+   "direct": 209.9602,
+   "total": 301.2434
   },
   {
    "surface": "floor",
@@ -7278,8 +7290,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 196.4262,
-   "total": 288.7012
+   "direct": 196.4265,
+   "total": 288.3609
   },
   {
    "surface": "floor",
@@ -7293,8 +7305,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 176.4236,
-   "total": 270.2092
+   "direct": 176.424,
+   "total": 269.8406
   },
   {
    "surface": "floor",
@@ -7308,8 +7320,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 150.7022,
-   "total": 245.9219
+   "direct": 150.7058,
+   "total": 246.2131
   },
   {
    "surface": "floor",
@@ -7323,8 +7335,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 120.3472,
-   "total": 217.5558
+   "direct": 120.3465,
+   "total": 217.6003
   },
   {
    "surface": "floor",
@@ -7338,8 +7350,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 181.1396,
-   "total": 291.4983
+   "direct": 181.141,
+   "total": 291.426
   },
   {
    "surface": "floor",
@@ -7353,8 +7365,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 210.4961,
-   "total": 320.222
+   "direct": 210.4943,
+   "total": 319.788
   },
   {
    "surface": "floor",
@@ -7368,8 +7380,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 234.1341,
-   "total": 342.1571
+   "direct": 234.1375,
+   "total": 342.3778
   },
   {
    "surface": "floor",
@@ -7383,8 +7395,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 249.2527,
-   "total": 355.1734
+   "direct": 249.2555,
+   "total": 354.5492
   },
   {
    "surface": "floor",
@@ -7398,8 +7410,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 254.1487,
-   "total": 358.6806
+   "direct": 254.1501,
+   "total": 358.5134
   },
   {
    "surface": "floor",
@@ -7414,7 +7426,7 @@
     "z": 0
    },
    "direct": 249.6189,
-   "total": 351.3306
+   "total": 351.5811
   },
   {
    "surface": "floor",
@@ -7428,8 +7440,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 242.7068,
-   "total": 342.3377
+   "direct": 242.7027,
+   "total": 342.057
   },
   {
    "surface": "floor",
@@ -7443,8 +7455,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 234.4802,
-   "total": 332.6481
+   "direct": 234.48,
+   "total": 332.1048
   },
   {
    "surface": "floor",
@@ -7458,8 +7470,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 226.2786,
-   "total": 321.8669
+   "direct": 226.2753,
+   "total": 322.4413
   },
   {
    "surface": "floor",
@@ -7473,8 +7485,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 220.3698,
-   "total": 315.0316
+   "direct": 220.3694,
+   "total": 315.0729
   },
   {
    "surface": "floor",
@@ -7488,8 +7500,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.6476,
-   "total": 310.1404
+   "direct": 216.6464,
+   "total": 310.1146
   },
   {
    "surface": "floor",
@@ -7503,8 +7515,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 215.286,
-   "total": 307.5508
+   "direct": 215.2847,
+   "total": 307.626
   },
   {
    "surface": "floor",
@@ -7518,8 +7530,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.4978,
-   "total": 307.8574
+   "direct": 216.4957,
+   "total": 308.1242
   },
   {
    "surface": "floor",
@@ -7533,8 +7545,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 217.8745,
-   "total": 309.184
+   "direct": 217.8784,
+   "total": 309.2644
   },
   {
    "surface": "floor",
@@ -7548,8 +7560,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.6947,
-   "total": 307.8771
+   "direct": 216.6945,
+   "total": 307.5011
   },
   {
    "surface": "floor",
@@ -7563,8 +7575,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 209.9842,
-   "total": 301.3256
+   "direct": 209.9828,
+   "total": 300.6409
   },
   {
    "surface": "floor",
@@ -7578,8 +7590,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 196.443,
-   "total": 288.6191
+   "direct": 196.4421,
+   "total": 287.9836
   },
   {
    "surface": "floor",
@@ -7593,8 +7605,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 176.436,
-   "total": 269.2316
+   "direct": 176.4342,
+   "total": 269.8175
   },
   {
    "surface": "floor",
@@ -7608,8 +7620,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 150.7127,
-   "total": 245.5273
+   "direct": 150.7118,
+   "total": 245.9219
   },
   {
    "surface": "floor",
@@ -7623,8 +7635,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 120.3512,
-   "total": 216.9247
+   "direct": 120.3501,
+   "total": 217.3347
   },
   {
    "surface": "floor",
@@ -7638,8 +7650,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 175.5372,
-   "total": 285.3097
+   "direct": 175.5407,
+   "total": 284.9568
   },
   {
    "surface": "floor",
@@ -7653,8 +7665,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 203.0991,
-   "total": 312.4857
+   "direct": 203.0993,
+   "total": 312.1481
   },
   {
    "surface": "floor",
@@ -7668,8 +7680,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 227.0987,
-   "total": 335.0141
+   "direct": 227.0984,
+   "total": 334.5231
   },
   {
    "surface": "floor",
@@ -7683,8 +7695,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 244.8,
-   "total": 350.6064
+   "direct": 244.8011,
+   "total": 350.7038
   },
   {
    "surface": "floor",
@@ -7698,8 +7710,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 251.2013,
-   "total": 355.1428
+   "direct": 251.2011,
+   "total": 354.8566
   },
   {
    "surface": "floor",
@@ -7713,8 +7725,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 247.4521,
-   "total": 349.214
+   "direct": 247.4544,
+   "total": 349.5786
   },
   {
    "surface": "floor",
@@ -7728,8 +7740,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 239.6649,
-   "total": 339.3749
+   "direct": 239.664,
+   "total": 339.6765
   },
   {
    "surface": "floor",
@@ -7744,7 +7756,7 @@
     "z": 0
    },
    "direct": 229.5551,
-   "total": 327.4121
+   "total": 327.413
   },
   {
    "surface": "floor",
@@ -7758,8 +7770,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 221.8816,
-   "total": 318.0023
+   "direct": 221.8809,
+   "total": 318.083
   },
   {
    "surface": "floor",
@@ -7773,8 +7785,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.8279,
-   "total": 312.0054
+   "direct": 216.8259,
+   "total": 311.9515
   },
   {
    "surface": "floor",
@@ -7788,8 +7800,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 213.242,
-   "total": 306.5658
+   "direct": 213.2425,
+   "total": 306.6216
   },
   {
    "surface": "floor",
@@ -7803,8 +7815,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 211.2936,
-   "total": 303.6257
+   "direct": 211.2939,
+   "total": 303.7161
   },
   {
    "surface": "floor",
@@ -7818,8 +7830,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 212.2623,
-   "total": 303.8683
+   "direct": 212.2627,
+   "total": 304.361
   },
   {
    "surface": "floor",
@@ -7833,8 +7845,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 215.7099,
-   "total": 307.3874
+   "direct": 215.7102,
+   "total": 307.3315
   },
   {
    "surface": "floor",
@@ -7848,8 +7860,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.1105,
-   "total": 307.4074
+   "direct": 216.1072,
+   "total": 307.3718
   },
   {
    "surface": "floor",
@@ -7863,8 +7875,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 209.3987,
-   "total": 300.8124
+   "direct": 209.3978,
+   "total": 300.532
   },
   {
    "surface": "floor",
@@ -7878,8 +7890,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 194.2175,
-   "total": 286.9649
+   "direct": 194.2177,
+   "total": 286.1863
   },
   {
    "surface": "floor",
@@ -7893,8 +7905,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 172.1355,
-   "total": 265.6401
+   "direct": 172.1352,
+   "total": 265.6273
   },
   {
    "surface": "floor",
@@ -7908,8 +7920,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 146.3792,
-   "total": 241.6293
+   "direct": 146.3791,
+   "total": 241.7588
   },
   {
    "surface": "floor",
@@ -7923,8 +7935,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 117.8023,
-   "total": 215.2764
+   "direct": 117.802,
+   "total": 215.4962
   },
   {
    "surface": "floor",
@@ -7938,8 +7950,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 165.9425,
-   "total": 274.6928
+   "direct": 165.9441,
+   "total": 274.3521
   },
   {
    "surface": "floor",
@@ -7953,8 +7965,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 191.6719,
-   "total": 300.4488
+   "direct": 191.6728,
+   "total": 300.9121
   },
   {
    "surface": "floor",
@@ -7968,8 +7980,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 216.4767,
-   "total": 323.8477
+   "direct": 216.4765,
+   "total": 323.6816
   },
   {
    "surface": "floor",
@@ -7983,8 +7995,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 235.1682,
-   "total": 340.855
+   "direct": 235.1684,
+   "total": 341.2707
   },
   {
    "surface": "floor",
@@ -7998,8 +8010,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 243.4894,
-   "total": 346.9856
+   "direct": 243.4878,
+   "total": 347.1703
   },
   {
    "surface": "floor",
@@ -8013,8 +8025,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 241.633,
-   "total": 343.2525
+   "direct": 241.6348,
+   "total": 343.4734
   },
   {
    "surface": "floor",
@@ -8028,8 +8040,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 233.0852,
-   "total": 333.5234
+   "direct": 233.0843,
+   "total": 333.0787
   },
   {
    "surface": "floor",
@@ -8044,7 +8056,7 @@
     "z": 0
    },
    "direct": 222.0653,
-   "total": 320.3588
+   "total": 320.468
   },
   {
    "surface": "floor",
@@ -8058,8 +8070,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 214.2557,
-   "total": 311.012
+   "direct": 214.2567,
+   "total": 311.0723
   },
   {
    "surface": "floor",
@@ -8073,8 +8085,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 210.9309,
-   "total": 305.9031
+   "direct": 210.9289,
+   "total": 306.417
   },
   {
    "surface": "floor",
@@ -8088,8 +8100,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 207.5872,
-   "total": 301.0834
+   "direct": 207.5867,
+   "total": 301.3365
   },
   {
    "surface": "floor",
@@ -8103,8 +8115,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 204.3784,
-   "total": 297.3525
+   "direct": 204.3788,
+   "total": 297.4357
   },
   {
    "surface": "floor",
@@ -8118,8 +8130,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 206.0145,
-   "total": 298.2784
+   "direct": 206.0156,
+   "total": 298.1843
   },
   {
    "surface": "floor",
@@ -8133,8 +8145,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 210.939,
-   "total": 303.4614
+   "direct": 210.9399,
+   "total": 302.9749
   },
   {
    "surface": "floor",
@@ -8148,8 +8160,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 212.8715,
-   "total": 304.6022
+   "direct": 212.8698,
+   "total": 304.8758
   },
   {
    "surface": "floor",
@@ -8163,8 +8175,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 206.2483,
-   "total": 298.5251
+   "direct": 206.2495,
+   "total": 298.2745
   },
   {
    "surface": "floor",
@@ -8178,8 +8190,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 189.6394,
-   "total": 282.4335
+   "direct": 189.6392,
+   "total": 282.4951
   },
   {
    "surface": "floor",
@@ -8193,8 +8205,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 166.2442,
-   "total": 260.3051
+   "direct": 166.2435,
+   "total": 260.3048
   },
   {
    "surface": "floor",
@@ -8208,8 +8220,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 139.9146,
-   "total": 235.8953
+   "direct": 139.9137,
+   "total": 235.3799
   },
   {
    "surface": "floor",
@@ -8223,8 +8235,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 113.97,
-   "total": 211.9765
+   "direct": 113.9699,
+   "total": 211.4685
   },
   {
    "surface": "floor",
@@ -8238,8 +8250,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 153.3031,
-   "total": 260.7279
+   "direct": 153.3006,
+   "total": 261.3456
   },
   {
    "surface": "floor",
@@ -8253,8 +8265,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 177.9383,
-   "total": 286.0871
+   "direct": 177.9377,
+   "total": 286.3634
   },
   {
    "surface": "floor",
@@ -8268,8 +8280,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 201.7092,
-   "total": 308.5507
+   "direct": 201.7094,
+   "total": 308.1798
   },
   {
    "surface": "floor",
@@ -8283,8 +8295,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 220.8004,
-   "total": 326.2638
+   "direct": 220.8006,
+   "total": 326.672
   },
   {
    "surface": "floor",
@@ -8298,8 +8310,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 231.3946,
-   "total": 335.2391
+   "direct": 231.3969,
+   "total": 335.2215
   },
   {
    "surface": "floor",
@@ -8313,8 +8325,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 231.145,
-   "total": 333.5865
+   "direct": 231.147,
+   "total": 333.1711
   },
   {
    "surface": "floor",
@@ -8328,8 +8340,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 222.5179,
-   "total": 323.0506
+   "direct": 222.5176,
+   "total": 323.1866
   },
   {
    "surface": "floor",
@@ -8343,8 +8355,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 211.7486,
-   "total": 310.5047
+   "direct": 211.7479,
+   "total": 310.0763
   },
   {
    "surface": "floor",
@@ -8358,8 +8370,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 204.805,
-   "total": 301.7084
+   "direct": 204.8066,
+   "total": 301.4876
   },
   {
    "surface": "floor",
@@ -8373,8 +8385,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 202.41,
-   "total": 298.2605
+   "direct": 202.4123,
+   "total": 298.1803
   },
   {
    "surface": "floor",
@@ -8388,8 +8400,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 199.4755,
-   "total": 293.9783
+   "direct": 199.4765,
+   "total": 293.8332
   },
   {
    "surface": "floor",
@@ -8403,8 +8415,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 196.0829,
-   "total": 289.743
+   "direct": 196.0827,
+   "total": 289.8916
   },
   {
    "surface": "floor",
@@ -8418,8 +8430,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 197.5018,
-   "total": 290.4083
+   "direct": 197.5013,
+   "total": 290.9806
   },
   {
    "surface": "floor",
@@ -8433,7 +8445,7 @@
     "y": 1,
     "z": 0
    },
-   "direct": 202.9493,
+   "direct": 202.9481,
    "total": 295.5668
   },
   {
@@ -8448,8 +8460,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 206.1248,
-   "total": 299.3141
+   "direct": 206.1258,
+   "total": 298.4804
   },
   {
    "surface": "floor",
@@ -8463,8 +8475,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 199.6779,
-   "total": 292.5241
+   "direct": 199.6783,
+   "total": 292.6788
   },
   {
    "surface": "floor",
@@ -8478,8 +8490,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 182.2612,
-   "total": 275.4368
+   "direct": 182.2596,
+   "total": 275.2574
   },
   {
    "surface": "floor",
@@ -8493,8 +8505,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 158.8308,
-   "total": 253.5152
+   "direct": 158.8313,
+   "total": 253.1201
   },
   {
    "surface": "floor",
@@ -8508,8 +8520,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 133.4109,
-   "total": 229.1905
+   "direct": 133.4113,
+   "total": 229.4674
   },
   {
    "surface": "floor",
@@ -8523,8 +8535,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 109.2434,
-   "total": 206.3431
+   "direct": 109.2463,
+   "total": 206.7859
   },
   {
    "surface": "floor",
@@ -8538,8 +8550,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 139.7435,
-   "total": 246.0818
+   "direct": 139.7427,
+   "total": 245.851
   },
   {
    "surface": "floor",
@@ -8553,8 +8565,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 162.2768,
-   "total": 269.3146
+   "direct": 162.2748,
+   "total": 269.7222
   },
   {
    "surface": "floor",
@@ -8568,8 +8580,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 183.9717,
-   "total": 290.2863
+   "direct": 183.9723,
+   "total": 290.6389
   },
   {
    "surface": "floor",
@@ -8583,8 +8595,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 201.8427,
-   "total": 307.8324
+   "direct": 201.8409,
+   "total": 307.0129
   },
   {
    "surface": "floor",
@@ -8598,8 +8610,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 213.114,
-   "total": 317.9453
+   "direct": 213.1154,
+   "total": 317.8056
   },
   {
    "surface": "floor",
@@ -8613,8 +8625,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 214.2664,
-   "total": 317.8149
+   "direct": 214.2675,
+   "total": 317.585
   },
   {
    "surface": "floor",
@@ -8628,8 +8640,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 206.8311,
-   "total": 308.5189
+   "direct": 206.8325,
+   "total": 307.9754
   },
   {
    "surface": "floor",
@@ -8643,8 +8655,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 197.4066,
-   "total": 297.7397
+   "direct": 197.4062,
+   "total": 297.2116
   },
   {
    "surface": "floor",
@@ -8658,8 +8670,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 191.7521,
-   "total": 289.5771
+   "direct": 191.7543,
+   "total": 289.4749
   },
   {
    "surface": "floor",
@@ -8674,7 +8686,7 @@
     "z": 0
    },
    "direct": 190.2944,
-   "total": 286.221
+   "total": 286.7943
   },
   {
    "surface": "floor",
@@ -8688,8 +8700,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 187.7946,
-   "total": 283.0403
+   "direct": 187.7939,
+   "total": 282.4083
   },
   {
    "surface": "floor",
@@ -8703,8 +8715,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 184.3077,
-   "total": 279.18
+   "direct": 184.3061,
+   "total": 279.2772
   },
   {
    "surface": "floor",
@@ -8719,7 +8731,7 @@
     "z": 0
    },
    "direct": 185.2061,
-   "total": 279.5155
+   "total": 279.5377
   },
   {
    "surface": "floor",
@@ -8733,8 +8745,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 190.1764,
-   "total": 284.2044
+   "direct": 190.1753,
+   "total": 284.1868
   },
   {
    "surface": "floor",
@@ -8748,8 +8760,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 193.1496,
-   "total": 287.4022
+   "direct": 193.151,
+   "total": 286.9918
   },
   {
    "surface": "floor",
@@ -8763,8 +8775,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 187.1397,
-   "total": 280.9403
+   "direct": 187.1413,
+   "total": 280.9457
   },
   {
    "surface": "floor",
@@ -8778,8 +8790,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 170.7531,
-   "total": 265.0991
+   "direct": 170.7533,
+   "total": 265.3971
   },
   {
    "surface": "floor",
@@ -8793,8 +8805,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 148.8287,
-   "total": 243.832
+   "direct": 148.8293,
+   "total": 243.7771
   },
   {
    "surface": "floor",
@@ -8808,8 +8820,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 125.3141,
-   "total": 221.2484
+   "direct": 125.3144,
+   "total": 221.0621
   },
   {
    "surface": "floor",
@@ -8823,8 +8835,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 103.0556,
-   "total": 199.366
+   "direct": 103.0551,
+   "total": 199.5336
   },
   {
    "surface": "floor",
@@ -8838,8 +8850,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.2402,
-   "total": 228.5853
+   "direct": 124.2383,
+   "total": 228.4435
   },
   {
    "surface": "floor",
@@ -8853,8 +8865,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 144.1666,
-   "total": 249.9756
+   "direct": 144.1669,
+   "total": 250.0926
   },
   {
    "surface": "floor",
@@ -8868,8 +8880,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 162.6169,
-   "total": 268.811
+   "direct": 162.6185,
+   "total": 269.0921
   },
   {
    "surface": "floor",
@@ -8883,8 +8895,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 177.6816,
-   "total": 284.3924
+   "direct": 177.6826,
+   "total": 284.0049
   },
   {
    "surface": "floor",
@@ -8898,8 +8910,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 187.2587,
-   "total": 293.5654
+   "direct": 187.2608,
+   "total": 292.917
   },
   {
    "surface": "floor",
@@ -8913,8 +8925,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 189.5467,
-   "total": 294.2368
+   "direct": 189.5451,
+   "total": 293.7947
   },
   {
    "surface": "floor",
@@ -8928,8 +8940,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 184.7658,
-   "total": 287.6888
+   "direct": 184.7652,
+   "total": 287.5426
   },
   {
    "surface": "floor",
@@ -8943,8 +8955,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 177.9522,
-   "total": 279.1298
+   "direct": 177.9503,
+   "total": 278.508
   },
   {
    "surface": "floor",
@@ -8958,8 +8970,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 174.2668,
-   "total": 272.9678
+   "direct": 174.2662,
+   "total": 273.0925
   },
   {
    "surface": "floor",
@@ -8973,8 +8985,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 173.8602,
-   "total": 271.4736
+   "direct": 173.8619,
+   "total": 271.1218
   },
   {
    "surface": "floor",
@@ -8988,8 +9000,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 171.7915,
-   "total": 268.0736
+   "direct": 171.7908,
+   "total": 267.9903
   },
   {
    "surface": "floor",
@@ -9003,8 +9015,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 168.0726,
-   "total": 264.0789
+   "direct": 168.0727,
+   "total": 263.8978
   },
   {
    "surface": "floor",
@@ -9019,7 +9031,7 @@
     "z": 0
    },
    "direct": 167.8254,
-   "total": 263.1771
+   "total": 263.4153
   },
   {
    "surface": "floor",
@@ -9033,8 +9045,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 171.0704,
-   "total": 266.9244
+   "direct": 171.0702,
+   "total": 266.3638
   },
   {
    "surface": "floor",
@@ -9048,8 +9060,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 172.5147,
-   "total": 268.446
+   "direct": 172.5148,
+   "total": 268.1004
   },
   {
    "surface": "floor",
@@ -9063,8 +9075,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 167.0798,
-   "total": 262.7433
+   "direct": 167.079,
+   "total": 262.8991
   },
   {
    "surface": "floor",
@@ -9078,8 +9090,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 153.5861,
-   "total": 248.9956
+   "direct": 153.5863,
+   "total": 248.9793
   },
   {
    "surface": "floor",
@@ -9093,8 +9105,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 135.0656,
-   "total": 230.0482
+   "direct": 135.0654,
+   "total": 230.5801
   },
   {
    "surface": "floor",
@@ -9108,8 +9120,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 114.8463,
-   "total": 210.221
+   "direct": 114.8462,
+   "total": 210.429
   },
   {
    "surface": "floor",
@@ -9124,7 +9136,7 @@
     "z": 0
    },
    "direct": 94.8577,
-   "total": 189.8069
+   "total": 189.8904
   },
   {
    "surface": "floor",
@@ -9138,8 +9150,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 106.6254,
-   "total": 207.8618
+   "direct": 106.6223,
+   "total": 208.1258
   },
   {
    "surface": "floor",
@@ -9153,8 +9165,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.065,
-   "total": 228.7448
+   "direct": 124.0648,
+   "total": 228.4916
   },
   {
    "surface": "floor",
@@ -9169,7 +9181,7 @@
     "z": 0
    },
    "direct": 138.9124,
-   "total": 245.0289
+   "total": 245.4088
   },
   {
    "surface": "floor",
@@ -9183,8 +9195,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 151.6159,
-   "total": 258.6153
+   "direct": 151.6156,
+   "total": 258.7189
   },
   {
    "surface": "floor",
@@ -9199,7 +9211,7 @@
     "z": 0
    },
    "direct": 159.4328,
-   "total": 266.3194
+   "total": 266.2647
   },
   {
    "surface": "floor",
@@ -9213,8 +9225,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 161.8307,
-   "total": 268.1041
+   "direct": 161.83,
+   "total": 267.8372
   },
   {
    "surface": "floor",
@@ -9228,8 +9240,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 159.2409,
-   "total": 264.0806
+   "direct": 159.2403,
+   "total": 263.4223
   },
   {
    "surface": "floor",
@@ -9243,8 +9255,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 154.7254,
-   "total": 256.9296
+   "direct": 154.7251,
+   "total": 257.1303
   },
   {
    "surface": "floor",
@@ -9258,8 +9270,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 152.8852,
-   "total": 252.6363
+   "direct": 152.8841,
+   "total": 253.1231
   },
   {
    "surface": "floor",
@@ -9273,8 +9285,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 152.6027,
-   "total": 251.4307
+   "direct": 152.6066,
+   "total": 251.1607
   },
   {
    "surface": "floor",
@@ -9288,8 +9300,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 150.9061,
-   "total": 248.3028
+   "direct": 150.9066,
+   "total": 247.911
   },
   {
    "surface": "floor",
@@ -9303,8 +9315,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 147.8677,
-   "total": 244.5019
+   "direct": 147.8678,
+   "total": 245.0881
   },
   {
    "surface": "floor",
@@ -9318,8 +9330,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 146.6553,
-   "total": 243.459
+   "direct": 146.655,
+   "total": 243.7247
   },
   {
    "surface": "floor",
@@ -9333,8 +9345,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 148.3832,
-   "total": 245.3116
+   "direct": 148.3849,
+   "total": 244.8994
   },
   {
    "surface": "floor",
@@ -9348,8 +9360,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 148.5114,
-   "total": 245.6387
+   "direct": 148.5125,
+   "total": 246.1652
   },
   {
    "surface": "floor",
@@ -9363,8 +9375,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 143.8485,
-   "total": 241.1012
+   "direct": 143.8495,
+   "total": 240.4478
   },
   {
    "surface": "floor",
@@ -9378,8 +9390,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 133.3459,
-   "total": 229.8179
+   "direct": 133.3456,
+   "total": 229.6283
   },
   {
    "surface": "floor",
@@ -9393,8 +9405,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 118.5005,
-   "total": 214.2231
+   "direct": 118.5011,
+   "total": 213.9738
   },
   {
    "surface": "floor",
@@ -9408,8 +9420,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 102.1931,
-   "total": 196.6976
+   "direct": 102.1933,
+   "total": 196.5056
   },
   {
    "surface": "floor",
@@ -9423,8 +9435,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 84.0642,
-   "total": 177.155
+   "direct": 84.0652,
+   "total": 177.1774
   },
   {
    "surface": "floor",
@@ -9438,8 +9450,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 87.5725,
-   "total": 184.9383
+   "direct": 87.5724,
+   "total": 185.4743
   },
   {
    "surface": "floor",
@@ -9453,8 +9465,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 103.3877,
-   "total": 205.6265
+   "direct": 103.3855,
+   "total": 205.842
   },
   {
    "surface": "floor",
@@ -9468,8 +9480,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 116.1574,
-   "total": 221.4318
+   "direct": 116.1576,
+   "total": 221.5692
   },
   {
    "surface": "floor",
@@ -9483,8 +9495,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 126.1244,
-   "total": 232.8123
+   "direct": 126.1245,
+   "total": 232.6197
   },
   {
    "surface": "floor",
@@ -9498,8 +9510,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 132.3152,
-   "total": 240.3781
+   "direct": 132.3148,
+   "total": 240.0065
   },
   {
    "surface": "floor",
@@ -9513,8 +9525,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 134.4126,
-   "total": 241.6943
+   "direct": 134.4135,
+   "total": 241.1916
   },
   {
    "surface": "floor",
@@ -9528,8 +9540,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 133.2514,
-   "total": 239.1292
+   "direct": 133.2518,
+   "total": 238.4996
   },
   {
    "surface": "floor",
@@ -9543,8 +9555,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 130.6458,
-   "total": 234.3796
+   "direct": 130.6457,
+   "total": 233.2803
   },
   {
    "surface": "floor",
@@ -9558,8 +9570,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 128.3707,
-   "total": 229.9969
+   "direct": 128.3686,
+   "total": 229.0671
   },
   {
    "surface": "floor",
@@ -9573,8 +9585,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 126.9602,
-   "total": 226.6794
+   "direct": 126.9609,
+   "total": 226.0977
   },
   {
    "surface": "floor",
@@ -9588,8 +9600,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 125.6036,
-   "total": 224.0259
+   "direct": 125.603,
+   "total": 223.2154
   },
   {
    "surface": "floor",
@@ -9603,8 +9615,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.4726,
-   "total": 222.1336
+   "direct": 124.4739,
+   "total": 221.6066
   },
   {
    "surface": "floor",
@@ -9618,8 +9630,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.3923,
-   "total": 221.9834
+   "direct": 124.3925,
+   "total": 222.2382
   },
   {
    "surface": "floor",
@@ -9633,8 +9645,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 124.8763,
-   "total": 223.0498
+   "direct": 124.8747,
+   "total": 222.5994
   },
   {
    "surface": "floor",
@@ -9649,7 +9661,7 @@
     "z": 0
    },
    "direct": 124.2281,
-   "total": 222.7938
+   "total": 222.4381
   },
   {
    "surface": "floor",
@@ -9663,8 +9675,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 120.3653,
-   "total": 217.9915
+   "direct": 120.3662,
+   "total": 217.5242
   },
   {
    "surface": "floor",
@@ -9678,8 +9690,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 112.5336,
-   "total": 208.6785
+   "direct": 112.5335,
+   "total": 208.5014
   },
   {
    "surface": "floor",
@@ -9693,8 +9705,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 101.3823,
-   "total": 195.4255
+   "direct": 101.3824,
+   "total": 195.5553
   },
   {
    "surface": "floor",
@@ -9708,8 +9720,8 @@
     "y": 1,
     "z": 0
    },
-   "direct": 87.4974,
-   "total": 179.4291
+   "direct": 87.4976,
+   "total": 179.278
   },
   {
    "surface": "floor",
@@ -9724,7 +9736,7 @@
     "z": 0
    },
    "direct": 70.7104,
-   "total": 159.3634
+   "total": 158.764
   },
   {
    "surface": "wall-x-",
@@ -9738,8 +9750,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 33.2472,
-   "total": 116.4427
+   "direct": 33.2478,
+   "total": 116.5593
   },
   {
    "surface": "wall-x-",
@@ -9753,8 +9765,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 39.4958,
-   "total": 123.5573
+   "direct": 39.4967,
+   "total": 123.6407
   },
   {
    "surface": "wall-x-",
@@ -9768,8 +9780,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 45.2422,
-   "total": 131.2493
+   "direct": 45.2411,
+   "total": 131.4601
   },
   {
    "surface": "wall-x-",
@@ -9783,8 +9795,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 50.2197,
-   "total": 138.0748
+   "direct": 50.2208,
+   "total": 137.9826
   },
   {
    "surface": "wall-x-",
@@ -9798,8 +9810,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 54.3532,
-   "total": 143.9205
+   "direct": 54.3541,
+   "total": 143.6308
   },
   {
    "surface": "wall-x-",
@@ -9813,8 +9825,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 57.7001,
-   "total": 148.1197
+   "direct": 57.6992,
+   "total": 148.2899
   },
   {
    "surface": "wall-x-",
@@ -9828,8 +9840,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 60.2917,
-   "total": 152.2007
+   "direct": 60.2911,
+   "total": 151.8689
   },
   {
    "surface": "wall-x-",
@@ -9843,8 +9855,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 62.1551,
-   "total": 155.0163
+   "direct": 62.1563,
+   "total": 154.7036
   },
   {
    "surface": "wall-x-",
@@ -9858,8 +9870,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 63.504,
-   "total": 157.0927
+   "direct": 63.5034,
+   "total": 157.1116
   },
   {
    "surface": "wall-x-",
@@ -9873,8 +9885,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 64.2982,
-   "total": 158.0985
+   "direct": 64.2976,
+   "total": 157.9027
   },
   {
    "surface": "wall-x-",
@@ -9888,8 +9900,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 64.2471,
-   "total": 157.9316
+   "direct": 64.2479,
+   "total": 158.0952
   },
   {
    "surface": "wall-x-",
@@ -9903,8 +9915,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 63.4105,
-   "total": 156.7248
+   "direct": 63.4113,
+   "total": 156.4565
   },
   {
    "surface": "wall-x-",
@@ -9918,8 +9930,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 62.0212,
-   "total": 154.7308
+   "direct": 62.0207,
+   "total": 154.9736
   },
   {
    "surface": "wall-x-",
@@ -9934,7 +9946,7 @@
     "z": 0
    },
    "direct": 60.1345,
-   "total": 151.4574
+   "total": 151.6532
   },
   {
    "surface": "wall-x-",
@@ -9949,7 +9961,7 @@
     "z": 0
    },
    "direct": 57.5561,
-   "total": 148.1594
+   "total": 148.3214
   },
   {
    "surface": "wall-x-",
@@ -9963,8 +9975,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 54.2091,
-   "total": 143.6414
+   "direct": 54.2081,
+   "total": 143.3125
   },
   {
    "surface": "wall-x-",
@@ -9978,8 +9990,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 50.0638,
-   "total": 138.0743
+   "direct": 50.0627,
+   "total": 137.9859
   },
   {
    "surface": "wall-x-",
@@ -9993,8 +10005,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 45.1185,
-   "total": 131.4416
+   "direct": 45.1196,
+   "total": 131.2307
   },
   {
    "surface": "wall-x-",
@@ -10008,8 +10020,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 39.4344,
-   "total": 123.7571
+   "direct": 39.4339,
+   "total": 123.9545
   },
   {
    "surface": "wall-x-",
@@ -10023,8 +10035,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 33.2337,
-   "total": 116.5871
+   "direct": 33.2336,
+   "total": 116.6316
   },
   {
    "surface": "wall-x-",
@@ -10039,7 +10051,7 @@
     "z": 0
    },
    "direct": 33.4853,
-   "total": 125.184
+   "total": 125.2785
   },
   {
    "surface": "wall-x-",
@@ -10053,8 +10065,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 41.101,
-   "total": 132.8179
+   "direct": 41.102,
+   "total": 132.6845
   },
   {
    "surface": "wall-x-",
@@ -10069,7 +10081,7 @@
     "z": 0
    },
    "direct": 48.2438,
-   "total": 139.8177
+   "total": 140.1093
   },
   {
    "surface": "wall-x-",
@@ -10083,8 +10095,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 54.3756,
-   "total": 146.7686
+   "direct": 54.377,
+   "total": 146.4865
   },
   {
    "surface": "wall-x-",
@@ -10098,8 +10110,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 59.2881,
-   "total": 152.0002
+   "direct": 59.2876,
+   "total": 152.2667
   },
   {
    "surface": "wall-x-",
@@ -10113,8 +10125,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 62.9418,
-   "total": 156.8742
+   "direct": 62.9422,
+   "total": 156.636
   },
   {
    "surface": "wall-x-",
@@ -10128,8 +10140,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 65.376,
-   "total": 159.5867
+   "direct": 65.3746,
+   "total": 159.834
   },
   {
    "surface": "wall-x-",
@@ -10143,8 +10155,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 66.7599,
-   "total": 161.5275
+   "direct": 66.7601,
+   "total": 161.5952
   },
   {
    "surface": "wall-x-",
@@ -10158,8 +10170,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 67.4272,
-   "total": 163.2872
+   "direct": 67.4261,
+   "total": 162.8161
   },
   {
    "surface": "wall-x-",
@@ -10173,8 +10185,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 67.3975,
-   "total": 163.4697
+   "direct": 67.3987,
+   "total": 163.1974
   },
   {
    "surface": "wall-x-",
@@ -10188,8 +10200,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 67.33,
-   "total": 162.9931
+   "direct": 67.3295,
+   "total": 163.021
   },
   {
    "surface": "wall-x-",
@@ -10203,8 +10215,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 67.2654,
-   "total": 162.6124
+   "direct": 67.2663,
+   "total": 162.8326
   },
   {
    "surface": "wall-x-",
@@ -10218,8 +10230,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 66.5273,
-   "total": 161.3413
+   "direct": 66.5275,
+   "total": 161.5946
   },
   {
    "surface": "wall-x-",
@@ -10233,8 +10245,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 65.127,
-   "total": 159.697
+   "direct": 65.1282,
+   "total": 159.7821
   },
   {
    "surface": "wall-x-",
@@ -10249,7 +10261,7 @@
     "z": 0
    },
    "direct": 62.7306,
-   "total": 156.3475
+   "total": 156.6213
   },
   {
    "surface": "wall-x-",
@@ -10263,8 +10275,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 59.0654,
-   "total": 151.9863
+   "direct": 59.0662,
+   "total": 152.2091
   },
   {
    "surface": "wall-x-",
@@ -10278,8 +10290,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 54.1844,
-   "total": 147.0054
+   "direct": 54.1827,
+   "total": 146.7855
   },
   {
    "surface": "wall-x-",
@@ -10293,8 +10305,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 48.1274,
-   "total": 140.5301
+   "direct": 48.1275,
+   "total": 140.1317
   },
   {
    "surface": "wall-x-",
@@ -10308,8 +10320,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 41.0584,
-   "total": 132.6411
+   "direct": 41.0577,
+   "total": 132.8085
   },
   {
    "surface": "wall-x-",
@@ -10323,8 +10335,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 33.4797,
-   "total": 125.239
+   "direct": 33.4795,
+   "total": 125.1871
   },
   {
    "surface": "wall-x-",
@@ -10338,8 +10350,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 32.5188,
-   "total": 127.5398
+   "direct": 32.5203,
+   "total": 127.7019
   },
   {
    "surface": "wall-x-",
@@ -10353,8 +10365,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 41.4523,
-   "total": 136.8738
+   "direct": 41.4526,
+   "total": 136.2723
   },
   {
    "surface": "wall-x-",
@@ -10368,8 +10380,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 50.2399,
-   "total": 145.4305
+   "direct": 50.2407,
+   "total": 145.2646
   },
   {
    "surface": "wall-x-",
@@ -10383,8 +10395,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 57.933,
-   "total": 153.0062
+   "direct": 57.9315,
+   "total": 152.6037
   },
   {
    "surface": "wall-x-",
@@ -10398,8 +10410,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 63.9071,
-   "total": 158.833
+   "direct": 63.9061,
+   "total": 158.7668
   },
   {
    "surface": "wall-x-",
@@ -10413,8 +10425,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 68.0217,
-   "total": 162.9775
+   "direct": 68.0229,
+   "total": 163.2178
   },
   {
    "surface": "wall-x-",
@@ -10428,8 +10440,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 70.2259,
-   "total": 165.551
+   "direct": 70.227,
+   "total": 165.6321
   },
   {
    "surface": "wall-x-",
@@ -10443,8 +10455,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 70.8378,
-   "total": 166.5894
+   "direct": 70.8374,
+   "total": 166.59
   },
   {
    "surface": "wall-x-",
@@ -10458,8 +10470,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 70.6228,
-   "total": 166.572
+   "direct": 70.6226,
+   "total": 166.3744
   },
   {
    "surface": "wall-x-",
@@ -10473,8 +10485,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 69.9975,
-   "total": 165.7216
+   "direct": 69.9967,
+   "total": 165.9188
   },
   {
    "surface": "wall-x-",
@@ -10488,8 +10500,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 69.8858,
-   "total": 165.9263
+   "direct": 69.8868,
+   "total": 165.9469
   },
   {
    "surface": "wall-x-",
@@ -10503,8 +10515,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 70.3434,
-   "total": 166.1286
+   "direct": 70.3436,
+   "total": 166.2014
   },
   {
    "surface": "wall-x-",
@@ -10518,8 +10530,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 70.4451,
-   "total": 166.1049
+   "direct": 70.4459,
+   "total": 166.5285
   },
   {
    "surface": "wall-x-",
@@ -10533,8 +10545,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 69.8649,
-   "total": 164.8356
+   "direct": 69.864,
+   "total": 165.0675
   },
   {
    "surface": "wall-x-",
@@ -10548,8 +10560,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 67.6887,
-   "total": 162.8985
+   "direct": 67.6885,
+   "total": 162.3849
   },
   {
    "surface": "wall-x-",
@@ -10563,8 +10575,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 63.596,
-   "total": 158.461
+   "direct": 63.5965,
+   "total": 158.5162
   },
   {
    "surface": "wall-x-",
@@ -10578,8 +10590,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 57.723,
-   "total": 152.6739
+   "direct": 57.7246,
+   "total": 152.9487
   },
   {
    "surface": "wall-x-",
@@ -10593,8 +10605,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 50.1371,
-   "total": 145.032
+   "direct": 50.1363,
+   "total": 145.2908
   },
   {
    "surface": "wall-x-",
@@ -10608,8 +10620,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 41.4222,
-   "total": 136.9506
+   "direct": 41.422,
+   "total": 137.1298
   },
   {
    "surface": "wall-x-",
@@ -10623,8 +10635,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 32.51,
-   "total": 128.157
+   "direct": 32.5092,
+   "total": 127.7662
   },
   {
    "surface": "wall-x-",
@@ -10638,8 +10650,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 30.4756,
-   "total": 127.2578
+   "direct": 30.4767,
+   "total": 126.6283
   },
   {
    "surface": "wall-x-",
@@ -10653,8 +10665,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 40.0103,
-   "total": 136.9138
+   "direct": 40.0098,
+   "total": 137.2188
   },
   {
    "surface": "wall-x-",
@@ -10668,8 +10680,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 50.1303,
-   "total": 146.4834
+   "direct": 50.1281,
+   "total": 146.946
   },
   {
    "surface": "wall-x-",
@@ -10683,8 +10695,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 59.5632,
-   "total": 155.4958
+   "direct": 59.5626,
+   "total": 155.5617
   },
   {
    "surface": "wall-x-",
@@ -10698,8 +10710,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 66.9279,
-   "total": 162.6394
+   "direct": 66.9278,
+   "total": 162.26
   },
   {
    "surface": "wall-x-",
@@ -10713,8 +10725,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 71.7522,
-   "total": 166.9144
+   "direct": 71.7523,
+   "total": 167.2153
   },
   {
    "surface": "wall-x-",
@@ -10728,8 +10740,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 73.8983,
-   "total": 169.4054
+   "direct": 73.8991,
+   "total": 169.548
   },
   {
    "surface": "wall-x-",
@@ -10743,8 +10755,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 73.9146,
-   "total": 169.7155
+   "direct": 73.9171,
+   "total": 169.4443
   },
   {
    "surface": "wall-x-",
@@ -10758,8 +10770,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 73.3222,
-   "total": 169.3012
+   "direct": 73.3227,
+   "total": 169.0213
   },
   {
    "surface": "wall-x-",
@@ -10773,8 +10785,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 72.7683,
-   "total": 168.5947
+   "direct": 72.7681,
+   "total": 168.8391
   },
   {
    "surface": "wall-x-",
@@ -10788,8 +10800,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 72.5745,
-   "total": 168.5022
+   "direct": 72.5752,
+   "total": 168.732
   },
   {
    "surface": "wall-x-",
@@ -10803,8 +10815,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 72.8348,
-   "total": 168.4916
+   "direct": 72.8343,
+   "total": 168.4792
   },
   {
    "surface": "wall-x-",
@@ -10818,8 +10830,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 73.2787,
-   "total": 169.0685
+   "direct": 73.2774,
+   "total": 168.7928
   },
   {
    "surface": "wall-x-",
@@ -10833,8 +10845,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 73.3639,
-   "total": 168.9734
+   "direct": 73.3633,
+   "total": 169.5326
   },
   {
    "surface": "wall-x-",
@@ -10849,7 +10861,7 @@
     "z": 0
    },
    "direct": 71.2402,
-   "total": 167.0806
+   "total": 166.763
   },
   {
    "surface": "wall-x-",
@@ -10863,8 +10875,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 66.5529,
-   "total": 162.3054
+   "direct": 66.5533,
+   "total": 162.4457
   },
   {
    "surface": "wall-x-",
@@ -10878,8 +10890,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 59.3446,
-   "total": 156.1091
+   "direct": 59.3454,
+   "total": 155.4194
   },
   {
    "surface": "wall-x-",
@@ -10893,8 +10905,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 50.0472,
-   "total": 147.2325
+   "direct": 50.0493,
+   "total": 147.2872
   },
   {
    "surface": "wall-x-",
@@ -10908,8 +10920,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 39.9718,
-   "total": 137.2645
+   "direct": 39.9726,
+   "total": 137.3299
   },
   {
    "surface": "wall-x-",
@@ -10923,8 +10935,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 30.4697,
-   "total": 127.636
+   "direct": 30.4692,
+   "total": 127.4036
   },
   {
    "surface": "wall-x-",
@@ -10938,8 +10950,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 27.1857,
-   "total": 123.4418
+   "direct": 27.1861,
+   "total": 123.5413
   },
   {
    "surface": "wall-x-",
@@ -10953,8 +10965,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 37.0769,
-   "total": 134.8448
+   "direct": 37.0745,
+   "total": 134.3079
   },
   {
    "surface": "wall-x-",
@@ -10968,8 +10980,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 47.9241,
-   "total": 145.4551
+   "direct": 47.9237,
+   "total": 144.8095
   },
   {
    "surface": "wall-x-",
@@ -10983,8 +10995,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 58.3502,
-   "total": 154.956
+   "direct": 58.352,
+   "total": 155.223
   },
   {
    "surface": "wall-x-",
@@ -10998,8 +11010,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 67.0809,
-   "total": 163.4769
+   "direct": 67.083,
+   "total": 162.6564
   },
   {
    "surface": "wall-x-",
@@ -11013,8 +11025,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 72.952,
-   "total": 168.6252
+   "direct": 72.9502,
+   "total": 168.907
   },
   {
    "surface": "wall-x-",
@@ -11028,8 +11040,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 75.8821,
-   "total": 171.2032
+   "direct": 75.8804,
+   "total": 171.6163
   },
   {
    "surface": "wall-x-",
@@ -11043,8 +11055,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 76.7044,
-   "total": 171.9513
+   "direct": 76.7053,
+   "total": 172.6173
   },
   {
    "surface": "wall-x-",
@@ -11058,8 +11070,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 77.1011,
-   "total": 172.5186
+   "direct": 77.104,
+   "total": 172.5359
   },
   {
    "surface": "wall-x-",
@@ -11073,8 +11085,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 76.9089,
-   "total": 172.6647
+   "direct": 76.9097,
+   "total": 172.3948
   },
   {
    "surface": "wall-x-",
@@ -11088,8 +11100,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 76.5632,
-   "total": 172.3154
+   "direct": 76.563,
+   "total": 171.7546
   },
   {
    "surface": "wall-x-",
@@ -11103,8 +11115,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 76.2477,
-   "total": 171.4247
+   "direct": 76.2454,
+   "total": 171.5622
   },
   {
    "surface": "wall-x-",
@@ -11118,8 +11130,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 75.7267,
-   "total": 170.8984
+   "direct": 75.7283,
+   "total": 171.8042
   },
   {
    "surface": "wall-x-",
@@ -11133,8 +11145,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 75.026,
-   "total": 170.8357
+   "direct": 75.0274,
+   "total": 170.0258
   },
   {
    "surface": "wall-x-",
@@ -11149,7 +11161,7 @@
     "z": 0
    },
    "direct": 72.2421,
-   "total": 168.3614
+   "total": 168.2514
   },
   {
    "surface": "wall-x-",
@@ -11163,8 +11175,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 66.6495,
-   "total": 162.9209
+   "direct": 66.6481,
+   "total": 162.9906
   },
   {
    "surface": "wall-x-",
@@ -11178,8 +11190,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 58.1662,
-   "total": 155.0976
+   "direct": 58.1644,
+   "total": 154.6517
   },
   {
    "surface": "wall-x-",
@@ -11193,8 +11205,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 47.8277,
-   "total": 145.7691
+   "direct": 47.8285,
+   "total": 145.189
   },
   {
    "surface": "wall-x-",
@@ -11208,8 +11220,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 37.0333,
-   "total": 135.4715
+   "direct": 37.0341,
+   "total": 135.3183
   },
   {
    "surface": "wall-x-",
@@ -11223,8 +11235,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 27.2287,
-   "total": 123.8559
+   "direct": 27.2288,
+   "total": 123.6649
   },
   {
    "surface": "wall-x-",
@@ -11238,8 +11250,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 22.9482,
-   "total": 118.1664
+   "direct": 22.9461,
+   "total": 118.0685
   },
   {
    "surface": "wall-x-",
@@ -11253,8 +11265,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 32.2173,
-   "total": 128.9841
+   "direct": 32.2152,
+   "total": 129.2755
   },
   {
    "surface": "wall-x-",
@@ -11268,8 +11280,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 43.2871,
-   "total": 140.47
+   "direct": 43.2936,
+   "total": 140.3338
   },
   {
    "surface": "wall-x-",
@@ -11283,8 +11295,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 54.5499,
-   "total": 151.0672
+   "direct": 54.5438,
+   "total": 151.0734
   },
   {
    "surface": "wall-x-",
@@ -11298,8 +11310,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 64.3166,
-   "total": 160.4576
+   "direct": 64.3174,
+   "total": 160.3986
   },
   {
    "surface": "wall-x-",
@@ -11313,8 +11325,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 71.7484,
-   "total": 167.1236
+   "direct": 71.7476,
+   "total": 167.0569
   },
   {
    "surface": "wall-x-",
@@ -11328,8 +11340,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 76.7083,
-   "total": 171.7988
+   "direct": 76.7141,
+   "total": 171.8179
   },
   {
    "surface": "wall-x-",
@@ -11343,8 +11355,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 79.9911,
-   "total": 174.6158
+   "direct": 79.985,
+   "total": 175.1115
   },
   {
    "surface": "wall-x-",
@@ -11358,8 +11370,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 83.0781,
-   "total": 178.0427
+   "direct": 83.08,
+   "total": 177.6808
   },
   {
    "surface": "wall-x-",
@@ -11373,8 +11385,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 84.8725,
-   "total": 179.5214
+   "direct": 84.8733,
+   "total": 179.503
   },
   {
    "surface": "wall-x-",
@@ -11388,8 +11400,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 84.2381,
-   "total": 179.2791
+   "direct": 84.2358,
+   "total": 178.8964
   },
   {
    "surface": "wall-x-",
@@ -11403,8 +11415,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 81.6158,
-   "total": 176.6871
+   "direct": 81.6141,
+   "total": 176.9503
   },
   {
    "surface": "wall-x-",
@@ -11418,8 +11430,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 78.4697,
-   "total": 173.5514
+   "direct": 78.4751,
+   "total": 174.1763
   },
   {
    "surface": "wall-x-",
@@ -11433,8 +11445,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 75.3767,
-   "total": 170.5039
+   "direct": 75.3731,
+   "total": 170.4267
   },
   {
    "surface": "wall-x-",
@@ -11448,8 +11460,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 70.8685,
-   "total": 166.4345
+   "direct": 70.8683,
+   "total": 166.5687
   },
   {
    "surface": "wall-x-",
@@ -11463,8 +11475,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 63.8849,
-   "total": 159.841
+   "direct": 63.8825,
+   "total": 160.3491
   },
   {
    "surface": "wall-x-",
@@ -11478,8 +11490,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 54.331,
-   "total": 151.2969
+   "direct": 54.3372,
+   "total": 150.9421
   },
   {
    "surface": "wall-x-",
@@ -11493,8 +11505,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 43.1728,
-   "total": 140.6592
+   "direct": 43.1681,
+   "total": 140.2682
   },
   {
    "surface": "wall-x-",
@@ -11508,8 +11520,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 32.2473,
-   "total": 129.5053
+   "direct": 32.2489,
+   "total": 129.929
   },
   {
    "surface": "wall-x-",
@@ -11523,8 +11535,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 23.0181,
-   "total": 118.1773
+   "direct": 23.0185,
+   "total": 117.9805
   },
   {
    "surface": "wall-x-",
@@ -11538,8 +11550,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 18.3616,
-   "total": 111.217
+   "direct": 18.3635,
+   "total": 110.9823
   },
   {
    "surface": "wall-x-",
@@ -11553,8 +11565,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 26.3907,
-   "total": 121.3317
+   "direct": 26.3928,
+   "total": 122.0735
   },
   {
    "surface": "wall-x-",
@@ -11568,8 +11580,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 36.3557,
-   "total": 132.0373
+   "direct": 36.3476,
+   "total": 132.6034
   },
   {
    "surface": "wall-x-",
@@ -11583,8 +11595,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 47.552,
-   "total": 143.363
+   "direct": 47.5579,
+   "total": 142.9743
   },
   {
    "surface": "wall-x-",
@@ -11598,8 +11610,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 58.2634,
-   "total": 153.5236
+   "direct": 58.2596,
+   "total": 153.7686
   },
   {
    "surface": "wall-x-",
@@ -11613,8 +11625,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 67.5533,
-   "total": 162.5019
+   "direct": 67.5568,
+   "total": 162.397
   },
   {
    "surface": "wall-x-",
@@ -11628,8 +11640,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 76.2033,
-   "total": 171.6086
+   "direct": 76.1978,
+   "total": 171.1615
   },
   {
    "surface": "wall-x-",
@@ -11643,8 +11655,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 85.1464,
-   "total": 179.6284
+   "direct": 85.1547,
+   "total": 180.138
   },
   {
    "surface": "wall-x-",
@@ -11658,8 +11670,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 94.6036,
-   "total": 189.7708
+   "direct": 94.6011,
+   "total": 189.4102
   },
   {
    "surface": "wall-x-",
@@ -11673,8 +11685,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 100.6134,
-   "total": 195.3874
+   "direct": 100.6115,
+   "total": 195.2656
   },
   {
    "surface": "wall-x-",
@@ -11688,8 +11700,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 99.4604,
-   "total": 194.2316
+   "direct": 99.4624,
+   "total": 194.1069
   },
   {
    "surface": "wall-x-",
@@ -11703,8 +11715,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 92.2221,
-   "total": 186.6521
+   "direct": 92.2238,
+   "total": 186.6971
   },
   {
    "surface": "wall-x-",
@@ -11718,8 +11730,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 82.601,
-   "total": 177.0795
+   "direct": 82.5954,
+   "total": 177.3245
   },
   {
    "surface": "wall-x-",
@@ -11733,8 +11745,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 74.3638,
-   "total": 168.9932
+   "direct": 74.3661,
+   "total": 169.5706
   },
   {
    "surface": "wall-x-",
@@ -11748,8 +11760,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 66.5175,
-   "total": 161.0678
+   "direct": 66.5181,
+   "total": 161.2843
   },
   {
    "surface": "wall-x-",
@@ -11763,8 +11775,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 57.7916,
-   "total": 153.1772
+   "direct": 57.7988,
+   "total": 152.869
   },
   {
    "surface": "wall-x-",
@@ -11778,8 +11790,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 47.2748,
-   "total": 142.7708
+   "direct": 47.2696,
+   "total": 142.9469
   },
   {
    "surface": "wall-x-",
@@ -11793,8 +11805,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 36.3479,
-   "total": 132.8852
+   "direct": 36.3533,
+   "total": 131.9008
   },
   {
    "surface": "wall-x-",
@@ -11808,8 +11820,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 26.4615,
-   "total": 121.6934
+   "direct": 26.4599,
+   "total": 122.2794
   },
   {
    "surface": "wall-x-",
@@ -11823,8 +11835,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 18.435,
-   "total": 111.2716
+   "direct": 18.4341,
+   "total": 111.6357
   },
   {
    "surface": "wall-x-",
@@ -11838,8 +11850,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 14.0683,
-   "total": 103.6796
+   "direct": 14.0677,
+   "total": 104.4888
   },
   {
    "surface": "wall-x-",
@@ -11853,8 +11865,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 20.3591,
-   "total": 113.5632
+   "direct": 20.3605,
+   "total": 113.6843
   },
   {
    "surface": "wall-x-",
@@ -11868,8 +11880,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 28.7149,
-   "total": 123.0222
+   "direct": 28.7184,
+   "total": 122.7904
   },
   {
    "surface": "wall-x-",
@@ -11883,8 +11895,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 38.6085,
-   "total": 132.8808
+   "direct": 38.6008,
+   "total": 133.1636
   },
   {
    "surface": "wall-x-",
@@ -11898,8 +11910,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 49.7713,
-   "total": 143.7632
+   "direct": 49.7716,
+   "total": 143.741
   },
   {
    "surface": "wall-x-",
@@ -11914,7 +11926,7 @@
     "z": 0
    },
    "direct": 61.6551,
-   "total": 155.7537
+   "total": 155.8513
   },
   {
    "surface": "wall-x-",
@@ -11928,8 +11940,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 75.7833,
-   "total": 169.4846
+   "direct": 75.7909,
+   "total": 169.9815
   },
   {
    "surface": "wall-x-",
@@ -11943,8 +11955,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 94.1045,
-   "total": 187.7222
+   "direct": 94.1013,
+   "total": 188.3101
   },
   {
    "surface": "wall-x-",
@@ -11958,8 +11970,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 116.2403,
-   "total": 210.679
+   "direct": 116.2386,
+   "total": 210.0891
   },
   {
    "surface": "wall-x-",
@@ -11973,8 +11985,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 130.9114,
-   "total": 225.1588
+   "direct": 130.912,
+   "total": 224.5486
   },
   {
    "surface": "wall-x-",
@@ -11988,8 +12000,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 128.9216,
-   "total": 223.1374
+   "direct": 128.9208,
+   "total": 222.8812
   },
   {
    "surface": "wall-x-",
@@ -12003,8 +12015,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 111.9177,
-   "total": 205.7734
+   "direct": 111.9185,
+   "total": 205.897
   },
   {
    "surface": "wall-x-",
@@ -12018,8 +12030,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 90.1195,
-   "total": 184.3817
+   "direct": 90.1225,
+   "total": 184.3051
   },
   {
    "surface": "wall-x-",
@@ -12033,8 +12045,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 73.356,
-   "total": 167.5621
+   "direct": 73.3509,
+   "total": 167.5095
   },
   {
    "surface": "wall-x-",
@@ -12048,8 +12060,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 60.5824,
-   "total": 154.9744
+   "direct": 60.5822,
+   "total": 154.5337
   },
   {
    "surface": "wall-x-",
@@ -12063,8 +12075,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 49.2191,
-   "total": 143.4055
+   "direct": 49.2198,
+   "total": 143.5947
   },
   {
    "surface": "wall-x-",
@@ -12078,8 +12090,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 38.5122,
-   "total": 133.1826
+   "direct": 38.5199,
+   "total": 132.9167
   },
   {
    "surface": "wall-x-",
@@ -12093,8 +12105,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 28.7683,
-   "total": 122.9106
+   "direct": 28.7641,
+   "total": 123.1468
   },
   {
    "surface": "wall-x-",
@@ -12108,8 +12120,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 20.4274,
-   "total": 113.591
+   "direct": 20.4267,
+   "total": 114.3823
   },
   {
    "surface": "wall-x-",
@@ -12123,8 +12135,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 14.1353,
-   "total": 104.6586
+   "direct": 14.1356,
+   "total": 104.4233
   },
   {
    "surface": "wall-x-",
@@ -12138,8 +12150,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 10.4408,
-   "total": 97.3463
+   "direct": 10.4403,
+   "total": 97.3125
   },
   {
    "surface": "wall-x-",
@@ -12153,8 +12165,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 15.1723,
-   "total": 105.8804
+   "direct": 15.172,
+   "total": 106.0623
   },
   {
    "surface": "wall-x-",
@@ -12168,8 +12180,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 21.5673,
-   "total": 113.6981
+   "direct": 21.5715,
+   "total": 113.577
   },
   {
    "surface": "wall-x-",
@@ -12183,8 +12195,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 29.7028,
-   "total": 122.5997
+   "direct": 29.6972,
+   "total": 122.3045
   },
   {
    "surface": "wall-x-",
@@ -12199,7 +12211,7 @@
     "z": 0
    },
    "direct": 40.2099,
-   "total": 133.2139
+   "total": 133.4525
   },
   {
    "surface": "wall-x-",
@@ -12213,8 +12225,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 54.8811,
-   "total": 148.0921
+   "direct": 54.8812,
+   "total": 148.0754
   },
   {
    "surface": "wall-x-",
@@ -12228,8 +12240,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 76.2612,
-   "total": 169.6706
+   "direct": 76.2664,
+   "total": 169.9501
   },
   {
    "surface": "wall-x-",
@@ -12243,8 +12255,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 108.4357,
-   "total": 201.9583
+   "direct": 108.4314,
+   "total": 201.8071
   },
   {
    "surface": "wall-x-",
@@ -12258,8 +12270,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 152.7013,
-   "total": 246.641
+   "direct": 152.7017,
+   "total": 246.7659
   },
   {
    "surface": "wall-x-",
@@ -12273,8 +12285,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 185.1957,
-   "total": 279.1392
+   "direct": 185.1964,
+   "total": 279.1657
   },
   {
    "surface": "wall-x-",
@@ -12288,8 +12300,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 181.1532,
-   "total": 274.7985
+   "direct": 181.1528,
+   "total": 275.3219
   },
   {
    "surface": "wall-x-",
@@ -12303,8 +12315,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 145.2228,
-   "total": 239.3061
+   "direct": 145.222,
+   "total": 238.8875
   },
   {
    "surface": "wall-x-",
@@ -12318,8 +12330,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 102.6889,
-   "total": 196.5215
+   "direct": 102.693,
+   "total": 196.6856
   },
   {
    "surface": "wall-x-",
@@ -12333,8 +12345,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 73.6004,
-   "total": 167.3835
+   "direct": 73.5974,
+   "total": 167.1735
   },
   {
    "surface": "wall-x-",
@@ -12348,8 +12360,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 53.9206,
-   "total": 147.5912
+   "direct": 53.9202,
+   "total": 146.9106
   },
   {
    "surface": "wall-x-",
@@ -12363,8 +12375,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 39.9937,
-   "total": 133.1419
+   "direct": 39.9934,
+   "total": 133.4152
   },
   {
    "surface": "wall-x-",
@@ -12378,8 +12390,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 29.6755,
-   "total": 122.8891
+   "direct": 29.6815,
+   "total": 122.7393
   },
   {
    "surface": "wall-x-",
@@ -12393,8 +12405,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 21.6128,
-   "total": 114.0459
+   "direct": 21.6097,
+   "total": 114.1983
   },
   {
    "surface": "wall-x-",
@@ -12408,8 +12420,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 15.2404,
-   "total": 106.4753
+   "direct": 15.2407,
+   "total": 106.1254
   },
   {
    "surface": "wall-x-",
@@ -12423,8 +12435,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 10.5179,
-   "total": 97.9407
+   "direct": 10.518,
+   "total": 97.6834
   },
   {
    "surface": "wall-x-",
@@ -12438,8 +12450,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 7.2933,
-   "total": 91.7329
+   "direct": 7.2931,
+   "total": 91.4341
   },
   {
    "surface": "wall-x-",
@@ -12454,7 +12466,7 @@
     "z": 0
    },
    "direct": 10.8036,
-   "total": 98.9262
+   "total": 99.0768
   },
   {
    "surface": "wall-x-",
@@ -12468,8 +12480,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 15.5227,
-   "total": 105.6408
+   "direct": 15.5221,
+   "total": 105.5813
   },
   {
    "surface": "wall-x-",
@@ -12483,8 +12495,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 22.033,
-   "total": 112.7622
+   "direct": 22.0328,
+   "total": 113.2462
   },
   {
    "surface": "wall-x-",
@@ -12498,8 +12510,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 31.664,
-   "total": 123.7992
+   "direct": 31.663,
+   "total": 123.5227
   },
   {
    "surface": "wall-x-",
@@ -12513,8 +12525,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 47.9023,
-   "total": 140.3779
+   "direct": 47.9031,
+   "total": 140.5819
   },
   {
    "surface": "wall-x-",
@@ -12528,8 +12540,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 76.8715,
-   "total": 170.0353
+   "direct": 76.8718,
+   "total": 169.5662
   },
   {
    "surface": "wall-x-",
@@ -12543,8 +12555,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 126.7389,
-   "total": 220.377
+   "direct": 126.7374,
+   "total": 220.4463
   },
   {
    "surface": "wall-x-",
@@ -12559,7 +12571,7 @@
     "z": 0
    },
    "direct": 201.164,
-   "total": 295.5516
+   "total": 294.7681
   },
   {
    "surface": "wall-x-",
@@ -12573,8 +12585,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 269.3637,
-   "total": 363.317
+   "direct": 269.3633,
+   "total": 363.6584
   },
   {
    "surface": "wall-x-",
@@ -12588,8 +12600,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 263.0861,
-   "total": 357.0526
+   "direct": 263.0854,
+   "total": 357.0665
   },
   {
    "surface": "wall-x-",
@@ -12603,8 +12615,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 192.4558,
-   "total": 286.1521
+   "direct": 192.4561,
+   "total": 285.8519
   },
   {
    "surface": "wall-x-",
@@ -12618,8 +12630,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 120.1506,
-   "total": 213.5628
+   "direct": 120.1507,
+   "total": 213.4029
   },
   {
    "surface": "wall-x-",
@@ -12633,8 +12645,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 75.1723,
-   "total": 168.5739
+   "direct": 75.1722,
+   "total": 168.6889
   },
   {
    "surface": "wall-x-",
@@ -12648,8 +12660,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 47.5326,
-   "total": 139.7254
+   "direct": 47.533,
+   "total": 140.1495
   },
   {
    "surface": "wall-x-",
@@ -12663,8 +12675,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 31.5116,
-   "total": 123.5992
+   "direct": 31.514,
+   "total": 123.7011
   },
   {
    "surface": "wall-x-",
@@ -12678,8 +12690,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 22.0187,
-   "total": 113.4062
+   "direct": 22.0188,
+   "total": 113.3679
   },
   {
    "surface": "wall-x-",
@@ -12693,8 +12705,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 15.596,
-   "total": 105.9263
+   "direct": 15.5967,
+   "total": 106.1983
   },
   {
    "surface": "wall-x-",
@@ -12709,7 +12721,7 @@
     "z": 0
    },
    "direct": 10.8902,
-   "total": 99.6984
+   "total": 98.8548
   },
   {
    "surface": "wall-x-",
@@ -12723,8 +12735,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 7.3786,
-   "total": 91.742
+   "direct": 7.3787,
+   "total": 92.1823
   },
   {
    "surface": "wall-x-",
@@ -12739,7 +12751,7 @@
     "z": 0
    },
    "direct": 4.7471,
-   "total": 86.0452
+   "total": 86.3982
   },
   {
    "surface": "wall-x-",
@@ -12754,7 +12766,7 @@
     "z": 0
    },
    "direct": 7.019,
-   "total": 92.464
+   "total": 92.4508
   },
   {
    "surface": "wall-x-",
@@ -12768,8 +12780,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 10.2373,
-   "total": 97.9206
+   "direct": 10.2371,
+   "total": 97.8493
   },
   {
    "surface": "wall-x-",
@@ -12783,8 +12795,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 14.9551,
-   "total": 104.5767
+   "direct": 14.952,
+   "total": 104.5142
   },
   {
    "surface": "wall-x-",
@@ -12798,8 +12810,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 22.979,
-   "total": 113.4903
+   "direct": 22.9798,
+   "total": 113.2948
   },
   {
    "surface": "wall-x-",
@@ -12813,8 +12825,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 38.9964,
-   "total": 130.5614
+   "direct": 38.996,
+   "total": 130.6063
   },
   {
    "surface": "wall-x-",
@@ -12828,8 +12840,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 73.6687,
-   "total": 165.9434
+   "direct": 73.6718,
+   "total": 166.4506
   },
   {
    "surface": "wall-x-",
@@ -12843,8 +12855,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 142.9886,
-   "total": 236.1967
+   "direct": 142.9829,
+   "total": 236.8776
   },
   {
    "surface": "wall-x-",
@@ -12858,8 +12870,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 250.17,
-   "total": 344.2002
+   "direct": 250.1699,
+   "total": 344.2175
   },
   {
    "surface": "wall-x-",
@@ -12873,8 +12885,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 362.864,
-   "total": 457.8249
+   "direct": 362.8631,
+   "total": 457.0575
   },
   {
    "surface": "wall-x-",
@@ -12888,8 +12900,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 359.1257,
-   "total": 453.8176
+   "direct": 359.1261,
+   "total": 454.1395
   },
   {
    "surface": "wall-x-",
@@ -12903,8 +12915,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 244.5374,
-   "total": 339.0108
+   "direct": 244.5376,
+   "total": 338.7663
   },
   {
    "surface": "wall-x-",
@@ -12918,8 +12930,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 140.2385,
-   "total": 233.7346
+   "direct": 140.2341,
+   "total": 233.7308
   },
   {
    "surface": "wall-x-",
@@ -12933,8 +12945,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 72.8763,
-   "total": 165.4168
+   "direct": 72.874,
+   "total": 165.6399
   },
   {
    "surface": "wall-x-",
@@ -12948,8 +12960,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 38.648,
-   "total": 130.931
+   "direct": 38.6481,
+   "total": 130.0628
   },
   {
    "surface": "wall-x-",
@@ -12963,8 +12975,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 22.9498,
-   "total": 113.7623
+   "direct": 22.9483,
+   "total": 113.984
   },
   {
    "surface": "wall-x-",
@@ -12978,8 +12990,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 15.0228,
-   "total": 104.7794
+   "direct": 15.0259,
+   "total": 104.5176
   },
   {
    "surface": "wall-x-",
@@ -12994,7 +13006,7 @@
     "z": 0
    },
    "direct": 10.364,
-   "total": 98.5222
+   "total": 98.4725
   },
   {
    "surface": "wall-x-",
@@ -13009,7 +13021,7 @@
     "z": 0
    },
    "direct": 7.1457,
-   "total": 92.3317
+   "total": 92.8286
   },
   {
    "surface": "wall-x-",
@@ -13024,7 +13036,7 @@
     "z": 0
    },
    "direct": 4.8527,
-   "total": 86.1608
+   "total": 86.685
   },
   {
    "surface": "wall-x-",
@@ -13039,7 +13051,7 @@
     "z": 0
    },
    "direct": 2.531,
-   "total": 80.7819
+   "total": 80.8967
   },
   {
    "surface": "wall-x-",
@@ -13054,7 +13066,7 @@
     "z": 0
    },
    "direct": 3.7554,
-   "total": 86.6499
+   "total": 86.7708
   },
   {
    "surface": "wall-x-",
@@ -13069,7 +13081,7 @@
     "z": 0
    },
    "direct": 5.5904,
-   "total": 91.6653
+   "total": 91.4752
   },
   {
    "surface": "wall-x-",
@@ -13083,8 +13095,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 8.5186,
-   "total": 96.1116
+   "direct": 8.5176,
+   "total": 95.8639
   },
   {
    "surface": "wall-x-",
@@ -13098,8 +13110,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 14.0034,
-   "total": 103.5059
+   "direct": 14.0037,
+   "total": 102.8742
   },
   {
    "surface": "wall-x-",
@@ -13113,8 +13125,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 26.207,
-   "total": 117.0546
+   "direct": 26.2068,
+   "total": 116.7634
   },
   {
    "surface": "wall-x-",
@@ -13128,8 +13140,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 56.9288,
-   "total": 149.1658
+   "direct": 56.9297,
+   "total": 149.0989
   },
   {
    "surface": "wall-x-",
@@ -13143,8 +13155,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 137.1799,
-   "total": 231.1772
+   "direct": 137.1722,
+   "total": 231.2599
   },
   {
    "surface": "wall-x-",
@@ -13158,8 +13170,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 284.6961,
-   "total": 380.0779
+   "direct": 284.6954,
+   "total": 380.0881
   },
   {
    "surface": "wall-x-",
@@ -13173,8 +13185,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 448.2881,
-   "total": 544.4455
+   "direct": 448.2883,
+   "total": 544.4351
   },
   {
    "surface": "wall-x-",
@@ -13188,8 +13200,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 449.2426,
-   "total": 545.5025
+   "direct": 449.242,
+   "total": 544.896
   },
   {
    "surface": "wall-x-",
@@ -13203,8 +13215,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 284.5309,
-   "total": 379.5427
+   "direct": 284.532,
+   "total": 379.5654
   },
   {
    "surface": "wall-x-",
@@ -13218,8 +13230,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 135.0198,
-   "total": 228.9801
+   "direct": 135.0138,
+   "total": 229.0381
   },
   {
    "surface": "wall-x-",
@@ -13233,8 +13245,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 56.6982,
-   "total": 149.1148
+   "direct": 56.6976,
+   "total": 149.3923
   },
   {
    "surface": "wall-x-",
@@ -13248,8 +13260,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 26.3215,
-   "total": 117.693
+   "direct": 26.3214,
+   "total": 117.2308
   },
   {
    "surface": "wall-x-",
@@ -13263,8 +13275,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 14.2563,
-   "total": 103.4028
+   "direct": 14.256,
+   "total": 103.4299
   },
   {
    "surface": "wall-x-",
@@ -13278,8 +13290,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 8.7519,
-   "total": 96.3343
+   "direct": 8.7529,
+   "total": 96.7389
   },
   {
    "surface": "wall-x-",
@@ -13294,7 +13306,7 @@
     "z": 0
    },
    "direct": 5.7744,
-   "total": 91.4983
+   "total": 91.324
   },
   {
    "surface": "wall-x-",
@@ -13309,7 +13321,7 @@
     "z": 0
    },
    "direct": 3.887,
-   "total": 86.913
+   "total": 87.0062
   },
   {
    "surface": "wall-x-",
@@ -13324,7 +13336,7 @@
     "z": 0
    },
    "direct": 2.6219,
-   "total": 81.1218
+   "total": 80.847
   },
   {
    "surface": "wall-x-",
@@ -13338,8 +13350,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 0.6796,
-   "total": 75.9574
+   "direct": 0.6795,
+   "total": 75.8777
   },
   {
    "surface": "wall-x-",
@@ -13354,7 +13366,7 @@
     "z": 0
    },
    "direct": 1.0331,
-   "total": 81.1434
+   "total": 80.8246
   },
   {
    "surface": "wall-x-",
@@ -13368,8 +13380,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 1.7185,
-   "total": 84.5921
+   "direct": 1.7184,
+   "total": 85.2823
   },
   {
    "surface": "wall-x-",
@@ -13384,7 +13396,7 @@
     "z": 0
    },
    "direct": 2.8427,
-   "total": 88.9072
+   "total": 88.3623
   },
   {
    "surface": "wall-x-",
@@ -13398,8 +13410,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 5.1171,
-   "total": 92.9619
+   "direct": 5.1172,
+   "total": 93.1445
   },
   {
    "surface": "wall-x-",
@@ -13413,8 +13425,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 10.8857,
-   "total": 100.7771
+   "direct": 10.8858,
+   "total": 100.7419
   },
   {
    "surface": "wall-x-",
@@ -13429,7 +13441,7 @@
     "z": 0
    },
    "direct": 27.4989,
-   "total": 119.5506
+   "total": 119.6503
   },
   {
    "surface": "wall-x-",
@@ -13443,8 +13455,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 78.1,
-   "total": 172.9279
+   "direct": 78.0984,
+   "total": 173.6896
   },
   {
    "surface": "wall-x-",
@@ -13458,8 +13470,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 209.5628,
-   "total": 307.0899
+   "direct": 209.5619,
+   "total": 307.0886
   },
   {
    "surface": "wall-x-",
@@ -13473,8 +13485,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 395.3296,
-   "total": 493.8596
+   "direct": 395.3322,
+   "total": 493.9389
   },
   {
    "surface": "wall-x-",
@@ -13488,8 +13500,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 397.1638,
-   "total": 495.9555
+   "direct": 397.1632,
+   "total": 496.4391
   },
   {
    "surface": "wall-x-",
@@ -13503,8 +13515,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 210.698,
-   "total": 308.0483
+   "direct": 210.6964,
+   "total": 308.0339
   },
   {
    "surface": "wall-x-",
@@ -13518,8 +13530,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 79.3684,
-   "total": 174.4567
+   "direct": 79.3672,
+   "total": 174.1362
   },
   {
    "surface": "wall-x-",
@@ -13533,8 +13545,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 28.635,
-   "total": 120.784
+   "direct": 28.6351,
+   "total": 120.9399
   },
   {
    "surface": "wall-x-",
@@ -13549,7 +13561,7 @@
     "z": 0
    },
    "direct": 11.5718,
-   "total": 101.564
+   "total": 101.4166
   },
   {
    "surface": "wall-x-",
@@ -13564,7 +13576,7 @@
     "z": 0
    },
    "direct": 5.5136,
-   "total": 92.7694
+   "total": 93.1558
   },
   {
    "surface": "wall-x-",
@@ -13578,8 +13590,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 3.0695,
-   "total": 88.9216
+   "direct": 3.0696,
+   "total": 88.9199
   },
   {
    "surface": "wall-x-",
@@ -13594,7 +13606,7 @@
     "z": 0
    },
    "direct": 1.8466,
-   "total": 85.2074
+   "total": 85.4301
   },
   {
    "surface": "wall-x-",
@@ -13608,8 +13620,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 1.1087,
-   "total": 81.1836
+   "direct": 1.1088,
+   "total": 81.0048
   },
   {
    "surface": "wall-x-",
@@ -13623,8 +13635,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 0.726,
-   "total": 75.4905
+   "direct": 0.7261,
+   "total": 76.4172
   },
   {
    "surface": "wall-x-",
@@ -13639,7 +13651,7 @@
     "z": 0
    },
    "direct": 0.0465,
-   "total": 71.0577
+   "total": 70.9221
   },
   {
    "surface": "wall-x-",
@@ -13654,7 +13666,7 @@
     "z": 0
    },
    "direct": 0.0596,
-   "total": 75.8133
+   "total": 75.9165
   },
   {
    "surface": "wall-x-",
@@ -13669,7 +13681,7 @@
     "z": 0
    },
    "direct": 0.0774,
-   "total": 79.386
+   "total": 80.029
   },
   {
    "surface": "wall-x-",
@@ -13684,7 +13696,7 @@
     "z": 0
    },
    "direct": 0.1014,
-   "total": 82.1021
+   "total": 82.0447
   },
   {
    "surface": "wall-x-",
@@ -13699,7 +13711,7 @@
     "z": 0
    },
    "direct": 0.1535,
-   "total": 84.1756
+   "total": 84.4789
   },
   {
    "surface": "wall-x-",
@@ -13714,7 +13726,7 @@
     "z": 0
    },
    "direct": 0.378,
-   "total": 86.96
+   "total": 87.1749
   },
   {
    "surface": "wall-x-",
@@ -13729,7 +13741,7 @@
     "z": 0
    },
    "direct": 1.3946,
-   "total": 91.1253
+   "total": 90.7601
   },
   {
    "surface": "wall-x-",
@@ -13743,8 +13755,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 5.9873,
-   "total": 99.777
+   "direct": 5.9876,
+   "total": 99.4473
   },
   {
    "surface": "wall-x-",
@@ -13758,8 +13770,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 24.9575,
-   "total": 122.531
+   "direct": 24.9573,
+   "total": 123.7532
   },
   {
    "surface": "wall-x-",
@@ -13773,8 +13785,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 64.1276,
-   "total": 165.9617
+   "direct": 64.1287,
+   "total": 166.6883
   },
   {
    "surface": "wall-x-",
@@ -13788,8 +13800,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 66.882,
-   "total": 169.3935
+   "direct": 66.8818,
+   "total": 169.3979
   },
   {
    "surface": "wall-x-",
@@ -13803,8 +13815,8 @@
     "y": 0,
     "z": 0
    },
-   "direct": 28.4636,
-   "total": 126.6057
+   "direct": 28.4633,
+   "total": 126.7456
   },
   {
    "surface": "wall-x-",
@@ -13819,7 +13831,7 @@
     "z": 0
    },
    "direct": 7.7338,
-   "total": 101.8737
+   "total": 101.7333
   },
   {
    "surface": "wall-x-",
@@ -13834,7 +13846,7 @@
     "z": 0
    },
    "direct": 2.0923,
-   "total": 91.8754
+   "total": 91.624
   },
   {
    "surface": "wall-x-",
@@ -13849,7 +13861,7 @@
     "z": 0
    },
    "direct": 0.6883,
-   "total": 87.4207
+   "total": 87.5546
   },
   {
    "surface": "wall-x-",
@@ -13864,7 +13876,7 @@
     "z": 0
    },
    "direct": 0.2931,
-   "total": 84.7712
+   "total": 85.0275
   },
   {
    "surface": "wall-x-",
@@ -13879,7 +13891,7 @@
     "z": 0
    },
    "direct": 0.1743,
-   "total": 82.7037
+   "total": 82.2932
   },
   {
    "surface": "wall-x-",
@@ -13894,7 +13906,7 @@
     "z": 0
    },
    "direct": 0.1213,
-   "total": 79.753
+   "total": 80.1401
   },
   {
    "surface": "wall-x-",
@@ -13909,7 +13921,7 @@
     "z": 0
    },
    "direct": 0.0878,
-   "total": 76.541
+   "total": 76.5408
   },
   {
    "surface": "wall-x-",
@@ -13924,7 +13936,7 @@
     "z": 0
    },
    "direct": 0.0656,
-   "total": 71.3668
+   "total": 70.7784
   }
  ]
 }

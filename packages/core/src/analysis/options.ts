@@ -1,8 +1,9 @@
-// The illuminance calculation's tuning: how finely it splits things and when
-// it stops (ADR 0060). Plain data passed through the calculation, with
-// defaults, so it can become a user setting by wiring alone.
+// The illuminance calculation's tuning and its features (ADR 0060, 0061): how
+// finely it splits things, when it stops, and which parts of the physics it
+// counts. Plain data passed through the calculation, with defaults, so any of
+// it can become a user setting by wiring alone.
 
-/** How finely the calculation works, and when it stops. */
+/** How finely the calculation works, when it stops, and what it counts. */
 export interface CalculationOptions {
   /**
    * The largest cell a luminous opening is split into, in m. The inverse-
@@ -18,11 +19,44 @@ export interface CalculationOptions {
    * more than this share of the brightest patch's.
    */
   readonly tolerance: number;
+  /**
+   * Split luminous openings into cells of `sourceCellM`. Off, each luminaire
+   * is one point of light: faster, and wrong close to a large luminaire.
+   */
+  readonly splitOpenings: boolean;
+  /** Furniture casts shadows on direct light. */
+  readonly furnitureShadows: boolean;
+  /**
+   * Count the light the floor, ceiling and walls reflect, every bounce of it.
+   * Off, only direct light: in a typical room, a third or more too dark.
+   */
+  readonly bouncedLight: boolean;
 }
 
-/** The defaults, chosen by measurement against Radiance (ADR 0060, accuracy/REPORT.md). */
+/** The defaults: everything counted, sizes chosen by measurement against Radiance (ADR 0060, accuracy/PATCH-SIZE.md). */
 export const DEFAULT_CALCULATION_OPTIONS: CalculationOptions = {
   sourceCellM: 0.1,
   patchSizeM: 0.25,
   tolerance: 1e-4,
+  splitOpenings: true,
+  furnitureShadows: true,
+  bouncedLight: true,
 };
+
+/**
+ * Checks options that may come from a user: sizes positive and finite, the
+ * tolerance between 0 and 1.
+ *
+ * @throws RangeError naming the first bad value.
+ */
+export function checkCalculationOptions(options: CalculationOptions): void {
+  for (const name of ['sourceCellM', 'patchSizeM'] as const) {
+    const value = options[name];
+    if (!(value > 0) || !Number.isFinite(value)) {
+      throw new RangeError(`${name} must be a positive size in m, not ${value}`);
+    }
+  }
+  if (!(options.tolerance > 0 && options.tolerance < 1)) {
+    throw new RangeError(`tolerance must be between 0 and 1, not ${options.tolerance}`);
+  }
+}

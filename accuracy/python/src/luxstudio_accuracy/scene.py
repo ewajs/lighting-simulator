@@ -2,7 +2,7 @@
 
 Direct light (``DIRECT_OPTIONS``) needs nothing but the luminaires and the
 boxes: inside a closed box nothing is hidden by its walls. Bounced light comes
-from two runs with Radiance's ordinary source sampling: total light with every
+from two runs with Radiance's ordinary source subdivision: total light with every
 bounce (``BOUNCE_OPTIONS``) less direct light alone (``BOUNCE_DIRECT_OPTIONS``).
 The fine source sampling direct light needs close to a luminaire would apply at
 every bounce and take hours; bounced light is smooth, and the direct part's
@@ -12,7 +12,9 @@ them (ADR 0060).
 """
 
 import os
+import resource
 import shutil
+import time
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -43,9 +45,9 @@ _ORDINARY_SOURCES = (
     "-ds",
     "0.2",  # Radiance's default source subdivision.
     "-dt",
-    "0.05",  # Its default source threshold.
+    "0",  # Test every source. The default (0.05) skips faint ones by statistics
     "-dc",
-    "0.5",  # Its default certainty.
+    "1",  # that depend on the order rays arrive in, which -n changes: runs didn't repeat.
 )
 
 BOUNCE_DIRECT_OPTIONS = (*_ORDINARY_SOURCES, "-ab", "0")
@@ -171,12 +173,60 @@ def measure(
     return [_lux(line) for line in output.splitlines() if line.strip()]
 
 
+@dataclass(frozen=True)
+class RunTime:
+    """How long rtrace took."""
+
+    wall_s: float
+    """Wall-clock seconds."""
+    cpu_s: float
+    """CPU seconds, summed over all of rtrace's processes."""
+
+
+@dataclass(frozen=True)
+class DirectAndBounced:
+    """Direct and bounced light at each point, in lx, and how long Radiance took."""
+
+    direct: list[float]
+    bounced: list[float]
+    direct_time: RunTime
+    """The direct-light run."""
+    bounced_time: RunTime
+    """The two runs bounced light takes: total light, and direct light to subtract."""
+
+
+def timed_measure(
+    radiance: Radiance,
+    octree: Path,
+    points: list[tuple[Vec3, Vec3]],
+    options: tuple[str, ...],
+) -> tuple[list[float], RunTime]:
+    """``measure``, timed: wall-clock and CPU seconds.
+
+    Args:
+        radiance: The installed Radiance.
+        octree: From ``build_scene``.
+        points: As for ``measure``.
+        options: As for ``measure``.
+
+    Returns:
+        The illuminance at each point, in lx, and the time it took.
+    """
+    before = resource.getrusage(resource.RUSAGE_CHILDREN)
+    start = time.perf_counter()
+    values = measure(radiance, octree, points, options)
+    wall = time.perf_counter() - start
+    after = resource.getrusage(resource.RUSAGE_CHILDREN)
+    cpu = (after.ru_utime + after.ru_stime) - (before.ru_utime + before.ru_stime)
+    return values, RunTime(wall_s=wall, cpu_s=cpu)
+
+
 def direct_and_bounced(
     radiance: Radiance,
     octree: Path,
     points: list[tuple[Vec3, Vec3]],
     bounce_options: tuple[str, ...] = BOUNCE_OPTIONS,
-) -> tuple[list[float], list[float]]:
+) -> DirectAndBounced:
     """Direct light with fine source sampling, and bounced light, at each point.
 
     Args:
@@ -187,12 +237,20 @@ def direct_and_bounced(
             or others to test the checks with.
 
     Returns:
-        Direct and bounced illuminance at each point, in lx.
+        Direct and bounced illuminance at each point, in lx, and the runs' times.
     """
-    direct = measure(radiance, octree, points, DIRECT_OPTIONS)
-    total = measure(radiance, octree, points, bounce_options)
-    plain = measure(radiance, octree, points, BOUNCE_DIRECT_OPTIONS)
-    return direct, [t - p for t, p in zip(total, plain, strict=True)]
+    direct, direct_time = timed_measure(radiance, octree, points, DIRECT_OPTIONS)
+    total, total_time = timed_measure(radiance, octree, points, bounce_options)
+    plain, plain_time = timed_measure(radiance, octree, points, BOUNCE_DIRECT_OPTIONS)
+    return DirectAndBounced(
+        direct=direct,
+        bounced=[t - p for t, p in zip(total, plain, strict=True)],
+        direct_time=direct_time,
+        bounced_time=RunTime(
+            wall_s=total_time.wall_s + plain_time.wall_s,
+            cpu_s=total_time.cpu_s + plain_time.cpu_s,
+        ),
+    )
 
 
 def illuminance(

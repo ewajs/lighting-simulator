@@ -17,6 +17,7 @@ simulator, Radiance, and the tools that show it: direct light
 | `REPORT.md` | The comparison, room by room and surface by surface |
 | `summary.json` | The same figures as data, for the manual's accuracy page (ADR 0059) |
 | `PATCH-SIZE.md` | Accuracy against time for three patch sizes: why bounced light uses 25 cm patches |
+| `timings.json` | How long Lux Studio takes per room at each feature step, and Radiance for the same points, with the machine (ADR 0061) |
 
 ## Running it
 
@@ -27,6 +28,7 @@ npm run accuracy:check        ruff, mypy and pytest for the Python
 npm run accuracy:references   check Radiance, regenerate the references, then the report
 npm run accuracy:report       regenerate only REPORT.md and summary.json
 npm run accuracy:patch-size   regenerate PATCH-SIZE.md (about 20 s)
+npm run accuracy:timings      regenerate timings.json (about 50 s, on an idle machine)
 npm run accuracy:docs         browse the Python's docs, live
 npm test                      includes the comparison (accuracy/typescript)
 ```
@@ -45,7 +47,8 @@ of an Apple M1 Pro; `accuracy:check` runs Radiance's own tests in about a minute
 2. **Its bounced light is checked too:** in a closed cube that reflects 80 %,
    the average must match the integrating-sphere formula within 2 %, and a
    test (`python/tests/test_convergence.py`) shows that more rays, more
-   bounces or fainter rays barely change a room's result.
+   bounces or fainter rays barely change a room's result, and that the same
+   run twice gives the same values but for sampling noise.
 3. **Then each room is computed** at every point of its grids: direct light,
    and total light with the room's surfaces reflecting diffusely. A room with
    furniture is computed again without it, so the report can show what

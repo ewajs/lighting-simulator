@@ -53,7 +53,9 @@ export interface Reference {
   readonly radiance: {
     readonly release: string;
     readonly direct: readonly string[];
-    readonly total: readonly string[];
+    readonly bounced: readonly (readonly string[])[];
+    /** How long Radiance took, on which machine and with how many processes (ADR 0061). */
+    readonly timing?: RadianceTiming;
   };
   readonly points: readonly {
     readonly surface: string;
@@ -67,6 +69,20 @@ export interface Reference {
     readonly direct: readonly number[];
     readonly total: readonly number[];
   };
+}
+
+/** Seconds a Radiance run took: wall clock, and CPU summed over its processes. */
+export interface RunSeconds {
+  readonly wallSeconds: number;
+  readonly cpuSeconds: number;
+}
+
+/** How long Radiance took for a reference: direct light, and the two runs bounced light takes. */
+export interface RadianceTiming {
+  readonly machine: string;
+  readonly processes: number;
+  readonly direct: RunSeconds;
+  readonly bounced: RunSeconds;
 }
 
 /** One point: where it is, and Radiance's and Lux Studio's direct and total light, in lx. */
@@ -152,7 +168,9 @@ export function referenceLight(
     return placed;
   });
 
-  const boxes = furniture ? (reference.room.blockers ?? []) : [];
+  // The reference's boxes stand in for furniture: they cast shadows when the
+  // options say furniture does.
+  const boxes = furniture && options.furnitureShadows ? (reference.room.blockers ?? []) : [];
   const blockers: Blocker[] = boxes.map(({ centre, half, yawDeg }) => ({
     centre,
     half,

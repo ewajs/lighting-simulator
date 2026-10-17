@@ -5,7 +5,8 @@ made from, and at each point Radiance's direct light and its total light,
 direct plus every bounce off the room's surfaces. For a room with furniture,
 it also holds both again without the furniture, so the report can show how
 much furniture changes bounced light (ADR 0060). It records how it was made:
-the Radiance release and rtrace's options. Lux Studio's own calculation is
+the Radiance release, rtrace's options, and how long the runs took on which
+machine (ADR 0061). Lux Studio's own calculation is
 compared with it by ``accuracy/typescript``.
 """
 
@@ -15,14 +16,17 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
-from luxstudio_accuracy.radiance import RELEASE, Radiance
+from luxstudio_accuracy.radiance import RELEASE, Radiance, machine
 from luxstudio_accuracy.rooms import IES_DIR, Room
 from luxstudio_accuracy.scene import (
     BOUNCE_DIRECT_OPTIONS,
     BOUNCE_OPTIONS,
     DIRECT_OPTIONS,
+    PROCESSES,
+    DirectAndBounced,
     PlacedLuminaire,
     RoomShell,
+    RunTime,
     ShadowBox,
     build_scene,
     direct_and_bounced,
@@ -62,7 +66,9 @@ def compute_reference(radiance: Radiance, room: Room) -> dict[str, Any]:
         room.reflectances["ceiling"],
     )
     points = [(point.position, point.normal) for point in room.points]
-    direct, total = _direct_and_total(radiance, luminaires, boxes, shell, points)
+    measured = _measure_scene(radiance, luminaires, boxes, shell, points)
+    direct = measured.direct
+    total = [d + b for d, b in zip(measured.direct, measured.bounced, strict=True)]
     reference: dict[str, Any] = {
         "format": FORMAT,
         "version": VERSION,
@@ -71,6 +77,12 @@ def compute_reference(radiance: Radiance, room: Room) -> dict[str, Any]:
             "release": RELEASE,
             "direct": list(DIRECT_OPTIONS),
             "bounced": [list(BOUNCE_OPTIONS), list(BOUNCE_DIRECT_OPTIONS)],
+            "timing": {
+                "machine": machine(),
+                "processes": PROCESSES,
+                "direct": _seconds(measured.direct_time),
+                "bounced": _seconds(measured.bounced_time),
+            },
         },
         "generated": datetime.date.today().isoformat(),
         "points": [
@@ -85,26 +97,29 @@ def compute_reference(radiance: Radiance, room: Room) -> dict[str, Any]:
         ],
     }
     if boxes:
-        bare_direct, bare_total = _direct_and_total(radiance, luminaires, [], shell, points)
+        bare = _measure_scene(radiance, luminaires, [], shell, points)
         reference["withoutFurniture"] = {
-            "direct": [round(d, 4) for d in bare_direct],
-            "total": [round(t, 4) for t in bare_total],
+            "direct": [round(d, 4) for d in bare.direct],
+            "total": [round(d + b, 4) for d, b in zip(bare.direct, bare.bounced, strict=True)],
         }
     return reference
 
 
-def _direct_and_total(
+def _measure_scene(
     radiance: Radiance,
     luminaires: list[PlacedLuminaire],
     boxes: list[ShadowBox],
     shell: RoomShell,
     points: list[tuple[Any, Any]],
-) -> tuple[list[float], list[float]]:
-    """One scene: direct light, and total light (direct plus bounced)."""
+) -> DirectAndBounced:
+    """One scene: direct light and bounced light, timed."""
     with tempfile.TemporaryDirectory() as tmp:
         octree = build_scene(radiance, Path(tmp), luminaires, boxes, shell)
-        direct, bounced = direct_and_bounced(radiance, octree, points)
-        return direct, [d + b for d, b in zip(direct, bounced, strict=True)]
+        return direct_and_bounced(radiance, octree, points)
+
+
+def _seconds(run: RunTime) -> dict[str, float]:
+    return {"wallSeconds": round(run.wall_s, 2), "cpuSeconds": round(run.cpu_s, 2)}
 
 
 def write_reference(reference: dict[str, Any], name: str) -> Path:

@@ -110,6 +110,24 @@ class Radiance:
         return result.stdout
 
 
+def machine() -> str:
+    """The processor's name, e.g. "Apple M1 Pro", to say where timings were taken.
+
+    Returns:
+        The name macOS gives, or Python's generic one elsewhere.
+    """
+    if platform.system() == "Darwin":
+        result = subprocess.run(
+            ["sysctl", "-n", "machdep.cpu.brand_string"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()
+    return platform.processor() or platform.machine()
+
+
 def supported(release: str = RELEASE) -> bool:
     """Whether a release is pinned for this platform, so it can be installed here.
 
