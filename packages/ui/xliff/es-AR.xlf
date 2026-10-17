@@ -887,6 +887,122 @@
   <source>Your work saves itself in this browser. At the top, New starts from a template, Save and Open use files, and Share makes a link.</source>
   <target>Tu trabajo se guarda solo en este navegador. Arriba, Nuevo empieza desde una plantilla, Guardar y Abrir usan archivos, y Compartir crea un enlace.</target>
 </trans-unit>
+<trans-unit id="s749b1ea23c1ad6e2">
+  <source>Work plane</source>
+  <target>Plano de trabajo</target>
+</trans-unit>
+<trans-unit id="s9b4177c33e262c04">
+  <source>Left wall</source>
+  <target>Pared izquierda</target>
+</trans-unit>
+<trans-unit id="s32d351797ab6edfb">
+  <source>Right wall</source>
+  <target>Pared derecha</target>
+</trans-unit>
+<trans-unit id="s4d44000f76af0cd6">
+  <source>Back wall</source>
+  <target>Pared del fondo</target>
+</trans-unit>
+<trans-unit id="scc415333bc43f71c">
+  <source>Front wall</source>
+  <target>Pared del frente</target>
+</trans-unit>
+<trans-unit id="sb5ffbb280b2ed563">
+  <source>Analysis</source>
+  <target>Análisis</target>
+</trans-unit>
+<trans-unit id="s67bf7e994fe5753a">
+  <source>Calculating…</source>
+  <target>Calculando…</target>
+</trans-unit>
+<trans-unit id="sca06671532428333">
+  <source>Calculation failed</source>
+  <target>El cálculo falló</target>
+</trans-unit>
+<trans-unit id="s01ed47d3bf697094">
+  <source>Out of date</source>
+  <target>Desactualizado</target>
+</trans-unit>
+<trans-unit id="s9c08620ecd68022e">
+  <source>Calculated in <x id="0" equiv-text="${formatNumber(state.ms)}"/> ms</source>
+  <target>Calculado en <x id="0" equiv-text="${formatNumber(state.ms)}"/> ms</target>
+</trans-unit>
+<trans-unit id="saa902b5e1f0a31dd">
+  <source>Add luminaires to see how much light reaches each surface.</source>
+  <target>Agregá luminarias para ver cuánta luz llega a cada superficie.</target>
+</trans-unit>
+<trans-unit id="sae27ee62b436b569">
+  <source>Open the catalog</source>
+  <target>Abrir el catálogo</target>
+</trans-unit>
+<trans-unit id="s292548f87eb2a57a">
+  <source>Calculate as I edit</source>
+  <target>Calcular mientras edito</target>
+</trans-unit>
+<trans-unit id="sfe81d5d73a35a2cf">
+  <source>Calculate</source>
+  <target>Calcular</target>
+</trans-unit>
+<trans-unit id="s3cf4f0723e1c0711">
+  <source>Average maintained illuminance</source>
+  <target>Iluminancia media mantenida</target>
+</trans-unit>
+<trans-unit id="s09b918b8e3c7ae55">
+  <source>The border leaves no work plane to measure.</source>
+  <target>El borde no deja plano de trabajo para medir.</target>
+</trans-unit>
+<trans-unit id="s76126d3ba75a558a">
+  <source>Room surfaces</source>
+  <target>Superficies del ambiente</target>
+</trans-unit>
+<trans-unit id="s51dc969b84c77a6d">
+  <source>Maintained values: with a maintenance factor of <x id="0" equiv-text="${factor}"/>.</source>
+  <target>Valores mantenidos: con un factor de mantenimiento de <x id="0" equiv-text="${factor}"/>.</target>
+</trans-unit>
+<trans-unit id="s9e16dc1b700aac47">
+  <source>Calculation settings</source>
+  <target>Ajustes del cálculo</target>
+</trans-unit>
+<trans-unit id="s27b32a0145bfdc03">
+  <source>Maintenance factor</source>
+  <target>Factor de mantenimiento</target>
+</trans-unit>
+<trans-unit id="s0350d44d90a92c2d">
+  <source>Work plane height</source>
+  <target>Altura del plano de trabajo</target>
+</trans-unit>
+<trans-unit id="s399092ccaf60b045">
+  <source>Light that bounces</source>
+  <target>Luz que rebota</target>
+</trans-unit>
+<trans-unit id="s81796c2d12b60aa9">
+  <source>Off: direct light only, faster and a third or more too dark.</source>
+  <target>Apagada: solo luz directa, más rápido y un tercio o más por debajo.</target>
+</trans-unit>
+<trans-unit id="s0c518f0855d19934">
+  <source>Furniture in bounced light</source>
+  <target>Muebles en la luz que rebota</target>
+</trans-unit>
+<trans-unit id="s3ada38a25e837359">
+  <source>Off: faster in furnished rooms, less accurate near furniture.</source>
+  <target>Apagada: más rápido con muebles, menos preciso cerca de ellos.</target>
+</trans-unit>
+<trans-unit id="s5d11a47bd5e424cc">
+  <source>Without an IES file: <x id="0" equiv-text="${estimated}"/>. Their light is an estimate.</source>
+  <target>Sin archivo IES: <x id="0" equiv-text="${estimated}"/>. Su luz es una estimación.</target>
+</trans-unit>
+<trans-unit id="s74467983e66653ca">
+  <source>Not in the catalog, left out: <x id="0" equiv-text="${unknown}"/>.</source>
+  <target>Fuera del catálogo, sin calcular: <x id="0" equiv-text="${unknown}"/>.</target>
+</trans-unit>
+<trans-unit id="see8c452e529b36fa">
+  <source><x id="0" equiv-text="${formatNumber(height, 2)}"/> m high, leaving out a <x id="1" equiv-text="${formatNumber(border, 2)}"/> m border</source>
+  <target>A <x id="0" equiv-text="${formatNumber(height, 2)}"/> m de altura, sin un borde de <x id="1" equiv-text="${formatNumber(border, 2)}"/> m</target>
+</trans-unit>
+<trans-unit id="s407df2ba980f0824">
+  <source>Work plane border</source>
+  <target>Borde del plano de trabajo</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

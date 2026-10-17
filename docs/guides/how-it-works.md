@@ -173,6 +173,14 @@ shape all the components:
   `<lxs-app>` subscribes to the Simulator, every component then gets the new
   scene.
 
+The Analysis tab shows the illuminance calculation
+([ADR 0064](../decisions/0064-analysis-in-the-app.md)). An
+{@link @luxstudio/ui!AnalysisController | `AnalysisController`} owned by
+`<lxs-app>` sends the scene, as a plain-data snapshot, to a Web Worker that
+runs core's `analyseIlluminance` from `@luxstudio/core/analysis`, an entry
+without the rendering code. It calculates only while the results are on
+screen, 250 ms after the last change, one calculation at a time.
+
 ## Walkthrough 1: dragging a luminaire, from pointer to undo
 
 1. **Pointer down.**

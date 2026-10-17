@@ -67,3 +67,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0061 | [The calculation's features as switches, measured one by one](0061-calculation-features-and-timing.md) | Accepted |
 | 0062 | [The manual's Analysis section: every comparison, charted](0062-manual-analysis-section.md) | Accepted |
 | 0063 | [Furniture in bounced light: it hides it and reflects it](0063-furniture-in-bounced-light.md) | Accepted |
+| 0064 | [The analysis in the app: a panel, calculated in a Web Worker](0064-analysis-in-the-app.md) | Accepted |
