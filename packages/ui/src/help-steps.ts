@@ -81,6 +81,17 @@ export function helpSteps({ touch, iesImport }: HelpContext): HelpStep[] {
           ),
     },
     {
+      illustration: 'analysis',
+      title: msg('See the light in numbers'),
+      body: touch
+        ? msg(
+            'Analysis gives the lux on the work plane and each surface. The Illuminance view, under View, paints them in colour; tap a surface to read its lux.',
+          )
+        : msg(
+            'Analysis, in the left panel, gives the lux on the work plane and each surface. Press 3 to paint them in colour, and point anywhere to read its lux.',
+          ),
+    },
+    {
       illustration: 'precision',
       title: msg('Precise, and undoable'),
       body: touch
