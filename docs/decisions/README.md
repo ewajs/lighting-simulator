@@ -71,3 +71,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0065 | [Keeping the room's work between calculations](0065-analysis-cache.md) | Accepted |
 | 0066 | [The illuminance view: the calculation drawn in false colour](0066-illuminance-view.md) | Accepted |
 | 0067 | [The lux probe: the light at any point, exactly](0067-lux-probe.md) | Accepted |
+| 0068 | [A busy reference room: how accuracy and time scale](0068-busy-reference-room.md) | Accepted |

@@ -3,7 +3,14 @@
 // are regression bounds set from the measured agreement; the figures
 // themselves are in accuracy/REPORT.md (`npm run accuracy:report`).
 import { describe, expect, it } from 'vitest';
-import { compareReference, summarize, type SurfaceSummary } from './compare';
+import {
+  BRIGHT_SHARE,
+  compareReference,
+  summarize,
+  type Light,
+  type PointComparison,
+  type SurfaceSummary,
+} from './compare';
 import { IES_FILES, REFERENCES } from './inputs';
 
 /** Each surface's average: measured worst 0.56 % (the wall sconce's ceiling). */
@@ -27,9 +34,25 @@ const NEAR_TOLERANCE = 0.15;
  */
 const TOTAL = { average: 0.04, far: 0.075, near: 0.16 };
 
+/**
+ * Rooms whose worst points are in penumbrae (ADR 0068), bounded by how few of
+ * their bright points are off by over OFF rather than by the worst one. In the
+ * busy open-plan room, floor points between furniture see a downlight only
+ * past an edge: Radiance sees a sliver of its 15 cm opening, while each of
+ * Lux Studio's 7.6 cm cells is seen or not, so the point reads 0 or double.
+ * Measured: 2.7 % of bright points off in direct light, 1.6 % in total;
+ * worst 68.4 % and 44.9 %. Averages keep the bounds above.
+ */
+const PENUMBRAE: Record<string, { readonly share: number; readonly worst: number }> = {
+  'busy-open-plan': { share: 0.035, worst: 0.75 },
+};
+/** A point "off", for PENUMBRAE's share. */
+const OFF = 0.1;
+
 describe('Lux Studio against Radiance', () => {
-  it('has the six reference rooms', () => {
+  it('has the seven reference rooms', () => {
     expect(Object.keys(REFERENCES).sort()).toEqual([
+      'busy-open-plan',
       'downlights-and-wall-washer',
       'furnished-living',
       'linear-pendant-over-table',
@@ -42,19 +65,24 @@ describe('Lux Studio against Radiance', () => {
   for (const [name, reference] of Object.entries(REFERENCES)) {
     const points = compareReference(reference, IES_FILES);
     const origins = reference.room.luminaires.map((luminaire) => luminaire.origin);
+    const penumbrae = PENUMBRAE[name];
+    const direct = { average: AVERAGE_TOLERANCE, far: FAR_TOLERANCE, near: NEAR_TOLERANCE };
 
     it(`${name}, direct: averages within 1 %, bright points within 3.5 % (15 % within 1 m of a luminaire)`, () => {
-      for (const summary of summarize(points, origins, 'direct')) {
-        const where = `${name} ${summary.surface}`;
-        expect(Math.abs(summary.averageError), `${where}: average`).toBeLessThan(AVERAGE_TOLERANCE);
-        expect(summary.worstFar, `${where}: points ≥ 1 m away`).toBeLessThan(FAR_TOLERANCE);
-        expect(summary.worstNear, `${where}: points < 1 m away`).toBeLessThan(NEAR_TOLERANCE);
-      }
+      expectWithin(name, summarize(points, origins, 'direct'), direct, penumbrae?.worst);
     });
 
     it(`${name}, total: averages within 4 %, bright points within 7.5 % (16 % within 1 m of a luminaire)`, () => {
-      expectWithin(name, summarize(points, origins, 'total'), TOTAL);
+      expectWithin(name, summarize(points, origins, 'total'), TOTAL, penumbrae?.worst);
     });
+
+    if (penumbrae) {
+      it(`${name}: few bright points off by over 10 %, in penumbrae`, () => {
+        for (const light of ['direct', 'total'] as const) {
+          expect(shareOff(points, light), light).toBeLessThan(penumbrae.share);
+        }
+      });
+    }
 
     if (reference.withoutFurniture) {
       it(`${name}, total without its furniture, on both sides: within the same bounds`, () => {
@@ -65,15 +93,27 @@ describe('Lux Studio against Radiance', () => {
   }
 });
 
+/** Checks each surface against `bounds`; with `worst`, a room in PENUMBRAE, its points against that instead. */
 function expectWithin(
   name: string,
   summaries: readonly SurfaceSummary[],
   bounds: { average: number; far: number; near: number },
+  worst?: number,
 ) {
   for (const summary of summaries) {
     const where = `${name} ${summary.surface}`;
     expect(Math.abs(summary.averageError), `${where}: average`).toBeLessThan(bounds.average);
-    expect(summary.worstFar, `${where}: points ≥ 1 m away`).toBeLessThan(bounds.far);
-    expect(summary.worstNear, `${where}: points < 1 m away`).toBeLessThan(bounds.near);
+    expect(summary.worstFar, `${where}: points ≥ 1 m away`).toBeLessThan(worst ?? bounds.far);
+    expect(summary.worstNear, `${where}: points < 1 m away`).toBeLessThan(worst ?? bounds.near);
   }
+}
+
+/** The share of the room's bright points (as `summarize` counts them) off by over OFF. */
+function shareOff(points: readonly PointComparison[], light: Light): number {
+  const radiance = (p: PointComparison) =>
+    light === 'direct' ? p.radianceDirectLx : p.radianceTotalLx;
+  const ours = (p: PointComparison) => (light === 'direct' ? p.oursDirectLx : p.oursTotalLx);
+  const brightest = Math.max(...points.map(radiance));
+  const bright = points.filter((p) => radiance(p) >= BRIGHT_SHARE * brightest);
+  return bright.filter((p) => Math.abs(ours(p) / radiance(p) - 1) > OFF).length / bright.length;
 }

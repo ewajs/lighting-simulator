@@ -36,7 +36,7 @@ npm test                      includes the comparison (accuracy/typescript)
 
 Radiance (6.0 patch 2) downloads on first use into `python/.cache`, checked by
 its SHA-256. It runs on macOS with Apple silicon; elsewhere its tests skip.
-Regenerating the references takes about six and a half minutes on every core
+Regenerating the references takes about fourteen minutes on every core
 of an Apple M1 Pro; `accuracy:check` runs Radiance's own tests in about a minute and a half.
 
 ## How a reference is made

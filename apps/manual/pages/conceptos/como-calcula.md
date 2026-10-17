@@ -9,6 +9,7 @@ const rooms = {
   'linear-pendant-over-table': 'Un colgante lineal sobre una mesa',
   'wall-sconce': 'Un aplique de pared',
   'furnished-living': 'Un living amueblado',
+  'busy-open-plan': 'Un ambiente integrado con diez muebles',
 }
 </script>
 
@@ -49,7 +50,7 @@ este orden:
 
 Se comprobó contra **Radiance**, el simulador de iluminación de investigación del
 Lawrence Berkeley National Laboratory, que lee los archivos IES con su propio
-código. Seis ambientes de prueba, con los archivos reales de la demo, y miles
+código. Siete ambientes de prueba, con los archivos reales de la demo, y miles
 de puntos, con la luz que rebota incluida. La diferencia más grande, por
 ambiente:
 

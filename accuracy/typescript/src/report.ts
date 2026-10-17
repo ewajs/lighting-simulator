@@ -118,10 +118,9 @@ export function reportMarkdown(summary: AccuracySummary): string {
       lines.push(
         '### Furniture and bounced light',
         '',
-        "Lux Studio's furniture casts shadows on direct light, but bounced light passes",
-        "through it; Radiance's furniture also blocks and reflects bounced light. Total light",
-        'compared again with the furniture taken out, in both: the difference between the',
-        'columns is what letting bounced light through furniture costs.',
+        'Furniture blocks and reflects bounced light in both programs (ADR 0063). Total',
+        'light compared again with the furniture taken out, in both: when the columns are',
+        'alike, the furniture is counted as well as the room is.',
         '',
         '| Surface | Ē difference, furnished | Ē difference, empty | Worst far point, furnished | Worst far point, empty |',
         '|---|---|---|---|---|',

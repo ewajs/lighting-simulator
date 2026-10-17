@@ -5,6 +5,59 @@ installed (no maintenance factor). "Direct" is the light straight from the lumin
 "total" adds every bounce off the room's surfaces. "Bright" points have at least
 10 % of the room's brightest point; "near" ones are within 1 m of a luminaire.
 
+## busy-open-plan
+
+A busy open-plan room, 6 × 5 m, with ten pieces of furniture: a living area (sofa, two armchairs, a coffee table and a TV unit), two bookcases on the back wall, a dining table under a linear pendant, a kitchen island and a desk. Nine luminaires: seven downlights, the pendant (Finelite HP-2) and a wall washer (Lightolier) on the back wall beside the bookcases. Finishes from walnut (0.15) to white (0.8). Measures how accuracy and time scale with a full room.
+
+Radiance rad6R0P2, 1924 points.
+
+### Total light
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 480 | 468.3 | 468.7 | 0.09 % | 11.65 % | 1.16 % |
+| floor | 480 | 254.4 | 255.4 | 0.37 % | 44.94 % | – |
+| ceiling | 480 | 278.2 | 279.5 | 0.44 % | 1.86 % | 4.09 % |
+| wall-x- | 220 | 176.7 | 176.5 | -0.16 % | 2.01 % | 0.93 % |
+| wall-z- | 264 | 186.7 | 188.4 | 0.93 % | 2.10 % | 1.70 % |
+
+### Direct light
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 480 | 257.9 | 257.7 | -0.08 % | 0.54 % | 0.61 % |
+| floor | 480 | 121.9 | 122.6 | 0.56 % | 68.37 % | – |
+| ceiling | 480 | 86.2 | 86.4 | 0.20 % | 0.12 % | 0.11 % |
+| wall-x- | 220 | 44.4 | 44.4 | -0.11 % | 0.32 % | – |
+| wall-z- | 264 | 51.3 | 51.3 | -0.05 % | 0.80 % | 0.99 % |
+
+### Feature by feature
+
+Each step adds one feature to the one before, against Radiance's full light (ADR 0061).
+
+| Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
+|---|---|---|---|---|
+| point-sources | 71.83 % | 60.92 % | 167.35 % | 98.51 % |
+| bounced-light | 77.82 % | 17.94 % | 320.50 % | 30.44 % |
+| split-openings | 77.69 % | 17.29 % | 320.19 % | 21.34 % |
+| furniture-shadows | 22.91 % | 15.93 % | 90.73 % | 36.55 % |
+| furniture-hides-bounce | 42.97 % | 34.11 % | 88.71 % | 62.05 % |
+| furniture-in-bounce | 0.93 % | 0.93 % | 44.94 % | 4.09 % |
+
+### Furniture and bounced light
+
+Furniture blocks and reflects bounced light in both programs (ADR 0063). Total
+light compared again with the furniture taken out, in both: when the columns are
+alike, the furniture is counted as well as the room is.
+
+| Surface | Ē difference, furnished | Ē difference, empty | Worst far point, furnished | Worst far point, empty |
+|---|---|---|---|---|
+| work-plane | 0.09 % | 0.53 % | 11.65 % | 1.75 % |
+| floor | 0.37 % | 0.54 % | 44.94 % | 1.37 % |
+| ceiling | 0.44 % | 1.01 % | 1.86 % | 2.34 % |
+| wall-x- | -0.16 % | 0.69 % | 2.01 % | 1.75 % |
+| wall-z- | 0.93 % | 0.89 % | 2.10 % | 2.43 % |
+
 ## downlights-and-wall-washer
 
 Four downlights on a grid, and a wall washer (Lightolier, asymmetric) 0.5 m from the wall at x = −2.5, its beam turned onto that wall.
@@ -79,10 +132,9 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 
 ### Furniture and bounced light
 
-Lux Studio's furniture casts shadows on direct light, but bounced light passes
-through it; Radiance's furniture also blocks and reflects bounced light. Total light
-compared again with the furniture taken out, in both: the difference between the
-columns is what letting bounced light through furniture costs.
+Furniture blocks and reflects bounced light in both programs (ADR 0063). Total
+light compared again with the furniture taken out, in both: when the columns are
+alike, the furniture is counted as well as the room is.
 
 | Surface | Ē difference, furnished | Ē difference, empty | Worst far point, furnished | Worst far point, empty |
 |---|---|---|---|---|
@@ -128,10 +180,9 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 
 ### Furniture and bounced light
 
-Lux Studio's furniture casts shadows on direct light, but bounced light passes
-through it; Radiance's furniture also blocks and reflects bounced light. Total light
-compared again with the furniture taken out, in both: the difference between the
-columns is what letting bounced light through furniture costs.
+Furniture blocks and reflects bounced light in both programs (ADR 0063). Total
+light compared again with the furniture taken out, in both: when the columns are
+alike, the furniture is counted as well as the room is.
 
 | Surface | Ē difference, furnished | Ē difference, empty | Worst far point, furnished | Worst far point, empty |
 |---|---|---|---|---|

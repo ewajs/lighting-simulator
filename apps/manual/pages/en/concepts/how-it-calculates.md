@@ -9,6 +9,7 @@ const rooms = {
   'linear-pendant-over-table': 'A linear pendant over a table',
   'wall-sconce': 'A wall sconce',
   'furnished-living': 'A furnished living room',
+  'busy-open-plan': 'A busy open-plan room',
 }
 </script>
 
@@ -49,7 +50,7 @@ order:
 
 It's been checked against **Radiance**, the research lighting simulator from
 Lawrence Berkeley National Laboratory, which reads IES files with its own
-code. Six test rooms, with the demo's real files, and thousands of points,
+code. Seven test rooms, with the demo's real files, and thousands of points,
 bounced light included. The largest difference, room by room:
 
 <LxAccuracy

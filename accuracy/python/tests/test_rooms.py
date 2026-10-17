@@ -6,6 +6,7 @@ from luxstudio_accuracy.rooms import IES_DIR, all_rooms, load_room
 def test_every_room_loads_with_its_points() -> None:
     names = [path.stem for path in all_rooms()]
     assert names == [
+        "busy-open-plan",
         "downlights-and-wall-washer",
         "furnished-living",
         "linear-pendant-over-table",

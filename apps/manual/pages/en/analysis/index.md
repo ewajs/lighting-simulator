@@ -22,7 +22,9 @@ is regenerated with it ([How we compare](./method)).
 - **It agrees with Radiance.** In all {{ h.rooms }} rooms, furniture
   included, each surface's average is within **{{ pct(h.worstAverage) }}** of
   Radiance's, and no lit point more than 1 m from a luminaire is off by more
-  than **{{ pct(h.worstFar) }}**.
+  than **{{ pct(h.worstFar) }}**. The exception is a few points in the [room
+  with ten pieces of furniture](./busy-open-plan), in the penumbra of a piece's
+  edge: up to {{ pct(h.busyWorstFar, 0) }}.
 - **Furniture counts for bounced light too:** it hides it and reflects it, as
   its finish does. In the furnished rooms, that took the mean difference per
   point from {{ pct(h.furnishedBefore) }} to **{{ pct(h.furnishedAfter) }}**.
@@ -53,6 +55,9 @@ Each room has its own page, with its maps point by point:
 ## What it doesn't count yet
 
 - **Furniture is boxes:** a sofa is a block, a table is just its top.
+- **Shadows have stepped edges.** A luminaire's opening is split into 10 cm
+  cells, and each one is hidden or not. In the penumbra of a piece's edge, a
+  point can read 0 or double Radiance's, which sees part of the opening.
 - **Luminaires don't hide bounced light.** A large sconce right against
   its wall reads a few points higher than in Radiance.
 - **Every surface reflects diffusely:** no gloss, no mirrors.

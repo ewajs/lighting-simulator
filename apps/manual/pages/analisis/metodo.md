@@ -40,9 +40,11 @@ prueba.
 
 ## Los ambientes de prueba
 
-{{ h.rooms }} ambientes de 5 × 4 × 2,7 m, cada uno pensado para probar algo:
-una luminaria sola, varias juntas, haces inclinados, una luminaria grande
-cerca, una caja que brilla pegada a la pared y un living con muebles. Usan los
+{{ h.rooms }} ambientes, cada uno pensado para probar algo: una luminaria
+sola, varias juntas, haces inclinados, una luminaria grande cerca, una caja
+que brilla pegada a la pared, un living con cuatro muebles y un ambiente
+integrado con diez, que muestra cómo crecen la diferencia y el tiempo con un
+ambiente lleno. Miden 5 × 4 × 2,7 m, salvo el último, de 6 × 5 m. Usan los
 archivos IES reales de la demo. Se mide en cuadrículas sobre el plano de
 trabajo, el piso, el techo y las paredes: {{ n(h.points) }} puntos en total.
 
