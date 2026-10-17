@@ -49,7 +49,8 @@ npm run mutation-check -w packages/core   plants known mistakes in the
                       illuminance maths one at a time; each must fail a test
                       (ADR 0057). Run after changing analysis/ or the frame
 npm run bench -w packages/core   times a furnished room's illuminance
-                      calculation, bundled as the app ships it
+                      calculation, bundled as the app ships it, from scratch
+                      and with the room cached
 npm run accuracy:check        the accuracy Python: ruff (with docstrings),
                       mypy strict, pytest (Radiance tests run on macOS only)
 npm run accuracy:references   check Radiance, regenerate accuracy/references

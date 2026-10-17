@@ -144,6 +144,12 @@ const MISTAKES = [
     slip: 'const x0 = ax;',
   },
   {
+    name: 'the cache ignoring where the furniture is',
+    file: 'src/analysis/cache.ts',
+    correct: 'blockers.map(({ centre, half, yawRad }) => [centre, half, yawRad]),',
+    slip: '[],',
+  },
+  {
     name: 'grid spacing not from the longer side',
     file: 'src/analysis/calc-grid.ts',
     correct: 'maxGridSpacing(Math.max(sizeU, sizeV))',

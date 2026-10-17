@@ -5,7 +5,13 @@ import { describe, expect, it } from 'vitest';
 import { room } from '../test-fixtures';
 import type { Room } from '../types';
 import { roomPatches, type Patch } from './patches';
-import { formFactors, indirectIlluminanceAt, solveIndirectLight } from './radiosity';
+import {
+  formFactors,
+  indirectFromViews,
+  indirectIlluminanceAt,
+  pointViews,
+  solveIndirectLight,
+} from './radiosity';
 
 const TOLERANCE = 1e-6;
 
@@ -137,5 +143,30 @@ describe('indirectIlluminanceAt', () => {
     // And a work-plane point, which sees walls only above it: still M.
     const onDesk = indirectIlluminanceAt({ x: -1, y: 0.8, z: 0.5 }, { x: 0, y: 1, z: 0 }, light);
     expect(onDesk / ((rho * 100) / (1 - rho))).toBeCloseTo(1, 2);
+  });
+});
+
+describe('pointViews', () => {
+  it('weighs each patch as indirectIlluminanceAt does: the same light at every point', () => {
+    const patches = roomPatches(uniformRoom(0.6), 0.5);
+    const light = solveIndirectLight(
+      patches,
+      formFactors(patches),
+      unevenDirect(patches),
+      TOLERANCE,
+    );
+    const up = { x: 0, y: 1, z: 0 };
+    const points = [
+      { x: -2, y: 0.8, z: -1.5 },
+      { x: 0.3, y: 0.8, z: 0.2 },
+      { x: 2.4, y: 0, z: 1.9 },
+    ];
+    const views = pointViews(points, up, patches);
+    points.forEach((point, k) => {
+      expect(indirectFromViews(views, k, light)).toBeCloseTo(
+        indirectIlluminanceAt(point, up, light),
+        9,
+      );
+    });
   });
 });

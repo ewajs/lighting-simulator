@@ -5,6 +5,7 @@ import type { Room, Scene, Vec3 } from '../types';
 import { directIlluminance } from './direct';
 import { directLight, type DirectLight } from './direct-light';
 import { DEFAULT_CALCULATION_OPTIONS, type CalculationOptions } from './options';
+import { AnalysisCache, bounceGeometryKey } from './cache';
 import { boxPatches, roomPatches } from './patches';
 import { boxVisibility } from './visibility';
 import {
@@ -43,9 +44,10 @@ export function sceneLight(
   inputs: AnalysisInputs,
   settings: AnalysisSettings = DEFAULT_ANALYSIS_SETTINGS,
   options: CalculationOptions = DEFAULT_CALCULATION_OPTIONS,
+  cache?: AnalysisCache,
 ): SceneLight {
   const direct = directLight(scene, inputs, settings, options);
-  return { direct, indirect: indirectLight(scene.room, direct, options) };
+  return { direct, indirect: indirectLight(scene.room, direct, options, cache) };
 }
 
 /**
@@ -53,12 +55,14 @@ export function sceneLight(
  * given its direct light: solved over patches of at most the options'
  * `patchSizeM`. With furniture in bounced light, its boxes hide patches from
  * each other and their faces reflect too. None, over no patches, when the
- * options leave bounced light out.
+ * options leave bounced light out. With a `cache`, the form factors of a room
+ * calculated before are reused (ADR 0065).
  */
 export function indirectLight(
   room: Room,
   direct: DirectLight,
   options: CalculationOptions = DEFAULT_CALCULATION_OPTIONS,
+  cache?: AnalysisCache,
 ): IndirectLight {
   if (!options.bouncedLight) {
     return { patches: [], exitance: new Float64Array(0), iterations: 0, blockers: [] };
@@ -78,13 +82,11 @@ export function indirectLight(
     }
     return sum / patch.samples.length;
   });
-  return solveIndirectLight(
-    patches,
-    formFactors(patches, boxVisibility(blockers)),
-    directOnPatches,
-    options.tolerance,
-    blockers,
-  );
+  const compute = () => formFactors(patches, boxVisibility(blockers));
+  const factors = cache
+    ? cache.formFactors(bounceGeometryKey(room, blockers, options.patchSizeM), compute)
+    : compute();
+  return solveIndirectLight(patches, factors, directOnPatches, options.tolerance, blockers);
 }
 
 /** The light at a point facing `normal` (a unit vector), direct and bounced. */
