@@ -1011,6 +1011,10 @@
   <source>False-colour scale from 0 to 2000 lx</source>
   <target>Escala de colores falsos de 0 a 2000 lx</target>
 </trans-unit>
+<trans-unit id="s8ca77553a77523bd">
+  <source>Direct <x id="0" equiv-text="${formatNumber(lux.directLx)}"/> · bounced <x id="1" equiv-text="${formatNumber(lux.indirectLx)}"/></source>
+  <target>Directa <x id="0" equiv-text="${formatNumber(lux.directLx)}"/> · rebotada <x id="1" equiv-text="${formatNumber(lux.indirectLx)}"/></target>
+</trans-unit>
 </body>
 </file>
 </xliff>

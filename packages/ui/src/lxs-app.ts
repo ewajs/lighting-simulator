@@ -55,6 +55,7 @@ import type {
   DropFurnitureDetail,
   DropProductDetail,
   LxsViewport,
+  ProbeDetail,
 } from './lxs-viewport';
 import './lxs-viewport-controls';
 import { pruneSelection, selectionAfterPick, selectionForMove, selectionKind } from './selection';
@@ -338,6 +339,8 @@ export class LxsApp extends LitElement {
       .diagnostics=${this.diagnostics}
       .renderMode=${this.renderMode}
       .illuminance=${this.#analysis.state.analysis}
+      .probe=${this.#analysis.state.probe}
+      @lxs-probe=${this.#onProbe}
       .exposureEv=${this.exposureEv}
       @lxs-pick=${this.#onPick}
       @lxs-move-start=${({ detail }: CustomEvent<MoveStartEvent>) =>
@@ -512,7 +515,7 @@ export class LxsApp extends LitElement {
       @lxs-tool-change=${({ detail }: CustomEvent<{ tool: EditTool }>) => (this.tool = detail.tool)}
       @lxs-snapping-change=${({ detail }: CustomEvent<{ snapping: boolean }>) =>
         (this.snapping = detail.snapping)}
-      @lxs-render-mode-change=${({ detail }: CustomEvent<{ mode: RenderMode }>) => (this.renderMode = detail.mode)}
+      @lxs-render-mode-change=${({ detail }: CustomEvent<{ mode: RenderMode }>) => this.#setRenderMode(detail.mode)}
       @lxs-exposure-change=${({ detail }: CustomEvent<{ ev: number }>) => (this.exposureEv = detail.ev)}
       @lxs-view-request=${({ detail }: CustomEvent<{ view: ViewName }>) => this.#setView(detail.view)}
       @lxs-frame-request=${() => this.viewport.frame(this.selection)}
@@ -691,6 +694,17 @@ export class LxsApp extends LitElement {
     this.#analysis.calculate();
   };
 
+  #onProbe = ({ detail }: CustomEvent<ProbeDetail | null>): void => {
+    if (detail) this.#analysis.probe(detail.point, detail.normal);
+    else this.#analysis.clearProbe();
+  };
+
+  #setRenderMode(mode: RenderMode): void {
+    this.renderMode = mode;
+    // The probe reads the illuminance view; elsewhere there's nothing to probe.
+    if (mode !== 'illuminance') this.#analysis.clearProbe();
+  }
+
   /** Captures the viewport and, unless a host cancels `lxs-screenshot`, downloads it. */
   async #takeScreenshot(): Promise<void> {
     let png: Blob;
@@ -823,7 +837,7 @@ export class LxsApp extends LitElement {
       case 'frame':
         return this.viewport.frame(this.selection);
       case 'render-mode':
-        this.renderMode = action.mode;
+        this.#setRenderMode(action.mode);
         return;
       case 'tool':
         this.tool = action.tool;

@@ -2,6 +2,7 @@ import type {
   AnalysisSettings,
   CalculationOptions,
   IlluminanceAnalysis,
+  PointIlluminance,
   SurfaceResult,
 } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
@@ -26,6 +27,8 @@ export interface AnalysisState {
   readonly calculating: boolean;
   /** Whether the scene or the settings changed since `analysis`. */
   readonly stale: boolean;
+  /** The light at the probed point, from the last calculation (ADR 0067). */
+  readonly probe: PointIlluminance | undefined;
 }
 
 /** Nothing calculated yet. */
@@ -35,6 +38,7 @@ export const NO_ANALYSIS: AnalysisState = {
   error: undefined,
   calculating: false,
   stale: true,
+  probe: undefined,
 };
 
 /** The maintenance factor's range in the field: below 0.5 an installation is neglected, and 1 is new. */

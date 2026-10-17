@@ -117,3 +117,53 @@ test('key 3 switches to the Iluminancia view, 1 back', async ({ page }) => {
   await page.keyboard.press('1');
   await expect(page.locator('lxs-illuminance-legend')).toHaveCount(0);
 });
+
+/** The middle of the table, on the work plane, in the default view at 1280 × 800 (smoke.spec.ts). */
+const WORK_PLANE = { x: 640, y: 455 };
+
+/** The probe's figures: total, direct and bounced lux, and the surface. */
+async function probeReading(page: Page) {
+  const text = await page.locator('lxs-probe').evaluate((probe) => probe.shadowRoot!.textContent);
+  const numbers = [...text.matchAll(/[\d.]+/g)].map((m) => Number(m[0].replace('.', '')));
+  return { total: numbers[0]!, direct: numbers[1]!, bounced: numbers[2]!, text };
+}
+
+test(
+  'hovering the illuminance view reads the light at that point, direct and bounced',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    await page.goto('/');
+    await ready(page);
+    await page.getByRole('radio', { name: 'Iluminancia' }).click();
+    await expect(page.locator('lxs-illuminance-legend .note')).toHaveCount(0);
+    await page.mouse.move(WORK_PLANE.x, WORK_PLANE.y);
+    await page.mouse.move(WORK_PLANE.x + 2, WORK_PLANE.y + 2);
+    const probe = page.locator('lxs-probe');
+    await expect(probe).toBeVisible();
+    await expect.poll(async () => (await probeReading(page)).text).toContain('Plano de trabajo');
+    const { total, direct, bounced } = await probeReading(page);
+    expect(total).toBeGreaterThan(0);
+    // Each figure is rounded on its own.
+    expect(Math.abs(direct + bounced - total)).toBeLessThanOrEqual(1);
+    await page.mouse.move(5, 5);
+    await expect(probe).toHaveCount(0);
+  },
+);
+
+test.describe('probing on a phone', () => {
+  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
+
+  test('a tap in the illuminance view reads the light there', async ({ page }) => {
+    await page.goto('/');
+    await ready(page);
+    await page.getByRole('tab', { name: 'Vista' }).tap();
+    await page.getByRole('radio', { name: 'Iluminancia' }).tap();
+    await page.getByRole('tab', { name: 'Vista' }).tap();
+    const box = (await page.locator('lxs-viewport').boundingBox())!;
+    // The legend is in the closed sheet, so tap until the first calculation has answered.
+    await expect(async () => {
+      await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
+      await expect(page.locator('lxs-probe')).toBeVisible({ timeout: 1000 });
+    }).toPass();
+  });
+});

@@ -19,7 +19,7 @@ import { Manipulator, type HandleMode, type MoveStartEvent } from './Manipulator
 import { PointerGestures } from './PointerGestures';
 import { itemIdOf } from './overlay';
 import type { IlluminanceAnalysis } from '../analysis/analyse';
-import { IlluminanceMeshes } from './IlluminanceMeshes';
+import { IlluminanceMeshes, type SurfacePoint } from './IlluminanceMeshes';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
 import { SurfaceTextures, type PreparedTexture } from './SurfaceTextures';
 
@@ -283,6 +283,16 @@ export class Viewport {
     if (analysis === this.#analysis) return;
     this.#analysis = analysis;
     this.#illuminance.update(analysis);
+  }
+
+  /**
+   * In the illuminance mode, the point of a calculated surface under the
+   * screen point `clientX`, `clientY`, for the lux probe (ADR 0067): the
+   * nearest one facing the camera. Undefined in other modes or off the room.
+   */
+  surfaceAt(clientX: number, clientY: number): SurfacePoint | undefined {
+    if (this.#renderMode !== 'illuminance' || !this.#started) return undefined;
+    return this.#illuminance.hit(this.#raycasterAt(clientX, clientY));
   }
 
   /** How surfaces, furniture and luminaires are shaded: under the false colour, in clay. */

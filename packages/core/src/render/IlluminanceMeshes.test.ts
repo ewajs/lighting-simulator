@@ -65,6 +65,21 @@ describe('IlluminanceMeshes', () => {
     });
   });
 
+  it('finds the calculated surface a ray meets first, facing it: the work plane over the floor', () => {
+    const down = new THREE.Raycaster(new THREE.Vector3(0.3, 2, -0.2), new THREE.Vector3(0, -1, 0));
+    const hit = meshes.hit(down)!;
+    expect(hit.surface).toBe('work-plane');
+    // To the precision of the 32-bit vertices.
+    expect(hit.point.y).toBeCloseTo(0.8, 6);
+    expect(hit.normal).toEqual({ x: 0, y: 1, z: 0 });
+    // From outside the room, a wall's back faces the camera: it isn't hit.
+    const fromOutside = new THREE.Raycaster(
+      new THREE.Vector3(-10, 1, 0),
+      new THREE.Vector3(1, 0, 0),
+    );
+    expect(meshes.hit(fromOutside)!.surface).toBe('wall-x+');
+  });
+
   it('draws nothing without an analysis', () => {
     meshes.update(undefined);
     expect(meshes.group.children).toHaveLength(0);
