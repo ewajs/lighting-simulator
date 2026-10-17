@@ -31,7 +31,12 @@ import { fileURLToPath } from 'node:url';
 
 const CORE = fileURLToPath(new URL('..', import.meta.url));
 const REPO_MODULES = fileURLToPath(new URL('../../../node_modules', import.meta.url));
-const TESTS = ['src/analysis', 'src/luminaire-frame.test.ts', 'src/glb.test.ts'];
+const TESTS = [
+  'src/analysis',
+  'src/luminaire-frame.test.ts',
+  'src/glb.test.ts',
+  'src/render/IlluminanceMeshes.test.ts',
+];
 
 /** Each mistake: the file, the correct code, and the plausible slip that replaces it. */
 const MISTAKES = [
@@ -148,6 +153,12 @@ const MISTAKES = [
     file: 'src/analysis/cache.ts',
     correct: 'blockers.map(({ centre, half, yawRad }) => [centre, half, yawRad]),',
     slip: '[],',
+  },
+  {
+    name: 'false-colour planes facing out of the room',
+    file: 'src/render/IlluminanceMeshes.ts',
+    correct: 'geometry.setIndex(facesIn ? [0, 1, 2, 0, 2, 3] : [0, 2, 1, 0, 3, 2]);',
+    slip: 'geometry.setIndex(facesIn ? [0, 2, 1, 0, 3, 2] : [0, 1, 2, 0, 2, 3]);',
   },
   {
     name: 'grid spacing not from the longer side',

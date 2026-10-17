@@ -15,7 +15,11 @@ export type ShortcutAction =
 /** The parts of a KeyboardEvent the mapping looks at. */
 export type KeyPress = Pick<KeyboardEvent, 'key' | 'metaKey' | 'ctrlKey' | 'shiftKey' | 'altKey'>;
 
-const RENDER_MODE_KEYS: Record<string, RenderMode> = { '1': 'realistic', '2': 'clay' };
+const RENDER_MODE_KEYS: Record<string, RenderMode> = {
+  '1': 'realistic',
+  '2': 'clay',
+  '3': 'illuminance',
+};
 const TOOL_KEYS: Record<string, EditTool> = { w: 'move', e: 'aim' };
 const VIEW_KEYS: Record<string, ViewName> = {
   '0': 'perspective',

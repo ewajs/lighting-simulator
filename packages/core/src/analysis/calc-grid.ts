@@ -13,9 +13,24 @@ import type { Room, Vec3 } from '../types';
 export type CalcSurfaceName =
   'work-plane' | 'floor' | 'ceiling' | 'wall-x-' | 'wall-x+' | 'wall-z-' | 'wall-z+';
 
+/**
+ * The rectangle a grid covers: `corner` plus up to `lengthU` along the unit
+ * vector `u` and `lengthV` along `v`. Its points run along `u` within a row,
+ * rows along `v`.
+ */
+export interface GridRect {
+  readonly corner: Vec3;
+  readonly u: Vec3;
+  readonly v: Vec3;
+  readonly lengthU: number;
+  readonly lengthV: number;
+}
+
 /** Points to calculate on a flat rectangle, in rows of `columns`, at the centres of equal cells. */
 export interface CalcGrid {
   readonly surface: CalcSurfaceName;
+  /** The area the cells cover, the border left out: for drawing the results (ADR 0066). */
+  readonly rect: GridRect;
   readonly points: readonly Vec3[];
   /** The way the surface faces, into the room: a unit vector. */
   readonly normal: Vec3;
@@ -58,8 +73,15 @@ export function rectangleGrid(
 ): CalcGrid {
   const sizeU = lengthU - 2 * borderM;
   const sizeV = lengthV - 2 * borderM;
+  const rect: GridRect = {
+    corner: add(corner, add(scale(u, borderM), scale(v, borderM))),
+    u,
+    v,
+    lengthU: Math.max(0, sizeU),
+    lengthV: Math.max(0, sizeV),
+  };
   if (sizeU <= 0 || sizeV <= 0)
-    return { surface, points: [], normal, columns: 0, rows: 0, cellArea: 0 };
+    return { surface, rect, points: [], normal, columns: 0, rows: 0, cellArea: 0 };
   const spacing = maxGridSpacing(Math.max(sizeU, sizeV));
   const columns = Math.ceil(sizeU / spacing);
   const rows = Math.ceil(sizeV / spacing);
@@ -71,7 +93,15 @@ export function rectangleGrid(
       points.push(add(corner, add(scale(u, across), scale(v, along))));
     }
   }
-  return { surface, points, normal, columns, rows, cellArea: (sizeU / columns) * (sizeV / rows) };
+  return {
+    surface,
+    rect,
+    points,
+    normal,
+    columns,
+    rows,
+    cellArea: (sizeU / columns) * (sizeV / rows),
+  };
 }
 
 /**

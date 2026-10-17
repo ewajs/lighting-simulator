@@ -244,11 +244,12 @@ export class LuminaireMeshes {
     const { r, g, b } = kelvinToRgb(luminaire.cct);
     light.color.setRGB(r, g, b, THREE.SRGBColorSpace);
     const peak = item.photometry ? this.#profile(item.photometry).peak : candela(product);
-    light.intensity = peak * level;
+    // The illuminance view draws calculated light, not rendered light (ADR 0066).
+    light.intensity = mode === 'illuminance' ? 0 : peak * level;
     item.flux = product.flux * level;
     for (const material of emissive) {
       material.emissive.copy(light.color);
-      material.emissiveIntensity = mode === 'clay' ? 0 : level * EMISSIVE_GAIN;
+      material.emissiveIntensity = mode === 'realistic' ? level * EMISSIVE_GAIN : 0;
     }
   }
 

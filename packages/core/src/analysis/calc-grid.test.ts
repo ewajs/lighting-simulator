@@ -110,3 +110,15 @@ describe('roomGrids', () => {
     expect(grids[0]!.points.every((point) => point.y === 0.8)).toBe(true);
   });
 });
+
+describe('the rectangle a grid covers', () => {
+  it('is the surface less the border, with its points at the centres of its cells', () => {
+    const [workPlane] = roomGrids(room, 0.8, 0.5);
+    const { corner, lengthU, lengthV } = workPlane!.rect;
+    expect(corner).toEqual({ x: -room.width / 2 + 0.5, y: 0.8, z: -room.depth / 2 + 0.5 });
+    expect([lengthU, lengthV]).toEqual([room.width - 1, room.depth - 1]);
+    const first = workPlane!.points[0]!;
+    expect(first.x - corner.x).toBeCloseTo(lengthU / workPlane!.columns / 2, 12);
+    expect(first.z - corner.z).toBeCloseTo(lengthV / workPlane!.rows / 2, 12);
+  });
+});

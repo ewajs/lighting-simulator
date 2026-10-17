@@ -6,6 +6,7 @@ import { Crosshair, Magnet, Move, Scan } from 'lucide';
 import type { FieldChange } from './field-change';
 import { formatFixed } from './format';
 import { icon } from './icons';
+import './lxs-illuminance-legend';
 import './lxs-slider-field';
 import type { EditTool } from './shortcuts';
 import { segmentedStyles, sharedStyles } from './styles';
@@ -169,12 +170,19 @@ export class LxsViewportControls extends LitElement {
       :host([variant='panel']) .views .frame {
         border-top: 0;
       }
-      .exposure {
+      .exposure,
+      .legend {
         right: var(--lxs-sp-3);
         /* --lxs-stage-inset-bottom: space taken by a sheet floating over the viewport. */
         bottom: calc(var(--lxs-sp-3) + var(--lxs-stage-inset-bottom, 0px));
         width: 180px;
         padding: var(--lxs-sp-2) var(--lxs-sp-3);
+      }
+      .legend {
+        width: auto;
+        min-width: 110px;
+        height: 220px;
+        grid-template-rows: auto 1fr auto;
       }
     `,
   ];
@@ -185,6 +193,8 @@ export class LxsViewportControls extends LitElement {
   @property() renderMode: RenderMode = 'realistic';
   @property({ attribute: false }) view: ViewName = 'perspective';
   @property({ type: Number }) exposureEv = 0;
+  /** In the illuminance mode, how current the map is: shown under its legend. */
+  @property({ attribute: 'legend-note' }) legendNote = '';
 
   override render() {
     const views: [ViewName, string][] = [
@@ -196,6 +206,7 @@ export class LxsViewportControls extends LitElement {
     const modes: [RenderMode, string][] = [
       ['realistic', msg('Realistic')],
       ['clay', msg('Clay')],
+      ['illuminance', msg('Illuminance')],
     ];
     const tools: [EditTool, string, typeof Move, string][] = [
       ['move', msg('Move'), Move, 'W'],
@@ -246,15 +257,6 @@ export class LxsViewportControls extends LitElement {
                 ${label}
               </button>`,
           )}
-          <button
-            type="button"
-            role="radio"
-            aria-checked="false"
-            disabled
-            title=${msg('Coming soon')}
-          >
-            ${msg('Illuminance')}
-          </button>
         </div>
       </div>
       <div class="glass views" role="group" aria-label=${msg('Camera views')}>
@@ -278,22 +280,33 @@ export class LxsViewportControls extends LitElement {
           ${icon(Scan)}
         </button>
       </div>
-      <div
-        class="glass exposure"
-        title=${msg('Double-click to reset')}
-        @dblclick=${() => this.#emit('lxs-exposure-change', { ev: 0 })}
-      >
-        <lxs-slider-field
-          label=${msg('Exposure')}
-          .value=${this.exposureEv}
-          .min=${EXPOSURE_RANGE.min}
-          .max=${EXPOSURE_RANGE.max}
-          .step=${EXPOSURE_RANGE.step}
-          .format=${(ev: number) => `${ev > 0 ? '+' : ''}${formatFixed(ev, 1)} EV`}
-          @lxs-change=${({ detail }: CustomEvent<FieldChange>) => this.#emit('lxs-exposure-change', { ev: detail.value })}
-        ></lxs-slider-field>
-      </div>
+      ${
+        this.renderMode === 'illuminance'
+          ? html`<lxs-illuminance-legend
+              class="glass legend"
+              note=${this.legendNote}
+            ></lxs-illuminance-legend>`
+          : this.#exposure()
+      }
     `;
+  }
+
+  #exposure() {
+    return html`<div
+      class="glass exposure"
+      title=${msg('Double-click to reset')}
+      @dblclick=${() => this.#emit('lxs-exposure-change', { ev: 0 })}
+    >
+      <lxs-slider-field
+        label=${msg('Exposure')}
+        .value=${this.exposureEv}
+        .min=${EXPOSURE_RANGE.min}
+        .max=${EXPOSURE_RANGE.max}
+        .step=${EXPOSURE_RANGE.step}
+        .format=${(ev: number) => `${ev > 0 ? '+' : ''}${formatFixed(ev, 1)} EV`}
+        @lxs-change=${({ detail }: CustomEvent<FieldChange>) => this.#emit('lxs-exposure-change', { ev: detail.value })}
+      ></lxs-slider-field>
+    </div>`;
   }
 
   #emit(type: string, detail: object): void {

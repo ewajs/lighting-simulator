@@ -102,7 +102,7 @@ Run `npm run i18n:build` first if translations changed.
 | Furniture | `furniture` |
 | IES files, lights, models, rendering | `smoke`, `models`, `ies-import` |
 | Illuminance maths (`analysis/`, `luminaire-frame.ts`) | unit tests (the Radiance comparison is among them), `mutation-check`, and `models` if the renderer's frame changed |
-| The Analysis panel, its worker and settings | `analysis` |
+| The Analysis panel, its worker and settings, the illuminance view | `analysis` |
 | Loading, assets, providers | `loading`, `models` |
 | Files, templates, autosave, share links | `scene-files`, `new-and-autosave`, `share` |
 | Help | `help` |

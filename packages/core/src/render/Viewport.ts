@@ -18,6 +18,8 @@ import { LuminaireMeshes } from './LuminaireMeshes';
 import { Manipulator, type HandleMode, type MoveStartEvent } from './Manipulator';
 import { PointerGestures } from './PointerGestures';
 import { itemIdOf } from './overlay';
+import type { IlluminanceAnalysis } from '../analysis/analyse';
+import { IlluminanceMeshes } from './IlluminanceMeshes';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
 import { SurfaceTextures, type PreparedTexture } from './SurfaceTextures';
 
@@ -29,6 +31,13 @@ const FRAME_SMOOTHING = 0.05;
 const PICK_SLOP_PX = 10;
 /** Camera distance when framing a selection, in m. */
 const FRAME_DISTANCE = 3;
+/**
+ * The illuminance view's studio light, untone-mapped (ADR 0066): bright
+ * enough for clay at about its own grey from above, darker from below so
+ * shapes read.
+ */
+const STUDIO_INTENSITY = 2.5;
+const STUDIO_GROUND = 0x555555;
 
 /** Options for `Viewport.screenshot()`. */
 export interface ScreenshotOptions {
@@ -110,6 +119,8 @@ export class Viewport {
   readonly #camera = new THREE.PerspectiveCamera(40, 1, 0.05, 200);
   readonly #controls: OrbitControls;
   readonly #room = new RoomMeshes();
+  readonly #illuminance = new IlluminanceMeshes();
+  #analysis: IlluminanceAnalysis | undefined;
   readonly #luminaires: LuminaireMeshes;
   readonly #models: FixtureModels;
   readonly #furniture = new FurnitureMeshes();
@@ -173,8 +184,10 @@ export class Viewport {
       viewportHeightPx: () => this.#container.clientHeight,
     });
     const manipulator = this.#manipulator.group;
+    this.#illuminance.group.visible = false;
     this.#scene.add(
       this.#room.group,
+      this.#illuminance.group,
       this.#luminaires.group,
       this.#furniture.group,
       manipulator,
@@ -255,7 +268,44 @@ export class Viewport {
   /** Switches the render mode and redraws. */
   set renderMode(mode: RenderMode) {
     this.#renderMode = mode;
+    this.#room.group.visible = mode !== 'illuminance';
+    this.#illuminance.group.visible = mode === 'illuminance';
     this.#sync(this.#simulator.scene, undefined);
+  }
+
+  /** The calculated light the illuminance mode draws, or none yet (ADR 0066). */
+  get illuminance(): IlluminanceAnalysis | undefined {
+    return this.#analysis;
+  }
+
+  /** Sets the calculated light the illuminance mode draws. */
+  set illuminance(analysis: IlluminanceAnalysis | undefined) {
+    if (analysis === this.#analysis) return;
+    this.#analysis = analysis;
+    this.#illuminance.update(analysis);
+  }
+
+  /** How surfaces, furniture and luminaires are shaded: under the false colour, in clay. */
+  get #shading(): RenderMode {
+    return this.#renderMode === 'illuminance' ? 'clay' : this.#renderMode;
+  }
+
+  /**
+   * The scene's light and tone mapping for the render mode. The illuminance
+   * view needs its false colours exactly as the scale gives them, and
+   * three's WebGPU renderer tone-maps the whole frame, whatever a material
+   * says: so there, no tone mapping, the luminaires' lights off (they're
+   * calibrated for the exposure), and a plain studio light so the clay
+   * furniture and fittings keep their shape (ADR 0066).
+   */
+  #applyLighting(scene: Scene): void {
+    const illuminance = this.#renderMode === 'illuminance';
+    this.#renderer.toneMapping = illuminance ? THREE.NoToneMapping : THREE.AgXToneMapping;
+    this.#renderer.toneMappingExposure = illuminance ? 1 : toneMappingExposure(this.#exposureEv);
+    this.#bounce.groundColor.set(illuminance ? STUDIO_GROUND : 0xffffff);
+    this.#bounce.intensity = illuminance
+      ? STUDIO_INTENSITY
+      : indirectIlluminance(this.#luminaires.totalFlux(), scene.room) + MIN_FILL_LUX;
   }
 
   /** User exposure in EV stops; 0 is the calibrated default. */
@@ -266,7 +316,7 @@ export class Viewport {
   /** Sets the user exposure, in EV stops. */
   set exposureEv(ev: number) {
     this.#exposureEv = ev;
-    this.#renderer.toneMappingExposure = toneMappingExposure(ev);
+    this.#applyLighting(this.#simulator.scene);
   }
 
   /**
@@ -344,7 +394,7 @@ export class Viewport {
   setHighlighted(ids: readonly string[]): void {
     this.#highlighted = ids;
     this.#luminaires.sync(this.#simulator.scene, ids, this.#renderMode);
-    this.#furniture.sync(this.#simulator.scene, ids, this.#renderMode);
+    this.#furniture.sync(this.#simulator.scene, ids, this.#shading);
     this.#manipulator.setHighlighted(ids);
   }
 
@@ -413,6 +463,7 @@ export class Viewport {
     this.#resizeObserver.disconnect();
     this.#controls.dispose();
     this.#room.dispose();
+    this.#illuminance.dispose();
     this.#luminaires.dispose();
     this.#furniture.dispose();
     this.#models.dispose();
@@ -462,10 +513,8 @@ export class Viewport {
   #sync(scene: Scene, previous: Scene | undefined): void {
     if (scene.room !== previous?.room) this.#updateRoom();
     this.#luminaires.sync(scene, this.#highlighted, this.#renderMode);
-    this.#furniture.sync(scene, this.#highlighted, this.#renderMode);
-    this.#bounce.intensity =
-      indirectIlluminance(this.#luminaires.totalFlux(), scene.room) + MIN_FILL_LUX;
-    this.#renderer.toneMappingExposure = toneMappingExposure(this.#exposureEv);
+    this.#furniture.sync(scene, this.#highlighted, this.#shading);
+    this.#applyLighting(scene);
     this.#manipulator.refresh();
     this.#reportLoading();
   }
@@ -477,7 +526,7 @@ export class Viewport {
   #updateRoom(): void {
     const { room } = this.#simulator.scene;
     const shown: Partial<Record<SurfaceName, PreparedTexture>> = {};
-    this.#room.update(room, this.#renderMode, (name) => {
+    this.#room.update(room, this.#shading, (name) => {
       const id = room.surfaces[name].texture;
       const texture = id && this.#textures.get(id, this.#simulator.texture(id));
       shown[name] =

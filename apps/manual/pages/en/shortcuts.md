@@ -16,7 +16,7 @@ On Windows and Linux, use **Ctrl** instead of **⌘**.
 | **F** | Frame the selection |
 | **W** / **E** | Move / Aim tool |
 | **Alt** (⌥) while dragging | Move without the magnet |
-| **1** / **2** | Realistic / Clay |
+| **1** / **2** / **3** | Realistic / Clay / Illuminance |
 | **0** / **7** / **8** / **9** | 3D / Plan / Front / Side view |
 
 Shortcuts don't fire while you're typing in a field.

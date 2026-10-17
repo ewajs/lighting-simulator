@@ -3,8 +3,12 @@ import { brightnessScale } from '../texture-asset';
 import type { Room, SurfaceName } from '../types';
 import type { PreparedTexture } from './SurfaceTextures';
 
-/** How the scene is drawn. Clay replaces surface colours with a neutral grey. */
-export type RenderMode = 'realistic' | 'clay';
+/**
+ * How the scene is drawn. Clay replaces surface colours with a neutral grey;
+ * illuminance draws the calculated light in false colour over clay furniture
+ * and luminaires (ADR 0066).
+ */
+export type RenderMode = 'realistic' | 'clay' | 'illuminance';
 
 /** Surface colour in clay mode. */
 export const CLAY_COLOR = '#dcdcdc';

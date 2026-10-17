@@ -35,8 +35,8 @@ test('opening Analysis calculates the starter scene: the work plane first, then 
     await expect(panel(page).getByRole('cell', { name: surface, exact: true })).toBeVisible();
   }
   await expect(panel(page)).toHaveScreenshot('analysis-panel.png', {
-    // The time it took varies from run to run.
-    mask: [calculated(page)],
+    // The time it took varies from run to run, and a late model can start another calculation.
+    mask: [panel(page).getByRole('status')],
   });
 });
 
@@ -89,4 +89,31 @@ test.describe('on a phone', () => {
     await expect(calculated(page)).toBeVisible();
     expect(await average(page)).toBeGreaterThan(50);
   });
+});
+
+test(
+  'the Iluminancia view draws the calculated light in false colour, with its legend',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    await page.goto('/');
+    await ready(page);
+    await page.getByRole('radio', { name: 'Iluminancia' }).click();
+    const legend = page.locator('lxs-illuminance-legend');
+    await expect(legend.getByText('Iluminancia (lx)')).toBeVisible();
+    // It calculates on its own, the Analysis tab closed; the note goes once it's current.
+    await expect(legend.locator('.note')).toHaveCount(0);
+    await expect(page.locator('lxs-viewport')).toHaveScreenshot('illuminance-view.png');
+  },
+);
+
+test('key 3 switches to the Iluminancia view, 1 back', async ({ page }) => {
+  await page.goto('/');
+  await ready(page);
+  await page.keyboard.press('3');
+  await expect(page.getByRole('radio', { name: 'Iluminancia' })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+  await page.keyboard.press('1');
+  await expect(page.locator('lxs-illuminance-legend')).toHaveCount(0);
 });
