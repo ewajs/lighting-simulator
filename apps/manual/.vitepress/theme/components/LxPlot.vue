@@ -3,7 +3,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useData } from 'vitepress';
-import { formatNumber, path, scale, ticks } from '../diagrams/plot';
+import { formatNumber, path, scale, ticks, ticksBetween } from '../diagrams/plot';
 
 type XY = [number, number];
 const props = defineProps<{
@@ -31,17 +31,14 @@ const yTop = computed(
 );
 const yTicks = computed(() => ticks(yTop.value));
 const y1 = computed(() => yTicks.value[yTicks.value.length - 1]!);
-const xTicks = computed(() => {
-  const span = x1.value - x0.value;
-  return ticks(span)
-    .map((t) => t + x0.value)
-    .filter((t) => t <= x1.value + 1e-9);
-});
+const xTicks = computed(() => ticksBetween(x0.value, x1.value));
 const sx = computed(() => scale(x0.value, x1.value, M.left, W - M.right));
 const sy = computed(() => scale(0, y1.value, H - M.bottom, M.top));
+// Each series takes the next colour of the palette; muted ones stay grey.
 const lines = computed(() =>
-  props.series.map((s) => ({
+  props.series.map((s, i) => ({
     ...s,
+    color: `c${i + 1}`,
     d: path(
       s.points
         .filter(([x]) => x >= x0.value && x <= x1.value)
@@ -97,7 +94,7 @@ const n = (v: number) => formatNumber(v, lang.value, Math.abs(v) < 10 && v % 1 !
         v-for="(line, i) in lines"
         :key="i"
         :d="line.d"
-        :class="['series', { dashed: line.dashed, muted: line.muted }]"
+        :class="['series', line.color, { dashed: line.dashed, muted: line.muted }]"
       />
       <g class="legend" v-if="series.length > 1">
         <g
@@ -110,7 +107,7 @@ const n = (v: number) => formatNumber(v, lang.value, Math.abs(v) < 10 && v % 1 !
             x2="28"
             y1="0"
             y2="0"
-            :class="['series', { dashed: line.dashed, muted: line.muted }]"
+            :class="['series', line.color, { dashed: line.dashed, muted: line.muted }]"
           />
           <text x="36" y="4">{{ line.label }}</text>
         </g>

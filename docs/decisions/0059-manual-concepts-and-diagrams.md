@@ -43,8 +43,13 @@ build time.
     `diagrams/core.ts` imports it by path. It reads the IES files with
     `readFileSync`, declared in `env.d.ts` rather than adding `@types/node`.
 - **Drawing:** small Vue components (`LxPlot`, `LxPolar`, `LxHeatmap`,
-  `LxGridPlan`, `LxUnits`, `LxAccuracy`) render the data as inline SVG.
+  `LxColorScale`, `LxGridPlan`, `LxUnits`, `LxAccuracy`) render the data as
+  inline SVG.
   - They use the theme's colour variables, so they follow light and dark.
+    Data series take a palette of their own (`--lx-c-1` to `--lx-c-5`,
+    Lux Studio's amber first, then blue, teal, rose and violet), and grid
+    lines and axes stronger greys than VitePress's dividers, which vanished
+    in charts.
   - Labels come from each page, in its language.
   - Plotting helpers live in `diagrams/plot.ts`, which tsc type-checks; it
     doesn't read `.vue` files.

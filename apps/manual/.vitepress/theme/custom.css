@@ -18,6 +18,31 @@
   --vp-c-brand-3: #f5b544;
 }
 
+/* The diagrams' palette: Lux Studio's amber first, then hues far enough apart
+   to tell series apart without the legend, each tuned to keep its contrast on
+   the light and the dark background. Grid lines and axes get their own,
+   stronger greys than VitePress's dividers, which vanish in a chart. */
+:root {
+  --lx-c-1: #b86e00;
+  --lx-c-2: #1f63b6;
+  --lx-c-3: #12866b;
+  --lx-c-4: #c2386b;
+  --lx-c-5: #6a4cc2;
+  --lx-c-neutral: #6e6e78;
+  --lx-grid: rgb(60 60 67 / 0.2);
+  --lx-axis: rgb(60 60 67 / 0.6);
+}
+.dark {
+  --lx-c-1: #f5b544;
+  --lx-c-2: #6cb0ff;
+  --lx-c-3: #48d1ad;
+  --lx-c-4: #ff7fa8;
+  --lx-c-5: #b9a2ff;
+  --lx-c-neutral: #9a9aa4;
+  --lx-grid: rgb(235 235 245 / 0.18);
+  --lx-axis: rgb(235 235 245 / 0.55);
+}
+
 /* Screenshots: a soft frame so dark UI shots sit well on either background. */
 .vp-doc img {
   border-radius: 10px;
@@ -51,8 +76,16 @@
 .lx-plan svg {
   max-width: 420px;
 }
-.lx-heatmap svg {
+.lx-heatmap svg,
+.lx-color-scale svg {
   max-width: 460px;
+}
+.lx-color-scale {
+  margin-top: 0;
+}
+.lx-figure .scale-bar {
+  stroke: var(--lx-axis);
+  stroke-width: 1;
 }
 .lx-figure figcaption {
   margin-top: 8px;
@@ -61,37 +94,64 @@
 }
 .lx-figure .grid line,
 .lx-figure .grid circle {
-  stroke: var(--vp-c-divider);
+  stroke: var(--lx-grid);
+  stroke-width: 1.25;
   fill: none;
 }
 .lx-figure .axis line,
 .lx-figure .room-outline {
-  stroke: var(--vp-c-text-3);
+  stroke: var(--lx-axis);
+  stroke-width: 1.5;
   fill: none;
 }
 .lx-figure text {
   fill: var(--vp-c-text-2);
   font-size: 13px;
 }
+.lx-figure text.ring-label {
+  font-size: 11px;
+  fill: var(--vp-c-text-2);
+  /* A halo in the page's colour keeps the value readable over a curve. */
+  paint-order: stroke;
+  stroke: var(--vp-c-bg);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
 .lx-figure text.label {
   fill: var(--vp-c-text-1);
   font-size: 14px;
 }
 .lx-figure .series {
-  stroke: var(--vp-c-brand-1);
-  stroke-width: 2.5;
+  stroke: var(--lx-c-1);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  stroke-linecap: round;
   fill: none;
 }
+.lx-figure .series.c2 {
+  stroke: var(--lx-c-2);
+}
+.lx-figure .series.c3 {
+  stroke: var(--lx-c-3);
+}
+.lx-figure .series.c4 {
+  stroke: var(--lx-c-4);
+}
+.lx-figure .series.c5 {
+  stroke: var(--lx-c-5);
+}
 .lx-figure .series.dashed {
-  stroke-dasharray: 7 5;
+  stroke-dasharray: 9 6;
+  stroke-linecap: butt;
 }
 .lx-figure .series.muted {
-  stroke: var(--vp-c-text-3);
+  stroke: var(--lx-c-neutral);
 }
 .lx-figure .beam line,
 .lx-figure .beam-key {
-  stroke: var(--vp-c-text-3);
-  stroke-dasharray: 2 4;
+  stroke: var(--lx-c-neutral);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 4;
 }
 .lx-figure .border-strip {
   fill: none;
@@ -108,7 +168,7 @@
 }
 .lx-figure .border-band {
   fill: var(--vp-c-bg);
-  stroke: var(--vp-c-divider);
+  stroke: var(--lx-axis);
   stroke-dasharray: 6 4;
 }
 .lx-figure .grid-point {

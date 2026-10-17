@@ -1,5 +1,6 @@
 <script setup>
 import LxHeatmap from '../../.vitepress/theme/components/LxHeatmap.vue'
+import LxColorScale from '../../.vitepress/theme/components/LxColorScale.vue'
 import { data } from '../../.vitepress/theme/diagrams/rooms.data'
 import { formatNumber } from '../../.vitepress/theme/diagrams/plot'
 
@@ -40,6 +41,8 @@ borde que queda afuera:
 <LxHeatmap :map="data.spread" :room="data.room" :border-m="data.borderM" :scale-max-lx="top" caption="Repartidas" />
 <LxHeatmap :map="data.bunched" :room="data.room" :border-m="data.borderM" :scale-max-lx="top" caption="Juntas" />
 </div>
+
+<LxColorScale :max-lx="top" label="Iluminancia en el plano de trabajo (lx)" />
 
 Juntas, el **promedio sube**: de {{ n(data.spread.averageLx) }} a
 {{ n(data.bunched.averageLx) }} lx, porque casi toda la luz cae adentro del
