@@ -5,8 +5,15 @@ import committedReport from '../../REPORT.md?raw';
 import committedSummary from '../../summary.json?raw';
 import { accuracySummary, reportMarkdown, summaryJson } from './report';
 
-it('REPORT.md and summary.json are current: else run `npm run accuracy:report`', () => {
-  const summary = accuracySummary();
-  expect(committedReport).toBe(reportMarkdown(summary));
-  expect(committedSummary).toBe(summaryJson(summary));
-});
+/** It computes every room, furnished ones twice: about 4 s on an M1 Pro, more on CI's runners. */
+const TIMEOUT_MS = 60_000;
+
+it(
+  'REPORT.md and summary.json are current: else run `npm run accuracy:report`',
+  () => {
+    const summary = accuracySummary();
+    expect(committedReport).toBe(reportMarkdown(summary));
+    expect(committedSummary).toBe(summaryJson(summary));
+  },
+  TIMEOUT_MS,
+);
