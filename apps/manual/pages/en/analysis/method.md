@@ -12,10 +12,22 @@ const release = data.summary.rooms[0].radianceRelease
 ## The reference: Radiance
 
 **Radiance** is the research lighting simulator from Lawrence Berkeley
-National Laboratory. Programs like DIALux and Relux are validated against the
-same test cases. It reads IES files with its own code, so it shares neither
-Lux Studio's code nor its assumptions. The release is always the same, 6.0
-patch 2 (`{{ release }}`), checked by its digital fingerprint.
+National Laboratory, widely used as a reference in validation studies. The
+release is always the same, 6.0 patch 2 (`{{ release }}`), checked by its
+digital fingerprint.
+
+**What's independent and what isn't.** Radiance's calculation and its IES
+reader are its own: they share no code with Lux Studio. What they do share
+is the description of the room: both get the same sizes, the same luminaires
+with their positions and aims, furniture as boxes, and surfaces that reflect
+diffusely. So agreement says Lux Studio calculates that simplified room
+correctly, not that a real room will read the same. And a mistake in
+describing the room, such as a luminaire turned the wrong way, would show up
+the same in both: the checks worked out by hand, which depend on neither
+program, cover that.
+
+DIALux and Relux are validated with the test cases of the CIE 171:2006
+standard. Lux Studio hasn't run them yet.
 
 ## Before Radiance is trusted
 

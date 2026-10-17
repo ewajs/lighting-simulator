@@ -150,11 +150,11 @@ every lumen a luminaire emits lands somewhere in the room, check bounced
 light against the laws a closed room obeys (reciprocity, the integrating
 sphere, light absorbed equal to light emitted), and check the renderer and
 the calculation against each other.
-`npm run mutation-check -w packages/core` plants sixteen plausible mistakes
+`npm run mutation-check -w packages/core` plants twenty-one plausible mistakes
 and shows that the tests catch each one. Beyond the maths,
 [`accuracy/`](https://github.com/ewajs/lighting-simulator/tree/master/accuracy)
-compares the results with Radiance, an independent simulator, in six
-reference rooms ([ADR 0058](../decisions/0058-accuracy-checks.md),
+compares the results with Radiance, a simulator with its own solver and IES
+reader, in seven reference rooms ([ADR 0058](../decisions/0058-accuracy-checks.md),
 [ADR 0060](../decisions/0060-bounced-light.md)); its
 Python is documented at [/docs/accuracy](https://ewajs.github.io/lighting-simulator/docs/accuracy/).
 

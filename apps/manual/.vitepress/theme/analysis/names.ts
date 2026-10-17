@@ -63,12 +63,12 @@ export const ROOMS: Record<string, Record<Lang, { name: string; about: string }>
     es: {
       name: 'Un aplique de pared',
       about:
-        'Un aplique con luz hacia arriba y hacia abajo (Visa Colonnade, una caja que brilla de 23 × 13 × 51 cm) en la pared izquierda, a 1,8 m: muy cerca de la pared que tiene detrás.',
+        'Un aplique con luz hacia arriba y hacia abajo (Visa Colonnade, una caja que brilla de 23 × 13 × 51 cm) en la pared izquierda, a 1,8 m de altura y centrado a 25 cm de ella: muy cerca de la pared que tiene detrás.',
     },
     en: {
       name: 'A wall sconce',
       about:
-        'An up/down wall sconce (Visa Colonnade, a 23 × 13 × 51 cm glowing box) on the left wall at 1.8 m: very close to the wall behind it.',
+        'An up/down wall sconce (Visa Colonnade, a 23 × 13 × 51 cm glowing box) on the left wall, 1.8 m up and centred 25 cm out from it: very close to the wall behind it.',
     },
   },
   'furnished-living': {
@@ -316,8 +316,8 @@ export const ROOM_NOTES: Record<string, Record<Lang, string>> = {
     en: 'Close to a large luminaire, with a piece of furniture that reflects. Splitting the opening into cells fixes the points close to it. The table reflects light to the ceiling and shades the floor below from bounced light too: without counting that, the ceiling read 7 % low.',
   },
   'wall-sconce': {
-    es: 'Una caja que brilla a 13 cm de la pared. Muy cerca, los dos programas aproximan de forma distinta una abertura grande. Toda la habitación da algo más que en Radiance, probablemente porque allá el cuerpo del aplique tapa parte de la luz que rebota en la pared de atrás; en Lux Studio, las luminarias no tapan luz.',
-    en: "A glowing box 13 cm from its wall. Very close, the two programs approximate a large opening differently. The whole room reads a little higher than in Radiance, probably because there the sconce's body hides some of the light bouncing off the wall behind it; in Lux Studio, luminaires don't hide light.",
+    es: 'Una caja que brilla, centrada a 25 cm de la pared. Muy cerca, los dos programas aproximan de forma distinta una abertura grande. Toda la habitación da algo más que en Radiance, probablemente porque allá el cuerpo del aplique tapa parte de la luz que rebota en la pared de atrás; en Lux Studio, las luminarias no tapan luz.',
+    en: "A glowing box centred 25 cm from its wall. Very close, the two programs approximate a large opening differently. The whole room reads a little higher than in Radiance, probably because there the sconce's body hides some of the light bouncing off the wall behind it; in Lux Studio, luminaires don't hide light.",
   },
   'furnished-living': {
     es: 'Cuatro muebles que tapan y reflejan la luz, también la que rebota. Probalo con Paso en los mapas: si los muebles solo tapan la luz que rebota, como cajas negras, todo da menos que en Radiance; cuando además la reflejan, como su terminación, coincide. Algunos puntos del plano de trabajo caen dentro de la biblioteca, donde los dos programas dan casi 0.',

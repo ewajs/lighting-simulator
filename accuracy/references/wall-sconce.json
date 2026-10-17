@@ -2,7 +2,7 @@
  "format": "lux-studio-accuracy-reference",
  "version": 2,
  "room": {
-  "description": "An up/down wall sconce (Visa Colonnade, a 23 \u00d7 13 \u00d7 51 cm glowing box) on the wall at x = \u22122.5, its light 0.25 m out from it at 1.8 m: very close to the wall behind it.",
+  "description": "An up/down wall sconce (Visa Colonnade, a 23 \u00d7 13 \u00d7 51 cm glowing box) on the wall at x = \u22122.5, the box centred 0.25 m out from it at 1.8 m: very close to the wall behind it.",
   "room": {
    "width": 5,
    "depth": 4,

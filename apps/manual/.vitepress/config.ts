@@ -83,6 +83,13 @@ export default defineConfig({
   lastUpdated: false,
   head: [['link', { rel: 'icon', href: 'data:,' }]],
   markdown: { math: true },
+  // A room's page is one template (analisis/[room].md): its heading is filled in
+  // at render, too late for the tab's title, so the title is set here.
+  transformPageData(pageData) {
+    const room = pageData.params?.room as string | undefined;
+    const lang: Lang = pageData.relativePath.startsWith('en/') ? 'en' : 'es';
+    if (room && ROOMS[room]) pageData.title = ROOMS[room][lang].name;
+  },
 
   locales: {
     root: {

@@ -2,7 +2,7 @@
  "format": "lux-studio-accuracy-reference",
  "version": 2,
  "room": {
-  "description": "A furnished living room: four downlights over a sofa, a coffee table, a dining table and a bookcase, which block and reflect light as their finishes do (linen 0.55, oak 0.45). Measures how much furniture changes bounced light, which Lux Studio doesn't count yet.",
+  "description": "A furnished living room: four downlights over a sofa, a coffee table, a dining table and a bookcase, which block and reflect light as their finishes do (linen 0.55, oak 0.45). Measures what furniture does to light, bounced light included.",
   "room": {
    "width": 5,
    "depth": 4,

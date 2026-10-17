@@ -32,6 +32,12 @@ export interface RoomSummary {
   readonly name: string;
   readonly radianceRelease: string;
   readonly points: number;
+  /** The room's surfaces' reflectances, 0–1. */
+  readonly reflectances: {
+    readonly floor: number;
+    readonly walls: number;
+    readonly ceiling: number;
+  };
   readonly direct: readonly SurfaceSummary[];
   readonly total: readonly SurfaceSummary[];
   /** Total light with the furniture taken out on both sides; empty without furniture. */
