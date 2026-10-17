@@ -24,7 +24,7 @@ test.describe('first visit', () => {
     await expect(title(page)).toHaveText('Agregá luminarias y muebles');
 
     // The last card, through its dot: the IES step (the demo has import on) and the manual.
-    await page.getByRole('button', { name: 'Paso 10 de 10' }).click();
+    await page.getByRole('button', { name: 'Paso 11 de 11' }).click();
     await expect(title(page)).toHaveText('Probá tu propio archivo IES');
     await expect(page.getByRole('link', { name: /Ver el manual completo/ })).toHaveAttribute(
       'href',
