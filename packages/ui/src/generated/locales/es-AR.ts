@@ -154,6 +154,7 @@
 's8ad0f424f236fa22': `Tierra`,
 's8ada49fbc8a09fb3': `escena`,
 's8c7116be54de3f9b': `Mesada`,
+'s8ca77553a77523bd': str`Directa ${0} · rebotada ${1}`,
 's8cfb6cabf1c5f6e3': `Lámpara de mesa`,
 's8d702591ace7b7c9': str`${0} muebles seleccionados`,
 's8da37c19f4068f7c': `Maceta`,

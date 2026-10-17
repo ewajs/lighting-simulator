@@ -8,7 +8,7 @@ import { DEFAULT_CALCULATION_OPTIONS, type CalculationOptions } from './options'
 import { bounceGeometryKey, type AnalysisCache } from './cache';
 import { directIlluminance } from './direct';
 import { indirectFromViews, pointViews } from './radiosity';
-import { sceneLight } from './scene-light';
+import { sceneLight, type SceneLight } from './scene-light';
 import { boxVisibility } from './visibility';
 import { DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs, type AnalysisSettings } from './settings';
 import { illuminanceStats, type IlluminanceStats } from './stats';
@@ -54,6 +54,21 @@ export function analyseIlluminance(
   cache?: AnalysisCache,
 ): IlluminanceAnalysis {
   const light = sceneLight(scene, inputs, settings, options, cache);
+  return analyseSceneLight(scene, light, settings, options, cache);
+}
+
+/**
+ * `analyseIlluminance` from a scene's light already prepared by `sceneLight`
+ * with the same settings and options: for a caller that keeps the light, e.g.
+ * to read it at other points afterwards (ADR 0067).
+ */
+export function analyseSceneLight(
+  scene: Scene,
+  light: SceneLight,
+  settings: AnalysisSettings = DEFAULT_ANALYSIS_SETTINGS,
+  options: CalculationOptions = DEFAULT_CALCULATION_OPTIONS,
+  cache?: AnalysisCache,
+): IlluminanceAnalysis {
   const grids = roomGrids(scene.room, settings.workPlaneHeightM, settings.borderM);
   const { patches, blockers } = light.indirect;
   const key = bounceGeometryKey(scene.room, blockers, options.patchSizeM);

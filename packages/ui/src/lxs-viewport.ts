@@ -7,8 +7,11 @@ import {
   type Measurement,
   type MoveStartEvent,
   type PickEvent,
+  type CalcSurfaceName,
   type IlluminanceAnalysis,
+  type PointIlluminance,
   type RenderMode,
+  type Vec3,
   type Simulator,
   type ViewName,
 } from '@luxstudio/core';
@@ -18,9 +21,12 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { formatFixed } from './format';
 import { PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
 import { FURNITURE_DRAG_TYPE } from './lxs-furniture-list';
+import './lxs-probe';
 
 /** How often the diagnostics overlay refreshes, in ms. */
 const STATS_INTERVAL_MS = 500;
+/** A touch that moves less than this, in px, is a tap: it probes (ADR 0067). */
+const TAP_SLOP_PX = 10;
 /** Loading shorter than this feels instant, so no spinner is shown for it, in ms. */
 const LOADER_DELAY_MS = 250;
 
@@ -40,6 +46,8 @@ const LOADER_DELAY_MS = 250;
  * @fires lxs-drop-product - a catalog card was dropped: `detail: { productId, at }`.
  * @fires lxs-drop-furniture - a furniture card was dropped: `detail: { kind, at }`.
  * @fires lxs-drop-file - a file was dropped, e.g. a scene file: `detail: { file }`.
+ * @fires lxs-probe - in the illuminance mode, the pointer over a calculated
+ *   surface: `detail: ProbeDetail`, or `null` when it leaves (ADR 0067).
  */
 @customElement('lxs-viewport')
 @localized()
@@ -168,6 +176,13 @@ export class LxsViewport extends LitElement {
   @property({ type: Number, attribute: 'exposure-ev' }) exposureEv = 0;
   /** The calculated light the `illuminance` render mode draws (ADR 0066). */
   @property({ attribute: false }) illuminance: IlluminanceAnalysis | undefined;
+  /** The light at the probed point, shown beside it (ADR 0067). */
+  @property({ attribute: false }) probe: PointIlluminance | undefined;
+  /** Where the probe is: the pointer, in px within the viewport, and the surface under it. */
+  @state() private probeAt:
+    { readonly x: number; readonly y: number; readonly surface: CalcSurfaceName } | undefined;
+  #probeFrame: number | undefined;
+  #pressedAt: { readonly x: number; readonly y: number } | undefined;
   /** Handle on the highlighted luminaires: `move` shows arrows to slide them along an axis. */
   @property() handle: HandleMode = 'none';
   /** Shows frame rate, backend, shadows and draw counts over the viewport, for debugging. */
@@ -194,7 +209,23 @@ export class LxsViewport extends LitElement {
             class="canvas ${this.covered ? 'hidden' : ''}"
             @dragover=${this.#onDragOver}
             @drop=${this.#onDrop}
+            @pointermove=${this.#onProbeMove}
+            @pointerleave=${this.#onProbeLeave}
+            @pointerdown=${this.#onProbeDown}
+            @pointerup=${this.#onProbeUp}
           ></div>
+          ${
+            this.renderMode === 'illuminance' && this.probeAt && this.probe
+              ? html`<lxs-probe
+                  .illuminance=${this.probe}
+                  .surface=${this.probeAt.surface}
+                  .x=${this.probeAt.x}
+                  .y=${this.probeAt.y}
+                  .width=${this.clientWidth}
+                  .height=${this.clientHeight}
+                ></lxs-probe>`
+              : ''
+          }
           ${this.#renderLoading()}
           ${this.diagnostics && this.stats ? this.#renderStats(this.stats) : ''}
           ${this.measurements.map(
@@ -337,6 +368,55 @@ export class LxsViewport extends LitElement {
     }
   }
 
+  // The lux probe (ADR 0067): a mouse probes as it moves, a finger with a tap.
+  #onProbeMove = (event: PointerEvent): void => {
+    if (event.pointerType === 'touch' || this.renderMode !== 'illuminance') return;
+    if (this.#probeFrame !== undefined) cancelAnimationFrame(this.#probeFrame);
+    const { clientX, clientY } = event;
+    this.#probeFrame = requestAnimationFrame(() => {
+      this.#probeFrame = undefined;
+      this.#probeAt(clientX, clientY);
+    });
+  };
+
+  #onProbeLeave = (event: PointerEvent): void => {
+    if (event.pointerType === 'touch') return;
+    if (this.#probeFrame !== undefined) cancelAnimationFrame(this.#probeFrame);
+    this.#probeFrame = undefined;
+    this.#endProbe();
+  };
+
+  #onProbeDown = (event: PointerEvent): void => {
+    this.#pressedAt = { x: event.clientX, y: event.clientY };
+  };
+
+  #onProbeUp = (event: PointerEvent): void => {
+    const pressed = this.#pressedAt;
+    this.#pressedAt = undefined;
+    if (event.pointerType !== 'touch' || this.renderMode !== 'illuminance' || !pressed) return;
+    // A tap, not a drag or an orbit.
+    if (Math.hypot(event.clientX - pressed.x, event.clientY - pressed.y) > TAP_SLOP_PX) return;
+    this.#probeAt(event.clientX, event.clientY);
+  };
+
+  #probeAt(clientX: number, clientY: number): void {
+    const hit = this.#viewport?.surfaceAt(clientX, clientY);
+    if (!hit) {
+      this.#endProbe();
+      return;
+    }
+    const box = this.getBoundingClientRect();
+    this.probeAt = { x: clientX - box.left, y: clientY - box.top, surface: hit.surface };
+    const detail: ProbeDetail = { point: hit.point, normal: hit.normal };
+    this.#emit('lxs-probe', detail);
+  }
+
+  #endProbe(): void {
+    if (!this.probeAt) return;
+    this.probeAt = undefined;
+    this.#emit('lxs-probe', null);
+  }
+
   #unmount(): void {
     this.#viewport?.dispose();
     this.#viewport = undefined;
@@ -392,6 +472,12 @@ export class LxsViewport extends LitElement {
   #emit<T>(type: string, detail: T): void {
     this.dispatchEvent(new CustomEvent<T>(type, { detail, bubbles: true, composed: true }));
   }
+}
+
+/** Detail of `lxs-probe`: a point of a calculated surface under the pointer, and the way it faces. */
+export interface ProbeDetail {
+  readonly point: Vec3;
+  readonly normal: Vec3;
 }
 
 /** Detail of `lxs-drop-product`: which product, and where on the floor it was dropped. */

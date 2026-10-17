@@ -1,6 +1,16 @@
 import * as THREE from 'three/webgpu';
 import type { IlluminanceAnalysis, SurfaceResult } from '../analysis/analyse';
+import type { CalcSurfaceName } from '../analysis/calc-grid';
 import { falseColour } from '../analysis/false-colour';
+import type { Vec3 } from '../types';
+
+/** A point on a calculated surface, as the illuminance view shows it (ADR 0067). */
+export interface SurfacePoint {
+  readonly surface: CalcSurfaceName;
+  readonly point: Vec3;
+  /** The way the surface faces, into the room. */
+  readonly normal: Vec3;
+}
 
 /**
  * The illuminance view (ADR 0066): each calculated surface (the work plane,
@@ -18,6 +28,20 @@ export class IlluminanceMeshes {
     for (const surface of analysis?.surfaces ?? []) {
       if (surface.grid.points.length > 0) this.group.add(plane(surface));
     }
+  }
+
+  /** The nearest calculated surface `raycaster` meets from its front, if any. */
+  hit(raycaster: THREE.Raycaster): SurfacePoint | undefined {
+    const [first] = raycaster.intersectObjects(this.group.children, false);
+    if (!first) return undefined;
+    const { surface, normal } = first.object.userData as Omit<SurfacePoint, 'point'>;
+    // Back onto the surface itself: the plane is lifted off it.
+    const point = {
+      x: first.point.x - normal.x * LIFT_M,
+      y: first.point.y - normal.y * LIFT_M,
+      z: first.point.z - normal.z * LIFT_M,
+    };
+    return { surface, point, normal };
   }
 
   dispose(): void {
@@ -68,7 +92,9 @@ function plane({ grid, illuminanceLx }: SurfaceResult): THREE.Mesh {
     map: texture(grid.columns, grid.rows, illuminanceLx),
     toneMapped: false,
   });
-  return new THREE.Mesh(geometry, material);
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.userData = { surface: grid.surface, normal: grid.normal };
+  return mesh;
 }
 
 /** One texel per grid point, in its row and column, coloured by its illuminance. */

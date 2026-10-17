@@ -128,6 +128,7 @@ shared styles in `packages/ui/src/styles.ts` and `field-styles.ts`.
 | **Product card** | Thumbnail, name, short spec line (power · CCT · flux). Click to add, drag to place. |
 | **Section** | Collapsible group inside panels, uppercase xs heading. |
 | **Legend** | Vertical gradient bar with lux ticks. |
+| **Probe** | `<lxs-probe>`, in the illuminance view: beside the pointer (or where a finger tapped), the total in lux, then direct and bounced, and the surface. It keeps clear of the viewport's edges and the legend. |
 | **Status item** | Icon + mono value, separated by hairlines. |
 | **Notice** | `<lxs-notice>`, bottom left of the viewport: a line or two of info or error. It rises in, and closes itself after 7 s or with ✕. |
 | **Dialog** | A native `<dialog>` (New scene, Help), centred, fading and scaling in. |

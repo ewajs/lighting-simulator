@@ -2,15 +2,17 @@ import { Simulator, type Catalog, type Product } from '@luxstudio/core';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AnalysisController } from './analysis-controller';
-import type { AnalysisRequest, AnalysisResponse } from './analysis-request';
+import type { AnalysisRequest, AnalysisResponse, ProbeRequest } from './analysis-request';
 import { THROTTLE_MS, type WorkerLike } from './analysis-runner';
 
 /** A worker that keeps what it's sent and answers when told to. */
 class FakeWorker implements WorkerLike {
   sent: AnalysisRequest[] = [];
+  probes: ProbeRequest[] = [];
   #onMessage: ((event: MessageEvent<AnalysisResponse>) => void) | undefined;
-  postMessage(message: AnalysisRequest): void {
-    this.sent.push(message);
+  postMessage(message: AnalysisRequest | ProbeRequest): void {
+    if (message.type === 'analyse') this.sent.push(message);
+    else this.probes.push(message);
   }
   addEventListener(type: 'message' | 'error', listener: never): void {
     if (type === 'message') this.#onMessage = listener;
@@ -106,6 +108,23 @@ describe('AnalysisController', () => {
     expect(worker.sent).toHaveLength(0);
     controller.calculate();
     expect(worker.sent).toHaveLength(1);
+  });
+
+  it('reads a probed point again after each new calculation, and stops when cleared', () => {
+    const { worker, controller } = setUp();
+    controller.setVisible(true);
+    worker.answerLast();
+    controller.probe({ x: 0, y: 0.8, z: 0 }, { x: 0, y: 1, z: 0 });
+    expect(worker.probes).toHaveLength(1);
+    controller.changed();
+    vi.advanceTimersByTime(THROTTLE_MS);
+    worker.answerLast();
+    expect(worker.probes).toHaveLength(2);
+    controller.clearProbe();
+    controller.changed();
+    vi.advanceTimersByTime(THROTTLE_MS);
+    worker.answerLast();
+    expect(worker.probes).toHaveLength(2);
   });
 
   it('sends the settings and options it was given, and the scene’s products as data', () => {

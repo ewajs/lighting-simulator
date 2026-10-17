@@ -1,14 +1,22 @@
 export { LxsApp } from './lxs-app';
 export type { ScreenshotDetail } from './lxs-app';
 export { LxsViewport } from './lxs-viewport';
-export type { DropProductDetail } from './lxs-viewport';
+export type { DropProductDetail, ProbeDetail } from './lxs-viewport';
+export { LxsProbe } from './lxs-probe';
+export { LxsIlluminanceLegend } from './lxs-illuminance-legend';
 export { LxsLibrary } from './lxs-library';
 export type { LibraryTab } from './lxs-library';
 export { LxsAnalysisPanel, NO_ANALYSIS } from './lxs-analysis-panel';
 export type { AnalysisState } from './lxs-analysis-panel';
 export { AnalysisController } from './analysis-controller';
 export type { WorkerLike } from './analysis-runner';
-export type { AnalysisRequest, AnalysisResponse } from './analysis-request';
+export { AnalysisService } from './analysis-request';
+export type {
+  AnalysisRequest,
+  AnalysisResponse,
+  ProbeRequest,
+  ProbeResponse,
+} from './analysis-request';
 export { LxsCatalogPanel, PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
 export { LxsIesImport } from './lxs-ies-import';
 export type { ImportIesDetail } from './lxs-ies-import';

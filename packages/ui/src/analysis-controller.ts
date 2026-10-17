@@ -6,6 +6,7 @@ import {
   type AnalysisSettings,
   type CalculationOptions,
   type Simulator,
+  type Vec3,
 } from '@luxstudio/core';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type { AnalysisResponse } from './analysis-request';
@@ -29,6 +30,8 @@ export class AnalysisController implements ReactiveController {
   #changes = 0;
   #changesSent = 0;
   #visible = false;
+  /** The point last probed, so a new calculation reads it again. */
+  #probed: { readonly point: Vec3; readonly normal: Vec3 } | undefined;
 
   state: AnalysisState = NO_ANALYSIS;
   settings: AnalysisSettings = DEFAULT_ANALYSIS_SETTINGS;
@@ -91,6 +94,22 @@ export class AnalysisController implements ReactiveController {
     if (auto && this.state.stale) this.#request(true);
   }
 
+  /**
+   * Reads the light at a point of a calculated surface, from the last
+   * calculation (ADR 0067); read again after each new one. The answer
+   * arrives in `state.probe`.
+   */
+  probe(point: Vec3, normal: Vec3): void {
+    this.#probed = { point, normal };
+    (this.#runner ?? this.#createRunner()).probe(point, normal);
+  }
+
+  /** Stops probing: the pointer left the surfaces. */
+  clearProbe(): void {
+    this.#probed = undefined;
+    if (this.state.probe) this.#set({ probe: undefined });
+  }
+
   /** The Calculate button: now, whether `auto` is on or not. */
   calculate(): void {
     this.#request(true, true);
@@ -125,6 +144,9 @@ export class AnalysisController implements ReactiveController {
         this.#set({ calculating: true });
       },
       onResponse: (response) => this.#onResponse(response),
+      onProbe: (response) => {
+        if (this.#probed) this.#set({ probe: response.illuminance });
+      },
     });
     return this.#runner;
   }
@@ -147,6 +169,8 @@ export class AnalysisController implements ReactiveController {
       calculating: false,
       stale,
     });
+    // A probed point shows the new light too.
+    if (this.#probed) this.#runner?.probe(this.#probed.point, this.#probed.normal);
   }
 
   #set(change: Partial<AnalysisState>): void {

@@ -15,13 +15,14 @@ export type {
 export type { HandleMode, MoveStartEvent } from './render/Manipulator';
 export type { ViewName } from './render/lighting';
 export type { RenderMode } from './render/RoomMeshes';
+export type { SurfacePoint } from './render/IlluminanceMeshes';
 export { parseIes } from './photometry/ies';
 export { beamAngleDeg, candelaAt, totalFlux } from './photometry/distribution';
 export { DEFAULT_ROOM } from './room';
 export { consoleLogger } from './logger';
 export type { Logger, LogLevel } from './logger';
 export { summarizeScene } from './summary';
-export { analyseIlluminance } from './analysis/analyse';
+export { analyseIlluminance, analyseSceneLight } from './analysis/analyse';
 export type { IlluminanceAnalysis, SurfaceResult } from './analysis/analyse';
 export { DEFAULT_ANALYSIS_SETTINGS } from './analysis/settings';
 export type { AnalysisInputs, AnalysisSettings } from './analysis/settings';
