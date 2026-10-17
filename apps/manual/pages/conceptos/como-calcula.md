@@ -8,6 +8,7 @@ const rooms = {
   'track-spots': 'Dos spots de riel inclinados',
   'linear-pendant-over-table': 'Un colgante lineal sobre una mesa',
   'wall-sconce': 'Un aplique de pared',
+  'furnished-living': 'Un living amueblado',
 }
 </script>
 
@@ -25,29 +26,36 @@ este orden:
    suma lo que le llega de cada fuente: $E = I \cos\alpha / d^2$.
 3. **Los muebles hacen sombra:** si uno se interpone, esa fuente no suma. Las
    mesas tapan solo con la tapa; sillas, plantas y cuadros no tapan.
-4. **Multiplica por el factor de mantenimiento**
+4. **Suma la luz que rebota:** el piso, el techo y las paredes se dividen en
+   parches de 25 cm, y cada uno devuelve la parte de la luz que recibe que
+   indica su reflectancia, rebote tras rebote, hasta que no cambia nada. Es el
+   método de radiosidad, clásico en el cálculo de iluminación de interiores.
+5. **Multiplica por el factor de mantenimiento**
    ([Factor de mantenimiento](./mantenimiento)).
-5. **Resume** cada superficie: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ y $U_0$
+6. **Resume** cada superficie: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ y $U_0$
    ([Uniformidad](./uniformidad)).
 
 ## Lo que todavía no cuenta
 
-::: warning Solo luz directa, por ahora
-La luz que rebota en paredes, techo y piso todavía no se suma. Es una parte
-importante del total, más cuanto más claras son las superficies, así que por
-ahora los valores quedan **por debajo** de los de DIALux o Relux. Llega en una
-próxima versión.
-:::
+Los muebles hacen sombra a la luz directa, pero la luz que rebota no los ve: no
+la tapan ni la reflejan. Medido con Radiance, eso pesa:
+- en un living amueblado, los promedios se alejan hasta un 5,4 %, y algunos
+  puntos junto a los muebles (debajo de una mesa, junto a la biblioteca) hasta
+  un 43 %;
+- sobre una mesa con un colgante, el techo recibe un 7 % menos de lo que
+  debería, porque falta la luz que refleja la mesa.
 
-Tampoco cuenta la luz que reflejan los muebles, ni superficies brillantes o
-espejadas: todo refleja de forma difusa.
+Sin los muebles, los promedios de Lux Studio y Radiance coinciden dentro del 1 %
+en esos mismos ambientes. Todas las superficies reflejan de forma difusa: no hay
+brillos ni espejos.
 
 ## Cuán preciso es
 
 Se comprobó contra **Radiance**, el simulador de iluminación de investigación del
 Lawrence Berkeley National Laboratory, que lee los archivos IES con su propio
-código. Cinco ambientes de prueba, con los archivos reales de la demo, y miles
-de puntos. La diferencia más grande, por ambiente:
+código. Seis ambientes de prueba, con los archivos reales de la demo, y miles
+de puntos, con la luz que rebota incluida. La diferencia más grande, por
+ambiente:
 
 <LxAccuracy
   :summary="data"
@@ -56,7 +64,10 @@ de puntos. La diferencia más grande, por ambiente:
 />
 
 Los "puntos" cuentan solo los que reciben al menos el 10 % de la luz del punto
-más iluminado del ambiente. Muy cerca de una luminaria grande, como el aplique,
+más iluminado del ambiente. Las diferencias del living y del colgante son las de
+los muebles, que se explican más arriba. El aplique da hasta un 3,3 % más en
+promedio, probablemente porque en Radiance su cuerpo tapa parte de la luz que
+rebota en la pared de atrás; en Lux Studio, las luminarias no la tapan. Muy cerca de una luminaria grande, como el aplique,
 los dos programas aproximan de forma distinta una abertura que brilla, y el
 archivo IES no dice cómo es la luz tan de cerca.
 

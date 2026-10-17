@@ -53,11 +53,19 @@ def _report(checks: list[Check]) -> int:
             f"✗ {check.name}: Radiance {check.radiance_lux:.4f} lx, "
             f"by hand {check.expected_lux:.4f} lx ({check.error:+.3%})"
         )
-    worst = max(abs(check.error) for check in checks)
+    hand = [check for check in checks if check.tolerance == TOLERANCE]
+    worst = max(abs(check.error) for check in hand)
     print(
-        f"Radiance {RELEASE}: {len(checks) - len(failed)} of {len(checks)} hand checks within "
+        f"Radiance {RELEASE}: {sum(c.passed for c in hand)} of {len(hand)} hand checks within "
         f"{TOLERANCE:.1%} (worst {worst:.3%})"
     )
+    for check in checks:
+        if check.tolerance != TOLERANCE:
+            mark = "✓" if check.passed else "✗"
+            print(
+                f"{mark} {check.name}: Radiance {check.radiance_lux:.2f} lx, formula "
+                f"{check.expected_lux:.2f} lx ({check.error:+.2%}, allowed ±{check.tolerance:.0%})"
+            )
     return len(failed)
 
 

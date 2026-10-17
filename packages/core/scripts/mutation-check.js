@@ -16,7 +16,15 @@
 /* global console, process, URL */
 
 import { spawnSync } from 'node:child_process';
-import { cpSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -72,12 +80,12 @@ const MISTAKES = [
   {
     name: 'tall openings not split in height',
     file: 'src/analysis/sources.ts',
-    correct: 'const layers = Math.max(1, Math.ceil(height / SOURCE_CELL_M));',
+    correct: 'const layers = Math.max(1, Math.ceil(height / cellM));',
     slip: 'const layers = 1;',
   },
   {
     name: 'no maintenance factor',
-    file: 'src/analysis/analyse-direct.ts',
+    file: 'src/analysis/direct-light.ts',
     correct: 'level * settings.maintenanceFactor,',
     slip: 'level,',
   },
@@ -86,6 +94,36 @@ const MISTAKES = [
     file: 'src/analysis/direct.ts',
     correct: 'if (segmentBlocked(point, source.position, blockers)) continue;',
     slip: '',
+  },
+  {
+    name: 'bounced light without reflectance',
+    file: 'src/analysis/radiosity.ts',
+    correct: 'const next = patches[i]!.reflectance * received;',
+    slip: 'const next = received;',
+  },
+  {
+    name: 'only one bounce',
+    file: 'src/analysis/radiosity.ts',
+    correct: 'for (let j = 0; j < count; j++) received += values[row + j]! * exitance[j]!;',
+    slip: '',
+  },
+  {
+    name: 'facing test reversed',
+    file: 'src/analysis/form-factor.ts',
+    correct: 'const inFront = (h: number) => h > PLANE_EPSILON_M;',
+    slip: 'const inFront = (h: number) => h < -PLANE_EPSILON_M;',
+  },
+  {
+    name: 'surfaces behind the point not cut away',
+    file: 'src/analysis/form-factor.ts',
+    correct: 'const visible = clipToFront(vertices, point, normal);',
+    slip: 'const visible = vertices;',
+  },
+  {
+    name: 'reciprocity the wrong way round',
+    file: 'src/analysis/radiosity.ts',
+    correct: 'values[j * count + i] = (fij * a.area) / b.area;',
+    slip: 'values[j * count + i] = (fij * b.area) / a.area;',
   },
   {
     name: 'grid spacing not from the longer side',
@@ -108,6 +146,11 @@ try {
   symlinkSync(REPO_MODULES, join(sandbox, 'node_modules'), 'dir');
   for (const { name, file, correct, slip } of MISTAKES) {
     const path = join(sandbox, file);
+    if (!existsSync(path)) {
+      console.log(`✗ ${name}: ${file} is gone; update this script`);
+      unnoticed++;
+      continue;
+    }
     const original = readFileSync(path, 'utf8');
     if (original.split(correct).length !== 2) {
       console.log(`✗ ${name}: the code it changes isn't in ${file} once; update this script`);

@@ -49,4 +49,4 @@ plano medido. Pero el punto más oscuro baja de {{ n(data.spread.minLx) }} a
 centro muy iluminado y rincones en penumbra. Mirando solo el promedio, la peor
 distribución parecería la mejor.
 
-Son valores con luz directa solamente y sin factor de mantenimiento.
+Incluyen la luz que rebota en paredes, techo y piso; no llevan factor de mantenimiento.

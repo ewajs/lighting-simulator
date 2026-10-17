@@ -1,0 +1,119 @@
+{
+  "description": "A furnished living room: four downlights over a sofa, a coffee table, a dining table and a bookcase, which block and reflect light as their finishes do (linen 0.55, oak 0.45). Measures how much furniture changes bounced light, which Lux Studio doesn't count yet.",
+  "room": {
+    "width": 5,
+    "depth": 4,
+    "height": 2.7
+  },
+  "luminaires": [
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -1.25,
+        "y": 2.67,
+        "z": -1
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 1.25,
+        "y": 2.67,
+        "z": -1
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -1.25,
+        "y": 2.67,
+        "z": 1
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 1.25,
+        "y": 2.67,
+        "z": 1
+      }
+    }
+  ],
+  "blockers": [
+    {
+      "centre": {
+        "x": -0.5,
+        "y": 0.4,
+        "z": 1.45
+      },
+      "half": {
+        "x": 1.05,
+        "y": 0.4,
+        "z": 0.45
+      },
+      "yawDeg": 0,
+      "reflectance": 0.55
+    },
+    {
+      "centre": {
+        "x": -0.5,
+        "y": 0.385,
+        "z": 0.5
+      },
+      "half": {
+        "x": 0.55,
+        "y": 0.015,
+        "z": 0.3
+      },
+      "yawDeg": 0,
+      "reflectance": 0.45
+    },
+    {
+      "centre": {
+        "x": 1.2,
+        "y": 0.735,
+        "z": -0.2
+      },
+      "half": {
+        "x": 0.8,
+        "y": 0.015,
+        "z": 0.45
+      },
+      "yawDeg": 0,
+      "reflectance": 0.45
+    },
+    {
+      "centre": {
+        "x": 2.0,
+        "y": 1.0,
+        "z": -1.8
+      },
+      "half": {
+        "x": 0.5,
+        "y": 1.0,
+        "z": 0.175
+      },
+      "yawDeg": 0,
+      "reflectance": 0.45
+    }
+  ],
+  "grids": [
+    {
+      "surface": "work-plane",
+      "heightM": 0.8,
+      "spacingM": 0.25
+    },
+    {
+      "surface": "floor",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-x+",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-z-",
+      "spacingM": 0.25
+    }
+  ]
+}

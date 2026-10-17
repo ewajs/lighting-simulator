@@ -3,7 +3,8 @@
 // budget (M5.4). `npm run bench -w packages/core` bundles this file with Vite
 // and runs it in Node, so it times the code as the app ships it: under
 // Vitest, every import goes through a getter that distorts the timing.
-import { analyseDirect, type AnalysisInputs } from '../src/analysis/analyse-direct';
+import { analyseIlluminance } from '../src/analysis/analyse';
+import type { AnalysisInputs } from '../src/analysis/settings';
 import { catalog, photometry, room } from '../src/test-fixtures';
 import type { Furniture, Luminaire, Scene } from '../src/types';
 
@@ -57,17 +58,17 @@ const scene: Scene = {
 };
 const inputs: AnalysisInputs = { catalog, photometry: () => FILE, modelFile: () => undefined };
 
-for (let i = 0; i < WARM_UP_RUNS; i++) analyseDirect(scene, inputs);
+for (let i = 0; i < WARM_UP_RUNS; i++) analyseIlluminance(scene, inputs);
 const times: number[] = [];
 for (let i = 0; i < TIMED_RUNS; i++) {
   const start = performance.now();
-  analyseDirect(scene, inputs);
+  analyseIlluminance(scene, inputs);
   times.push(performance.now() - start);
 }
 times.sort((a, b) => a - b);
 const median = times[Math.floor(times.length / 2)]!;
 const mean = times.reduce((sum, t) => sum + t, 0) / times.length;
 console.log(
-  `analyseDirect, 6 luminaires × 12 cells, 3 pieces of furniture, 5 × 4 m room: ` +
+  `analyseIlluminance, 6 luminaires × 12 cells, 3 pieces of furniture, 5 × 4 m room: ` +
     `median ${median.toFixed(1)} ms, mean ${mean.toFixed(1)} ms over ${TIMED_RUNS} runs`,
 );

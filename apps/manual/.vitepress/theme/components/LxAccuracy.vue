@@ -9,7 +9,7 @@ const props = defineProps<{
   summary: {
     rooms: readonly {
       name: string;
-      surfaces: readonly { averageError: number; worstFar: number; worstNear: number }[];
+      total: readonly { averageError: number; worstFar: number; worstNear: number }[];
     }[];
   };
   /** Each room's name in the page's language, by its file name. */
@@ -23,9 +23,9 @@ const pct = (value: number) => `${formatNumber(value * 100, lang.value, 2)} %`;
 const rows = computed(() =>
   props.summary.rooms.map((room) => ({
     name: props.roomNames[room.name] ?? room.name,
-    average: Math.max(...room.surfaces.map((s) => Math.abs(s.averageError))),
-    far: Math.max(...room.surfaces.map((s) => s.worstFar)),
-    near: Math.max(...room.surfaces.map((s) => s.worstNear)),
+    average: Math.max(...room.total.map((s) => Math.abs(s.averageError))),
+    far: Math.max(...room.total.map((s) => s.worstFar)),
+    near: Math.max(...room.total.map((s) => s.worstNear)),
   })),
 );
 </script>

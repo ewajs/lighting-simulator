@@ -31,7 +31,8 @@
     "accuracy:check": "cd accuracy/python && uv run ruff check && uv run ruff format --check && uv run mypy && uv run pytest",
     "accuracy:references": "uv run --directory accuracy/python accuracy references && npm run accuracy:report",
     "accuracy:report": "npm run report -w accuracy/typescript",
-    "accuracy:docs": "uv run --directory accuracy/python pdoc luxstudio_accuracy --docformat google"
+    "accuracy:docs": "uv run --directory accuracy/python pdoc luxstudio_accuracy --docformat google",
+    "accuracy:patch-size": "npm run patch-size -w accuracy/typescript"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

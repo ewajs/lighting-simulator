@@ -1,22 +1,15 @@
 // Luminaires as point sources of light for the illuminance calculation
-// (ADR 0057). A luminaire whose luminous opening is larger than SOURCE_CELL_M
-// is split into a grid of cells, each a point source with an equal share of
-// the intensity, as DIALux and Relux do: the inverse-square law then holds
-// close to large luminaires too.
+// (ADR 0057). A luminaire whose luminous opening is larger than the options'
+// `sourceCellM` is split into a grid of cells, each a point source with an
+// equal share of the intensity, as DIALux and Relux do: the inverse-square law
+// then holds close to large luminaires too.
 
 import { candelaAt } from '../photometry/distribution';
 import { candela, isSpot } from '../photometry/estimate';
 import type { LuminaireFrame } from '../luminaire-frame';
 import { add, scale } from '../math';
+import { DEFAULT_CALCULATION_OPTIONS } from './options';
 import type { LuminousOpening, Photometry, Product, Vec3 } from '../types';
-
-/**
- * The largest cell a luminous opening is split into, in m. The inverse-square
- * law is within about 1 % of the truth beyond five times a source's size (the
- * "five-times rule", IES Lighting Handbook), so 10 cm cells hold from 0.5 m
- * away: closer than any point a calculation needs.
- */
-export const SOURCE_CELL_M = 0.1;
 
 /** How a source's intensity varies with direction. */
 export type Distribution =
@@ -61,7 +54,7 @@ export function intensityAt(
 
 /**
  * A luminaire's point sources: one at its photometric centre, or one per cell
- * of its luminous opening when the opening is larger than SOURCE_CELL_M. A
+ * of its luminous opening when the opening is larger than `cellM`. A
  * round opening keeps the cells whose centres fall inside it. `level` is its
  * output, 0–1 (dimming, or 0 when off): none at 0.
  */
@@ -70,9 +63,10 @@ export function luminaireSources(
   distribution: Distribution,
   opening: LuminousOpening | undefined,
   level: number,
+  cellM: number = DEFAULT_CALCULATION_OPTIONS.sourceCellM,
 ): PointSource[] {
   if (level <= 0) return [];
-  const offsets = cellOffsets(opening);
+  const offsets = cellOffsets(opening, cellM);
   const share = level / offsets.length;
   return offsets.map(({ across, along, up }) => ({
     position: add(
@@ -98,13 +92,13 @@ interface CellOffset {
  * centre. A tall opening, such as a sconce's glowing box or a lamp's shade,
  * is split in height too: close to it, a single height would be far off.
  */
-function cellOffsets(opening: LuminousOpening | undefined): CellOffset[] {
+function cellOffsets(opening: LuminousOpening | undefined, cellM: number): CellOffset[] {
   const width = opening?.widthM ?? 0;
   const length = opening?.lengthM ?? 0;
   const height = opening?.heightM ?? 0;
-  const columns = Math.max(1, Math.ceil(width / SOURCE_CELL_M));
-  const rows = Math.max(1, Math.ceil(length / SOURCE_CELL_M));
-  const layers = Math.max(1, Math.ceil(height / SOURCE_CELL_M));
+  const columns = Math.max(1, Math.ceil(width / cellM));
+  const rows = Math.max(1, Math.ceil(length / cellM));
+  const layers = Math.max(1, Math.ceil(height / cellM));
   const cells: CellOffset[] = [];
   for (let i = 0; i < columns; i++) {
     for (let j = 0; j < rows; j++) {

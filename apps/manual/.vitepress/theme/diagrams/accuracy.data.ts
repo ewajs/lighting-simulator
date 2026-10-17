@@ -22,7 +22,10 @@ export interface AccuracyData {
     readonly name: string;
     readonly radianceRelease: string;
     readonly points: number;
-    readonly surfaces: readonly SurfaceResult[];
+    /** Straight from the luminaires. */
+    readonly direct: readonly SurfaceResult[];
+    /** Direct plus every bounce. */
+    readonly total: readonly SurfaceResult[];
   }[];
 }
 

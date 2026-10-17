@@ -26,7 +26,14 @@ from luxstudio_accuracy.geometry import LightAxes, Vec3, light_axes
 from luxstudio_accuracy.ies import IesFile, read_ies, write_ies
 from luxstudio_accuracy.radiance import Radiance
 from luxstudio_accuracy.rooms import IES_DIR
-from luxstudio_accuracy.scene import PlacedLuminaire, illuminance
+from luxstudio_accuracy.scene import (
+    BOUNCE_OPTIONS,
+    PlacedLuminaire,
+    RoomShell,
+    build_scene,
+    direct_and_bounced,
+    illuminance,
+)
 
 CHECK_DISTANCE_M = 20.0
 """How far from the luminaire to measure: 40x the largest demo opening."""
@@ -54,11 +61,13 @@ AIMS = ((0.0, 0.0), (30.0, 45.0), (60.0, -120.0), (90.0, 200.0), (15.0, 90.0))
 
 @dataclass(frozen=True)
 class Check:
-    """One measured direction: what the hand calculation expects and what Radiance gives."""
+    """One check: what the hand calculation expects and what Radiance gives."""
 
     name: str
     expected_lux: float
     radiance_lux: float
+    tolerance: float = TOLERANCE
+    """The largest relative difference allowed."""
 
     @property
     def error(self) -> float:
@@ -67,8 +76,8 @@ class Check:
 
     @property
     def passed(self) -> bool:
-        """Whether the difference is within TOLERANCE."""
-        return abs(self.error) <= TOLERANCE
+        """Whether the difference is within the check's tolerance."""
+        return abs(self.error) <= self.tolerance
 
 
 def direction(axes: LightAxes, vertical_deg: float, horizontal_deg: float) -> Vec3:
@@ -113,7 +122,79 @@ def run_checks(radiance: Radiance) -> list[Check]:
             checks += _measure(
                 radiance, work, lopsided, read_ies(lopsided), tilt, pan, _lopsided_angles
             )
+        checks.append(sphere_check(radiance, work))
     return checks
+
+
+SPHERE_ROOM_M = 3.0
+"""The integrating-sphere check's cube room: 3 m on each side."""
+SPHERE_REFLECTANCE = 0.8
+"""High, as a room's walls and ceiling are, so that missing bounces show: with
+ρ = 0.8, stopping after n bounces leaves out 0.8ⁿ of the bounced light."""
+SPHERE_CANDELA = 100.0
+SPHERE_POINTS_PER_SIDE = 4
+SPHERE_TOLERANCE = 0.02
+"""Radiance samples bounced light at random, so its average carries a little noise."""
+
+
+def sphere_check(
+    radiance: Radiance, work: Path, bounce_options: tuple[str, ...] = BOUNCE_OPTIONS
+) -> Check:
+    """Radiance's bounced light against the integrating sphere.
+
+    In a closed room whose surfaces all reflect ρ, every lumen is reflected
+    again and again until absorbed, so the bounced light reaching the
+    surfaces, averaged over their area, is E = ρ Φ / (A (1 − ρ)) (the
+    integrating-sphere formula; e.g. the IES Lighting Handbook, on
+    inter-reflections). Here a uniform 100 cd point source sits in the middle
+    of a 3 m cube: Φ = 4π · 100 lm, A = 54 m².
+
+    Args:
+        radiance: The installed Radiance.
+        work: A folder for the scene's files.
+        bounce_options: rtrace's options for total light: the references' own,
+            or others to prove the check catches a mistake.
+
+    Returns:
+        The check: Radiance's average bounced light (total less direct) on the
+        cube's surfaces against the formula.
+    """
+    folder = work / "sphere"
+    folder.mkdir()
+    point_file = folder / "point.ies"
+    write_ies(point_file, (0.0, 180.0), (0.0,), ((SPHERE_CANDELA, SPHERE_CANDELA),))
+    s, rho = SPHERE_ROOM_M, SPHERE_REFLECTANCE
+    room = RoomShell(s, s, s, rho, rho, rho)
+    luminaire = PlacedLuminaire(point_file, Vec3(0, s / 2, 0), 0, 0)
+    octree = build_scene(radiance, folder, [luminaire], [], room)
+    points = _cube_points(s)
+    _, bounced_at = direct_and_bounced(radiance, octree, points, bounce_options)
+    bounced = sum(bounced_at) / len(points)
+    flux = 4 * math.pi * SPHERE_CANDELA
+    area = 6 * s * s
+    return Check(
+        name=f"integrating sphere: {s:g} m cube, ρ {rho:g}, {SPHERE_CANDELA:g} cd point",
+        expected_lux=rho * flux / (area * (1 - rho)),
+        radiance_lux=bounced,
+        tolerance=SPHERE_TOLERANCE,
+    )
+
+
+def _cube_points(side: float) -> list[tuple[Vec3, Vec3]]:
+    """Points at cell centres on each face of a cube of `side` standing on the floor, facing in."""
+    n = SPHERE_POINTS_PER_SIDE
+    h = side / 2
+    cells = [(-h + (i + 0.5) * side / n) for i in range(n)]
+    points: list[tuple[Vec3, Vec3]] = []
+    for a in cells:
+        for b in cells:
+            points.append((Vec3(a, 0, b), Vec3(0, 1, 0)))
+            points.append((Vec3(a, side, b), Vec3(0, -1, 0)))
+            points.append((Vec3(-h, b + h, a), Vec3(1, 0, 0)))
+            points.append((Vec3(h, b + h, a), Vec3(-1, 0, 0)))
+            points.append((Vec3(a, b + h, -h), Vec3(0, 0, 1)))
+            points.append((Vec3(a, b + h, h), Vec3(0, 0, -1)))
+    return points
 
 
 def _demo_angles(ies: IesFile) -> Iterator[tuple[float, float]]:

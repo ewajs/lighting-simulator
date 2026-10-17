@@ -36,7 +36,8 @@ build time.
 - **Computing:** VitePress data loaders (`.vitepress/theme/diagrams/*.data.ts`)
   run in Node at build time. They call core's functions on the demo's real
   IES files: `parseIes`, `candelaAt`, `beamAngleDeg`, `directLight`,
-  `directIlluminance`, `analyseDirect`, `maxGridSpacing`.
+  `directIlluminance`, `analyseIlluminance` (`analyseDirect` until ADR 0060),
+  `maxGridSpacing`.
   - Loaders are bundled with esbuild. Imported by package name, core would be
     left to Node, which can't load its TypeScript source (ADR 0017), so
     `diagrams/core.ts` imports it by path. It reads the IES files with

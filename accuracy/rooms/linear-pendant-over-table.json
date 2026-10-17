@@ -1,22 +1,49 @@
 {
-  "description": "A 1.2 m direct/indirect linear pendant (Finelite HP-2) at 1.55 m over a 1.6 × 0.9 m table top, lengthwise along it: close to a large luminaire, with a shadow on the floor and light on the ceiling.",
-  "room": { "width": 5, "depth": 4, "height": 2.7 },
+  "description": "A 1.2 m direct/indirect linear pendant (Finelite HP-2) at 1.55 m over a 1.6 × 0.9 m oak table top, lengthwise along it: close to a large luminaire, with a shadow on the floor and light on the ceiling.",
+  "room": {
+    "width": 5,
+    "depth": 4,
+    "height": 2.7
+  },
   "luminaires": [
     {
       "ies": "HP-2-ID-4ft-H-B-835-ITL85132.008.ies",
-      "origin": { "x": 0, "y": 1.55, "z": 0 }
+      "origin": {
+        "x": 0,
+        "y": 1.55,
+        "z": 0
+      }
     }
   ],
   "blockers": [
     {
-      "centre": { "x": 0, "y": 0.735, "z": 0 },
-      "half": { "x": 0.45, "y": 0.015, "z": 0.8 },
-      "yawDeg": 0
+      "centre": {
+        "x": 0,
+        "y": 0.735,
+        "z": 0
+      },
+      "half": {
+        "x": 0.45,
+        "y": 0.015,
+        "z": 0.8
+      },
+      "yawDeg": 0,
+      "reflectance": 0.45
     }
   ],
   "grids": [
-    { "surface": "work-plane", "heightM": 0.8, "spacingM": 0.2 },
-    { "surface": "floor", "spacingM": 0.2 },
-    { "surface": "ceiling", "spacingM": 0.2 }
+    {
+      "surface": "work-plane",
+      "heightM": 0.8,
+      "spacingM": 0.2
+    },
+    {
+      "surface": "floor",
+      "spacingM": 0.2
+    },
+    {
+      "surface": "ceiling",
+      "spacingM": 0.2
+    }
   ]
 }

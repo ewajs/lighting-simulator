@@ -7,67 +7,275 @@
       "description": "Four downlights on a grid, and a wall washer (Lightolier, asymmetric) 0.5 m from the wall at x = −2.5, its beam turned onto that wall.",
       "radianceRelease": "rad6R0P2",
       "points": 920,
-      "surfaces": [
+      "direct": [
         {
           "surface": "work-plane",
           "points": 320,
-          "radianceAverageLx": 213.16,
+          "radianceAverageLx": 213.21,
           "oursAverageLx": 213.14,
-          "averageError": -0.00007,
-          "worstFar": 0.0007,
+          "averageError": -0.0003,
+          "worstFar": 0.00128,
           "worstNear": 0
         },
         {
           "surface": "floor",
           "points": 320,
-          "radianceAverageLx": 175.93,
+          "radianceAverageLx": 175.97,
           "oursAverageLx": 175.92,
-          "averageError": -0.00004,
-          "worstFar": 0.00033,
+          "averageError": -0.00028,
+          "worstFar": 0.00059,
           "worstNear": 0
         },
         {
           "surface": "wall-x-",
           "points": 280,
-          "radianceAverageLx": 64.13,
+          "radianceAverageLx": 64.18,
           "oursAverageLx": 64.12,
-          "averageError": -0.00012,
-          "worstFar": 0.00213,
-          "worstNear": 0.00461
+          "averageError": -0.001,
+          "worstFar": 0.00247,
+          "worstNear": 0.01012
+        }
+      ],
+      "total": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 306.83,
+          "oursAverageLx": 306.96,
+          "averageError": 0.00043,
+          "worstFar": 0.01223,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 274.72,
+          "oursAverageLx": 275.2,
+          "averageError": 0.00177,
+          "worstFar": 0.00633,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x-",
+          "points": 280,
+          "radianceAverageLx": 156.55,
+          "oursAverageLx": 157.04,
+          "averageError": 0.00313,
+          "worstFar": 0.01926,
+          "worstNear": 0.01609
+        }
+      ],
+      "withoutFurniture": []
+    },
+    {
+      "name": "furnished-living",
+      "description": "A furnished living room: four downlights over a sofa, a coffee table, a dining table and a bookcase, which block and reflect light as their finishes do (linen 0.55, oak 0.45). Measures how much furniture changes bounced light, which Lux Studio doesn't count yet.",
+      "radianceRelease": "rad6R0P2",
+      "points": 1036,
+      "direct": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 193.71,
+          "oursAverageLx": 193.66,
+          "averageError": -0.00029,
+          "worstFar": 0.00126,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 118.69,
+          "oursAverageLx": 118.65,
+          "averageError": -0.00031,
+          "worstFar": 0.00161,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x+",
+          "points": 176,
+          "radianceAverageLx": 24.51,
+          "oursAverageLx": 24.47,
+          "averageError": -0.00157,
+          "worstFar": 0.00462,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z-",
+          "points": 220,
+          "radianceAverageLx": 26.37,
+          "oursAverageLx": 26.34,
+          "averageError": -0.00132,
+          "worstFar": 0.00424,
+          "worstNear": 0
+        }
+      ],
+      "total": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 265.89,
+          "oursAverageLx": 255.05,
+          "averageError": -0.04076,
+          "worstFar": 0.1918,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 180.37,
+          "oursAverageLx": 185.28,
+          "averageError": 0.02723,
+          "worstFar": 0.4167,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x+",
+          "points": 176,
+          "radianceAverageLx": 88.84,
+          "oursAverageLx": 84.03,
+          "averageError": -0.05415,
+          "worstFar": 0.43119,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z-",
+          "points": 220,
+          "radianceAverageLx": 85.89,
+          "oursAverageLx": 87.69,
+          "averageError": 0.02102,
+          "worstFar": 0.245,
+          "worstNear": 0
+        }
+      ],
+      "withoutFurniture": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 268.53,
+          "oursAverageLx": 268.89,
+          "averageError": 0.00137,
+          "worstFar": 0.00963,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 241.44,
+          "oursAverageLx": 241.84,
+          "averageError": 0.00167,
+          "worstFar": 0.00741,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x+",
+          "points": 176,
+          "radianceAverageLx": 100.2,
+          "oursAverageLx": 100.59,
+          "averageError": 0.00392,
+          "worstFar": 0.01472,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z-",
+          "points": 220,
+          "radianceAverageLx": 105.54,
+          "oursAverageLx": 105.94,
+          "averageError": 0.00376,
+          "worstFar": 0.01213,
+          "worstNear": 0
         }
       ]
     },
     {
       "name": "linear-pendant-over-table",
-      "description": "A 1.2 m direct/indirect linear pendant (Finelite HP-2) at 1.55 m over a 1.6 × 0.9 m table top, lengthwise along it: close to a large luminaire, with a shadow on the floor and light on the ceiling.",
+      "description": "A 1.2 m direct/indirect linear pendant (Finelite HP-2) at 1.55 m over a 1.6 × 0.9 m oak table top, lengthwise along it: close to a large luminaire, with a shadow on the floor and light on the ceiling.",
       "radianceRelease": "rad6R0P2",
       "points": 1500,
-      "surfaces": [
+      "direct": [
         {
           "surface": "work-plane",
           "points": 500,
-          "radianceAverageLx": 76.33,
+          "radianceAverageLx": 76.34,
           "oursAverageLx": 76.33,
-          "averageError": 0.00007,
-          "worstFar": 0.00172,
-          "worstNear": 0.00132
+          "averageError": -0.00011,
+          "worstFar": 0.00145,
+          "worstNear": 0.00112
         },
         {
           "surface": "floor",
           "points": 500,
-          "radianceAverageLx": 26.96,
+          "radianceAverageLx": 26.95,
           "oursAverageLx": 26.89,
-          "averageError": -0.00238,
-          "worstFar": 0.00006,
+          "averageError": -0.00221,
+          "worstFar": 0.00025,
           "worstNear": 0
         },
         {
           "surface": "ceiling",
           "points": 500,
-          "radianceAverageLx": 126.53,
+          "radianceAverageLx": 126.57,
           "oursAverageLx": 126.54,
-          "averageError": 0.00001,
-          "worstFar": 0.00081,
+          "averageError": -0.00025,
+          "worstFar": 0.0011,
+          "worstNear": 0
+        }
+      ],
+      "total": [
+        {
+          "surface": "work-plane",
+          "points": 500,
+          "radianceAverageLx": 229.27,
+          "oursAverageLx": 218,
+          "averageError": -0.04915,
+          "worstFar": 0.09141,
+          "worstNear": 0.03213
+        },
+        {
+          "surface": "floor",
+          "points": 500,
+          "radianceAverageLx": 150.97,
+          "oursAverageLx": 154,
+          "averageError": 0.02012,
+          "worstFar": 0.34912,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 500,
+          "radianceAverageLx": 221.87,
+          "oursAverageLx": 205.51,
+          "averageError": -0.07372,
+          "worstFar": 0.11427,
+          "worstNear": 0
+        }
+      ],
+      "withoutFurniture": [
+        {
+          "surface": "work-plane",
+          "points": 500,
+          "radianceAverageLx": 224.53,
+          "oursAverageLx": 225.82,
+          "averageError": 0.00571,
+          "worstFar": 0.02569,
+          "worstNear": 0.01356
+        },
+        {
+          "surface": "floor",
+          "points": 500,
+          "radianceAverageLx": 195.5,
+          "oursAverageLx": 196.85,
+          "averageError": 0.00686,
+          "worstFar": 0.02034,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 500,
+          "radianceAverageLx": 213.95,
+          "oursAverageLx": 215.27,
+          "averageError": 0.00619,
+          "worstFar": 0.03614,
           "worstNear": 0
         }
       ]
@@ -77,23 +285,23 @@
       "description": "One 6-inch recessed downlight (Cooper, 1153 lm, a 15 cm disk) in the middle of a 5 × 4 × 2.7 m room, aimed straight down.",
       "radianceRelease": "rad6R0P2",
       "points": 1036,
-      "surfaces": [
+      "direct": [
         {
           "surface": "work-plane",
           "points": 320,
           "radianceAverageLx": 55.27,
           "oursAverageLx": 55.27,
-          "averageError": -0.00004,
-          "worstFar": 0.00043,
+          "averageError": -0.00011,
+          "worstFar": 0.00144,
           "worstNear": 0
         },
         {
           "surface": "floor",
           "points": 320,
-          "radianceAverageLx": 50.88,
+          "radianceAverageLx": 50.89,
           "oursAverageLx": 50.88,
-          "averageError": -0.00002,
-          "worstFar": 0.00046,
+          "averageError": -0.00016,
+          "worstFar": 0.00102,
           "worstNear": 0
         },
         {
@@ -101,7 +309,7 @@
           "points": 176,
           "radianceAverageLx": 1.97,
           "oursAverageLx": 1.97,
-          "averageError": 0.00006,
+          "averageError": -0.00131,
           "worstFar": 0,
           "worstNear": 0
         },
@@ -110,90 +318,198 @@
           "points": 220,
           "radianceAverageLx": 3.47,
           "oursAverageLx": 3.47,
-          "averageError": -0.00011,
+          "averageError": -0.00162,
           "worstFar": 0,
           "worstNear": 0
         }
-      ]
+      ],
+      "total": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 69.72,
+          "oursAverageLx": 69.79,
+          "averageError": 0.00096,
+          "worstFar": 0.00568,
+          "worstNear": 0
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 66.05,
+          "oursAverageLx": 66.1,
+          "averageError": 0.00074,
+          "worstFar": 0.00645,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x-",
+          "points": 176,
+          "radianceAverageLx": 17.15,
+          "oursAverageLx": 17.19,
+          "averageError": 0.00225,
+          "worstFar": 0,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z+",
+          "points": 220,
+          "radianceAverageLx": 19.24,
+          "oursAverageLx": 19.27,
+          "averageError": 0.00149,
+          "worstFar": 0.00348,
+          "worstNear": 0
+        }
+      ],
+      "withoutFurniture": []
     },
     {
       "name": "track-spots",
       "description": "Two narrow track spots (iGuzzini Palco, 17° beam, 2913 lm) hung at 2.5 m, tilted and panned: one onto the floor towards the wall at z = −2, one onto the wall at x = −2.5.",
       "radianceRelease": "rad6R0P2",
       "points": 1130,
-      "surfaces": [
+      "direct": [
         {
           "surface": "floor",
           "points": 500,
-          "radianceAverageLx": 109.63,
+          "radianceAverageLx": 109.68,
           "oursAverageLx": 109.67,
-          "averageError": 0.00035,
-          "worstFar": 0.0056,
+          "averageError": -0.00008,
+          "worstFar": 0.00587,
           "worstNear": 0
         },
         {
           "surface": "wall-x-",
           "points": 280,
-          "radianceAverageLx": 268.48,
+          "radianceAverageLx": 268.49,
           "oursAverageLx": 268.15,
-          "averageError": -0.00124,
-          "worstFar": 0.01902,
+          "averageError": -0.00128,
+          "worstFar": 0.0177,
           "worstNear": 0
         },
         {
           "surface": "wall-z-",
           "points": 350,
-          "radianceAverageLx": 53.19,
+          "radianceAverageLx": 53.25,
           "oursAverageLx": 53.17,
-          "averageError": -0.0005,
+          "averageError": -0.00159,
           "worstFar": 0,
           "worstNear": 0
         }
-      ]
+      ],
+      "total": [
+        {
+          "surface": "floor",
+          "points": 500,
+          "radianceAverageLx": 250.77,
+          "oursAverageLx": 251.23,
+          "averageError": 0.00186,
+          "worstFar": 0.00595,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-x-",
+          "points": 280,
+          "radianceAverageLx": 379.31,
+          "oursAverageLx": 379.32,
+          "averageError": 0.00004,
+          "worstFar": 0.01691,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z-",
+          "points": 350,
+          "radianceAverageLx": 190.6,
+          "oursAverageLx": 190.69,
+          "averageError": 0.00047,
+          "worstFar": 0,
+          "worstNear": 0
+        }
+      ],
+      "withoutFurniture": []
     },
     {
       "name": "wall-sconce",
       "description": "An up/down wall sconce (Visa Colonnade, a 23 × 13 × 51 cm glowing box) on the wall at x = −2.5, its light 0.25 m out from it at 1.8 m: very close to the wall behind it.",
       "radianceRelease": "rad6R0P2",
       "points": 1140,
-      "surfaces": [
+      "direct": [
         {
           "surface": "wall-x-",
           "points": 280,
-          "radianceAverageLx": 20.33,
+          "radianceAverageLx": 20.36,
           "oursAverageLx": 20.44,
-          "averageError": 0.00543,
-          "worstFar": 0.02134,
-          "worstNear": 0.12651
+          "averageError": 0.00402,
+          "worstFar": 0.02282,
+          "worstNear": 0.13337
         },
         {
           "surface": "floor",
           "points": 320,
-          "radianceAverageLx": 15.37,
+          "radianceAverageLx": 15.38,
           "oursAverageLx": 15.4,
-          "averageError": 0.00185,
-          "worstFar": 0.02391,
+          "averageError": 0.00135,
+          "worstFar": 0.0252,
           "worstNear": 0
         },
         {
           "surface": "ceiling",
           "points": 320,
-          "radianceAverageLx": 24.65,
+          "radianceAverageLx": 24.66,
           "oursAverageLx": 24.79,
-          "averageError": 0.00562,
-          "worstFar": 0.03006,
-          "worstNear": 0.06859
+          "averageError": 0.00509,
+          "worstFar": 0.02879,
+          "worstNear": 0.0713
         },
         {
           "surface": "wall-z+",
           "points": 220,
-          "radianceAverageLx": 17.75,
+          "radianceAverageLx": 17.76,
           "oursAverageLx": 17.75,
-          "averageError": -0.00002,
-          "worstFar": 0.02786,
+          "averageError": -0.00052,
+          "worstFar": 0.02888,
           "worstNear": 0
         }
-      ]
+      ],
+      "total": [
+        {
+          "surface": "wall-x-",
+          "points": 280,
+          "radianceAverageLx": 68.05,
+          "oursAverageLx": 70.28,
+          "averageError": 0.03275,
+          "worstFar": 0.04349,
+          "worstNear": 0.1465
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 62.07,
+          "oursAverageLx": 63.65,
+          "averageError": 0.02542,
+          "worstFar": 0.03887,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 320,
+          "radianceAverageLx": 62.15,
+          "oursAverageLx": 63.67,
+          "averageError": 0.02454,
+          "worstFar": 0.03903,
+          "worstNear": 0.03246
+        },
+        {
+          "surface": "wall-z+",
+          "points": 220,
+          "radianceAverageLx": 56.79,
+          "oursAverageLx": 58.16,
+          "averageError": 0.02417,
+          "worstFar": 0.04131,
+          "worstNear": 0
+        }
+      ],
+      "withoutFurniture": []
     }
   ]
 }

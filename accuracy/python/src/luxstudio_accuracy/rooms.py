@@ -4,12 +4,17 @@ A room file (``accuracy/rooms/*.json``) describes a room in Lux Studio's
 coordinates (metres, Y-up, the floor's centre at the origin):
 
 - ``room``: its ``width`` (x), ``depth`` (z) and ``height`` (y).
+- ``surfaces``: the ``floor``'s, ``walls``' and ``ceiling``'s reflectance,
+  0–1; Lux Studio's default room's when left out.
 - ``luminaires``: each an ``ies`` file from ``apps/demo/public/ies``, the
   ``origin`` its light leaves from, and its ``tiltDeg`` and ``panDeg``
   (Lux Studio's aim). Wall lights are given by their pan alone.
 - ``blockers``: boxes that cast shadows, each a ``centre``, ``half`` sizes
   (x across, y up, z front to back) and a ``yawDeg`` about the vertical, as
-  Lux Studio's ``furnitureBlockers`` makes them.
+  Lux Studio's ``furnitureBlockers`` makes them, and optionally the
+  ``reflectance`` Radiance gives them (black when left out). Lux Studio's
+  furniture blocks direct light only (ADR 0057); the reference shows what
+  else it does.
 - ``grids``: where to measure: a ``surface`` (``floor``, ``ceiling``,
   ``work-plane`` at ``heightM``, or a wall: ``wall-x-``, ``wall-x+``,
   ``wall-z-``, ``wall-z+``) and a ``spacingM``.
@@ -45,6 +50,10 @@ class Luminaire:
     pan_deg: float
 
 
+DEFAULT_REFLECTANCES = {"floor": 0.3, "walls": 0.8, "ceiling": 0.85}
+"""Lux Studio's default room's (packages/core/src/room.ts)."""
+
+
 @dataclass(frozen=True)
 class Blocker:
     """A box that casts shadows, as Lux Studio's ``Blocker``."""
@@ -52,6 +61,7 @@ class Blocker:
     centre: Vec3
     half: Vec3
     yaw_deg: float
+    reflectance: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -72,6 +82,8 @@ class Room:
     width: float
     depth: float
     height: float
+    reflectances: dict[str, float]
+    """The floor's, walls' and ceiling's."""
     luminaires: tuple[Luminaire, ...]
     blockers: tuple[Blocker, ...]
     points: tuple[Point, ...]
@@ -101,9 +113,15 @@ def load_room(path: Path) -> Room:
         for item in spec["luminaires"]
     )
     blockers = tuple(
-        Blocker(_vec(item["centre"]), _vec(item["half"]), float(item.get("yawDeg", 0)))
+        Blocker(
+            _vec(item["centre"]),
+            _vec(item["half"]),
+            float(item.get("yawDeg", 0)),
+            float(item.get("reflectance", 0)),
+        )
         for item in spec.get("blockers", [])
     )
+    reflectances = {**DEFAULT_REFLECTANCES, **spec.get("surfaces", {})}
     points = tuple(
         point for grid in spec["grids"] for point in _grid_points(grid, width, depth, height)
     )
@@ -113,6 +131,7 @@ def load_room(path: Path) -> Room:
         width=width,
         depth=depth,
         height=height,
+        reflectances={key: float(value) for key, value in reflectances.items()},
         luminaires=luminaires,
         blockers=blockers,
         points=points,

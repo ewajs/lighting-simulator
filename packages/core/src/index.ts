@@ -21,20 +21,23 @@ export { DEFAULT_ROOM } from './room';
 export { consoleLogger } from './logger';
 export type { Logger, LogLevel } from './logger';
 export { summarizeScene } from './summary';
-export { analyseDirect, DEFAULT_ANALYSIS_SETTINGS, directLight } from './analysis/analyse-direct';
-export type {
-  AnalysisInputs,
-  AnalysisSettings,
-  DirectAnalysis,
-  DirectLight,
-  SurfaceResult,
-} from './analysis/analyse-direct';
+export { analyseIlluminance } from './analysis/analyse';
+export type { IlluminanceAnalysis, SurfaceResult } from './analysis/analyse';
+export { DEFAULT_ANALYSIS_SETTINGS } from './analysis/settings';
+export type { AnalysisInputs, AnalysisSettings } from './analysis/settings';
+export { directLight } from './analysis/direct-light';
+export type { DirectLight } from './analysis/direct-light';
+export { illuminanceAt, indirectLight, sceneLight } from './analysis/scene-light';
+export type { PointIlluminance, SceneLight } from './analysis/scene-light';
+export { DEFAULT_CALCULATION_OPTIONS } from './analysis/options';
+export type { CalculationOptions } from './analysis/options';
+export type { IndirectLight } from './analysis/radiosity';
+export type { Patch } from './analysis/patches';
 export { directIlluminance } from './analysis/direct';
 export { maxGridSpacing } from './analysis/calc-grid';
 export type { CalcGrid, CalcSurfaceName } from './analysis/calc-grid';
 export { FURNITURE_BLOCKING, TABLE_TOP_M } from './analysis/occlusion';
 export type { Blocker } from './analysis/occlusion';
-export { SOURCE_CELL_M } from './analysis/sources';
 export type { Distribution, PointSource } from './analysis/sources';
 export type { IlluminanceStats } from './analysis/stats';
 export { fixtureLayout, modelLayout } from './fixture-layout';
