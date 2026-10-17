@@ -150,6 +150,48 @@
               "averageError": 0.00309
             }
           ]
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "worstAverage": 0.00309,
+          "meanPointError": 0.00294,
+          "worstFar": 0.02371,
+          "worstNear": 0.01663,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": 0.00231
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.00197
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": 0.00309
+            }
+          ]
+        },
+        {
+          "step": "furniture-in-bounce",
+          "worstAverage": 0.00309,
+          "meanPointError": 0.00294,
+          "worstFar": 0.02371,
+          "worstNear": 0.01663,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": 0.00231
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.00197
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": 0.00309
+            }
+          ]
         }
       ]
     },
@@ -201,36 +243,36 @@
           "surface": "work-plane",
           "points": 320,
           "radianceAverageLx": 265.7,
-          "oursAverageLx": 255.05,
-          "averageError": -0.04009,
-          "worstFar": 0.18924,
+          "oursAverageLx": 265.52,
+          "averageError": -0.00068,
+          "worstFar": 0.06537,
           "worstNear": 0
         },
         {
           "surface": "floor",
           "points": 320,
           "radianceAverageLx": 180.37,
-          "oursAverageLx": 185.28,
-          "averageError": 0.02723,
-          "worstFar": 0.40926,
+          "oursAverageLx": 180.58,
+          "averageError": 0.00114,
+          "worstFar": 0.03825,
           "worstNear": 0
         },
         {
           "surface": "wall-x+",
           "points": 176,
           "radianceAverageLx": 88.9,
-          "oursAverageLx": 84.03,
-          "averageError": -0.05479,
-          "worstFar": 0.43732,
+          "oursAverageLx": 89.21,
+          "averageError": 0.00339,
+          "worstFar": 0.04078,
           "worstNear": 0
         },
         {
           "surface": "wall-z-",
           "points": 220,
           "radianceAverageLx": 85.96,
-          "oursAverageLx": 87.69,
-          "averageError": 0.0202,
-          "worstFar": 0.24631,
+          "oursAverageLx": 86.44,
+          "averageError": 0.00561,
+          "worstFar": 0.04917,
           "worstNear": 0
         }
       ],
@@ -372,6 +414,56 @@
               "averageError": 0.0202
             }
           ]
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "worstAverage": 0.28948,
+          "meanPointError": 0.17862,
+          "worstFar": 0.60954,
+          "worstNear": 0,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": -0.09773
+            },
+            {
+              "surface": "floor",
+              "averageError": -0.12019
+            },
+            {
+              "surface": "wall-x+",
+              "averageError": -0.28948
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": -0.23139
+            }
+          ]
+        },
+        {
+          "step": "furniture-in-bounce",
+          "worstAverage": 0.00561,
+          "meanPointError": 0.00418,
+          "worstFar": 0.06537,
+          "worstNear": 0,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": -0.00068
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.00114
+            },
+            {
+              "surface": "wall-x+",
+              "averageError": 0.00339
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": 0.00561
+            }
+          ]
         }
       ]
     },
@@ -414,27 +506,27 @@
           "surface": "work-plane",
           "points": 500,
           "radianceAverageLx": 229.3,
-          "oursAverageLx": 218,
-          "averageError": -0.04926,
-          "worstFar": 0.0898,
-          "worstNear": 0.03336
+          "oursAverageLx": 230.4,
+          "averageError": 0.00481,
+          "worstFar": 0.02785,
+          "worstNear": 0.01044
         },
         {
           "surface": "floor",
           "points": 500,
           "radianceAverageLx": 150.5,
-          "oursAverageLx": 154,
-          "averageError": 0.02329,
-          "worstFar": 0.43017,
+          "oursAverageLx": 151.53,
+          "averageError": 0.00686,
+          "worstFar": 0.04373,
           "worstNear": 0
         },
         {
           "surface": "ceiling",
           "points": 500,
           "radianceAverageLx": 221.78,
-          "oursAverageLx": 205.51,
-          "averageError": -0.07336,
-          "worstFar": 0.11374,
+          "oursAverageLx": 222.88,
+          "averageError": 0.00493,
+          "worstFar": 0.03355,
           "worstNear": 0
         }
       ],
@@ -549,6 +641,48 @@
             {
               "surface": "ceiling",
               "averageError": -0.07336
+            }
+          ]
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "worstAverage": 0.10349,
+          "meanPointError": 0.1012,
+          "worstFar": 0.16541,
+          "worstNear": 0.04546,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": -0.07296
+            },
+            {
+              "surface": "floor",
+              "averageError": -0.09383
+            },
+            {
+              "surface": "ceiling",
+              "averageError": -0.10349
+            }
+          ]
+        },
+        {
+          "step": "furniture-in-bounce",
+          "worstAverage": 0.00686,
+          "meanPointError": 0.00707,
+          "worstFar": 0.04373,
+          "worstNear": 0.01044,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": 0.00481
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.00686
+            },
+            {
+              "surface": "ceiling",
+              "averageError": 0.00493
             }
           ]
         }
@@ -736,6 +870,56 @@
               "averageError": 0.00216
             }
           ]
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "worstAverage": 0.00242,
+          "meanPointError": 0.00117,
+          "worstFar": 0.00563,
+          "worstNear": 0,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": 0.00084
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.00062
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": 0.00242
+            },
+            {
+              "surface": "wall-z+",
+              "averageError": 0.00216
+            }
+          ]
+        },
+        {
+          "step": "furniture-in-bounce",
+          "worstAverage": 0.00242,
+          "meanPointError": 0.00117,
+          "worstFar": 0.00563,
+          "worstNear": 0,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": 0.00084
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.00062
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": 0.00242
+            },
+            {
+              "surface": "wall-z+",
+              "averageError": 0.00216
+            }
+          ]
         }
       ]
     },
@@ -869,6 +1053,48 @@
         },
         {
           "step": "furniture-shadows",
+          "worstAverage": 0.00286,
+          "meanPointError": 0.00416,
+          "worstFar": 0.01745,
+          "worstNear": 0,
+          "surfaces": [
+            {
+              "surface": "floor",
+              "averageError": 0.00154
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": 0.00014
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": 0.00286
+            }
+          ]
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "worstAverage": 0.00286,
+          "meanPointError": 0.00416,
+          "worstFar": 0.01745,
+          "worstNear": 0,
+          "surfaces": [
+            {
+              "surface": "floor",
+              "averageError": 0.00154
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": 0.00014
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": 0.00286
+            }
+          ]
+        },
+        {
+          "step": "furniture-in-bounce",
           "worstAverage": 0.00286,
           "meanPointError": 0.00416,
           "worstFar": 0.01745,
@@ -1050,6 +1276,56 @@
         },
         {
           "step": "furniture-shadows",
+          "worstAverage": 0.03288,
+          "meanPointError": 0.0262,
+          "worstFar": 0.04263,
+          "worstNear": 0.15094,
+          "surfaces": [
+            {
+              "surface": "wall-x-",
+              "averageError": 0.03288
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.02567
+            },
+            {
+              "surface": "ceiling",
+              "averageError": 0.02454
+            },
+            {
+              "surface": "wall-z+",
+              "averageError": 0.02354
+            }
+          ]
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "worstAverage": 0.03288,
+          "meanPointError": 0.0262,
+          "worstFar": 0.04263,
+          "worstNear": 0.15094,
+          "surfaces": [
+            {
+              "surface": "wall-x-",
+              "averageError": 0.03288
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.02567
+            },
+            {
+              "surface": "ceiling",
+              "averageError": 0.02454
+            },
+            {
+              "surface": "wall-z+",
+              "averageError": 0.02354
+            }
+          ]
+        },
+        {
+          "step": "furniture-in-bounce",
           "worstAverage": 0.03288,
           "meanPointError": 0.0262,
           "worstFar": 0.04263,

@@ -6,21 +6,18 @@ const worstAverage = (surfaces: readonly SurfaceSummary[]) =>
   Math.max(...surfaces.map((s) => Math.abs(s.averageError)));
 const worstFar = (surfaces: readonly SurfaceSummary[]) =>
   Math.max(...surfaces.map((s) => s.worstFar));
-/** A room as Lux Studio models it: without its furniture, if it has any. */
-const asModelled = (room: RoomSummary) =>
-  room.withoutFurniture.length > 0 ? room.withoutFurniture : room.total;
 
 /** The section's headline figures. */
 export interface Headline {
   /** Reference points in all rooms. */
   readonly points: number;
   readonly rooms: number;
-  /** The worst surface average and far point, every room without furniture (or with it taken out on both sides). */
-  readonly modelledAverage: number;
-  readonly modelledFar: number;
-  /** The same in the furnished rooms as they are. */
-  readonly furnishedAverage: number;
-  readonly furnishedFar: number;
+  /** The worst surface average and far point, every room as it is, furniture and all. */
+  readonly worstAverage: number;
+  readonly worstFar: number;
+  /** The furnished rooms' worst mean point error before furniture took part in bounced light, and after. */
+  readonly furnishedBefore: number;
+  readonly furnishedAfter: number;
   /** The first feature step's mean point error, at its best and worst room. */
   readonly directOnlyMin: number;
   readonly directOnlyMax: number;
@@ -43,10 +40,16 @@ export function headline(summary: AccuracySummary, timings: Timings): Headline {
   return {
     points: summary.rooms.reduce((sum, r) => sum + r.points, 0),
     rooms: summary.rooms.length,
-    modelledAverage: Math.max(...summary.rooms.map((r) => worstAverage(asModelled(r)))),
-    modelledFar: Math.max(...summary.rooms.map((r) => worstFar(asModelled(r)))),
-    furnishedAverage: Math.max(...furnished.map((r) => worstAverage(r.total))),
-    furnishedFar: Math.max(...furnished.map((r) => worstFar(r.total))),
+    worstAverage: Math.max(...summary.rooms.map((r) => worstAverage(r.total))),
+    worstFar: Math.max(...summary.rooms.map((r) => worstFar(r.total))),
+    furnishedBefore: Math.max(
+      ...furnished.map(
+        (r) => r.features.find((f) => f.step === 'furniture-shadows')!.meanPointError,
+      ),
+    ),
+    furnishedAfter: Math.max(
+      ...furnished.map((r) => r.features[r.features.length - 1]!.meanPointError),
+    ),
     directOnlyMin: Math.min(...directOnly),
     directOnlyMax: Math.max(...directOnly),
     oursMinMs: Math.min(...ours),
@@ -71,6 +74,9 @@ export interface StepFigures {
   readonly afterShadows: number;
   /** The largest rise in a room's worst near point from furniture shadows. */
   readonly shadowsNearRise: number;
+  /** The furnished rooms' worst mean point error with black furniture hiding bounced light, and with it reflecting too. */
+  readonly hidesOnly: number;
+  readonly hidesAndReflects: number;
   /** Each step's median time, averaged over the rooms, in ms. */
   readonly stepMs: readonly { readonly step: string; readonly ms: number }[];
 }
@@ -98,6 +104,10 @@ export function stepFigures(summary: AccuracySummary, timings: Timings): StepFig
       ...summary.rooms.map(
         (r) => at(r, 'furniture-shadows').worstNear - at(r, 'split-openings').worstNear,
       ),
+    ),
+    hidesOnly: Math.max(...furnished.map((r) => at(r, 'furniture-hides-bounce').meanPointError)),
+    hidesAndReflects: Math.max(
+      ...furnished.map((r) => at(r, 'furniture-in-bounce').meanPointError),
     ),
     stepMs: steps.map((step) => ({
       step,

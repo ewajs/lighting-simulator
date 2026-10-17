@@ -9,6 +9,8 @@ export interface FeatureStep {
   /** A stable name for the manual's labels: `point-sources` and so on. */
   readonly id: string;
   readonly options: CalculationOptions;
+  /** The reference's furniture made black: it hides bounced light but reflects none. */
+  readonly blackFurniture?: boolean;
 }
 
 const NOTHING = {
@@ -16,6 +18,7 @@ const NOTHING = {
   splitOpenings: false,
   furnitureShadows: false,
   bouncedLight: false,
+  furnitureInBouncedLight: false,
 };
 
 /**
@@ -27,7 +30,14 @@ export const FEATURE_STEPS: readonly FeatureStep[] = [
   { id: 'point-sources', options: NOTHING },
   { id: 'bounced-light', options: { ...NOTHING, bouncedLight: true } },
   { id: 'split-openings', options: { ...NOTHING, bouncedLight: true, splitOpenings: true } },
-  { id: 'furniture-shadows', options: DEFAULT_CALCULATION_OPTIONS },
+  {
+    id: 'furniture-shadows',
+    options: { ...NOTHING, bouncedLight: true, splitOpenings: true, furnitureShadows: true },
+  },
+  // Half a feature, shown because it makes things worse: furniture that hides
+  // bounced light without reflecting any is a set of black boxes (ADR 0063).
+  { id: 'furniture-hides-bounce', options: DEFAULT_CALCULATION_OPTIONS, blackFurniture: true },
+  { id: 'furniture-in-bounce', options: DEFAULT_CALCULATION_OPTIONS },
 ];
 
 /** How one step compares with Radiance's full light in one room. */
@@ -56,8 +66,8 @@ export function featureStudy(
   iesFiles: Readonly<Record<string, string>>,
 ): FeatureResult[] {
   const origins = reference.room.luminaires.map((luminaire) => luminaire.origin);
-  return FEATURE_STEPS.map(({ id, options }) => {
-    const points = compareReference(reference, iesFiles, options);
+  return FEATURE_STEPS.map(({ id, options, blackFurniture }) => {
+    const points = compareReference(reference, iesFiles, options, true, blackFurniture);
     const surfaces = summarize(points, origins, 'total');
     const brightest = Math.max(...points.map((p) => p.radianceTotalLx));
     const bright = points.filter((p) => p.radianceTotalLx >= BRIGHT_SHARE * brightest);

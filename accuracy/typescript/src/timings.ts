@@ -19,12 +19,12 @@ const median = (values: number[]) => {
 const rooms = Object.entries(REFERENCES).map(([name, reference]) => ({
   name,
   points: reference.points.length,
-  steps: FEATURE_STEPS.map(({ id, options }) => {
-    compareReference(reference, IES_FILES, options);
+  steps: FEATURE_STEPS.map(({ id, options, blackFurniture }) => {
+    compareReference(reference, IES_FILES, options, true, blackFurniture);
     const times: number[] = [];
     for (let run = 0; run < RUNS; run++) {
       const start = performance.now();
-      compareReference(reference, IES_FILES, options);
+      compareReference(reference, IES_FILES, options, true, blackFurniture);
       times.push(performance.now() - start);
     }
     return { step: id, medianMs: Number(median(times).toFixed(1)) };

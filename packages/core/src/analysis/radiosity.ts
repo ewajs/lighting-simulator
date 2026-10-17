@@ -11,12 +11,13 @@
 import { distance } from '../math';
 import type { Vec3 } from '../types';
 import { pointToPolygon } from './form-factor';
+import type { Blocker } from './occlusion';
 import type { Patch } from './patches';
 
 /**
  * The share of a patch a point actually sees, 0–1, past anything in between
- * (ADR 0060). Nothing blocks bounced light yet: furniture and other room
- * shapes will plug in here.
+ * (ADR 0060). Furniture plugs in here (visibility.ts, ADR 0063); other room
+ * shapes will too.
  */
 export type Visibility = (from: Vec3, to: Patch) => number;
 
@@ -95,6 +96,8 @@ export interface IndirectLight {
   /** Each patch's exitance: the light it reflects, in lm/m². */
   readonly exitance: Float64Array;
   readonly iterations: number;
+  /** The boxes that hide patches from a point (ADR 0063): none when furniture doesn't count. */
+  readonly blockers: readonly Blocker[];
 }
 
 /**
@@ -102,12 +105,14 @@ export interface IndirectLight {
  *
  * @param directLx The direct illuminance on each patch, in patch order.
  * @param tolerance Stop once no exitance changes by more than this share of the largest.
+ * @param blockers The boxes `factors` was computed past, kept for reading the light at points.
  */
 export function solveIndirectLight(
   patches: readonly Patch[],
   factors: FormFactors,
   directLx: ArrayLike<number>,
   tolerance: number,
+  blockers: readonly Blocker[] = [],
 ): IndirectLight {
   const { count, values } = factors;
   const exitance = new Float64Array(count);
@@ -127,16 +132,27 @@ export function solveIndirectLight(
     }
     if (largestChange <= tolerance * largest) break;
   }
-  return { patches, exitance, iterations: iterations + 1 };
+  return { patches, exitance, iterations: iterations + 1, blockers };
 }
 
-/** The indirect (bounced) light reaching a point facing `normal` (a unit vector), in lx. */
-export function indirectIlluminanceAt(point: Vec3, normal: Vec3, light: IndirectLight): number {
+/**
+ * The indirect (bounced) light reaching a point facing `normal` (a unit
+ * vector), in lx, past whatever `visibility` says hides each patch.
+ */
+export function indirectIlluminanceAt(
+  point: Vec3,
+  normal: Vec3,
+  light: IndirectLight,
+  visibility: Visibility = UNBLOCKED,
+): number {
   let lux = 0;
   for (let j = 0; j < light.patches.length; j++) {
     const exitance = light.exitance[j]!;
     if (exitance === 0) continue;
-    lux += exitance * pointToPolygon(point, normal, light.patches[j]!.vertices);
+    const patch = light.patches[j]!;
+    const factor = pointToPolygon(point, normal, patch.vertices);
+    if (factor === 0) continue;
+    lux += exitance * factor * visibility(point, patch);
   }
   return lux;
 }

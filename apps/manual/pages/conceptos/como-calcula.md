@@ -30,6 +30,8 @@ este orden:
    parches de 25 cm, y cada uno devuelve la parte de la luz que recibe que
    indica su reflectancia, rebote tras rebote, hasta que no cambia nada. Es el
    método de radiosidad, clásico en el cálculo de iluminación de interiores.
+   Los muebles también cuentan: tapan la luz que rebota, y cada una de sus
+   caras la refleja según su terminación.
 5. **Multiplica por el factor de mantenimiento**
    ([Factor de mantenimiento](./mantenimiento)).
 6. **Resume** cada superficie: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ y $U_0$
@@ -37,17 +39,11 @@ este orden:
 
 ## Lo que todavía no cuenta
 
-Los muebles hacen sombra a la luz directa, pero la luz que rebota no los ve: no
-la tapan ni la reflejan. Medido con Radiance, eso pesa:
-- en un living amueblado, los promedios se alejan hasta un 5,4 %, y algunos
-  puntos junto a los muebles (debajo de una mesa, junto a la biblioteca) hasta
-  un 43 %;
-- sobre una mesa con un colgante, el techo recibe un 7 % menos de lo que
-  debería, porque falta la luz que refleja la mesa.
-
-Sin los muebles, los promedios de Lux Studio y Radiance coinciden dentro del 1 %
-en esos mismos ambientes. Todas las superficies reflejan de forma difusa: no hay
-brillos ni espejos.
+- **Los muebles son cajas:** un sillón es un bloque, una mesa es solo su tapa.
+- **Las luminarias no tapan la luz que rebota.** Un aplique grande pegado a la
+  pared da unos puntos más que en Radiance (ver abajo).
+- **Todas las superficies reflejan de forma difusa:** no hay brillos ni espejos.
+- **Los ambientes son rectangulares**, y todavía no hay ventanas.
 
 ## Cuán preciso es
 
@@ -64,12 +60,12 @@ ambiente:
 />
 
 Los "puntos" cuentan solo los que reciben al menos el 10 % de la luz del punto
-más iluminado del ambiente. Las diferencias del living y del colgante son las de
-los muebles, que se explican más arriba. El aplique da hasta un 3,3 % más en
-promedio, probablemente porque en Radiance su cuerpo tapa parte de la luz que
-rebota en la pared de atrás; en Lux Studio, las luminarias no la tapan. Muy cerca de una luminaria grande, como el aplique,
-los dos programas aproximan de forma distinta una abertura que brilla, y el
-archivo IES no dice cómo es la luz tan de cerca.
+más iluminado del ambiente. El aplique da hasta un 3,3 % más en promedio,
+probablemente porque en Radiance su cuerpo tapa parte de la luz que rebota en
+la pared de atrás; en Lux Studio, las luminarias no la tapan. Muy cerca de una
+luminaria grande, como el aplique, los dos programas aproximan de forma
+distinta una abertura que brilla, y el archivo IES no dice cómo es la luz tan
+de cerca.
 
 Antes de confiar en Radiance, se le pide reproducir valores calculados a mano
 desde cada archivo; una versión de Radiance con un error conocido no pasa esas

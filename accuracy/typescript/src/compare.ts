@@ -124,14 +124,16 @@ export function referenceRoom(reference: Reference): Room {
  * neither block nor reflect bounced light, which Lux Studio doesn't model yet.
  *
  * @param iesFiles The IES files' text by file name.
- * @param furniture Whether the reference's boxes block direct light: false
- *   matches its `withoutFurniture` values.
+ * @param furniture Whether the reference's boxes are there: false matches its
+ *   `withoutFurniture` values.
+ * @param blackFurniture Whether the boxes reflect nothing, whatever the reference says.
  */
 export function referenceLight(
   reference: Reference,
   iesFiles: Readonly<Record<string, string>>,
   options: CalculationOptions = DEFAULT_CALCULATION_OPTIONS,
   furniture = true,
+  blackFurniture = false,
 ): SceneLight {
   const room = referenceRoom(reference);
   const photometry = new Map<string, Photometry>();
@@ -171,10 +173,12 @@ export function referenceLight(
   // The reference's boxes stand in for furniture: they cast shadows when the
   // options say furniture does.
   const boxes = furniture && options.furnitureShadows ? (reference.room.blockers ?? []) : [];
-  const blockers: Blocker[] = boxes.map(({ centre, half, yawDeg }) => ({
+  const blockers: Blocker[] = boxes.map(({ centre, half, yawDeg, reflectance }) => ({
     centre,
     half,
     yawRad: ((yawDeg ?? 0) * Math.PI) / 180,
+    // As in the reference; black for the feature study's "furniture only hides" step.
+    reflectance: blackFurniture ? 0 : (reflectance ?? 0),
   }));
   const direct = {
     ...directLight(
@@ -194,16 +198,18 @@ export function referenceLight(
  *
  * @param furniture false compares the room without its furniture, against
  *   the reference's `withoutFurniture` values.
+ * @param blackFurniture As for `referenceLight`.
  */
 export function compareReference(
   reference: Reference,
   iesFiles: Readonly<Record<string, string>>,
   options: CalculationOptions = DEFAULT_CALCULATION_OPTIONS,
   furniture = true,
+  blackFurniture = false,
 ): PointComparison[] {
   const bare = reference.withoutFurniture;
   if (!furniture && !bare) throw new Error('This reference has no values without furniture');
-  const light = referenceLight(reference, iesFiles, options, furniture);
+  const light = referenceLight(reference, iesFiles, options, furniture, blackFurniture);
   return reference.points.map(({ surface, position, normal, direct, total }, k) => {
     const ours = illuminanceAt(light, position, normal);
     return {

@@ -30,8 +30,9 @@ takes for the same points.
 ## How to read it
 
 Lux Studio's full calculation takes {{ n(h.oursMinMs) }} to {{ n(h.oursMaxMs) }}
-ms per room. Almost all of it is bounced light: with direct light only, a room
-takes about a millisecond.
+ms per room. Almost all of it is bounced light, and in the furnished rooms,
+the furniture in it: they're the slowest. With direct light only, a room takes
+about a millisecond.
 
 Radiance takes {{ n(h.radianceMinS) }} to {{ n(h.radianceMaxS) }} s, but **it's
 not a race**: its settings were chosen to make it an exact reference, however

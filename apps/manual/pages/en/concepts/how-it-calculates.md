@@ -30,22 +30,20 @@ order:
 4. **It adds the light that bounces:** the floor, ceiling and walls are split
    into 25 cm patches, and each sends back the share of the light it receives
    that its reflectance says, bounce after bounce, until nothing changes. It's
-   the radiosity method, a classic of interior lighting calculation.
+   the radiosity method, a classic of interior lighting calculation. Furniture
+   counts too: it hides bounced light, and each of its faces reflects it as its
+   finish does.
 5. **It multiplies by the maintenance factor** ([Maintenance factor](./maintenance)).
 6. **It sums up** each surface: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ and
    $U_0$ ([Uniformity](./uniformity)).
 
 ## What it doesn't count yet
 
-Furniture casts shadows on direct light, but bounced light doesn't see it: it
-neither blocks nor reflects it. Measured with Radiance, that matters:
-- in a furnished living room, averages move by up to 5.4 %, and some points next
-  to the furniture (under a table, beside the bookcase) by up to 43 %;
-- over a table under a pendant, the ceiling gets 7 % less than it should,
-  missing the light the table reflects.
-
-Without the furniture, Lux Studio's and Radiance's averages agree within 1 % in
-those same rooms. Every surface reflects diffusely: no gloss, no mirrors.
+- **Furniture is boxes:** a sofa is a block, a table is just its top.
+- **Luminaires don't hide bounced light.** A large sconce right against its
+  wall reads a few points higher than in Radiance (see below).
+- **Every surface reflects diffusely:** no gloss, no mirrors.
+- **Rooms are rectangular**, and there are no windows yet.
 
 ## How accurate it is
 
@@ -61,12 +59,11 @@ bounced light included. The largest difference, room by room:
 />
 
 "Points" counts only those getting at least 10 % of the room's brightest
-point's light. The living room's and the pendant's differences are the
-furniture's, explained above. The sconce gives up to 3.3 % more on average,
-probably because in Radiance its body hides some of the light bouncing off the
-wall behind it; in Lux Studio, luminaires don't. Very close to a large luminaire, like the sconce, the two
-programs approximate a glowing opening differently, and the IES file doesn't
-say what the light is like that close.
+point's light. The sconce gives up to 3.3 % more on average, probably because
+in Radiance its body hides some of the light bouncing off the wall behind it;
+in Lux Studio, luminaires don't. Very close to a large luminaire, like the
+sconce, the two programs approximate a glowing opening differently, and the
+IES file doesn't say what the light is like that close.
 
 Before Radiance is trusted, it must reproduce values worked out by hand from
 each file; a Radiance version with a known bug fails those checks. Every

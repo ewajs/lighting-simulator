@@ -15,19 +15,27 @@
       "steps": [
         {
           "step": "point-sources",
-          "medianMs": 3.2
+          "medianMs": 3.1
         },
         {
           "step": "bounced-light",
-          "medianMs": 281.1
+          "medianMs": 285.6
         },
         {
           "step": "split-openings",
-          "medianMs": 296.2
+          "medianMs": 295.3
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 297.4
+          "medianMs": 298.8
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "medianMs": 299
+        },
+        {
+          "step": "furniture-in-bounce",
+          "medianMs": 295.3
         }
       ],
       "radiance": {
@@ -53,15 +61,23 @@
         },
         {
           "step": "bounced-light",
-          "medianMs": 286.8
+          "medianMs": 286
         },
         {
           "step": "split-openings",
-          "medianMs": 310
+          "medianMs": 305.4
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 361.4
+          "medianMs": 314.9
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "medianMs": 958.7
+        },
+        {
+          "step": "furniture-in-bounce",
+          "medianMs": 1038.7
         }
       ],
       "radiance": {
@@ -87,15 +103,23 @@
         },
         {
           "step": "bounced-light",
-          "medianMs": 340.2
+          "medianMs": 350.7
         },
         {
           "step": "split-openings",
-          "medianMs": 395.6
+          "medianMs": 412.2
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 411.8
+          "medianMs": 414.5
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "medianMs": 631.4
+        },
+        {
+          "step": "furniture-in-bounce",
+          "medianMs": 655.4
         }
       ],
       "radiance": {
@@ -117,19 +141,27 @@
       "steps": [
         {
           "step": "point-sources",
-          "medianMs": 0.3
+          "medianMs": 0.4
         },
         {
           "step": "bounced-light",
-          "medianMs": 278.9
+          "medianMs": 292.3
         },
         {
           "step": "split-openings",
-          "medianMs": 284.8
+          "medianMs": 298.2
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 289.4
+          "medianMs": 293.9
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "medianMs": 296
+        },
+        {
+          "step": "furniture-in-bounce",
+          "medianMs": 299.6
         }
       ],
       "radiance": {
@@ -151,19 +183,27 @@
       "steps": [
         {
           "step": "point-sources",
-          "medianMs": 1
+          "medianMs": 1.1
         },
         {
           "step": "bounced-light",
-          "medianMs": 294
+          "medianMs": 308.8
         },
         {
           "step": "split-openings",
-          "medianMs": 291.6
+          "medianMs": 309.7
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 295
+          "medianMs": 307.9
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "medianMs": 308.9
+        },
+        {
+          "step": "furniture-in-bounce",
+          "medianMs": 310.9
         }
       ],
       "radiance": {
@@ -189,15 +229,23 @@
         },
         {
           "step": "bounced-light",
-          "medianMs": 304
+          "medianMs": 317.2
         },
         {
           "step": "split-openings",
-          "medianMs": 454.5
+          "medianMs": 470.5
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 454.2
+          "medianMs": 470.7
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "medianMs": 469.5
+        },
+        {
+          "step": "furniture-in-bounce",
+          "medianMs": 466.8
         }
       ],
       "radiance": {

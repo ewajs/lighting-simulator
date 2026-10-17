@@ -20,6 +20,7 @@ describe('furnitureBlockers', () => {
       centre: { x: 0, y: 0.4, z: 0 },
       half: { x: 1, y: 0.4, z: 0.5 },
       yawRad: 0,
+      reflectance: 0.45,
     });
   });
 
