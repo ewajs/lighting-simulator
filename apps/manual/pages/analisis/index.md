@@ -18,6 +18,11 @@ iluminación de investigación del Lawrence Berkeley National Laboratory. Todos
 los números y gráficos salen del código y se regeneran con él
 ([Cómo comparamos](./metodo)).
 
+Los dos programas calculan el mismo ambiente simplificado: los muebles son
+cajas y todas las superficies reflejan de forma difusa. Que coincidan dice que
+el cálculo de Lux Studio es correcto para ese ambiente, no que un ambiente
+real vaya a dar exactamente lo mismo.
+
 ## En pocas palabras
 
 - **Coincide con Radiance.** En los {{ h.rooms }} ambientes, muebles

@@ -1,7 +1,10 @@
 # Accuracy
 
-How close Lux Studio's illuminance numbers are to an independent lighting
-simulator, Radiance, and the tools that show it: direct light
+How close Lux Studio's illuminance numbers are to Radiance's, and the tools
+that show it. Radiance's solver and IES reader share no code with Lux
+Studio's, but both read the same room description (sizes, luminaires and
+their aims, furniture as boxes, diffuse surfaces), so agreement checks the
+calculation, not the description; hand-worked checks cover that. Covered: direct light
 ([ADR 0058](../docs/decisions/0058-accuracy-checks.md)) and bounced light
 ([ADR 0060](../docs/decisions/0060-bounced-light.md)). The figures are in
 [REPORT.md](REPORT.md), and the patch size's evidence in [PATCH-SIZE.md](PATCH-SIZE.md).

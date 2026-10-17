@@ -17,6 +17,10 @@ Studio and by **Radiance**, the research lighting simulator from Lawrence
 Berkeley National Laboratory. Every number and chart comes from the code and
 is regenerated with it ([How we compare](./method)).
 
+Both programs calculate the same simplified room: furniture is boxes and
+every surface reflects diffusely. Agreement says Lux Studio's calculation is
+right for that room, not that a real room will read exactly the same.
+
 ## In short
 
 - **It agrees with Radiance.** In all {{ h.rooms }} rooms, furniture

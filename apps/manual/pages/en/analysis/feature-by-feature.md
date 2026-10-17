@@ -37,10 +37,9 @@ difference per point in the rooms without furniture drops below
 **\+ openings split into cells.** A large luminaire isn't a point: splitting
 its opening into 10 cm cells fixes the points close to it. The worst point
 within 1 m of a luminaire goes from **{{ pct(f.nearBeforeSplit, 0) }}** to
-**{{ pct(f.nearAfterSplit, 0) }}**. In exchange, an average gets a little
-worse, by up to {{ pct(f.splitAverageRise, 1) }} points: far from the
-luminaire, the cells and the point nearly agree, and the difference is the
-size of the noise.
+**{{ pct(f.nearAfterSplit, 0) }}**. In exchange, an average gets worse, by
+up to {{ pct(f.splitAverageRise, 1) }} points, in the wall sconce. That's more
+than Radiance's noise, and it isn't explained yet.
 
 **\+ furniture shadows.** In the furnished rooms, the mean difference per
 point drops from **{{ pct(f.beforeShadows) }}** to **{{ pct(f.afterShadows) }}**.
