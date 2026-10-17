@@ -23,6 +23,19 @@ export function ticks(max: number, count = 5): number[] {
   return values;
 }
 
+/**
+ * Round tick values within [min, max]: multiples of a step of 1, 2 or 5 × 10ⁿ,
+ * about `count` of them, so an axis from −3 to 3 shows 0 and not −3, −1, 1, 3.
+ */
+export function ticksBetween(min: number, max: number, count = 6): number[] {
+  const step = ticks(max - min, count)[1]!;
+  const values: number[] = [];
+  for (let k = Math.ceil(min / step - 1e-9); k * step <= max + 1e-9; k++) {
+    values.push(Number((k * step).toPrecision(12)));
+  }
+  return values;
+}
+
 /** An SVG path through points already in screen coordinates. */
 export function path(points: readonly (readonly [number, number])[]): string {
   return points

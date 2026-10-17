@@ -1,5 +1,6 @@
 <script setup>
 import LxHeatmap from '../../../.vitepress/theme/components/LxHeatmap.vue'
+import LxColorScale from '../../../.vitepress/theme/components/LxColorScale.vue'
 import { data } from '../../../.vitepress/theme/diagrams/rooms.data'
 import { formatNumber } from '../../../.vitepress/theme/diagrams/plot'
 
@@ -39,6 +40,8 @@ on the same scale for both; the dashed line marks the border left out:
 <LxHeatmap :map="data.spread" :room="data.room" :border-m="data.borderM" :scale-max-lx="top" caption="Spread out" />
 <LxHeatmap :map="data.bunched" :room="data.room" :border-m="data.borderM" :scale-max-lx="top" caption="Bunched" />
 </div>
+
+<LxColorScale :max-lx="top" label="Illuminance on the work plane (lx)" />
 
 Bunched, the **average goes up**: from {{ n(data.spread.averageLx) }} to
 {{ n(data.bunched.averageLx) }} lx, because almost all the light falls inside

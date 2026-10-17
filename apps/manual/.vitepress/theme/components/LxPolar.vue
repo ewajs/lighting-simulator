@@ -57,6 +57,16 @@ const ringStep = computed(() => rings.value[0]!);
         />
       </g>
       <g class="axis">
+        <!-- Each ring's intensity, up the 180° spoke; the outer ring's would sit on "180°". -->
+        <text
+          v-for="r in rings.slice(0, -1)"
+          :key="`r${r}`"
+          class="ring-label"
+          :x="C + 4"
+          :y="C - (r / outer) * R - 4"
+        >
+          {{ formatNumber(r, lang) }}
+        </text>
         <text :x="C" :y="C + R + 16" text-anchor="middle">0°</text>
         <text :x="C + R + 6" :y="C + 4">90°</text>
         <text :x="C - R - 6" :y="C + 4" text-anchor="end">90°</text>
@@ -67,11 +77,11 @@ const ringStep = computed(() => rings.value[0]!);
         <line :x1="C" :y1="C" :x2="beamEdge[1]![0]" :y2="beamEdge[1]![1]" />
       </g>
       <path :d="curves[0]" class="series" />
-      <path :d="curves[1]" class="series dashed" />
+      <path :d="curves[1]" class="series c2 dashed" />
       <g class="legend" :transform="`translate(8, ${SIZE + 10})`">
         <line x1="0" x2="24" y1="0" y2="0" class="series" />
         <text x="30" y="4">{{ labels[0] }}</text>
-        <line x1="0" x2="24" y1="18" y2="18" class="series dashed" />
+        <line x1="0" x2="24" y1="18" y2="18" class="series c2 dashed" />
         <text x="30" y="22">{{ labels[1] }}</text>
         <template v-if="showBeam">
           <line x1="190" x2="214" y1="0" y2="0" class="beam-key" />
