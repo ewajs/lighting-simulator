@@ -11,7 +11,7 @@ async function openAnalysis(page: Page): Promise<void> {
 }
 
 const panel = (page: Page) => page.locator('lxs-analysis-panel');
-const calculated = (page: Page) => panel(page).getByText(/^Calculado en \d+ ms$/);
+const calculated = (page: Page) => panel(page).getByText(/^Calculado en [\d.]+ ms$/);
 
 /** The work plane's average, in lx, as the panel shows it (es-AR groups thousands with a dot). */
 async function average(page: Page): Promise<number> {
@@ -86,6 +86,18 @@ test('switching bounced light off leaves direct light only, and furniture in it 
   await expect.poll(() => average(page)).toBeLessThan(withBounces);
   await expect(furniture).toBeDisabled();
   await expect(furniture).not.toBeChecked();
+});
+
+test('shadow detail splits the luminaires into finer cells, and recalculates', async ({ page }) => {
+  await openAnalysis(page);
+  const detail = panel(page).getByRole('combobox', { name: 'Detalle de las sombras' });
+  await expect(detail).toHaveValue('0.1');
+  const coarse = await panel(page).locator('.big').innerText();
+  await detail.selectOption({ label: '2,5 cm, más exacto' });
+  await expect(detail).toHaveValue('0.025');
+  // The starter's 1.2 m pendant is close to the work plane: finer cells change its light there.
+  await expect.poll(() => panel(page).locator('.big').innerText()).not.toBe(coarse);
+  await expect(calculated(page)).toBeVisible();
 });
 
 test.describe('on a phone', () => {

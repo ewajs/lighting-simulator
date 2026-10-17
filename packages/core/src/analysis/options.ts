@@ -6,10 +6,12 @@
 /** How finely the calculation works, when it stops, and what it counts. */
 export interface CalculationOptions {
   /**
-   * The largest cell a luminous opening is split into, in m. The inverse-
-   * square law is within about 1 % beyond five times a source's size (the
-   * "five-times rule", IES Lighting Handbook), so 10 cm cells hold from 0.5 m
-   * away (ADR 0057).
+   * The largest cell a luminous opening is split into, in m (ADR 0057). Against
+   * the exact illuminance of a glowing panel, cells are within 1 % from two
+   * cells away (area-source.test.ts). 10 cm by default: 5 cm makes points in
+   * the penumbra between furniture closer to Radiance, but a light edit takes
+   * up to three times as long with linear luminaires (ADR 0069,
+   * accuracy/SOURCE-CELL.md), so the Analysis panel offers it as a choice.
    */
   readonly sourceCellM: number;
   /** The largest patch a room surface is split into for bounced light, in m (ADR 0060). */
@@ -39,7 +41,7 @@ export interface CalculationOptions {
   readonly furnitureInBouncedLight: boolean;
 }
 
-/** The defaults: everything counted, sizes chosen by measurement against Radiance (ADR 0060, accuracy/PATCH-SIZE.md). */
+/** The defaults: everything counted, sizes chosen by measurement (ADRs 0060, 0069; accuracy/PATCH-SIZE.md, SOURCE-CELL.md). */
 export const DEFAULT_CALCULATION_OPTIONS: CalculationOptions = {
   sourceCellM: 0.1,
   patchSizeM: 0.25,

@@ -45,6 +45,11 @@ export const NO_ANALYSIS: AnalysisState = {
 const MAINTENANCE_RANGE = { min: 0.5, max: 1, step: 0.05 };
 /** Steps for the work plane's height and border, in m. */
 const LENGTH_STEP_M = 0.05;
+/**
+ * The cell sizes luminous openings can be split into, in m (ADR 0069): the
+ * three measured in accuracy/SOURCE-CELL.md.
+ */
+const SOURCE_CELLS_M = [0.1, 0.05, 0.025] as const;
 
 /**
  * The illuminance calculation's results and settings (ADR 0064): the work
@@ -134,6 +139,30 @@ export class LxsAnalysisPanel extends LitElement {
       .figure-label {
         color: var(--lxs-text-faint);
         font-size: var(--lxs-fs-xs);
+      }
+      .choice,
+      .choice label {
+        display: grid;
+        gap: 6px;
+        color: var(--lxs-text-muted);
+        font-size: var(--lxs-fs-xs);
+      }
+      .choice select {
+        height: var(--lxs-control-h);
+        padding: 0 var(--lxs-sp-2);
+        border: 1px solid var(--lxs-line);
+        border-radius: var(--lxs-r-md);
+        background: var(--lxs-surface-2);
+        color: var(--lxs-text);
+        font: inherit;
+        font-size: var(--lxs-fs-sm);
+      }
+      .choice select:focus {
+        border-color: var(--lxs-accent);
+        outline: none;
+      }
+      .choice small {
+        color: var(--lxs-text-faint);
       }
       .figure-value {
         font: var(--lxs-fs-md) var(--lxs-font-mono);
@@ -451,6 +480,28 @@ export class LxsAnalysisPanel extends LitElement {
         @lxs-change=${({ detail }: CustomEvent<FieldChange>) =>
           setSettings({ borderM: detail.value })}
       ></lxs-number-field>
+      <div class="choice">
+        <label>
+          ${msg('Shadow detail')}
+          <select
+            aria-describedby="cell-hint"
+            @change=${(event: Event) =>
+              setOptions({ sourceCellM: Number((event.target as HTMLSelectElement).value) })}
+          >
+            ${SOURCE_CELLS_M.map(
+              (cellM) =>
+                html`<option value=${cellM} ?selected=${options.sourceCellM === cellM}>
+                  ${cellLabel(cellM)}
+                </option>`,
+            )}
+          </select>
+        </label>
+        <small id="cell-hint"
+          >${msg(
+            'Each luminaire is split into cells of this size: smaller is more exact at shadow edges and close to large luminaires, and slower.',
+          )}</small
+        >
+      </div>
       ${this.#switch(
         msg('Light that bounces'),
         options.bouncedLight,
@@ -494,6 +545,14 @@ export class LxsAnalysisPanel extends LitElement {
   #fire(name: string, detail?: unknown): void {
     this.dispatchEvent(new CustomEvent(name, { detail, bubbles: true, composed: true }));
   }
+}
+
+/** A cell size as the choice shows it: the extremes say what they trade. */
+function cellLabel(cellM: number): string {
+  const cm = formatNumber(cellM * 100, 1);
+  if (cellM === SOURCE_CELLS_M[0]) return msg(str`${cm} cm, faster`);
+  if (cellM === SOURCE_CELLS_M[SOURCE_CELLS_M.length - 1]) return msg(str`${cm} cm, more exact`);
+  return `${cm} cm`;
 }
 
 declare global {

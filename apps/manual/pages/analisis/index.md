@@ -67,7 +67,8 @@ Cada ambiente tiene su página, con sus mapas punto por punto:
 - **Las sombras tienen el borde escalonado.** La abertura de una luminaria se
   divide en celdas de 10 cm, y cada una queda tapada o no. En la penumbra del
   borde de un mueble, un punto puede dar 0 o el doble que en Radiance, que ve
-  una parte de la abertura.
+  una parte de la abertura. Con más detalle en las sombras (5 o 2,5 cm), esos
+  puntos se acercan, a cambio de tiempo ([Analizar la luz](../analizar)).
 - **Las luminarias no tapan la luz que rebota.** Un aplique grande
   pegado a la pared da unos puntos más que en Radiance.
 - **Todas las superficies reflejan de forma difusa:** no hay brillos ni

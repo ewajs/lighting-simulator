@@ -19,8 +19,10 @@ Lux Studio calculates illuminance with the ideas on these pages, in this
 order:
 
 1. **Each luminaire is a light source** with its IES file's distribution. If
-   its opening is larger than 10 cm, it's split into cells of at most 10 cm,
-   across, along and in height ([Distance and angle](./distance-and-angle)).
+   its opening is larger than 10 cm, it's split into cells of at most 10 cm
+   (5 or 2.5 cm if you choose finer shadow detail), across, along and in height
+   ([Distance and angle](./distance-and-angle)). Against the exact value for a
+   panel that glows evenly, the cells are within 1 % from two cells away.
    Without an IES file, its flux is spread over its beam angle as an estimate,
    and the result says so.
 2. **At each point of the grid** ([The work plane](./work-plane)) it adds up

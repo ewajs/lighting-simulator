@@ -20,6 +20,7 @@ calculation, not the description; hand-worked checks cover that. Covered: direct
 | `REPORT.md` | The comparison, room by room and surface by surface |
 | `summary.json` | The same figures as data, for the manual's accuracy page (ADR 0059) |
 | `comparison.json` | Every point of every room, both sides, at each feature step: the manual's Analysis section draws it (ADR 0062) |
+| `SOURCE-CELL.md` | Accuracy against time for three source cell sizes, against Radiance and against the exact value for a glowing panel: why 10 cm is the default, and what 5 and 2.5 cm buy |
 | `PATCH-SIZE.md` | Accuracy against time for three patch sizes: why bounced light uses 25 cm patches |
 | `timings.json` | How long Lux Studio takes per room at each feature step, and Radiance for the same points, with the machine (ADR 0061) |
 
@@ -32,6 +33,7 @@ npm run accuracy:check        ruff, mypy and pytest for the Python
 npm run accuracy:references   check Radiance, regenerate the references, then the report
 npm run accuracy:report       regenerate only REPORT.md, summary.json and comparison.json
 npm run accuracy:patch-size   regenerate PATCH-SIZE.md (about 20 s)
+npm run accuracy:source-cell  regenerate SOURCE-CELL.md (about 30 s)
 npm run accuracy:timings      regenerate timings.json (about 50 s, on an idle machine)
 npm run accuracy:docs         browse the Python's docs, live
 npm test                      includes the comparison (accuracy/typescript)
