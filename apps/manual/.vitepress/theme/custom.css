@@ -565,3 +565,19 @@
     margin: 4px 0;
   }
 }
+
+/* A test room as the demo renders it (ADR 0062). */
+.lx-room-picture {
+  margin: 24px 0;
+}
+.lx-room-picture img {
+  display: block;
+  max-width: 420px;
+  width: 100%;
+  height: auto;
+}
+.lx-room-picture figcaption {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+}

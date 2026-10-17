@@ -1,5 +1,5 @@
 <script setup>
-import { useData } from 'vitepress'
+import { useData, withBase } from 'vitepress'
 import LxRoomPlan from '../../../.vitepress/theme/components/analysis/LxRoomPlan.vue'
 import LxRoomStats from '../../../.vitepress/theme/components/analysis/LxRoomStats.vue'
 import LxRoomSteps from '../../../.vitepress/theme/components/analysis/LxRoomSteps.vue'
@@ -23,6 +23,11 @@ const size = page.comparison.room.room
 <LxRoomStats :page="page" />
 
 {{ note }}
+
+<figure class="lx-room-picture">
+  <img :src="withBase(`/analysis/${page.summary.name}.png`)" :alt="room.name" width="676" height="724" loading="lazy" />
+  <figcaption>The room in Lux Studio, with the demo's products and furniture.</figcaption>
+</figure>
 
 <LxRoomPlan :page="page">
   Seen from above: {{ m(size.width) }} × {{ m(size.depth) }} m, and {{ m(size.height) }} m high. Furniture as the boxes the calculation uses.
