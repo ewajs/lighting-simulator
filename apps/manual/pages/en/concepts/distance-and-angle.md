@@ -1,6 +1,8 @@
 <script setup>
 import LxPlot from '../../../.vitepress/theme/components/LxPlot.vue'
+import LxDistanceAngle from '../../../.vitepress/theme/components/LxDistanceAngle.vue'
 import { data } from '../../../.vitepress/theme/diagrams/light.data'
+import { data as directions } from '../../../.vitepress/theme/diagrams/directions.data'
 </script>
 
 # Distance and angle
@@ -57,6 +59,31 @@ dashed curve shows how much the cosine weighs:
   x-label="Position on the floor (m)"
   y-label="Illuminance (lx)"
   caption="The floor 2.7 m below the demo's downlight, computed by Lux Studio from its IES file."
+/>
+
+### Try it
+
+Drag the point along the floor or the luminaire up and down, or use the
+controls. The curve round the luminaire is its polar chart: in each
+direction, its length is the intensity $I$.
+
+- The angle **γ**, from the luminaire's vertical, says which intensity to
+  read from the IES file.
+- The angle **α**, from the surface's perpendicular (the blue arrow), gives
+  the cosine.
+
+With the surface on the floor, both angles are the same. Tilt it and they
+part: turned towards the luminaire it gets more light; facing away, none.
+
+<LxDistanceAngle
+  :profile="directions.downlight"
+  :labels="{
+    height: 'Luminaire height',
+    position: 'Point position',
+    tilt: 'Surface tilt',
+    away: 'the surface faces away from the light.',
+  }"
+  caption="The demo's downlight, with its IES file: the sum above, with the luminaire as a point."
 />
 
 ## Several luminaires

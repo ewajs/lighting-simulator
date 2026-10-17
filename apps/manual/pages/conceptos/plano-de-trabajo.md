@@ -1,5 +1,5 @@
 <script setup>
-import LxGridPlan from '../../.vitepress/theme/components/LxGridPlan.vue'
+import LxGridExplorer from '../../.vitepress/theme/components/LxGridExplorer.vue'
 import LxPlot from '../../.vitepress/theme/components/LxPlot.vue'
 import { data } from '../../.vitepress/theme/diagrams/rooms.data'
 import { formatNumber } from '../../.vitepress/theme/diagrams/plot'
@@ -35,12 +35,15 @@ cantidad de puntos se redondea para arriba, así nunca quedan más separados que
 $p$. Con una cuadrícula fija, los mínimos y los promedios se pueden comparar con
 los de otros programas.
 
-<LxGridPlan
-  :room="data.room"
+Probalo: cambiá el ancho, el largo y el borde, y mirá cómo se reparten los
+puntos. La cuadrícula la calcula la misma función que usa Lux Studio.
+
+<LxGridExplorer
+  :width-m="data.room.widthM"
+  :depth-m="data.room.depthM"
   :border-m="data.borderM"
-  :points="data.gridPoints"
-  border-label="borde"
-  :caption="`Un ambiente de 5 × 4 m: el plano de trabajo sin el borde de ${n(data.borderM, 1)} m, con un punto cada ${n(data.gridSpacingM)} m.`"
+  :labels="{ width: 'Ancho', depth: 'Largo', border: 'Borde', cell: 'Celdas de', points: 'puntos', none: 'El borde no deja nada para calcular.' }"
+  :caption="`Arranca en un ambiente de 5 × 4 m con un borde de ${n(data.borderM, 1)} m: un punto cada ${n(data.gridSpacingM)} m, cada uno en el centro de su celda.`"
 />
 
 <LxPlot

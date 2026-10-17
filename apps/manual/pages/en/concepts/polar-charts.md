@@ -1,6 +1,8 @@
 <script setup>
 import LxPolar from '../../../.vitepress/theme/components/LxPolar.vue'
+import LxTypeC from '../../../.vitepress/theme/components/LxTypeC.vue'
 import { data } from '../../../.vitepress/theme/diagrams/light.data'
+import { data as directions } from '../../../.vitepress/theme/diagrams/directions.data'
 
 const chart = (key) => data.polar.find((c) => c.key === key)
 const planes = ['C0–C180 plane', 'C90–C270 plane', 'Beam', 'Rings every']
@@ -23,6 +25,17 @@ pointing at the floor.
   up. 90° is the horizon.
 - The **horizontal angle** (C) turns around the vertical axis, from 0° to
   360°. The C0 plane runs along the luminaire; C90, across it.
+
+Each C picks a **vertical plane** through the luminaire, like a page turning
+round it; within that plane, γ picks the direction. Try it with the demo's
+wall washer, which doesn't share its light the same way all round: turn C
+from above and γ from the side, by dragging the dots or with the controls.
+
+<LxTypeC
+  :grid="directions.wallWasher"
+  :labels="{ above: 'From above', side: 'From the side, plane', c: 'Horizontal angle C', gamma: 'Vertical angle γ' }"
+  caption="From above, the curve is the intensity at each C for the chosen γ; from the side, at each γ of the chosen plane. The dot is the direction (C, γ)."
+/>
 
 Many luminaires are symmetric, and the file keeps only part of them: a round
 downlight is the same in every horizontal direction, so one plane is enough.

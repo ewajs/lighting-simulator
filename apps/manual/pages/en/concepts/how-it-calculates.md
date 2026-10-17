@@ -30,9 +30,9 @@ order:
 4. **It adds the light that bounces:** the floor, ceiling and walls are split
    into 25 cm patches, and each sends back the share of the light it receives
    that its reflectance says, bounce after bounce, until nothing changes. It's
-   the radiosity method, a classic of interior lighting calculation. Furniture
-   counts too: it hides bounced light, and each of its faces reflects it as its
-   finish does.
+   the radiosity method, a classic of interior lighting calculation
+   ([Light that bounces](./light-that-bounces)). Furniture counts too: it
+   hides bounced light, and each of its faces reflects it as its finish does.
 5. **It multiplies by the maintenance factor** ([Maintenance factor](./maintenance)).
 6. **It sums up** each surface: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ and
    $U_0$ ([Uniformity](./uniformity)).

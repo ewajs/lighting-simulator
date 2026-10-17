@@ -53,7 +53,8 @@ build time.
   - Labels come from each page, in its language.
   - Plotting helpers live in `diagrams/plot.ts`, which tsc type-checks; it
     doesn't read `.vue` files.
-- **What reaches the browser:** plain numbers, not core or three.js.
+- **What reaches the browser:** plain numbers, not core or three.js; the
+  interactive diagrams add a few pure functions (see below).
 - **Figures in the prose** (averages, uniformities, the maintained value)
   come from the same data, so the text can't contradict the diagrams. They
   sit outside formulas, since MathJax renders before Vue fills values in.
@@ -85,3 +86,32 @@ and spaces found only in the 2011 edition, are left out.
   changes. Writing this section caught one: bunching four downlights raises
   the average while ruining uniformity, the opposite of the draft's claim.
 - The manual's own captures and e2e are unaffected: no app code changed.
+
+## Interactive diagrams (amended 2026-10-17)
+
+The owner asked for diagrams the reader can move: text is too abstract for
+directions, angles and planes. Five Vue components take a drag (mouse, pen or
+touch, through pointer events) and sliders beside it for the keyboard:
+`LxDistanceAngle`, `LxTypeC`, `LxGridExplorer`, `LxFormFactor` and
+`LxBounces`. A sixth Concepts page, on bounced light, holds the last two.
+
+- **Data from files is still computed at build:** a loader
+  (`diagrams/directions.data.ts`) tabulates the demo downlight's intensity by
+  vertical angle and the wall washer's over a C × γ grid; the browser
+  interpolates between the values (`diagrams/interactive.ts`).
+- **Geometry runs in the browser, with core's own functions,** so a diagram
+  can't drift from the app's maths: `rectangleGrid` and `maxGridSpacing`
+  (`analysis/calc-grid.ts`) and `pointToPolygon` (`analysis/form-factor.ts`).
+  The rule:
+  - only pure modules: plain functions over plain data, with no three.js or
+    DOM imports, nor imports of modules that have them;
+  - imported by path, module by module, never through core's index, and only
+    through `diagrams/browser-core.ts`, so the list is in one place;
+  - the built manual is checked for three.js before such a change merges.
+- **Before hydration** each diagram renders its starting state on the
+  server, so the page reads the same without JavaScript; only the handles
+  and sliders need it.
+
+It narrows "Computing in the browser" under the options above: what ruled
+it out was shipping core and three.js, which importing pure modules by path
+avoids.

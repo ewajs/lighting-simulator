@@ -29,9 +29,9 @@ este orden:
 4. **Suma la luz que rebota:** el piso, el techo y las paredes se dividen en
    parches de 25 cm, y cada uno devuelve la parte de la luz que recibe que
    indica su reflectancia, rebote tras rebote, hasta que no cambia nada. Es el
-   método de radiosidad, clásico en el cálculo de iluminación de interiores.
-   Los muebles también cuentan: tapan la luz que rebota, y cada una de sus
-   caras la refleja según su terminación.
+   método de radiosidad, clásico en el cálculo de iluminación de interiores
+   ([La luz que rebota](./luz-que-rebota)). Los muebles también cuentan: tapan
+   la luz que rebota, y cada una de sus caras la refleja según su terminación.
 5. **Multiplica por el factor de mantenimiento**
    ([Factor de mantenimiento](./mantenimiento)).
 6. **Resume** cada superficie: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ y $U_0$

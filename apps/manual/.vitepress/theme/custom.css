@@ -403,3 +403,165 @@
   line-height: 1.4;
   color: var(--vp-c-text-2);
 }
+
+/* Interactive diagrams (ADR 0059): handles to drag, sliders beside them for
+   the keyboard, and the live numbers. Drawn at about the size of the page's
+   text, so they stay narrower than the static charts. */
+.lx-interactive svg,
+.lx-interactive .lx-readout,
+.lx-interactive .lx-controls {
+  max-width: 540px;
+}
+.lx-views {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px 24px;
+  max-width: 700px;
+}
+.lx-interactive .lx-views svg {
+  max-width: 340px;
+}
+.lx-figure .handle {
+  cursor: grab;
+  /* A finger on a handle drags it instead of scrolling the page. */
+  touch-action: none;
+}
+.lx-figure .handle:active {
+  cursor: grabbing;
+}
+.lx-figure .handle-hit {
+  fill: transparent;
+}
+.lx-figure .handle-dot {
+  fill: var(--vp-c-brand-1);
+  stroke: var(--vp-c-bg);
+  stroke-width: 2;
+}
+.lx-figure .handle-ring {
+  fill: var(--vp-c-bg);
+  stroke: var(--vp-c-brand-1);
+  stroke-width: 2.5;
+}
+.lx-figure .handle:hover .handle-dot,
+.lx-figure .handle:hover .handle-ring {
+  stroke: var(--vp-c-text-1);
+}
+.lx-figure .floor-band {
+  fill: var(--vp-c-bg-soft);
+}
+.lx-figure .lobe {
+  fill: var(--vp-c-brand-soft);
+  stroke: var(--lx-c-1);
+  stroke-width: 2;
+  stroke-linejoin: round;
+}
+.lx-figure .lobe-mark {
+  fill: var(--lx-c-1);
+  stroke: var(--vp-c-bg);
+  stroke-width: 1.5;
+}
+.lx-figure .nadir,
+.lx-figure .plane-back {
+  stroke: var(--lx-c-neutral);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 4;
+}
+.lx-figure .angle-arc {
+  stroke: var(--vp-c-text-1);
+  stroke-width: 1.5;
+  fill: none;
+}
+.lx-figure text.symbol {
+  fill: var(--vp-c-text-1);
+  font-size: 16px;
+  font-style: italic;
+}
+.lx-figure .normal {
+  stroke: var(--lx-c-2);
+  stroke-width: 2.5;
+}
+.lx-figure .normal-head {
+  fill: var(--lx-c-2);
+}
+.lx-figure .surface {
+  stroke: var(--vp-c-text-1);
+  stroke-width: 5;
+  stroke-linecap: round;
+}
+.lx-figure .surface.panel {
+  stroke: var(--lx-c-2);
+}
+.lx-figure .half-circle {
+  stroke: var(--lx-axis);
+  stroke-width: 1.5;
+  fill: none;
+}
+.lx-figure .drop {
+  stroke: var(--lx-c-1);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+.lx-figure .series.base {
+  stroke-width: 6;
+  stroke-linecap: butt;
+}
+.lx-figure .bar {
+  fill: var(--lx-c-1);
+}
+.lx-figure .bar.alternate {
+  opacity: 0.6;
+}
+.lx-figure .bar.direct {
+  fill: var(--lx-c-neutral);
+}
+.lx-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 16px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--vp-c-text-2);
+}
+.lx-readout strong {
+  flex-basis: 100%;
+  color: var(--vp-c-text-1);
+  font-weight: 600;
+}
+.lx-controls {
+  margin-top: 12px;
+  font-size: 14px;
+}
+/* On a phone: the name and value on one line, the slider below them. */
+.lx-controls label {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: 'name value' 'slider slider';
+  column-gap: 12px;
+  align-items: center;
+}
+.lx-controls label span {
+  grid-area: name;
+  color: var(--vp-c-text-2);
+}
+.lx-controls output {
+  grid-area: value;
+  color: var(--vp-c-text-1);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.lx-controls input {
+  grid-area: slider;
+  width: 100%;
+  margin: 2px 0 8px;
+  accent-color: var(--vp-c-brand-1);
+}
+@media (min-width: 640px) {
+  .lx-controls label {
+    grid-template-columns: 15em 1fr 4.5em;
+    grid-template-areas: 'name slider value';
+  }
+  .lx-controls input {
+    margin: 4px 0;
+  }
+}
