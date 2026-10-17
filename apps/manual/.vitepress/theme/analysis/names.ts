@@ -83,6 +83,18 @@ export const ROOMS: Record<string, Record<Lang, { name: string; about: string }>
         'A living room with four downlights over a sofa, a coffee table, a dining table and a bookcase, which block and reflect light as their finishes do (linen 0.55, oak 0.45).',
     },
   },
+  'busy-open-plan': {
+    es: {
+      name: 'Un ambiente integrado con diez muebles',
+      about:
+        'Un ambiente de 6 × 5 m con living (sillón, dos sillones individuales, mesa ratona y mueble de TV), dos bibliotecas, una mesa de comedor bajo un colgante lineal, una isla de cocina y un escritorio. Nueve luminarias: siete downlights, el colgante y un bañador de pared. Terminaciones del nogal (0,15) al blanco (0,8).',
+    },
+    en: {
+      name: 'A busy open-plan room',
+      about:
+        'A 6 × 5 m room with a living area (sofa, two armchairs, coffee table and TV unit), two bookcases, a dining table under a linear pendant, a kitchen island and a desk. Nine luminaires: seven downlights, the pendant and a wall washer. Finishes from walnut (0.15) to white (0.8).',
+    },
+  },
 };
 
 /** The order rooms are listed in: simplest first. */
@@ -93,6 +105,7 @@ export const ROOM_ORDER = [
   'linear-pendant-over-table',
   'wall-sconce',
   'furnished-living',
+  'busy-open-plan',
 ] as const;
 
 /** The measured surfaces. Seen from above, x runs left to right and z from the back to the front. */
@@ -309,5 +322,9 @@ export const ROOM_NOTES: Record<string, Record<Lang, string>> = {
   'furnished-living': {
     es: 'Cuatro muebles que tapan y reflejan la luz, también la que rebota. Probalo con Paso en los mapas: si los muebles solo tapan la luz que rebota, como cajas negras, todo da menos que en Radiance; cuando además la reflejan, como su terminación, coincide. Algunos puntos del plano de trabajo caen dentro de la biblioteca, donde los dos programas dan casi 0.',
     en: 'Four pieces of furniture that block and reflect light, bounced light included. Try it with Step on the maps: if the furniture only hides bounced light, like black boxes, everything reads lower than in Radiance; when it reflects it too, as its finish does, they agree. A few work-plane points fall inside the bookcase, where both programs give almost 0.',
+  },
+  'busy-open-plan': {
+    es: 'Diez muebles, nueve luminarias y un ambiente más grande, para ver cómo crecen la diferencia y el tiempo. Los promedios siguen dentro del 1 % de Radiance. Los peores puntos están en el piso, entre muebles: entre el sillón y la mesa ratona, o detrás de la isla, una downlight se ve apenas por encima de un borde. Radiance ve una parte de su abertura de 15 cm; en Lux Studio, cada celda de 7,6 cm se ve o no, y el punto da 0 o el doble. Son pocos: menos del 3 % de los puntos iluminados se alejan más del 10 %. Junto al costado de la isla, a 2,5 cm de ella y 10 cm debajo de su tapa, el plano de trabajo da hasta un 12 % menos, todo en la luz que rebota. Con parches de la mitad de tamaño baja apenas al 10 %, así que no es el tamaño del parche; la causa todavía no está clara.',
+    en: "Ten pieces of furniture, nine luminaires and a larger room, to see how the difference and the time grow. Averages stay within 1 % of Radiance. The worst points are on the floor between furniture: between the sofa and the coffee table, or behind the island, a downlight shows only just past an edge. Radiance sees part of its 15 cm opening; in Lux Studio each 7.6 cm cell is seen or not, so the point reads 0 or double. They're few: under 3 % of the lit points are off by more than 10 %. Beside the island, 2.5 cm from its side and 10 cm below its top, the work plane reads up to 12 % low, all of it in bounced light. Patches half the size only bring it to 10 %, so it isn't the patch size; the cause isn't clear yet.",
   },
 };

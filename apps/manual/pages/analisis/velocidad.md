@@ -40,7 +40,24 @@ exacta, sin importar cuánto tarde. Con sus ajustes normales sería mucho más
 rápido, y también menos preciso. La comparación muestra cuánto cuesta el
 modelo de Lux Studio, no que sea más rápido que Radiance.
 
-Todavía no se midió en otras máquinas: en un teléfono o una computadora más
-vieja, el cálculo va a tardar más. Cuando el análisis llegue a la aplicación,
-va a correr aparte de la vista 3D, sin trabarla, y va a guardar lo que solo
-depende del ambiente para no recalcularlo cada vez que se mueve una luminaria.
+## Cómo crece con el ambiente
+
+El [ambiente integrado con diez muebles](./busy-open-plan) es el más lento:
+más grande (6 × 5 m), con más puntos, más luminarias y más del doble de
+muebles que el living. Casi todo el tiempo de más son los muebles dentro de la
+luz que rebota: cada rayo entre dos parches, y entre cada punto y cada
+parche, se prueba contra cada mueble.
+
+En la aplicación, el análisis corre aparte de la vista 3D, sin trabarla, y
+guarda lo que solo depende del ambiente. Medido en la misma máquina, con seis
+luminarias:
+
+| | 3 muebles, 5 × 4 m | 10 muebles, 6 × 5 m |
+|---|---|---|
+| Desde cero, o al mover un mueble | 0,7 s | 2,4 s |
+| Al cambiar solo la luz | 0,13 s | 0,24 s |
+
+Mover o atenuar una luminaria se recalcula enseguida aun en un ambiente
+lleno; mover un mueble tarda unos segundos, porque cambia los rebotes de todo
+el ambiente. Todavía no se midió en otras máquinas: en un teléfono o una
+computadora más vieja, va a tardar más.

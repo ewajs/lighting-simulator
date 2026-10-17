@@ -3,6 +3,329 @@
   "nearM": 1,
   "rooms": [
     {
+      "name": "busy-open-plan",
+      "description": "A busy open-plan room, 6 × 5 m, with ten pieces of furniture: a living area (sofa, two armchairs, a coffee table and a TV unit), two bookcases on the back wall, a dining table under a linear pendant, a kitchen island and a desk. Nine luminaires: seven downlights, the pendant (Finelite HP-2) and a wall washer (Lightolier) on the back wall beside the bookcases. Finishes from walnut (0.15) to white (0.8). Measures how accuracy and time scale with a full room.",
+      "radianceRelease": "rad6R0P2",
+      "points": 1924,
+      "direct": [
+        {
+          "surface": "work-plane",
+          "points": 480,
+          "radianceAverageLx": 257.88,
+          "oursAverageLx": 257.68,
+          "averageError": -0.00078,
+          "worstFar": 0.00541,
+          "worstNear": 0.00612
+        },
+        {
+          "surface": "floor",
+          "points": 480,
+          "radianceAverageLx": 121.88,
+          "oursAverageLx": 122.57,
+          "averageError": 0.00565,
+          "worstFar": 0.68374,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 480,
+          "radianceAverageLx": 86.22,
+          "oursAverageLx": 86.39,
+          "averageError": 0.00201,
+          "worstFar": 0.00119,
+          "worstNear": 0.00108
+        },
+        {
+          "surface": "wall-x-",
+          "points": 220,
+          "radianceAverageLx": 44.43,
+          "oursAverageLx": 44.39,
+          "averageError": -0.00105,
+          "worstFar": 0.00323,
+          "worstNear": 0
+        },
+        {
+          "surface": "wall-z-",
+          "points": 264,
+          "radianceAverageLx": 51.32,
+          "oursAverageLx": 51.29,
+          "averageError": -0.00051,
+          "worstFar": 0.00796,
+          "worstNear": 0.00989
+        }
+      ],
+      "total": [
+        {
+          "surface": "work-plane",
+          "points": 480,
+          "radianceAverageLx": 468.32,
+          "oursAverageLx": 468.72,
+          "averageError": 0.00086,
+          "worstFar": 0.11651,
+          "worstNear": 0.01162
+        },
+        {
+          "surface": "floor",
+          "points": 480,
+          "radianceAverageLx": 254.44,
+          "oursAverageLx": 255.38,
+          "averageError": 0.00369,
+          "worstFar": 0.44942,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 480,
+          "radianceAverageLx": 278.24,
+          "oursAverageLx": 279.45,
+          "averageError": 0.00438,
+          "worstFar": 0.01859,
+          "worstNear": 0.04094
+        },
+        {
+          "surface": "wall-x-",
+          "points": 220,
+          "radianceAverageLx": 176.74,
+          "oursAverageLx": 176.46,
+          "averageError": -0.00159,
+          "worstFar": 0.0201,
+          "worstNear": 0.00927
+        },
+        {
+          "surface": "wall-z-",
+          "points": 264,
+          "radianceAverageLx": 186.69,
+          "oursAverageLx": 188.43,
+          "averageError": 0.00931,
+          "worstFar": 0.02105,
+          "worstNear": 0.01702
+        }
+      ],
+      "withoutFurniture": [
+        {
+          "surface": "work-plane",
+          "points": 480,
+          "radianceAverageLx": 493.98,
+          "oursAverageLx": 496.58,
+          "averageError": 0.00528,
+          "worstFar": 0.0175,
+          "worstNear": 0.01314
+        },
+        {
+          "surface": "floor",
+          "points": 480,
+          "radianceAverageLx": 449.68,
+          "oursAverageLx": 452.11,
+          "averageError": 0.00539,
+          "worstFar": 0.0137,
+          "worstNear": 0
+        },
+        {
+          "surface": "ceiling",
+          "points": 480,
+          "radianceAverageLx": 252.49,
+          "oursAverageLx": 255.03,
+          "averageError": 0.01008,
+          "worstFar": 0.02342,
+          "worstNear": 0.05137
+        },
+        {
+          "surface": "wall-x-",
+          "points": 220,
+          "radianceAverageLx": 206.91,
+          "oursAverageLx": 208.33,
+          "averageError": 0.00688,
+          "worstFar": 0.01754,
+          "worstNear": 0.0163
+        },
+        {
+          "surface": "wall-z-",
+          "points": 264,
+          "radianceAverageLx": 230.04,
+          "oursAverageLx": 232.09,
+          "averageError": 0.0089,
+          "worstFar": 0.02432,
+          "worstNear": 0.01499
+        }
+      ],
+      "features": [
+        {
+          "step": "point-sources",
+          "worstAverage": 0.71825,
+          "meanPointError": 0.60924,
+          "worstFar": 1.67346,
+          "worstNear": 0.9851,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": -0.39336
+            },
+            {
+              "surface": "floor",
+              "averageError": -0.03634
+            },
+            {
+              "surface": "ceiling",
+              "averageError": -0.68818
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": -0.71825
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": -0.6757
+            }
+          ]
+        },
+        {
+          "step": "bounced-light",
+          "worstAverage": 0.7782,
+          "meanPointError": 0.17943,
+          "worstFar": 3.20498,
+          "worstNear": 0.30436,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": 0.06104
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.7782
+            },
+            {
+              "surface": "ceiling",
+              "averageError": -0.08311
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": 0.17832
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": 0.23812
+            }
+          ]
+        },
+        {
+          "step": "split-openings",
+          "worstAverage": 0.77687,
+          "meanPointError": 0.17292,
+          "worstFar": 3.20189,
+          "worstNear": 0.21337,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": 0.06036
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.77687
+            },
+            {
+              "surface": "ceiling",
+              "averageError": -0.0834
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": 0.17873
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": 0.24317
+            }
+          ]
+        },
+        {
+          "step": "furniture-shadows",
+          "worstAverage": 0.22911,
+          "meanPointError": 0.15933,
+          "worstFar": 0.90734,
+          "worstNear": 0.3655,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": -0.06743
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.15365
+            },
+            {
+              "surface": "ceiling",
+              "averageError": -0.22911
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": -0.07395
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": 0.00044
+            }
+          ]
+        },
+        {
+          "step": "furniture-hides-bounce",
+          "worstAverage": 0.42966,
+          "meanPointError": 0.34107,
+          "worstFar": 0.88715,
+          "worstNear": 0.6205,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": -0.18452
+            },
+            {
+              "surface": "floor",
+              "averageError": -0.25392
+            },
+            {
+              "surface": "ceiling",
+              "averageError": -0.40481
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": -0.42966
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": -0.39438
+            }
+          ]
+        },
+        {
+          "step": "furniture-in-bounce",
+          "worstAverage": 0.00931,
+          "meanPointError": 0.00932,
+          "worstFar": 0.44942,
+          "worstNear": 0.04094,
+          "surfaces": [
+            {
+              "surface": "work-plane",
+              "averageError": 0.00086
+            },
+            {
+              "surface": "floor",
+              "averageError": 0.00369
+            },
+            {
+              "surface": "ceiling",
+              "averageError": 0.00438
+            },
+            {
+              "surface": "wall-x-",
+              "averageError": -0.00159
+            },
+            {
+              "surface": "wall-z-",
+              "averageError": 0.00931
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "downlights-and-wall-washer",
       "description": "Four downlights on a grid, and a wall washer (Lightolier, asymmetric) 0.5 m from the wall at x = −2.5, its beam turned onto that wall.",
       "radianceRelease": "rad6R0P2",

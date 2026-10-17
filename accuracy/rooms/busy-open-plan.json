@@ -1,0 +1,248 @@
+{
+  "description": "A busy open-plan room, 6 × 5 m, with ten pieces of furniture: a living area (sofa, two armchairs, a coffee table and a TV unit), two bookcases on the back wall, a dining table under a linear pendant, a kitchen island and a desk. Nine luminaires: seven downlights, the pendant (Finelite HP-2) and a wall washer (Lightolier) on the back wall beside the bookcases. Finishes from walnut (0.15) to white (0.8). Measures how accuracy and time scale with a full room.",
+  "room": {
+    "width": 6,
+    "depth": 5,
+    "height": 2.7
+  },
+  "luminaires": [
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -2.25,
+        "y": 2.67,
+        "z": -0.5
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -0.75,
+        "y": 2.67,
+        "z": -0.5
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -2.25,
+        "y": 2.67,
+        "z": 1.5
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -0.75,
+        "y": 2.67,
+        "z": 1.5
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 1.1,
+        "y": 2.67,
+        "z": -1.4
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 2.1,
+        "y": 2.67,
+        "z": -1.4
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 2.6,
+        "y": 2.67,
+        "z": 1.75
+      }
+    },
+    {
+      "ies": "HP-2-ID-4ft-H-B-835-ITL85132.008.ies",
+      "origin": {
+        "x": 1.2,
+        "y": 1.55,
+        "z": 0.4
+      }
+    },
+    {
+      "ies": "C3L10935NZ10U-C3RLWCC.ies",
+      "origin": {
+        "x": 0,
+        "y": 2.67,
+        "z": -2.0
+      },
+      "panDeg": 180
+    }
+  ],
+  "blockers": [
+    {
+      "centre": {
+        "x": -2.77,
+        "y": 0.25,
+        "z": 0.8
+      },
+      "half": {
+        "x": 0.21,
+        "y": 0.25,
+        "z": 0.9
+      },
+      "yawDeg": 0,
+      "reflectance": 0.15
+    },
+    {
+      "centre": {
+        "x": -0.75,
+        "y": 0.4,
+        "z": 0.8
+      },
+      "half": {
+        "x": 0.45,
+        "y": 0.4,
+        "z": 1.05
+      },
+      "yawDeg": 0,
+      "reflectance": 0.55
+    },
+    {
+      "centre": {
+        "x": -1.8,
+        "y": 0.385,
+        "z": 0.8
+      },
+      "half": {
+        "x": 0.3,
+        "y": 0.015,
+        "z": 0.55
+      },
+      "yawDeg": 0,
+      "reflectance": 0.45
+    },
+    {
+      "centre": {
+        "x": -1.8,
+        "y": 0.4,
+        "z": 2.0
+      },
+      "half": {
+        "x": 0.425,
+        "y": 0.4,
+        "z": 0.425
+      },
+      "yawDeg": 0,
+      "reflectance": 0.55
+    },
+    {
+      "centre": {
+        "x": -1.8,
+        "y": 0.4,
+        "z": -0.4
+      },
+      "half": {
+        "x": 0.425,
+        "y": 0.4,
+        "z": 0.425
+      },
+      "yawDeg": 0,
+      "reflectance": 0.55
+    },
+    {
+      "centre": {
+        "x": -2.2,
+        "y": 1.0,
+        "z": -2.32
+      },
+      "half": {
+        "x": 0.5,
+        "y": 1.0,
+        "z": 0.175
+      },
+      "yawDeg": 0,
+      "reflectance": 0.45
+    },
+    {
+      "centre": {
+        "x": -1.1,
+        "y": 1.0,
+        "z": -2.32
+      },
+      "half": {
+        "x": 0.5,
+        "y": 1.0,
+        "z": 0.175
+      },
+      "yawDeg": 0,
+      "reflectance": 0.45
+    },
+    {
+      "centre": {
+        "x": 1.2,
+        "y": 0.735,
+        "z": 0.4
+      },
+      "half": {
+        "x": 0.45,
+        "y": 0.015,
+        "z": 0.8
+      },
+      "yawDeg": 0,
+      "reflectance": 0.45
+    },
+    {
+      "centre": {
+        "x": 1.6,
+        "y": 0.45,
+        "z": -1.4
+      },
+      "half": {
+        "x": 1.0,
+        "y": 0.45,
+        "z": 0.325
+      },
+      "yawDeg": 0,
+      "reflectance": 0.8
+    },
+    {
+      "centre": {
+        "x": 2.6,
+        "y": 0.735,
+        "z": 1.75
+      },
+      "half": {
+        "x": 0.35,
+        "y": 0.015,
+        "z": 0.7
+      },
+      "yawDeg": 0,
+      "reflectance": 0.8
+    }
+  ],
+  "grids": [
+    {
+      "surface": "work-plane",
+      "heightM": 0.8,
+      "spacingM": 0.25
+    },
+    {
+      "surface": "floor",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "ceiling",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-x-",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-z-",
+      "spacingM": 0.25
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-// How long an illuminance calculation takes for a furnished room, to measure
+// How long an illuminance calculation takes for a furnished room and a busy one, to measure
 // before optimising (CLAUDE.md) and to size the live calculation's budget
 // (M5.4): from scratch, and with the room cached, as when only the light
 // changes (ADR 0065). `npm run bench -w packages/core` bundles this file with Vite
@@ -8,6 +8,7 @@ import { analyseIlluminance } from '../src/analysis/analyse';
 import { AnalysisCache } from '../src/analysis/cache';
 import { DEFAULT_CALCULATION_OPTIONS } from '../src/analysis/options';
 import { DEFAULT_ANALYSIS_SETTINGS } from '../src/analysis/settings';
+import { FURNITURE_TYPES } from '../src/furniture-kinds';
 import type { AnalysisInputs } from '../src/analysis/settings';
 import { catalog, photometry, room } from '../src/test-fixtures';
 import type { Furniture, Luminaire, Scene } from '../src/types';
@@ -60,6 +61,32 @@ const scene: Scene = {
     piece('b', 'bookcase', 2, -1.6),
   ],
 };
+// The busy reference room's furniture (accuracy/rooms/busy-open-plan.json, ADR 0068):
+// ten pieces at their usual sizes in a 6 × 5 m room, under the same luminaires.
+const usual = (id: string, kind: Furniture['kind'], x: number, z: number, rotationDeg = 0) => ({
+  id,
+  kind,
+  position: { x, y: 0, z },
+  rotationDeg,
+  size: FURNITURE_TYPES[kind].size,
+  finish: FURNITURE_TYPES[kind].finish,
+});
+const busy: Scene = {
+  room: { ...room, width: 6, depth: 5 },
+  luminaires,
+  furniture: [
+    usual('tv', 'tv-unit', -2.77, 0.8, 90),
+    usual('sofa', 'sofa', -0.75, 0.8, 90),
+    usual('coffee', 'coffee-table', -1.8, 0.8, 90),
+    usual('a1', 'armchair', -1.8, 2),
+    usual('a2', 'armchair', -1.8, -0.4),
+    usual('b1', 'bookcase', -2.2, -2.32),
+    usual('b2', 'bookcase', -1.1, -2.32),
+    usual('dining', 'dining-table', 1.2, 0.4, 90),
+    usual('island', 'kitchen-island', 1.6, -1.4),
+    usual('desk', 'desk', 2.6, 1.75, 90),
+  ],
+};
 const inputs: AnalysisInputs = { catalog, photometry: () => FILE, modelFile: () => undefined };
 
 /** The median and mean of `run`'s time, in ms, after warming it up. */
@@ -83,24 +110,29 @@ const report = (label: string, { median, mean }: { median: number; mean: number 
     `${label}: median ${median.toFixed(1)} ms, mean ${mean.toFixed(1)} ms over ${TIMED_RUNS} runs`,
   );
 
-console.log('6 luminaires × 12 cells, 3 pieces of furniture, 5 × 4 m room');
-report(
-  '  from scratch',
-  time(() => analyseIlluminance(scene, inputs)),
-);
-// A live edit: the same room, one luminaire dimmed a little more each time.
-const cache = new AnalysisCache();
-report(
-  '  the light changed, the room cached',
-  time((i) => {
-    const dimmed = { ...scene.luminaires[0]!, dimming: 1 - (i % 10) / 20 };
-    const changed = { ...scene, luminaires: [dimmed, ...scene.luminaires.slice(1)] };
-    analyseIlluminance(
-      changed,
-      inputs,
-      DEFAULT_ANALYSIS_SETTINGS,
-      DEFAULT_CALCULATION_OPTIONS,
-      cache,
-    );
-  }),
-);
+/** Times `scene` from scratch, and as a live edit: one luminaire dimmed a little more each time, the room cached. */
+function bench(label: string, scene: Scene): void {
+  console.log(label);
+  report(
+    '  from scratch',
+    time(() => analyseIlluminance(scene, inputs)),
+  );
+  const cache = new AnalysisCache();
+  report(
+    '  the light changed, the room cached',
+    time((i) => {
+      const dimmed = { ...scene.luminaires[0]!, dimming: 1 - (i % 10) / 20 };
+      const changed = { ...scene, luminaires: [dimmed, ...scene.luminaires.slice(1)] };
+      analyseIlluminance(
+        changed,
+        inputs,
+        DEFAULT_ANALYSIS_SETTINGS,
+        DEFAULT_CALCULATION_OPTIONS,
+        cache,
+      );
+    }),
+  );
+}
+
+bench('6 luminaires × 12 cells, 3 pieces of furniture, 5 × 4 m room', scene);
+bench('6 luminaires × 12 cells, 10 pieces of furniture, 6 × 5 m room', busy);

@@ -120,8 +120,8 @@ export function referenceRoom(reference: Reference): Room {
  * Each luminaire is a recessed product with the room's IES file, placed so
  * its light leaves from the reference's origin (the placeholder's light sits
  * 3 cm below the fixture), and aimed with the reference's tilt and pan. The
- * reference's boxes block direct light, as Lux Studio's furniture does; they
- * neither block nor reflect bounced light, which Lux Studio doesn't model yet.
+ * reference's boxes are furniture as Lux Studio models it: they cast shadows,
+ * and hide and reflect bounced light, as the options say.
  *
  * @param iesFiles The IES files' text by file name.
  * @param furniture Whether the reference's boxes are there: false matches its

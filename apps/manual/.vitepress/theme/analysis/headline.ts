@@ -7,14 +7,23 @@ const worstAverage = (surfaces: readonly SurfaceSummary[]) =>
 const worstFar = (surfaces: readonly SurfaceSummary[]) =>
   Math.max(...surfaces.map((s) => s.worstFar));
 
+/**
+ * The busy open-plan room, whose worst points are penumbrae between furniture
+ * (ADR 0068): the pages quote them apart, so one room's few points don't stand
+ * for every room's.
+ */
+export const BUSY_ROOM = 'busy-open-plan';
+
 /** The section's headline figures. */
 export interface Headline {
   /** Reference points in all rooms. */
   readonly points: number;
   readonly rooms: number;
-  /** The worst surface average and far point, every room as it is, furniture and all. */
+  /** The worst surface average, every room as it is, furniture and all. */
   readonly worstAverage: number;
+  /** The worst far point, every room but BUSY_ROOM; and BUSY_ROOM's. */
   readonly worstFar: number;
+  readonly busyWorstFar: number;
   /** The furnished rooms' worst mean point error before furniture took part in bounced light, and after. */
   readonly furnishedBefore: number;
   readonly furnishedAfter: number;
@@ -41,7 +50,10 @@ export function headline(summary: AccuracySummary, timings: Timings): Headline {
     points: summary.rooms.reduce((sum, r) => sum + r.points, 0),
     rooms: summary.rooms.length,
     worstAverage: Math.max(...summary.rooms.map((r) => worstAverage(r.total))),
-    worstFar: Math.max(...summary.rooms.map((r) => worstFar(r.total))),
+    worstFar: Math.max(
+      ...summary.rooms.filter((r) => r.name !== BUSY_ROOM).map((r) => worstFar(r.total)),
+    ),
+    busyWorstFar: worstFar(summary.rooms.find((r) => r.name === BUSY_ROOM)?.total ?? []),
     furnishedBefore: Math.max(
       ...furnished.map(
         (r) => r.features.find((f) => f.step === 'furniture-shadows')!.meanPointError,

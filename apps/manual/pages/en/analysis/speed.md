@@ -40,7 +40,24 @@ long it takes. At its usual settings it would be much faster, and less
 accurate too. The comparison shows what Lux Studio's model costs, not that
 it's faster than Radiance.
 
-It hasn't been measured on other machines yet: on a phone or an older
-computer, the calculation will take longer. When the analysis reaches the app,
-it will run apart from the 3D view, without freezing it, and keep what depends
-only on the room so it isn't recalculated each time a luminaire moves.
+## How it grows with the room
+
+The [busy open-plan room](./busy-open-plan) is the slowest: larger
+(6 × 5 m), with more points, more luminaires and more than twice the living
+room's furniture. Almost all the extra time is furniture inside bounced
+light: every ray between two patches, and between each point and each patch,
+is tested against every piece.
+
+In the app, the analysis runs apart from the 3D view, without freezing it,
+and keeps what depends only on the room. Measured on the same machine, with
+six luminaires:
+
+| | 3 pieces, 5 × 4 m | 10 pieces, 6 × 5 m |
+|---|---|---|
+| From scratch, or after moving furniture | 0.7 s | 2.4 s |
+| When only the light changes | 0.13 s | 0.24 s |
+
+Moving or dimming a luminaire recalculates right away even in a full room;
+moving furniture takes a few seconds, because it changes the bounces of the
+whole room. It hasn't been measured on other machines yet: on a phone or an
+older computer, it will take longer.

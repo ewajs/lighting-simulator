@@ -35,10 +35,12 @@ it unrepeatable; both are fixed and covered by a test.
 
 ## The test rooms
 
-{{ h.rooms }} rooms of 5 × 4 × 2.7 m, each one meant to test something: a
-single luminaire, several together, tilted beams, a large luminaire close by,
-a glowing box against a wall, and a furnished living room. They use the demo's
-real IES files. Points are measured on grids over the work plane, the floor,
+{{ h.rooms }} rooms, each one meant to test something: a single luminaire,
+several together, tilted beams, a large luminaire close by, a glowing box
+against a wall, a living room with four pieces of furniture, and an
+open-plan room with ten, which shows how the difference and the time grow in
+a full room. They measure 5 × 4 × 2.7 m, except the last, at 6 × 5 m. They
+use the demo's real IES files. Points are measured on grids over the work plane, the floor,
 the ceiling and the walls: {{ n(h.points) }} in all.
 
 ## How the difference is measured

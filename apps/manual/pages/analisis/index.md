@@ -23,7 +23,10 @@ los números y gráficos salen del código y se regeneran con él
 - **Coincide con Radiance.** En los {{ h.rooms }} ambientes, muebles
   incluidos, el promedio de cada superficie queda dentro del
   **{{ pct(h.worstAverage) }}** del de Radiance, y ningún punto iluminado a más
-  de 1 m de una luminaria se aleja más del **{{ pct(h.worstFar) }}**.
+  de 1 m de una luminaria se aleja más del **{{ pct(h.worstFar) }}**. La
+  excepción son unos pocos puntos del [ambiente con diez
+  muebles](./busy-open-plan), en la penumbra del borde de un mueble: hasta un
+  {{ pct(h.busyWorstFar, 0) }}.
 - **Los muebles cuentan también para la luz que rebota:** la tapan y la
   reflejan, como su terminación. En los ambientes amueblados, eso llevó la
   diferencia media por punto de un {{ pct(h.furnishedBefore) }} a un
@@ -56,6 +59,10 @@ Cada ambiente tiene su página, con sus mapas punto por punto:
 ## Lo que todavía no cuenta
 
 - **Los muebles son cajas:** un sillón es un bloque, una mesa es solo su tapa.
+- **Las sombras tienen el borde escalonado.** La abertura de una luminaria se
+  divide en celdas de 10 cm, y cada una queda tapada o no. En la penumbra del
+  borde de un mueble, un punto puede dar 0 o el doble que en Radiance, que ve
+  una parte de la abertura.
 - **Las luminarias no tapan la luz que rebota.** Un aplique grande
   pegado a la pared da unos puntos más que en Radiance.
 - **Todas las superficies reflejan de forma difusa:** no hay brillos ni
