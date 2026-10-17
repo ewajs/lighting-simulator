@@ -69,8 +69,9 @@ programs approximate a glowing opening differently, and the IES file doesn't
 say what the light is like that close.
 
 Before Radiance is trusted, it must reproduce values worked out by hand from
-each file; a Radiance version with a known bug fails those checks. The details
-are in the [accuracy report](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/REPORT.md).
+each file; a Radiance version with a known bug fails those checks. Every
+number, room by room and point by point, with maps, charts and timings, is in
+the **[Analysis](../analysis/)** section.
 
 Lux Studio isn't certified calculation software: it's for designing and
 comparing with confidence, not for signing off a project.

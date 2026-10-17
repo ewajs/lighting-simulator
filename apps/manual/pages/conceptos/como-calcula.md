@@ -73,8 +73,8 @@ archivo IES no dice cómo es la luz tan de cerca.
 
 Antes de confiar en Radiance, se le pide reproducir valores calculados a mano
 desde cada archivo; una versión de Radiance con un error conocido no pasa esas
-pruebas. El detalle está en el
-[informe de precisión](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/REPORT.md).
+pruebas. Todos los números, ambiente por ambiente y punto por punto, con
+mapas, gráficos y tiempos, están en la sección **[Análisis](../analisis/)**.
 
 Lux Studio no es un programa de cálculo certificado: sirve para diseñar y
 comparar con confianza, no para firmar un proyecto.

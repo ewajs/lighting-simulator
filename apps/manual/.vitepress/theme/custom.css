@@ -197,3 +197,209 @@
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 16px;
 }
+
+/* The Analysis section's charts (ADR 0062): Observable Plot draws them in the
+   browser; these frame them and style their controls and legends. */
+.lx-chart {
+  margin: 24px 0;
+}
+.lx-chart-canvas svg {
+  overflow: visible;
+}
+.lx-chart figcaption {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+}
+.lx-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.lx-controls button {
+  padding: 4px 12px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+  background: var(--vp-c-bg-soft);
+  transition:
+    color 0.15s,
+    border-color 0.15s,
+    background 0.15s;
+}
+.lx-controls button:hover {
+  color: var(--vp-c-text-1);
+  border-color: var(--vp-c-brand-1);
+}
+.lx-controls button.active {
+  color: var(--vp-button-brand-text);
+  background: var(--vp-button-brand-bg);
+  border-color: var(--vp-button-brand-bg);
+}
+.lx-controls .label {
+  align-self: center;
+  margin-right: 4px;
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+}
+.vp-doc ul.lx-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+}
+.vp-doc ul.lx-legend li {
+  margin: 0;
+}
+.lx-legend .swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  border-radius: 3px;
+  vertical-align: -1px;
+  background: var(--lx-c-neutral);
+}
+.lx-legend .swatch.c1 {
+  background: var(--lx-c-1);
+}
+.lx-legend .swatch.c2 {
+  background: var(--lx-c-2);
+}
+.lx-legend .swatch.c3 {
+  background: var(--lx-c-3);
+}
+.lx-legend .swatch.c4 {
+  background: var(--lx-c-4);
+}
+.lx-legend .swatch.c5 {
+  background: var(--lx-c-5);
+}
+.lx-legend .swatch.faint {
+  opacity: 0.45;
+}
+.lx-room-plan svg {
+  max-width: 520px;
+}
+.lx-figure .wall {
+  stroke: var(--lx-axis);
+  stroke-width: 3;
+}
+.lx-figure .wall.measured {
+  stroke: var(--lx-c-2);
+  stroke-width: 6;
+}
+.lx-figure text.wall-name {
+  font-size: 13px;
+  fill: var(--vp-c-text-2);
+}
+.lx-figure .work-plane {
+  fill: none;
+  stroke: var(--lx-c-2);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+}
+.lx-figure .furniture {
+  fill: var(--lx-c-neutral);
+  fill-opacity: 0.35;
+  stroke: var(--lx-c-neutral);
+  stroke-width: 1.5;
+}
+.lx-figure .aim {
+  stroke: var(--lx-c-1);
+  stroke-width: 2.5;
+}
+.lx-figure .aim-head {
+  fill: var(--lx-c-1);
+}
+.lx-room-plan .luminaire {
+  fill: var(--lx-c-1);
+  stroke: var(--vp-c-bg);
+  stroke-width: 2;
+}
+.lx-legend .swatch.round {
+  border-radius: 50%;
+}
+.lx-legend .swatch.line {
+  height: 5px;
+  vertical-align: 2px;
+  border-radius: 1px;
+}
+.lx-legend .swatch.dashed {
+  height: 0;
+  vertical-align: 3px;
+  border-top: 2px dashed var(--lx-c-2);
+  background: none;
+}
+.lx-maps {
+  display: grid;
+  gap: 16px;
+}
+.lx-map-title {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+}
+.lx-map svg {
+  display: block;
+}
+.lx-surface-table th.num,
+.lx-surface-table td.num {
+  text-align: right;
+  white-space: nowrap;
+}
+/* Differences graded: within 1 % (Radiance's own noise is 0.3 %), within 5 %, beyond. */
+.chip {
+  display: inline-block;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-variant-numeric: tabular-nums;
+}
+.chip.good {
+  color: var(--lx-c-3);
+  background: color-mix(in srgb, var(--lx-c-3) 14%, transparent);
+}
+.chip.fair {
+  color: var(--lx-c-1);
+  background: color-mix(in srgb, var(--lx-c-1) 14%, transparent);
+}
+.chip.poor {
+  color: var(--lx-c-4);
+  background: color-mix(in srgb, var(--lx-c-4) 14%, transparent);
+}
+.lx-note {
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+}
+.lx-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.lx-stats .stat {
+  padding: 12px 14px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 10px;
+  background: var(--vp-c-bg-soft);
+}
+.lx-stats .value {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--vp-c-text-1);
+  font-variant-numeric: tabular-nums;
+}
+.lx-stats .name {
+  margin-top: 2px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--vp-c-text-2);
+}

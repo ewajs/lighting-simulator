@@ -21,7 +21,8 @@ packages/core   headless engine: scene model, photometry (IES), lighting,
 packages/ui     optional Lit web components built on core.
 apps/demo       uses core + ui, provides sample data, deploys to GitHub Pages.
 apps/manual     the user manual (VitePress, es-AR and en), served at /manual;
-                its Concepts diagrams are computed by core at build (ADR 0059).
+                its Concepts diagrams are computed by core at build (ADR 0059),
+                its Analysis section charts accuracy/'s results (ADR 0062).
 accuracy/       Lux Studio's lux against Radiance (ADR 0058): python/ (uv
                 project) checks Radiance and writes references/;
                 typescript/ (npm workspace) compares; REPORT.md
@@ -53,7 +54,7 @@ npm run accuracy:check        the accuracy Python: ruff (with docstrings),
                       mypy strict, pytest (Radiance tests run on macOS only)
 npm run accuracy:references   check Radiance, regenerate accuracy/references
                       and accuracy/REPORT.md; after changing a room or the maths
-npm run accuracy:report       regenerate REPORT.md and summary.json alone
+npm run accuracy:report       regenerate REPORT.md, summary.json and comparison.json
 npm run accuracy:timings      time each reference room at each feature step
                       → accuracy/timings.json (ADR 0061); on an idle machine
 npm run accuracy:patch-size   accuracy against time per patch size → PATCH-SIZE.md
@@ -210,7 +211,8 @@ Run `npm run i18n:build` first if translations changed.
   licence (MIT/BSD/Apache-compatible) and the alternatives considered.
 - New dev dependencies also need approval, with a one-line justification in the PR.
   Python (accuracy/python) has dev dependencies only: ruff, mypy, pytest,
-  pdoc (ADR 0058). The manual uses markdown-it-mathjax3 for formulas (ADR 0059).
+  pdoc (ADR 0058). The manual uses markdown-it-mathjax3 for formulas (ADR 0059)
+  and @observablehq/plot for the Analysis section's charts (ADR 0062).
 - Don't add a dependency for something that takes a few clear lines.
 - Commit the lockfile.
 

@@ -1,5 +1,5 @@
 // Files the diagrams' data loaders read at build time: the demo's real IES
-// files, and the accuracy summary.
+// files, and the accuracy workspace's results.
 import { readFileSync } from 'node:fs';
 
 /** The demo's five IES files, by the product ids the demo gives them. */
@@ -22,4 +22,14 @@ export function iesText(key: keyof typeof IES_FILES): string {
 /** accuracy/summary.json, as text. */
 export function accuracySummaryText(): string {
   return readFileSync(new URL('../../../../../accuracy/summary.json', import.meta.url), 'utf8');
+}
+
+/** accuracy/comparison.json, as text: every point of every reference room (ADR 0062). */
+export function accuracyComparisonText(): string {
+  return readFileSync(new URL('../../../../../accuracy/comparison.json', import.meta.url), 'utf8');
+}
+
+/** accuracy/timings.json, as text: how long each room took, here and in Radiance (ADR 0061). */
+export function accuracyTimingsText(): string {
+  return readFileSync(new URL('../../../../../accuracy/timings.json', import.meta.url), 'utf8');
 }
