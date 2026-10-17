@@ -9,7 +9,8 @@ que instalar, y la escena se guarda sola mientras trabajás.
 ![La pantalla de Lux Studio con sus cinco áreas numeradas](/screenshots/es/overview.png)
 
 1. **Catálogo:** las luminarias y, con el selector de arriba, los muebles
-   que podés agregar. Al lado, la pestaña **Escena** lista lo que ya pusiste.
+   que podés agregar. Al lado, la pestaña **Escena** lista lo que ya pusiste,
+   y **Análisis** calcula cuánta luz llega a cada superficie.
 2. **Vista 3D:** el ambiente. Acá elegís, movés y orientás las luminarias y
    los muebles.
 3. **Propiedades:** lo que tenés seleccionado. Si no hay nada seleccionado,

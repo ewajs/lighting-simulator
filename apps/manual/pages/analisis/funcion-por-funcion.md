@@ -80,6 +80,7 @@ El tiempo de cada paso, promedio de los {{ h.rooms }} ambientes, en una
 
 Casi todo el tiempo es la luz que rebota, y en un ambiente amueblado, los
 muebles dentro de ella: cada rayo entre dos parches se prueba contra cada
-mueble. Más adelante se podrán apagar para calcular más rápido, a cambio de
-precisión; dividir las aberturas y las sombras cuestan poco y sin ellas el
-resultado es peor, así que quedan siempre.
+mueble. Por eso son las dos que se pueden apagar en los ajustes del panel
+Análisis, para calcular más rápido a cambio de precisión
+([Analizar la luz](../analizar)); dividir las aberturas y las sombras
+cuestan poco y sin ellas el resultado es peor, así que quedan siempre.

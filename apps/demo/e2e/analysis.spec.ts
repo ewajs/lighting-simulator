@@ -40,6 +40,18 @@ test('opening Analysis calculates the starter scene: the work plane first, then 
   });
 });
 
+test("the panel's header is as tall as the catalog's, though the results overflow", async ({
+  page,
+}) => {
+  await page.goto('/');
+  await ready(page);
+  const header = (panelName: string) => page.locator(`${panelName} .panel-header`);
+  const catalog = (await header('lxs-catalog-panel').boundingBox())!.height;
+  await page.getByRole('tab', { name: 'Análisis' }).click();
+  await expect(calculated(page)).toBeVisible();
+  expect((await header('lxs-analysis-panel').boundingBox())!.height).toBe(catalog);
+});
+
 test('the maintenance factor scales every result, recalculated as it changes', async ({ page }) => {
   await openAnalysis(page);
   const maintained = await average(page);
