@@ -1,4 +1,5 @@
 import { defineConfig, type DefaultTheme } from 'vitepress';
+import { ROOM_ORDER, ROOMS, type Lang } from './theme/analysis/names';
 
 const DEMO_URL = 'https://ewajs.github.io/lighting-simulator/';
 
@@ -6,9 +7,12 @@ const DEMO_URL = 'https://ewajs.github.io/lighting-simulator/';
 function sidebar(
   prefix: string,
   t: {
+    lang: Lang;
     start: string;
     use: string;
     concepts: string;
+    analysis: string;
+    rooms: string;
     more: string;
     pages: Record<string, [slug: string, title: string]>;
   },
@@ -37,6 +41,21 @@ function sidebar(
       ].map(item),
     },
     {
+      text: t.analysis,
+      items: [
+        ...['standing', 'features', 'speed', 'method'].map(item),
+        {
+          text: t.rooms,
+          collapsed: true,
+          // One page per reference room, from analisis/[room].md (ADR 0062).
+          items: ROOM_ORDER.map((id) => ({
+            text: ROOMS[id]![t.lang].name,
+            link: `${prefix}${t.pages.standing![0].replace(/\/$/, '')}/${id}`,
+          })),
+        },
+      ],
+    },
+    {
       text: t.more,
       items: ['files', 'ies', 'screenshots', 'touch', 'shortcuts', 'help'].map(item),
     },
@@ -63,9 +82,12 @@ export default defineConfig({
       themeConfig: {
         nav: [{ text: 'Abrir Lux Studio', link: DEMO_URL }],
         sidebar: sidebar('/', {
+          lang: 'es',
           start: 'Empezar',
           use: 'Usar Lux Studio',
           concepts: 'Conceptos',
+          analysis: 'Análisis',
+          rooms: 'Ambientes de prueba',
           more: 'Más',
           pages: {
             start: ['primeros-pasos', 'Primeros pasos'],
@@ -84,6 +106,10 @@ export default defineConfig({
             maintenance: ['conceptos/mantenimiento', 'Factor de mantenimiento'],
             levels: ['conceptos/niveles', 'Niveles recomendados'],
             howItCalculates: ['conceptos/como-calcula', 'Cómo calcula Lux Studio'],
+            standing: ['analisis/', 'Dónde estamos'],
+            features: ['analisis/funcion-por-funcion', 'Función por función'],
+            speed: ['analisis/velocidad', 'Velocidad'],
+            method: ['analisis/metodo', 'Cómo comparamos'],
             files: ['guardar', 'Guardar, abrir y compartir'],
             ies: ['archivos-ies', 'Tus archivos IES'],
             screenshots: ['capturas', 'Capturas'],
@@ -110,9 +136,12 @@ export default defineConfig({
       themeConfig: {
         nav: [{ text: 'Open Lux Studio', link: DEMO_URL }],
         sidebar: sidebar('/en/', {
+          lang: 'en',
           start: 'Start',
           use: 'Using Lux Studio',
           concepts: 'Concepts',
+          analysis: 'Analysis',
+          rooms: 'Test rooms',
           more: 'More',
           pages: {
             start: ['getting-started', 'Getting started'],
@@ -131,6 +160,10 @@ export default defineConfig({
             maintenance: ['concepts/maintenance', 'Maintenance factor'],
             levels: ['concepts/recommended-levels', 'Recommended levels'],
             howItCalculates: ['concepts/how-it-calculates', 'How Lux Studio calculates'],
+            standing: ['analysis/', 'Where we stand'],
+            features: ['analysis/feature-by-feature', 'Feature by feature'],
+            speed: ['analysis/speed', 'Speed'],
+            method: ['analysis/method', 'How we compare'],
             files: ['saving', 'Saving, opening and sharing'],
             ies: ['ies-files', 'Your IES files'],
             screenshots: ['screenshots', 'Screenshots'],

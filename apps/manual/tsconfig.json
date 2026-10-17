@@ -4,5 +4,5 @@
     // Vite's types know CSS imports, like the theme's.
     "types": ["vite/client"]
   },
-  "include": [".vitepress/**/*.ts", "screenshots", "playwright.config.ts"]
+  "include": [".vitepress/**/*.ts", "pages/**/*.ts", "screenshots", "playwright.config.ts"]
 }
