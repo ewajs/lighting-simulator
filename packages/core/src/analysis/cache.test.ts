@@ -46,7 +46,13 @@ const run = (cache: AnalysisCache, s: Scene) =>
     analyseIlluminance(s, inputs, DEFAULT_ANALYSIS_SETTINGS, DEFAULT_CALCULATION_OPTIONS, cache),
   );
 
-describe('AnalysisCache', () => {
+/**
+ * Each test runs up to five full calculations of a furnished room: about 4 s
+ * on a CI runner, near Vitest's default 5 s limit, which a slow runner crossed.
+ */
+const FULL_CALCULATIONS_TIMEOUT_MS = 20_000;
+
+describe('AnalysisCache', { timeout: FULL_CALCULATIONS_TIMEOUT_MS }, () => {
   it('gives exactly the results of a calculation without it', () => {
     expect(run(new AnalysisCache(), scene())).toEqual(uncached(scene()));
   });

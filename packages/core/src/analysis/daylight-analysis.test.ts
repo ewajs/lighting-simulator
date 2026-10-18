@@ -40,6 +40,12 @@ const scene = (daylight: Daylight, ...windows: RoomWindow[]): Scene => ({
   windows,
 });
 
+/**
+ * The flux checks sum tens of thousands of points, and the cache check runs
+ * six full calculations: about 3 s each on a CI runner, near Vitest's 5 s default.
+ */
+const HEAVY_TIMEOUT_MS = 20_000;
+
 /** Integration cells for the flux check, in m. */
 const FLUX_CELL_M = 0.025;
 
@@ -92,30 +98,34 @@ const X = { x: 1, y: 0, z: 0 };
 const Y = { x: 0, y: 1, z: 0 };
 const Z = { x: 0, y: 0, z: 1 };
 
-describe('daylight flux: what comes through a skylight lands on the room', () => {
-  // A horizontal opening sees the whole sky and no ground: the light through
-  // it is its transmittance times the sky's horizontal illuminance times its area.
-  it('from the overcast sky: τ · Eh · A', () => {
-    const sky = skyFor({ ...NOON, sky: 'overcast' })!;
-    const sources = daylightSources(scene(NOON, SKYLIGHT), 0.1, sky);
-    expect(fluxOnRoom(sources) / (0.8 * sky.horizontalLx * 1.2)).toBeCloseTo(1, 2);
-  });
+describe(
+  'daylight flux: what comes through a skylight lands on the room',
+  { timeout: HEAVY_TIMEOUT_MS },
+  () => {
+    // A horizontal opening sees the whole sky and no ground: the light through
+    // it is its transmittance times the sky's horizontal illuminance times its area.
+    it('from the overcast sky: τ · Eh · A', () => {
+      const sky = skyFor({ ...NOON, sky: 'overcast' })!;
+      const sources = daylightSources(scene(NOON, SKYLIGHT), 0.1, sky);
+      expect(fluxOnRoom(sources) / (0.8 * sky.horizontalLx * 1.2)).toBeCloseTo(1, 2);
+    });
 
-  it('from the clear sky: τ · Eh · A', () => {
-    const sky = { ...skyFor({ ...NOON, sky: 'clear' })!, sun: undefined };
-    const sources = daylightSources(scene(NOON, SKYLIGHT), 0.1, sky);
-    expect(fluxOnRoom(sources) / (0.8 * sky.horizontalLx * 1.2)).toBeCloseTo(1, 3);
-  });
+    it('from the clear sky: τ · Eh · A', () => {
+      const sky = { ...skyFor({ ...NOON, sky: 'clear' })!, sun: undefined };
+      const sources = daylightSources(scene(NOON, SKYLIGHT), 0.1, sky);
+      expect(fluxOnRoom(sources) / (0.8 * sky.horizontalLx * 1.2)).toBeCloseTo(1, 3);
+    });
 
-  it('from the sun: τ · Edn · cos θ · A, its beam all on the back wall', () => {
-    // At 45° towards +z the beam moves 2.7 m back: onto the back wall from
-    // 1.1 to 2.3 m up, edges on the integration cells', so the sum is exact.
-    const sun = { direction: { x: 0, y: Math.SQRT1_2, z: Math.SQRT1_2 }, normalLx: 90_000 };
-    const sky = { luminance: () => 0, horizontalLx: 0, sun };
-    const sources = daylightSources(scene(NOON, SKYLIGHT), 0.1, sky);
-    expect(fluxOnRoom(sources) / (0.8 * 90_000 * Math.SQRT1_2 * 1.2)).toBeCloseTo(1, 6);
-  });
-});
+    it('from the sun: τ · Edn · cos θ · A, its beam all on the back wall', () => {
+      // At 45° towards +z the beam moves 2.7 m back: onto the back wall from
+      // 1.1 to 2.3 m up, edges on the integration cells', so the sum is exact.
+      const sun = { direction: { x: 0, y: Math.SQRT1_2, z: Math.SQRT1_2 }, normalLx: 90_000 };
+      const sky = { luminance: () => 0, horizontalLx: 0, sun };
+      const sources = daylightSources(scene(NOON, SKYLIGHT), 0.1, sky);
+      expect(fluxOnRoom(sources) / (0.8 * 90_000 * Math.SQRT1_2 * 1.2)).toBeCloseTo(1, 6);
+    });
+  },
+);
 
 describe('daylight in the calculation', () => {
   const workPlane = (s: Scene, options = DEFAULT_CALCULATION_OPTIONS) =>
@@ -182,7 +192,7 @@ describe('light leaving through the windows', () => {
   });
 });
 
-describe('daylight and the cache', () => {
+describe('daylight and the cache', { timeout: HEAVY_TIMEOUT_MS }, () => {
   it('reuses the daylight while only the luminaires change, and not once the sky does', () => {
     const lit: Scene = {
       ...scene(NOON, SIDE_WINDOW),
