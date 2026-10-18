@@ -9,6 +9,7 @@
 // feature: core's calculation doesn't change. `npm run accuracy:bounce`
 // bundles this with Vite and runs it in Node.
 import {
+  coveredByFurniture,
   DEFAULT_CALCULATION_OPTIONS,
   fixtureLayout,
   illuminanceAt,
@@ -28,6 +29,7 @@ import {
   compareReference,
   oursLx,
   radianceLx,
+  referenceBoxes,
   referenceLight,
   referenceRoom,
   summarize,
@@ -119,6 +121,7 @@ function lightWithBodies(reference: Reference, options: CalculationOptions): Sce
 /** Every point of a reference against Radiance, with luminaire bodies hiding bounced light. */
 function compareWithBodies(reference: Reference, options: CalculationOptions): PointComparison[] {
   const light = lightWithBodies(reference, options);
+  const boxes = referenceBoxes(reference);
   return reference.points.map(({ surface, position, normal, direct, total }) => {
     const ours = illuminanceAt(light, position, normal);
     return {
@@ -128,6 +131,7 @@ function compareWithBodies(reference: Reference, options: CalculationOptions): P
       radianceTotalLx: total,
       oursDirectLx: ours.directLx,
       oursTotalLx: ours.totalLx,
+      covered: coveredByFurniture(position, normal, boxes),
     };
   });
 }

@@ -1043,6 +1043,10 @@
   <source><x id="0" equiv-text="${cm}"/> cm, more exact</source>
   <target><x id="0" equiv-text="${cm}"/> cm, más exacto</target>
 </trans-unit>
+<trans-unit id="s6a567bdc8c639893">
+  <source>Points covered by furniture, left out of the figures: <x id="0" equiv-text="${covered}"/>.</source>
+  <target>Puntos tapados por muebles, sin contar en las cifras: <x id="0" equiv-text="${covered}"/>.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

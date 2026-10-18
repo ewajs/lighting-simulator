@@ -297,6 +297,29 @@ describe('analyseIlluminance', () => {
     );
   });
 
+  it('leaves points covered by furniture out of the figures (ADR 0074)', () => {
+    // A 1 × 0.35 × 2 m bookcase standing on the work plane: two of its grid
+    // points fall inside it, where the light is 0. They made Emin and U₀ 0.
+    const bookcase: Furniture = {
+      id: 'b',
+      kind: 'bookcase',
+      position: { x: 0, y: 0, z: -0.9 },
+      rotationDeg: 0,
+      size: { width: 1, depth: 0.35, height: 2 },
+      finish: { main: 'oak', accent: 'white' },
+    };
+    const luminaires = [placed('recessed', { x: 0, y: 2.7, z: 0 })];
+    const result = analyseIlluminance({ room, luminaires, furniture: [bookcase] }, ies);
+    const workPlane = result.surfaces[0]!;
+    const covered = workPlane.illuminanceLx.filter((_, k) => workPlane.covered[k]);
+    expect(covered).toEqual([0, 0]);
+    expect(workPlane.stats!.minLx).toBeGreaterThan(0);
+    const uncovered = workPlane.illuminanceLx.filter((_, k) => !workPlane.covered[k]);
+    expect(workPlane.stats!.minLx).toBe(Math.min(...uncovered));
+    // A surface with nothing on it covers nothing.
+    expect(result.surfaces[2]!.covered.some(Boolean)).toBe(false);
+  });
+
   it('has no figures for a work plane the border leaves empty', () => {
     const result = analyseIlluminance(scene([]), ies, { ...DEFAULT_ANALYSIS_SETTINGS, borderM: 3 });
     expect(result.surfaces[0]!.stats).toBeUndefined();

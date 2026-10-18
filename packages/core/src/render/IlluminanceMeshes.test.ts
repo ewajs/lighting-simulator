@@ -3,7 +3,7 @@ import * as THREE from 'three/webgpu';
 import { analyseIlluminance } from '../analysis/analyse';
 import { falseColour } from '../analysis/false-colour';
 import { catalog, isotropic, room } from '../test-fixtures';
-import { IlluminanceMeshes } from './IlluminanceMeshes';
+import { COVERED_COLOUR, IlluminanceMeshes } from './IlluminanceMeshes';
 
 const analysis = analyseIlluminance(
   {
@@ -48,6 +48,18 @@ describe('IlluminanceMeshes', () => {
         expect([...data.slice(i * 4, i * 4 + 3)]).toEqual(falseColour(lx));
       });
     });
+  });
+
+  it('greys the points furniture covers, which aren’t measured (ADR 0074)', () => {
+    const work = analysis.surfaces[0]!;
+    const covered = { ...work, covered: work.covered.map((_, i) => i === 0) };
+    const one = new IlluminanceMeshes();
+    one.update({ ...analysis, surfaces: [covered] });
+    const mesh = one.group.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
+    const data = (mesh.material.map as THREE.DataTexture).image.data as Uint8Array;
+    expect([...data.slice(0, 3)]).toEqual([...COVERED_COLOUR]);
+    expect([...data.slice(4, 7)]).toEqual(falseColour(work.illuminanceLx[1]!));
+    one.dispose();
   });
 
   it('faces each plane into the room, as its grid does', () => {

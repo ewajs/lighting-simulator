@@ -150,6 +150,31 @@ export function boundsMeetBlockers(
   return false;
 }
 
+/**
+ * How close in front of a surface a piece covers it, in m (ADR 0074): the floor
+ * under a sofa, or a wall behind a bookcase standing a few centimetres from it,
+ * is out of reach, not lit.
+ */
+export const COVERED_GAP_M = 0.05;
+
+/**
+ * Whether a point on a surface facing `normal` (a unit vector) is covered by a
+ * piece: inside one of the boxes, or with one within COVERED_GAP_M in front of
+ * it. A point beside a piece, or under a table's top, isn't.
+ */
+export function coveredByFurniture(
+  point: Vec3,
+  normal: Vec3,
+  blockers: readonly Blocker[],
+): boolean {
+  const ahead = {
+    x: point.x + normal.x * COVERED_GAP_M,
+    y: point.y + normal.y * COVERED_GAP_M,
+    z: point.z + normal.z * COVERED_GAP_M,
+  };
+  return segmentBlocked(point, ahead, blockers);
+}
+
 /** Whether the segment from `from` to `to` passes through any of the boxes. */
 export function segmentBlocked(from: Vec3, to: Vec3, blockers: readonly Blocker[]): boolean {
   if (blockers.length === 0) return false;

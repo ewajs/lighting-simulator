@@ -16,31 +16,31 @@ Radiance rad6R0P2, 1924 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 480 | 462.9 | 463.3 | 0.10 % | 13.33 % | 1.03 % |
-| floor | 480 | 265.5 | 265.9 | 0.15 % | 46.82 % | – |
+| work-plane | 448 | 495.9 | 496.4 | 0.10 % | 13.33 % | 1.03 % |
+| floor | 381 | 334.5 | 335.0 | 0.15 % | 46.82 % | – |
 | ceiling | 480 | 272.3 | 273.5 | 0.41 % | 1.95 % | 5.68 % |
-| wall-x- | 220 | 175.0 | 174.6 | -0.21 % | 2.64 % | 1.73 % |
-| wall-z- | 264 | 184.7 | 186.4 | 0.92 % | 1.91 % | 1.00 % |
+| wall-x- | 206 | 186.8 | 186.3 | -0.23 % | 2.64 % | 1.73 % |
+| wall-z- | 200 | 243.6 | 245.0 | 0.54 % | 1.91 % | 1.00 % |
 
 ### Direct light
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 480 | 257.9 | 257.7 | -0.09 % | 0.54 % | 0.63 % |
-| floor | 480 | 129.3 | 129.4 | 0.10 % | 63.12 % | – |
+| work-plane | 448 | 276.3 | 276.1 | -0.09 % | 0.54 % | 0.63 % |
+| floor | 381 | 162.9 | 163.1 | 0.10 % | 63.12 % | – |
 | ceiling | 480 | 86.2 | 86.4 | 0.20 % | 0.12 % | 0.11 % |
-| wall-x- | 220 | 44.4 | 44.4 | -0.10 % | 0.32 % | – |
-| wall-z- | 264 | 51.3 | 51.3 | -0.05 % | 0.80 % | 0.99 % |
+| wall-x- | 206 | 47.5 | 47.4 | -0.10 % | 0.32 % | – |
+| wall-z- | 200 | 67.7 | 67.7 | -0.05 % | 0.80 % | 0.99 % |
 
 ### Bounced light
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 480 | 205.0 | 205.7 | 0.35 % | 13.57 % | 4.15 % |
-| floor | 480 | 136.2 | 136.4 | 0.21 % | 12.40 % | – |
+| work-plane | 448 | 219.6 | 220.4 | 0.35 % | 13.57 % | 4.15 % |
+| floor | 381 | 171.5 | 171.9 | 0.21 % | 12.40 % | – |
 | ceiling | 480 | 186.1 | 187.1 | 0.51 % | 2.26 % | 539.70 % |
-| wall-x- | 220 | 130.5 | 130.2 | -0.25 % | 13.33 % | 2.05 % |
-| wall-z- | 264 | 133.4 | 135.1 | 1.29 % | 2.93 % | 1.36 % |
+| wall-x- | 206 | 139.3 | 138.9 | -0.28 % | 13.33 % | 2.05 % |
+| wall-z- | 200 | 175.9 | 177.3 | 0.77 % | 2.93 % | 1.36 % |
 
 ### Emin and uniformity, total light
 
@@ -48,11 +48,11 @@ What a report quotes beside Ē: the least illuminance on each surface, and U₀ 
 
 | Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |
 |---|---|---|---|---|
-| work-plane | 0.0 | 0.0 | – | – |
-| floor | 0.0 | 0.0 | – | – |
+| work-plane | 25.6 | 25.5 | -0.22 % | -0.32 % |
+| floor | 29.5 | 31.6 | 6.93 % | 6.77 % |
 | ceiling | 43.1 | 99.0 | 129.83 % | 128.88 % |
-| wall-x- | 0.1 | 0.2 | – | – |
-| wall-z- | 0.0 | 0.0 | – | – |
+| wall-x- | 57.0 | 56.0 | -1.66 % | -1.43 % |
+| wall-z- | 17.5 | 18.5 | 5.51 % | 4.94 % |
 
 ### The bright-point cutoff
 
@@ -72,12 +72,12 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 
 | Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
 |---|---|---|---|---|
-| point-sources | 71.54 % | 61.03 % | 177.00 % | 98.49 % |
-| bounced-light | 70.42 % | 15.66 % | 335.69 % | 30.86 % |
-| split-openings | 70.29 % | 14.94 % | 335.37 % | 20.55 % |
+| point-sources | 74.11 % | 61.03 % | 177.00 % | 98.49 % |
+| bounced-light | 34.28 % | 15.66 % | 335.69 % | 30.86 % |
+| split-openings | 34.10 % | 14.94 % | 335.37 % | 20.55 % |
 | furniture-shadows | 20.27 % | 14.27 % | 99.10 % | 35.17 % |
 | furniture-hides-bounce | 41.15 % | 31.65 % | 88.68 % | 60.19 % |
-| furniture-in-bounce | 0.92 % | 0.90 % | 46.82 % | 5.68 % |
+| furniture-in-bounce | 0.54 % | 0.90 % | 46.82 % | 5.68 % |
 
 ### Furniture and bounced light
 
@@ -90,8 +90,8 @@ alike, the furniture is counted as well as the room is.
 | work-plane | 0.10 % | 0.51 % | 13.33 % | 1.80 % |
 | floor | 0.15 % | 0.54 % | 46.82 % | 1.35 % |
 | ceiling | 0.41 % | 1.04 % | 1.95 % | 2.17 % |
-| wall-x- | -0.21 % | 0.69 % | 2.64 % | 1.87 % |
-| wall-z- | 0.92 % | 0.89 % | 1.91 % | 2.38 % |
+| wall-x- | -0.23 % | 0.69 % | 2.64 % | 1.87 % |
+| wall-z- | 0.54 % | 0.89 % | 1.91 % | 2.38 % |
 
 ## dark-room
 
@@ -237,28 +237,28 @@ Radiance rad6R0P2, 1036 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 320 | 265.7 | 265.5 | -0.07 % | 6.54 % | – |
-| floor | 320 | 180.4 | 180.6 | 0.11 % | 3.83 % | – |
-| wall-x+ | 176 | 88.9 | 89.2 | 0.34 % | 4.08 % | – |
-| wall-z- | 220 | 86.0 | 86.4 | 0.56 % | 4.92 % | – |
+| work-plane | 316 | 269.1 | 268.9 | -0.07 % | 6.54 % | – |
+| floor | 284 | 203.2 | 203.5 | 0.11 % | 3.83 % | – |
+| wall-x+ | 168 | 93.1 | 93.5 | 0.34 % | 4.08 % | – |
+| wall-z- | 188 | 100.5 | 100.9 | 0.48 % | 4.92 % | – |
 
 ### Direct light
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 320 | 193.7 | 193.7 | -0.03 % | 0.12 % | – |
-| floor | 320 | 118.7 | 118.7 | -0.03 % | 0.16 % | – |
-| wall-x+ | 176 | 24.5 | 24.5 | -0.16 % | 0.47 % | – |
-| wall-z- | 220 | 26.4 | 26.3 | -0.13 % | 0.43 % | – |
+| work-plane | 316 | 196.2 | 196.1 | -0.03 % | 0.12 % | – |
+| floor | 284 | 133.7 | 133.7 | -0.03 % | 0.16 % | – |
+| wall-x+ | 168 | 25.7 | 25.6 | -0.16 % | 0.47 % | – |
+| wall-z- | 188 | 30.9 | 30.8 | -0.13 % | 0.43 % | – |
 
 ### Bounced light
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 320 | 72.0 | 71.9 | -0.17 % | 17.00 % | – |
-| floor | 320 | 61.7 | 61.9 | 0.40 % | 13.04 % | – |
-| wall-x+ | 176 | 64.4 | 64.7 | 0.53 % | 8.30 % | – |
-| wall-z- | 220 | 59.6 | 60.1 | 0.87 % | 5.23 % | – |
+| work-plane | 316 | 72.9 | 72.8 | -0.17 % | 17.00 % | – |
+| floor | 284 | 69.5 | 69.8 | 0.40 % | 13.04 % | – |
+| wall-x+ | 168 | 67.5 | 67.8 | 0.53 % | 8.30 % | – |
+| wall-z- | 188 | 69.6 | 70.1 | 0.75 % | 5.23 % | – |
 
 ### Emin and uniformity, total light
 
@@ -266,10 +266,10 @@ What a report quotes beside Ē: the least illuminance on each surface, and U₀ 
 
 | Surface | Radiance Emin (lx) | Lux Studio Emin (lx) | Emin difference | U₀ difference |
 |---|---|---|---|---|
-| work-plane | 0.0 | 0.0 | – | – |
-| floor | 0.0 | 0.0 | – | – |
-| wall-x+ | 0.0 | 0.0 | – | – |
-| wall-z- | 0.0 | 0.0 | – | – |
+| work-plane | 106.4 | 102.1 | -4.00 % | -3.93 % |
+| floor | 37.5 | 38.0 | 1.30 % | 1.18 % |
+| wall-x+ | 43.6 | 45.0 | 3.28 % | 2.93 % |
+| wall-z- | 43.8 | 45.9 | 4.92 % | 4.41 % |
 
 ### The bright-point cutoff
 
@@ -289,12 +289,12 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 
 | Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
 |---|---|---|---|---|
-| point-sources | 71.36 % | 49.49 % | 360.11 % | – |
-| bounced-light | 34.10 % | 13.70 % | 531.18 % | – |
-| split-openings | 34.08 % | 13.71 % | 531.18 % | – |
-| furniture-shadows | 5.48 % | 6.48 % | 43.73 % | – |
+| point-sources | 72.39 % | 49.49 % | 360.11 % | – |
+| bounced-light | 19.87 % | 13.70 % | 531.18 % | – |
+| split-openings | 19.86 % | 13.71 % | 531.18 % | – |
+| furniture-shadows | 8.08 % | 6.48 % | 43.73 % | – |
 | furniture-hides-bounce | 28.95 % | 17.86 % | 60.95 % | – |
-| furniture-in-bounce | 0.56 % | 0.42 % | 6.54 % | – |
+| furniture-in-bounce | 0.48 % | 0.42 % | 6.54 % | – |
 
 ### Furniture and bounced light
 
@@ -307,7 +307,7 @@ alike, the furniture is counted as well as the room is.
 | work-plane | -0.07 % | 0.21 % | 6.54 % | 0.93 % |
 | floor | 0.11 % | 0.18 % | 3.83 % | 0.64 % |
 | wall-x+ | 0.34 % | 0.39 % | 4.08 % | 1.46 % |
-| wall-z- | 0.56 % | 0.38 % | 4.92 % | 1.19 % |
+| wall-z- | 0.48 % | 0.38 % | 4.92 % | 1.19 % |
 
 ## linear-pendant-over-table
 

@@ -24,6 +24,10 @@ recalcula solo cada vez que cambiás la escena.
 - Arriba dice cuánto tardó el cálculo. Mientras calcula, los números
   anteriores quedan atenuados hasta que llegan los nuevos.
 - Si una luminaria no tiene archivo IES, lo avisa: su luz es una estimación.
+- Los puntos tapados por un mueble no cuentan en las cifras, y el panel dice
+  cuántos son: los que quedan dentro de un mueble, el piso debajo de un
+  sillón, o la pared detrás de una biblioteca a menos de 5 cm de ella. Nadie
+  mide ahí, y con ellos el mínimo y la uniformidad darían 0.
 
 Con **Calcular mientras edito** apagado, calcula solo cuando tocás
 **Calcular**. Sirve en un ambiente grande con muchos muebles, donde cada
@@ -85,8 +89,8 @@ completo está en
 Elegí **Iluminancia** arriba de la vista, o apretá **3**. Cada superficie
 calculada se pinta según la luz que recibe, de azul oscuro (0 lx) a blanco
 (2000 lx o más), con la escala abajo a la derecha. El plano de trabajo se ve
-a su altura, encima del piso. La vista se recalcula igual que el panel, y
-mientras tanto la escala lo dice.
+a su altura, encima del piso. Los puntos tapados por un mueble se ven grises.
+La vista se recalcula igual que el panel, y mientras tanto la escala lo dice.
 
 ## La luz en un punto
 

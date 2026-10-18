@@ -420,8 +420,16 @@ export class LxsAnalysisPanel extends LitElement {
     const estimated = analysis.estimatedLuminaires.length;
     const unknown = analysis.unknownLuminaires.length;
     const factor = formatNumber(analysis.settings.maintenanceFactor, 2);
+    const covered = analysis.surfaces.reduce((sum, s) => sum + s.covered.filter(Boolean).length, 0);
     return html`<section class="notes">
       <p class="meta">${msg(str`Maintained values: with a maintenance factor of ${factor}.`)}</p>
+      ${
+        covered > 0
+          ? html`<p class="meta">
+              ${msg(str`Points covered by furniture, left out of the figures: ${covered}.`)}
+            </p>`
+          : nothing
+      }
       ${
         estimated > 0
           ? html`<p class="warn">

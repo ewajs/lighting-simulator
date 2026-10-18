@@ -87,8 +87,8 @@ trabajo, el piso, el techo y las paredes: {{ n(h.points) }} puntos en total.
   se muestra cuáles.
 - **Mínimo y uniformidad:** la iluminancia mínima $E_{min}$ de cada superficie
   y la uniformidad $U_0 = E_{min} / \bar{E}$ se comparan aparte, porque salen
-  justo de los rincones oscuros que el corte deja afuera. Solo no se comparan
-  donde el mínimo es casi 0, un punto dentro de un mueble.
+  justo de los rincones oscuros que el corte deja afuera. Como en la
+  aplicación, no cuentan los puntos tapados por un mueble.
 - **Lejos y cerca:** a menos de 1 m de una luminaria, los dos programas
   aproximan de forma distinta una abertura que brilla, y el archivo IES no dice
   cómo es la luz tan de cerca. Se cuentan aparte.

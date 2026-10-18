@@ -43,7 +43,12 @@ export { maxGridSpacing } from './analysis/calc-grid';
 export type { CalcGrid, CalcSurfaceName, GridRect } from './analysis/calc-grid';
 export { FALSE_COLOUR_STOPS, falseColour } from './analysis/false-colour';
 export type { FalseColourStop } from './analysis/false-colour';
-export { FURNITURE_BLOCKING, TABLE_TOP_M } from './analysis/occlusion';
+export {
+  COVERED_GAP_M,
+  coveredByFurniture,
+  FURNITURE_BLOCKING,
+  TABLE_TOP_M,
+} from './analysis/occlusion';
 export type { Blocker } from './analysis/occlusion';
 export type { Distribution, PointSource } from './analysis/sources';
 export type { IlluminanceStats } from './analysis/stats';

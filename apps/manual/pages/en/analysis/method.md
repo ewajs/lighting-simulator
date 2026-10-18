@@ -82,8 +82,8 @@ the ceiling and the walls: {{ n(h.points) }} in all.
   percentage. That cutoff leaves things out, and below it shows which.
 - **Minimum and uniformity:** each surface's least illuminance $E_{min}$ and
   its uniformity $U_0 = E_{min} / \bar{E}$ are compared on their own, because
-  they come from exactly the dark corners the cutoff leaves out. They're only
-  not compared where the minimum is about 0, a point inside furniture.
+  they come from exactly the dark corners the cutoff leaves out. As in the
+  app, points covered by furniture don't count.
 - **Far and near:** within 1 m of a luminaire, the two programs approximate a
   glowing opening differently, and the IES file doesn't say what the light is
   like that close. They're counted apart.

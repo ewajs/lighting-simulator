@@ -62,7 +62,7 @@ has the same table.
 The 10 % cutoff stays the figures' definition: changing it would change every
 published bound at once, and the table shows both.
 
-## Open: Emin inside furniture, in the app
+## Open: Emin inside furniture, in the app (resolved by ADR 0074)
 
 The same grid points inside furniture reach the app. Whenever a work-plane
 grid point lands inside a tall piece, the Analysis panel shows Emin = 0 and

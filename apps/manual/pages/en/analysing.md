@@ -23,6 +23,10 @@ time you change the scene.
 - At the top it says how long the calculation took. While it calculates, the
   previous numbers are dimmed until the new ones arrive.
 - If a luminaire has no IES file, it says so: its light is an estimate.
+- Points covered by furniture don't count in the figures, and the panel says
+  how many there are: points inside a piece, the floor under a sofa, or a
+  wall behind a bookcase less than 5 cm from it. No one measures there, and
+  with them the minimum and the uniformity would be 0.
 
 With **Calculate as I edit** off, it calculates only when you press
 **Calculate**. That helps in a large room with lots of furniture, where each
@@ -84,8 +88,8 @@ in [SOURCE-CELL.md](https://github.com/ewajs/lighting-simulator/blob/master/accu
 Pick **Illuminance** above the view, or press **3**. Each calculated surface
 is painted by the light it gets, from dark blue (0 lx) to white (2000 lx or
 more), with the scale at the bottom right. The work plane shows at its
-height, above the floor. The view recalculates just as the panel does, and
-the scale says so meanwhile.
+height, above the floor. Points covered by furniture show grey. The view
+recalculates just as the panel does, and the scale says so meanwhile.
 
 ## The light at a point
 
