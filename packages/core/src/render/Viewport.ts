@@ -21,12 +21,16 @@ import { itemIdOf } from './overlay';
 import type { IlluminanceAnalysis } from '../analysis/analyse';
 import { IlluminanceMeshes, type SurfacePoint } from './IlluminanceMeshes';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
+import { WindowMeshes } from './WindowMeshes';
 import { SurfaceTextures, type PreparedTexture } from './SurfaceTextures';
 
 const VIEW_TRANSITION_MS = 450;
 const SURFACE_NAMES: readonly SurfaceName[] = ['floor', 'walls', 'ceiling'];
 /** Weight of each new frame in the smoothed frame time: about a second's memory at 60 fps. */
 const FRAME_SMOOTHING = 0.05;
+/** How far below the horizon the camera may orbit, in radians from straight down: 0.85 π, 63° below. */
+const MAX_POLAR_ANGLE = Math.PI * 0.85;
+
 /** A click this close to a fixture on screen still picks it: thin fixtures, fingers. In px. */
 const PICK_SLOP_PX = 10;
 /** Camera distance when framing a selection, in m. */
@@ -124,6 +128,7 @@ export class Viewport {
   readonly #luminaires: LuminaireMeshes;
   readonly #models: FixtureModels;
   readonly #furniture = new FurnitureMeshes();
+  readonly #windows = new WindowMeshes();
   readonly #textures: SurfaceTextures;
   // Uniform stand-in for inter-reflections (SPEC §6).
   readonly #bounce = new THREE.HemisphereLight(0xffffff, 0xffffff, 0);
@@ -173,7 +178,10 @@ export class Viewport {
     this.#renderer.library.addLight(IesLightNode, IesLight);
     this.#controls = new OrbitControls(this.#camera, this.#renderer.domElement);
     this.#controls.enableDamping = true;
-    this.#controls.maxPolarAngle = Math.PI * 0.495; // Stay above the floor.
+    // Below the horizon too, so the ceiling and its skylights can be seen from
+    // under the room: the floor drops away from below, as the near walls do
+    // from outside (ADR 0078).
+    this.#controls.maxPolarAngle = MAX_POLAR_ANGLE;
     this.#controls.maxDistance = 40;
     this.#manipulator = new Manipulator({
       simulator,
@@ -190,6 +198,7 @@ export class Viewport {
       this.#illuminance.group,
       this.#luminaires.group,
       this.#furniture.group,
+      this.#windows.group,
       manipulator,
       this.#bounce,
     );
@@ -232,6 +241,7 @@ export class Viewport {
       this.#measureFrame(now);
       this.#transition?.(now);
       this.#controls.update();
+      this.#windows.updateVisibility(this.#camera);
       this.#manipulator.updateSizes();
       this.#reportMeasurements();
       if (this.#captures.length > 0) this.#renderCaptures();
@@ -405,6 +415,7 @@ export class Viewport {
     this.#highlighted = ids;
     this.#luminaires.sync(this.#simulator.scene, ids, this.#renderMode);
     this.#furniture.sync(this.#simulator.scene, ids, this.#shading);
+    this.#windows.sync(this.#simulator.scene, ids, this.#shading);
     this.#manipulator.setHighlighted(ids);
   }
 
@@ -476,6 +487,7 @@ export class Viewport {
     this.#illuminance.dispose();
     this.#luminaires.dispose();
     this.#furniture.dispose();
+    this.#windows.dispose();
     this.#models.dispose();
     this.#textures.dispose();
     this.#manipulator.dispose();
@@ -494,6 +506,7 @@ export class Viewport {
     const source = this.#renderer.domElement;
     this.#luminaires.setOutlinesVisible(false);
     this.#furniture.setOutlinesVisible(false);
+    this.#windows.setOutlinesVisible(false);
     this.#manipulator.group.visible = false;
     this.#renderer.render(this.#scene, this.#camera);
     for (const { options, resolve, reject } of captures) {
@@ -517,13 +530,16 @@ export class Viewport {
     }
     this.#luminaires.setOutlinesVisible(true);
     this.#furniture.setOutlinesVisible(true);
+    this.#windows.setOutlinesVisible(true);
     this.#manipulator.group.visible = true;
   }
 
   #sync(scene: Scene, previous: Scene | undefined): void {
-    if (scene.room !== previous?.room) this.#updateRoom();
+    // Windows cut holes in the room's surfaces: the shell is rebuilt when they change.
+    if (scene.room !== previous?.room || scene.windows !== previous?.windows) this.#updateRoom();
     this.#luminaires.sync(scene, this.#highlighted, this.#renderMode);
     this.#furniture.sync(scene, this.#highlighted, this.#shading);
+    this.#windows.sync(scene, this.#highlighted, this.#shading);
     this.#applyLighting(scene);
     this.#manipulator.refresh();
     this.#reportLoading();
@@ -534,9 +550,9 @@ export class Viewport {
    * While a new texture loads, the surface keeps the one it had.
    */
   #updateRoom(): void {
-    const { room } = this.#simulator.scene;
+    const { room, windows } = this.#simulator.scene;
     const shown: Partial<Record<SurfaceName, PreparedTexture>> = {};
-    this.#room.update(room, this.#shading, (name) => {
+    this.#room.update(room, windows, this.#shading, (name) => {
       const id = room.surfaces[name].texture;
       const texture = id && this.#textures.get(id, this.#simulator.texture(id));
       shown[name] =

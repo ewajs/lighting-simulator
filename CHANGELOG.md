@@ -15,6 +15,9 @@ M6 Windows and daylight, in progress.
   glazing and a covering, kept on their surface, moved along it, copied,
   removed and undone like other items. Scene files are now version 2;
   version 1 files open without windows (ADR 0078).
+- Windows in the 3D view: a hole in the wall or ceiling, a frame, the glass
+  and its covering, with a pale sky behind. The camera can now orbit below
+  the horizon, to look up at the ceiling and its skylights.
 - Versions and this changelog; `npm run bump -- <version>` sets one version on
   every package and the dependencies between them (ADR 0077).
 
