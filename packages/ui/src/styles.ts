@@ -292,3 +292,44 @@ export const cardListStyles = css`
     }
   }
 `;
+
+/**
+ * Radio chips for a choice among a few named options, each group under a
+ * small label: finishes, glass, coverings, skies.
+ */
+export const chipStyles = css`
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lxs-sp-1);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: var(--lxs-chip-h);
+    padding: 0 var(--lxs-sp-2);
+    border: 1px solid var(--lxs-line);
+    border-radius: calc(var(--lxs-chip-h) / 2);
+    background: transparent;
+    color: var(--lxs-text-muted);
+    font-size: var(--lxs-fs-xs);
+    cursor: pointer;
+  }
+  .chip:hover {
+    color: var(--lxs-text);
+    border-color: var(--lxs-line-strong);
+  }
+  .chip[aria-checked='true'] {
+    border-color: var(--lxs-accent);
+    color: var(--lxs-text);
+  }
+  .part {
+    display: grid;
+    gap: var(--lxs-sp-2);
+  }
+  .part-label {
+    color: var(--lxs-text-muted);
+    font-size: var(--lxs-fs-sm);
+  }
+`;

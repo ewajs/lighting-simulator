@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { Simulator } from './simulator';
 import { catalog } from './test-fixtures';
+import { DEFAULT_DAYLIGHT } from './daylight';
 
 const create = () => new Simulator({ catalog });
 
@@ -18,6 +19,7 @@ describe('Simulator', () => {
       luminaires: [],
       furniture: [],
       windows: [],
+      daylight: DEFAULT_DAYLIGHT,
     };
     expect(() => new Simulator({ catalog, scene })).toThrow(/room.width/);
   });
@@ -216,6 +218,7 @@ describe('Simulator furniture', () => {
         },
       ],
       windows: [],
+      daylight: DEFAULT_DAYLIGHT,
     };
     expect(() => new Simulator({ catalog, scene })).toThrow(/position.z/);
   });

@@ -1,6 +1,6 @@
 {
   "name": "@luxstudio/manual",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +16,6 @@
     "vitepress": "1.6.4"
   },
   "dependencies": {
-    "@luxstudio/core": "0.5.4"
+    "@luxstudio/core": "0.5.5"
   }
 }

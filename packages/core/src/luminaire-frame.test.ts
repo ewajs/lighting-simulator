@@ -6,6 +6,7 @@ import { fixturePose, frameAngles, luminaireFrame, yawAwayFromWall } from './lum
 import { LuminaireMeshes } from './render/LuminaireMeshes';
 import { catalog, PRODUCTS, room } from './test-fixtures';
 import type { Aim, Luminaire, MountType, Photometry, Vec3 } from './types';
+import { DEFAULT_DAYLIGHT } from './daylight';
 
 const expectClose = (actual: Vec3, expected: Vec3, digits = 9) => {
   expect(actual.x).toBeCloseTo(expected.x, digits);
@@ -186,7 +187,11 @@ describe('the renderer and the calculation agree', () => {
       modelFile: () => undefined,
       logger: { debug() {}, info() {}, warn() {}, error() {} },
     });
-    meshes.sync({ room, luminaires: [placed], furniture: [], windows: [] }, [], 'realistic');
+    meshes.sync(
+      { room, luminaires: [placed], furniture: [], windows: [], daylight: DEFAULT_DAYLIGHT },
+      [],
+      'realistic',
+    );
     let light: THREE.Object3D | undefined;
     meshes.group.traverse((object) => {
       if ((object as THREE.Light).isLight) light = object;

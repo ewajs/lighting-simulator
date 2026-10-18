@@ -11,7 +11,7 @@ import {
   type WindowSurface,
 } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { Copy, Layers, Trash } from 'lucide';
 import type { FieldChange } from './field-change';
@@ -19,7 +19,7 @@ import { icon, iconPresetFor, windowIcon } from './icons';
 import { coveringLabel, glazingLabel, surfaceLabel, windowNames } from './labels';
 import type { SetSelectionDetail } from './lxs-luminaire-inspector';
 import './lxs-number-field';
-import { inspectorStyles, sharedStyles } from './styles';
+import { chipStyles, inspectorStyles, sharedStyles } from './styles';
 
 /** Step of the size and position fields, in m. */
 const LENGTH_STEP = 0.05;
@@ -35,43 +35,7 @@ const LENGTH_STEP = 0.05;
 @customElement('lxs-window-inspector')
 @localized()
 export class LxsWindowInspector extends LitElement {
-  static override styles = [
-    sharedStyles,
-    inspectorStyles,
-    css`
-      .chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--lxs-sp-1);
-      }
-      .chip {
-        height: var(--lxs-chip-h);
-        padding: 0 var(--lxs-sp-2);
-        border: 1px solid var(--lxs-line);
-        border-radius: calc(var(--lxs-chip-h) / 2);
-        background: transparent;
-        color: var(--lxs-text-muted);
-        font-size: var(--lxs-fs-xs);
-        cursor: pointer;
-      }
-      .chip:hover {
-        color: var(--lxs-text);
-        border-color: var(--lxs-line-strong);
-      }
-      .chip[aria-checked='true'] {
-        border-color: var(--lxs-accent);
-        color: var(--lxs-text);
-      }
-      .part {
-        display: grid;
-        gap: var(--lxs-sp-2);
-      }
-      .part-label {
-        color: var(--lxs-text-muted);
-        font-size: var(--lxs-fs-sm);
-      }
-    `,
-  ];
+  static override styles = [sharedStyles, inspectorStyles, chipStyles];
 
   @property({ attribute: false }) simulator: Simulator | undefined;
   @property({ attribute: false }) scene: Scene | undefined;

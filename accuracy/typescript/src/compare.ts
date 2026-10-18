@@ -4,6 +4,7 @@
 // direct light and total (direct plus every bounce).
 
 import {
+  DEFAULT_DAYLIGHT,
   DEFAULT_CALCULATION_OPTIONS,
   DEFAULT_ROOM,
   coveredByFurniture,
@@ -180,7 +181,7 @@ export function referenceLight(
   const blockers = blackFurniture ? boxes.map((box) => ({ ...box, reflectance: 0 })) : boxes;
   const direct = {
     ...directLight(
-      { room, luminaires, furniture: [], windows: [] },
+      { room, luminaires, furniture: [], windows: [], daylight: DEFAULT_DAYLIGHT },
       { catalog, photometry: (id) => photometry.get(id), modelFile: () => undefined },
       AS_INSTALLED,
       options,

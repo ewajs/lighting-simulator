@@ -21,6 +21,7 @@ import { DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs } from './settings';
 import { directIlluminance } from './direct';
 import { directLight } from './direct-light';
 import { distributionOf, luminaireSources, type PointSource } from './sources';
+import { DEFAULT_DAYLIGHT } from '../daylight';
 
 const placed = (
   mount: MountType,
@@ -232,6 +233,7 @@ describe('analyseIlluminance', () => {
     luminaires,
     furniture: [],
     windows: [],
+    daylight: DEFAULT_DAYLIGHT,
   });
 
   it('gives each surface its grid, values and figures, the work plane first', () => {
@@ -316,7 +318,7 @@ describe('analyseIlluminance', () => {
     };
     const luminaires = [placed('recessed', { x: 0, y: 2.7, z: 0 })];
     const result = analyseIlluminance(
-      { room, luminaires, furniture: [bookcase], windows: [] },
+      { room, luminaires, furniture: [bookcase], windows: [], daylight: DEFAULT_DAYLIGHT },
       ies,
     );
     const workPlane = result.surfaces[0]!;
@@ -352,7 +354,10 @@ describe('analyseIlluminance: bounced light', () => {
   });
 
   it('adds the room’s reflections to the direct light at every point', () => {
-    const result = analyseIlluminance({ room, luminaires: one, furniture: [], windows: [] }, ies);
+    const result = analyseIlluminance(
+      { room, luminaires: one, furniture: [], windows: [], daylight: DEFAULT_DAYLIGHT },
+      ies,
+    );
     for (const surface of result.surfaces) {
       surface.illuminanceLx.forEach((total, k) => {
         expect(total).toBeCloseTo(surface.directLx[k]! + surface.indirectLx[k]!, 9);
@@ -365,7 +370,13 @@ describe('analyseIlluminance: bounced light', () => {
 
   it('reflects nothing from a black room', () => {
     const result = analyseIlluminance(
-      { room: withReflectance(0), luminaires: one, furniture: [], windows: [] },
+      {
+        room: withReflectance(0),
+        luminaires: one,
+        furniture: [],
+        windows: [],
+        daylight: DEFAULT_DAYLIGHT,
+      },
       ies,
     );
     for (const surface of result.surfaces) expect(Math.max(...surface.indirectLx)).toBe(0);
@@ -374,7 +385,13 @@ describe('analyseIlluminance: bounced light', () => {
   it('reflects more from lighter surfaces', () => {
     const average = (rho: number) =>
       analyseIlluminance(
-        { room: withReflectance(rho), luminaires: one, furniture: [], windows: [] },
+        {
+          room: withReflectance(rho),
+          luminaires: one,
+          furniture: [],
+          windows: [],
+          daylight: DEFAULT_DAYLIGHT,
+        },
         ies,
       ).surfaces[0]!.indirectLx.reduce((sum, value, _, all) => sum + value / all.length, 0);
     expect(average(0.7)).toBeGreaterThan(2 * average(0.4));
@@ -400,6 +417,7 @@ describe('analyseIlluminance: features switched off', () => {
     luminaires: [placed('recessed', { x: 0, y: 2.7, z: 0 })],
     furniture: [sofa],
     windows: [],
+    daylight: DEFAULT_DAYLIGHT,
   };
   const withOptions = (changes: Partial<CalculationOptions>) =>
     analyseIlluminance(scene, ies, DEFAULT_ANALYSIS_SETTINGS, {
@@ -507,7 +525,7 @@ describe('analyseIlluminance: luminaire bodies (ADR 0075)', () => {
   const luminaire = placed('recessed', { x: 0, y: 2.7, z: 0 });
   const analyse = (luminaireBodies: boolean, luminaires = [luminaire], cache?: AnalysisCache) =>
     analyseIlluminance(
-      { room, luminaires, furniture: [], windows: [] },
+      { room, luminaires, furniture: [], windows: [], daylight: DEFAULT_DAYLIGHT },
       panel,
       DEFAULT_ANALYSIS_SETTINGS,
       { ...DEFAULT_CALCULATION_OPTIONS, luminaireBodies },
@@ -544,11 +562,11 @@ describe('analyseIlluminance: luminaire bodies (ADR 0075)', () => {
 
   it('come from luminous openings only: a point source has none', () => {
     const point = analyseIlluminance(
-      { room, luminaires: [luminaire], furniture: [], windows: [] },
+      { room, luminaires: [luminaire], furniture: [], windows: [], daylight: DEFAULT_DAYLIGHT },
       { ...panel, photometry: () => isotropic(100) },
     );
     const pointOff = analyseIlluminance(
-      { room, luminaires: [luminaire], furniture: [], windows: [] },
+      { room, luminaires: [luminaire], furniture: [], windows: [], daylight: DEFAULT_DAYLIGHT },
       { ...panel, photometry: () => isotropic(100) },
       DEFAULT_ANALYSIS_SETTINGS,
       { ...DEFAULT_CALCULATION_OPTIONS, luminaireBodies: false },

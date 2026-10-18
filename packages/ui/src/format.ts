@@ -19,6 +19,20 @@ export function formatFixed(value: number, decimals: number): string {
   }).format(value);
 }
 
+/** A time of day in hours as a clock reads it, e.g. 9.5 → "9:30". */
+export function formatHour(hours: number): string {
+  const minutes = Math.round(hours * 60);
+  return `${Math.floor(minutes / 60)}:${String(minutes % 60).padStart(2, '0')}`;
+}
+
+/** A month's name (1–12) in the active locale, capitalised: "Marzo", "March". */
+export function monthName(month: number): string {
+  const name = new Intl.DateTimeFormat(getLocale(), { month: 'long', timeZone: 'UTC' }).format(
+    new Date(Date.UTC(2001, month - 1, 1)),
+  );
+  return name.charAt(0).toLocaleUpperCase(getLocale()) + name.slice(1);
+}
+
 /**
  * File name for something saved at `date`, e.g. "escena-2026-10-11-1432.png"
  * for base "escena" and extension ".png".

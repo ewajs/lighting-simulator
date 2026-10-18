@@ -465,7 +465,9 @@ export class LxsApp extends LitElement {
   /** New: the template replaces the scene as one undo step, framed in the current view. */
   #onTemplatePick = ({ detail }: CustomEvent<TemplatePickDetail>): void => {
     if (!this.simulator) return;
-    this.simulator.setScene(detail.scene);
+    // A template is a room, not a place: the daylight, with its location, stays the visitor's.
+    const daylight = this.scene?.daylight ?? detail.scene.daylight;
+    this.simulator.setScene({ ...detail.scene, daylight });
     this.#showNewScene();
     this.notice = { kind: 'info', text: msg(str`New scene: ${detail.name}.`) };
   };

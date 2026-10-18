@@ -187,12 +187,37 @@ export type PickTarget =
   | { readonly kind: 'furniture'; readonly id: string }
   | { readonly kind: 'window'; readonly id: string };
 
+/** The sky outside: overcast, clear with the sun, or night (no daylight). */
+export type SkyKind = 'overcast' | 'clear' | 'night';
+
+/**
+ * The daylight outside the room's windows (ADR 0079): the sky, when, and
+ * where on Earth the room is and which way it faces.
+ */
+export interface Daylight {
+  readonly sky: SkyKind;
+  /** Local solar time in hours, 0–24: 12 is solar noon, when the sun is highest. */
+  readonly solarHour: number;
+  /** The date: month 1–12 and day of the month (years taken as 365 days). */
+  readonly month: number;
+  readonly day: number;
+  /** The site's latitude, in degrees: north positive, south negative. */
+  readonly latitudeDeg: number;
+  /**
+   * Which way north is, in degrees clockwise seen from above from the room's
+   * −z (behind the back wall): 0 puts north behind the back wall, 90 behind
+   * the right wall (+x).
+   */
+  readonly northDeg: number;
+}
+
 /** The editable document: everything that is saved and undoable. */
 export interface Scene {
   readonly room: Room;
   readonly luminaires: readonly Luminaire[];
   readonly furniture: readonly Furniture[];
   readonly windows: readonly RoomWindow[];
+  readonly daylight: Daylight;
 }
 
 /**

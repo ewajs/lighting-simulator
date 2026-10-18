@@ -7,6 +7,7 @@ import { analyseIlluminance, type IlluminanceAnalysis } from './analyse';
 import { AnalysisCache } from './cache';
 import { DEFAULT_CALCULATION_OPTIONS } from './options';
 import { DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs } from './settings';
+import { DEFAULT_DAYLIGHT } from '../daylight';
 
 const inputs: AnalysisInputs = {
   catalog,
@@ -35,6 +36,7 @@ const scene = (changes: Partial<Scene> = {}): Scene => ({
   luminaires: [luminaire(-1), luminaire(1)],
   furniture: [table(0)],
   windows: [],
+  daylight: DEFAULT_DAYLIGHT,
   ...changes,
 });
 const values = (analysis: IlluminanceAnalysis) => analysis.surfaces.map((s) => s.illuminanceLx);

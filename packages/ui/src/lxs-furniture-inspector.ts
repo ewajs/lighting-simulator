@@ -20,7 +20,7 @@ import { icon } from './icons';
 import { finishLabel, finishPartLabels, furnitureLabel, furnitureNames } from './labels';
 import type { SetSelectionDetail } from './lxs-luminaire-inspector';
 import './lxs-number-field';
-import { inspectorStyles, sharedStyles } from './styles';
+import { chipStyles, inspectorStyles, sharedStyles } from './styles';
 
 /** Step of the size and position fields, in m. */
 const LENGTH_STEP = 0.05;
@@ -40,46 +40,13 @@ export class LxsFurnitureInspector extends LitElement {
   static override styles = [
     sharedStyles,
     inspectorStyles,
+    chipStyles,
     css`
-      .chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--lxs-sp-1);
-      }
-      .chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        height: var(--lxs-chip-h);
-        padding: 0 var(--lxs-sp-2);
-        border: 1px solid var(--lxs-line);
-        border-radius: calc(var(--lxs-chip-h) / 2);
-        background: transparent;
-        color: var(--lxs-text-muted);
-        font-size: var(--lxs-fs-xs);
-        cursor: pointer;
-      }
-      .chip:hover {
-        color: var(--lxs-text);
-        border-color: var(--lxs-line-strong);
-      }
-      .chip[aria-checked='true'] {
-        border-color: var(--lxs-accent);
-        color: var(--lxs-text);
-      }
       .dot {
         width: 10px;
         height: 10px;
         border: 1px solid var(--lxs-line-strong);
         border-radius: 50%;
-      }
-      .part {
-        display: grid;
-        gap: var(--lxs-sp-2);
-      }
-      .part-label {
-        color: var(--lxs-text-muted);
-        font-size: var(--lxs-fs-sm);
       }
     `,
   ];

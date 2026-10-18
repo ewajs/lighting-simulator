@@ -3,6 +3,7 @@
 // flux. Core's own tests prove the maths with made-up data; these show it holds
 // for real files, next to the Radiance comparison that uses the same files.
 import {
+  DEFAULT_DAYLIGHT,
   DEFAULT_ROOM,
   directIlluminance,
   directLight,
@@ -71,6 +72,7 @@ describe('the Cooper downlight, by hand from its file', () => {
       luminaires: [placed('ies-downlight', { x: 0, y: 2.73, z: 0 })],
       furniture: [],
       windows: [],
+      daylight: DEFAULT_DAYLIGHT,
     },
     inputs,
     FULL,
@@ -145,7 +147,13 @@ describe('each real file’s flux lands on the room', () => {
         const position =
           id === 'ies-wall-up-down' ? { x: 0.6, y: 1.35, z: -0.4 } : { x: 0.3, y: 1.35, z: 0.2 };
         const light = directLight(
-          { room, luminaires: [placed(id, position, tilt, pan)], furniture: [], windows: [] },
+          {
+            room,
+            luminaires: [placed(id, position, tilt, pan)],
+            furniture: [],
+            windows: [],
+            daylight: DEFAULT_DAYLIGHT,
+          },
           inputs,
           FULL,
         );

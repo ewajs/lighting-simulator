@@ -95,6 +95,8 @@ export type {
   Product,
   Room,
   RoomWindow,
+  Daylight,
+  SkyKind,
   Scene,
   SceneItem,
   SceneStorage,
@@ -123,3 +125,14 @@ export {
   windowRect,
 } from './windows';
 export type { WindowPatch, WindowPreset, WindowRect, WindowType } from './windows';
+export {
+  assertDaylight,
+  dayOfYear,
+  DEFAULT_DAYLIGHT,
+  SKY_KINDS,
+  solarDeclinationDeg,
+  sunDirection,
+  sunPosition,
+  updateDaylight,
+} from './daylight';
+export type { DaylightPatch, SunPosition } from './daylight';

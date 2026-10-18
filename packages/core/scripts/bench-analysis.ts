@@ -5,6 +5,7 @@
 // and runs it in Node, so it times the code as the app ships it: under
 // Vitest, every import goes through a getter that distorts the timing.
 import { analyseIlluminance } from '../src/analysis/analyse';
+import { DEFAULT_DAYLIGHT } from '../src/daylight';
 import { AnalysisCache } from '../src/analysis/cache';
 import { DEFAULT_CALCULATION_OPTIONS } from '../src/analysis/options';
 import { DEFAULT_ANALYSIS_SETTINGS } from '../src/analysis/settings';
@@ -56,6 +57,7 @@ const scene: Scene = {
   room,
   luminaires,
   windows: [],
+  daylight: DEFAULT_DAYLIGHT,
   furniture: [
     piece('t', 'dining-table', 0, 0),
     piece('s', 'sofa', -1.5, 1.4),
@@ -77,6 +79,7 @@ const busy: Scene = {
   room: { ...room, width: 6, depth: 5 },
   luminaires,
   windows: [],
+  daylight: DEFAULT_DAYLIGHT,
   furniture: [
     usual('tv', 'tv-unit', -2.77, 0.8, 90),
     usual('sofa', 'sofa', -0.75, 0.8, -90),

@@ -34,6 +34,7 @@ import type {
   TextureImage,
   TextureProvider,
 } from './types';
+import { DEFAULT_DAYLIGHT, updateDaylight, type DaylightPatch } from './daylight';
 
 /** Options for edits that can be merged into one undo step. */
 export interface EditOptions {
@@ -96,7 +97,13 @@ export class Simulator {
   #history = history.emptyHistory<Scene>();
 
   constructor({ catalog, scene, photometry, models, textures, logger }: SimulatorOptions) {
-    const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [], furniture: [], windows: [] };
+    const initial = scene ?? {
+      room: DEFAULT_ROOM,
+      luminaires: [],
+      furniture: [],
+      windows: [],
+      daylight: DEFAULT_DAYLIGHT,
+    };
     assertScene(initial);
     this.#catalog = catalog;
     this.#logger = logger ?? consoleLogger();
@@ -229,6 +236,14 @@ export class Simulator {
    */
   setSurface(name: SurfaceName, patch: Partial<Surface>, options?: EditOptions): void {
     this.#commit(setSurface(this.#scene, name, patch), options, `Finish ${name}`, patch);
+  }
+
+  /**
+   * Changes the daylight: the sky, the solar time, the date, the latitude or
+   * which way north is (ADR 0079). Throws for an invalid value.
+   */
+  setDaylight(patch: DaylightPatch, options?: EditOptions): void {
+    this.#commit(updateDaylight(this.#scene, patch), options, 'Daylight', patch);
   }
 
   /**

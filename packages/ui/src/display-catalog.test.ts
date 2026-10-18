@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_ROOM, type Catalog, type Luminaire, type Product } from '@luxstudio/core';
+import {
+  DEFAULT_DAYLIGHT,
+  DEFAULT_ROOM,
+  type Catalog,
+  type Luminaire,
+  type Product,
+} from '@luxstudio/core';
 import {
   catalogFacets,
   filterItems,
@@ -79,6 +85,7 @@ describe('luminaireNames', () => {
       ],
       furniture: [],
       windows: [],
+      daylight: DEFAULT_DAYLIGHT,
     };
     expect([...luminaireNames(scene, { categories: [], items }).values()]).toEqual([
       'Downlight 7 W 1',

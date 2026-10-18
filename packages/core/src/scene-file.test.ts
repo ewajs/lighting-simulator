@@ -12,6 +12,7 @@ import {
 import { Simulator } from './simulator';
 import { catalog } from './test-fixtures';
 import type { Scene } from './types';
+import { DEFAULT_DAYLIGHT } from './daylight';
 
 /** A scene with a bit of everything: a textured floor, two luminaires and a piece of furniture. */
 function sampleScene(): Scene {
@@ -90,12 +91,22 @@ describe('serializeScene and parseScene', () => {
     expect(message({ ...scene, luminaires: [{ ...lamp, dimming: 3 }, pendant] })).toMatch(
       /dimming/,
     );
-    expect(message({ ...scene, furniture: [{ ...sofa, kind: 'throne' }], windows: [] })).toMatch(
-      /throne/,
-    );
-    expect(message({ ...scene, furniture: [{ ...sofa, id: lamp!.id }], windows: [] })).toMatch(
-      /share the id/,
-    );
+    expect(
+      message({
+        ...scene,
+        furniture: [{ ...sofa, kind: 'throne' }],
+        windows: [],
+        daylight: DEFAULT_DAYLIGHT,
+      }),
+    ).toMatch(/throne/);
+    expect(
+      message({
+        ...scene,
+        furniture: [{ ...sofa, id: lamp!.id }],
+        windows: [],
+        daylight: DEFAULT_DAYLIGHT,
+      }),
+    ).toMatch(/share the id/);
     expect(message({ ...scene, furniture: null })).toBe('furniture must be a list');
   });
 
@@ -103,7 +114,16 @@ describe('serializeScene and parseScene', () => {
     const { room, luminaires, furniture } = sampleScene();
     const read = parseScene(fileWith({ room, luminaires, furniture }, 1));
     expect(read.windows).toEqual([]);
+    expect(read.daylight).toEqual(DEFAULT_DAYLIGHT);
     expect(read.luminaires).toHaveLength(2);
+  });
+
+  it('keeps the daylight, and refuses an impossible one', () => {
+    const scene = { ...sampleScene(), daylight: { ...DEFAULT_DAYLIGHT, sky: 'clear' as const } };
+    expect(parseScene(serializeScene(scene)).daylight.sky).toBe('clear');
+    const daylight = { ...DEFAULT_DAYLIGHT, month: 13 };
+    expect(failure(fileWith({ ...scene, daylight })).message).toMatch(/daylight.month/);
+    expect(failure(fileWith({ ...scene, daylight: undefined })).message).toMatch(/daylight/);
   });
 
   it('refuses a window with an unknown glazing or surface', () => {
@@ -120,7 +140,12 @@ describe('serializeScene and parseScene', () => {
   it('upgrades files from older versions step by step', () => {
     // As if version 2 had added furniture: a version-1 file without any still opens.
     const { room, luminaires } = sampleScene();
-    const addFurniture = (scene: unknown) => ({ ...(scene as object), furniture: [], windows: [] });
+    const addFurniture = (scene: unknown) => ({
+      ...(scene as object),
+      furniture: [],
+      windows: [],
+      daylight: DEFAULT_DAYLIGHT,
+    });
     const scene = parseScene(fileWith({ room, luminaires }, 1), [addFurniture]);
     expect(scene.furniture).toEqual([]);
     expect(scene.luminaires).toEqual(luminaires);
@@ -156,7 +181,13 @@ describe('Simulator.setScene', () => {
     const before = sim.scene;
     const { room } = sampleScene();
     expect(() =>
-      sim.setScene({ room: { ...room, width: 0 }, luminaires: [], furniture: [], windows: [] }),
+      sim.setScene({
+        room: { ...room, width: 0 },
+        luminaires: [],
+        furniture: [],
+        windows: [],
+        daylight: DEFAULT_DAYLIGHT,
+      }),
     ).toThrow(/room.width/);
     expect(sim.scene).toBe(before);
     expect(sim.canUndo()).toBe(false);

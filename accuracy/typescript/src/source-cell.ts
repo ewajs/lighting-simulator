@@ -7,6 +7,7 @@
 // `npm run accuracy:source-cell` bundles this with Vite and runs it in Node;
 // the times are this machine's.
 import {
+  DEFAULT_DAYLIGHT,
   DEFAULT_CALCULATION_OPTIONS,
   DEFAULT_ROOM,
   fixtureLayout,
@@ -77,7 +78,13 @@ const inputs = {
 /** One row of errors at each distance; `cellM` undefined: the opening as one point. */
 function panelRow(cellM: number | undefined, name: string): string {
   const light = sceneLight(
-    { room: DEFAULT_ROOM, luminaires: [luminaire], furniture: [], windows: [] },
+    {
+      room: DEFAULT_ROOM,
+      luminaires: [luminaire],
+      furniture: [],
+      windows: [],
+      daylight: DEFAULT_DAYLIGHT,
+    },
     inputs,
     AS_INSTALLED,
     {

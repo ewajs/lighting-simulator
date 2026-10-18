@@ -24,6 +24,7 @@ export function resizeRoom(scene: Scene, size: Partial<RoomSize>, catalog: Catal
   const room = { ...scene.room, ...size };
   assertRoomSize(room);
   return {
+    ...scene,
     room,
     luminaires: scene.luminaires.map((luminaire) => ({
       ...luminaire,

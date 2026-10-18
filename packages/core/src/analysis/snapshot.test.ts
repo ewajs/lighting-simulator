@@ -4,6 +4,7 @@ import type { Luminaire, Scene } from '../types';
 import { analyseIlluminance } from './analyse';
 import { analysisSnapshot, snapshotInputs } from './snapshot';
 import type { AnalysisInputs } from './settings';
+import { DEFAULT_DAYLIGHT } from '../daylight';
 
 const luminaire = (id: string, productId: string): Luminaire => ({
   id,
@@ -23,6 +24,7 @@ const scene: Scene = {
   ],
   furniture: [],
   windows: [],
+  daylight: DEFAULT_DAYLIGHT,
 };
 const model = new ArrayBuffer(8);
 const inputs: AnalysisInputs = {

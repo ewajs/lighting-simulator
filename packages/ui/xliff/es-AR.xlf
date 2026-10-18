@@ -1135,6 +1135,74 @@
   <source><x id="0" equiv-text="${size}"/> · sill <x id="1" equiv-text="${sillText}"/> m</source>
   <target><x id="0" equiv-text="${size}"/> · antepecho <x id="1" equiv-text="${sillText}"/> m</target>
 </trans-unit>
+<trans-unit id="sc658daf9a3c112ef">
+  <source>Morning</source>
+  <target>Mañana</target>
+</trans-unit>
+<trans-unit id="s669ef3c6d2dd7353">
+  <source>Noon</source>
+  <target>Mediodía</target>
+</trans-unit>
+<trans-unit id="s92998b5e484dbf77">
+  <source>Afternoon</source>
+  <target>Tarde</target>
+</trans-unit>
+<trans-unit id="s74a09b179be18310">
+  <source>Overcast</source>
+  <target>Nublado</target>
+</trans-unit>
+<trans-unit id="sec566e3841a184c8">
+  <source>Clear, with sun</source>
+  <target>Despejado, con sol</target>
+</trans-unit>
+<trans-unit id="s0f3699a7bd401f61">
+  <source>Night</source>
+  <target>Noche</target>
+</trans-unit>
+<trans-unit id="s573db929a8b763a7">
+  <source>Daylight</source>
+  <target>Luz natural</target>
+</trans-unit>
+<trans-unit id="s984aae19fa9f9216">
+  <source>Sky</source>
+  <target>Cielo</target>
+</trans-unit>
+<trans-unit id="sd333df00d563c893">
+  <source>Time of day</source>
+  <target>Momento del día</target>
+</trans-unit>
+<trans-unit id="s4e9e5ea4da5abc83">
+  <source>Solar time</source>
+  <target>Hora solar</target>
+</trans-unit>
+<trans-unit id="sb47daaf9e1c4a905">
+  <source>Month</source>
+  <target>Mes</target>
+</trans-unit>
+<trans-unit id="s0a95ea7c8e330485">
+  <source>Latitude</source>
+  <target>Latitud</target>
+</trans-unit>
+<trans-unit id="sca6a42d80c5dd964">
+  <source>North</source>
+  <target>Norte</target>
+</trans-unit>
+<trans-unit id="s4418d8f5878288c5">
+  <source>North 0° is behind the back wall; 90° behind the right wall. Southern latitudes are negative.</source>
+  <target>Norte 0° queda detrás de la pared del fondo; 90°, detrás de la pared derecha. Las latitudes sur son negativas.</target>
+</trans-unit>
+<trans-unit id="s9bc578fa58ae4a5a">
+  <source>No daylight: only the luminaires light the room.</source>
+  <target>Sin luz natural: solo iluminan las luminarias.</target>
+</trans-unit>
+<trans-unit id="scd954566a970dbfe">
+  <source>The sun is below the horizon: no daylight.</source>
+  <target>El sol está bajo el horizonte: no hay luz natural.</target>
+</trans-unit>
+<trans-unit id="s1665003edbbd5b81">
+  <source>The sun is <x id="0" equiv-text="${altitude}"/>° above the horizon.</source>
+  <target>El sol está a <x id="0" equiv-text="${altitude}"/>° sobre el horizonte.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

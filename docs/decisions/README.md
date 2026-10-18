@@ -82,3 +82,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0076 | [Test tiers, and CI in about a minute](0076-test-tiers-and-ci.md) | Accepted |
 | 0077 | [One version for every package, and a changelog](0077-versions-and-changelog.md) | Accepted |
 | 0078 | [Windows: glazed openings in walls and the ceiling](0078-windows.md) | Accepted |
+| 0079 | [Daylight settings: the sky, solar time, date and site, saved with the scene](0079-daylight-settings.md) | Accepted |

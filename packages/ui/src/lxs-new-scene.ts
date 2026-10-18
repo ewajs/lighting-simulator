@@ -1,4 +1,4 @@
-import { DEFAULT_ROOM, type Scene } from '@luxstudio/core';
+import { DEFAULT_DAYLIGHT, DEFAULT_ROOM, type Scene } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement, type PropertyValues } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
@@ -16,7 +16,13 @@ export interface TemplatePickDetail {
 }
 
 /** The default room with nothing in it: always offered first. */
-const EMPTY_SCENE: Scene = { room: DEFAULT_ROOM, luminaires: [], furniture: [], windows: [] };
+const EMPTY_SCENE: Scene = {
+  room: DEFAULT_ROOM,
+  luminaires: [],
+  furniture: [],
+  windows: [],
+  daylight: DEFAULT_DAYLIGHT,
+};
 
 /**
  * New: a modal dialog to start a scene from a template (ADR 0052). An empty
