@@ -25,19 +25,24 @@ real vaya a dar exactamente lo mismo.
 
 ## En pocas palabras
 
-- **Coincide con Radiance.** En los {{ h.rooms }} ambientes, muebles
-  incluidos, el promedio de cada superficie queda dentro del
-  **{{ pct(h.worstAverage) }}** del de Radiance, y ningún punto iluminado
+- **Coincide con Radiance.** En {{ h.usualRooms }} de los {{ h.rooms }}
+  ambientes, muebles incluidos, el promedio de cada superficie queda dentro
+  del **{{ pct(h.worstAverage) }}** del de Radiance, y ningún punto iluminado
   ([al menos el 10 % del más iluminado](./metodo#que-deja-afuera-el-corte)) a
-  más de 1 m de una luminaria se aleja más del **{{ pct(h.worstFar) }}**. La
-  excepción son unos pocos puntos del [ambiente con diez
-  muebles](./busy-open-plan), en la penumbra del borde de un mueble: hasta un
-  {{ pct(h.busyWorstFar, 0) }}.
+  más de 1 m de una luminaria se aleja más del **{{ pct(h.worstFar) }}**. Las
+  dos excepciones tienen explicación. En el [ambiente con diez
+  muebles](./busy-open-plan), unos pocos puntos en la penumbra del borde de un
+  mueble llegan a un {{ pct(h.busyWorstFar, 0) }}. En el [baño
+  chico](./small-bathroom), todo está cerca de las luminarias, cuyo cuerpo tapa
+  luz en Radiance y no en Lux Studio: los promedios dan hasta un
+  {{ pct(h.smallWorstAverage) }} más
+  ([Lo que todavía no cuenta](#lo-que-todavia-no-cuenta)).
 - **El mínimo y la uniformidad,** lo que decide si un proyecto cumple
   ([Uniformidad](../conceptos/uniformidad)), quedan dentro del
-  **{{ pct(h.worstMin) }}**. La excepción es un punto del techo del ambiente
-  con diez muebles, justo encima de una downlight, que en Radiance tapa el
-  cuerpo de la luminaria: {{ pct(h.busyWorstMin, 0) }}.
+  **{{ pct(h.worstMin) }}** en esos {{ h.usualRooms }} ambientes. Junto al
+  cuerpo de una luminaria, no: un punto del techo justo encima de una
+  downlight da {{ pct(h.busyWorstMin, 0) }} de más en el ambiente con diez
+  muebles y {{ pct(h.smallWorstMin, 0) }} en el baño.
 - **Los muebles cuentan también para la luz que rebota:** la tapan y la
   reflejan, como su terminación. En los ambientes amueblados, eso llevó la
   diferencia media por punto de un {{ pct(h.furnishedBefore) }} a un
@@ -76,10 +81,12 @@ Cada ambiente tiene su página, con sus mapas punto por punto:
   una parte de la abertura. Con más detalle en las sombras (5 o 2,5 cm), esos
   puntos se acercan, a cambio de tiempo ([Analizar la luz](../analizar)).
 - **Las luminarias no tapan la luz que rebota.** En Radiance, el cuerpo que
-  brilla sí la tapa. Por eso la luz que rebota da en promedio un 1 % más que
-  en Radiance, y hasta un 4,5 % alrededor del aplique. En una prueba en la que
-  el cuerpo de cada luminaria tapa la luz que rebota, la diferencia media baja
-  a 0,0 %, y lo que queda se achica con el tamaño de los parches
+  brilla sí la tapa. Por eso la luz que rebota da en promedio un 1,6 % más
+  que en Radiance: un 4,5 % alrededor del aplique, y hasta un 9 % en el baño
+  chico, donde todo está cerca de una luminaria. En una prueba en la que el
+  cuerpo de cada luminaria tapa la luz que rebota, la diferencia media baja a
+  0,2 %, el baño queda dentro del 0,7 %, y lo que queda se achica con el
+  tamaño de los parches
   ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
 - **Todas las superficies reflejan de forma difusa:** no hay brillos ni
   espejos.

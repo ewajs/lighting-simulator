@@ -19,6 +19,7 @@ import { SAMPLE_IES_FILES } from '../../demo/src/sample-photometry';
 /** A reference room's file, accuracy/rooms/<name>.json: the parts a picture needs. */
 interface ReferenceRoom {
   readonly room: { readonly width: number; readonly depth: number; readonly height: number };
+  readonly surfaces?: Partial<Record<'floor' | 'walls' | 'ceiling', number>>;
   readonly luminaires: readonly {
     readonly ies: string;
     readonly origin: Vec3;
@@ -61,10 +62,23 @@ function kindOf({ centre, half, yawDeg = 0 }: { centre: Vec3; half: Vec3; yawDeg
   throw new Error(`No furniture kind is ${width} × ${depth} × ${top} m`);
 }
 
-/** The reference room as a demo scene: same size, luminaires, aims and furniture. */
+/** An sRGB grey whose linear brightness is `reflectance`. */
+function grey(reflectance: number): string {
+  const level = Math.round(255 * reflectance ** (1 / 2.2));
+  return `#${level.toString(16).padStart(2, '0').repeat(3)}`;
+}
+
+/** The reference room as a demo scene: same size, surfaces, luminaires, aims and furniture. */
 function sceneOf(room: ReferenceRoom): string {
   const sim = new Simulator({ catalog: sampleCatalog });
   sim.setRoomSize(room.room);
+  // A room that sets its reflectances is drawn in greys that match them.
+  for (const [name, reflectance] of Object.entries(room.surfaces ?? {})) {
+    sim.setSurface(name as 'floor' | 'walls' | 'ceiling', {
+      color: grey(reflectance),
+      reflectance,
+    });
+  }
   for (const luminaire of room.luminaires) {
     sim.addLuminaire(productOf(luminaire.ies), {
       // The light's origin, which is within centimetres of the fixture's

@@ -154,7 +154,7 @@ the calculation against each other.
 and shows that the tests catch each one. Beyond the maths,
 [`accuracy/`](https://github.com/ewajs/lighting-simulator/tree/master/accuracy)
 compares the results with Radiance, a simulator with its own solver and IES
-reader, in seven reference rooms ([ADR 0058](../decisions/0058-accuracy-checks.md),
+reader, in twelve reference rooms ([ADR 0058](../decisions/0058-accuracy-checks.md),
 [ADR 0060](../decisions/0060-bounced-light.md)); its
 Python is documented at [/docs/accuracy](https://ewajs.github.io/lighting-simulator/docs/accuracy/).
 

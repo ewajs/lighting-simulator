@@ -60,13 +60,17 @@ el valor exacto de un panel que brilla parejo, la grilla queda dentro del 1 %
 desde dos celdas de distancia, y cada vez que las celdas se achican a la
 mitad, la diferencia baja unas cuatro veces. Lo que más cambia es la
 **penumbra**: un punto que ve una luminaria apenas por encima del borde de un
-mueble. Medido contra Radiance en los siete ambientes de prueba:
+mueble. Medido contra Radiance en los doce ambientes de prueba:
 
 | Detalle | Puntos iluminados a más del 10 % de Radiance | Tiempo al cambiar una luz |
 |---|---|---|
-| 10 cm (el de siempre) | 31 de 6534 | 1 vez |
-| 5 cm | 8 de 6534 | hasta 3 veces |
-| 2,5 cm | 6 de 6534 | hasta 8 veces |
+| 10 cm (el de siempre) | 59 de 11045 | 1 vez |
+| 5 cm | 36 de 11045 | hasta 3 veces |
+| 2,5 cm | 34 de 11045 | hasta 8 veces |
+
+De esos puntos, 32 no cambian con las celdas: están en el baño chico y junto
+al aplique, donde lo que falta es el cuerpo de las luminarias. Los que sí
+cambian son los de penumbra, en el ambiente con diez muebles: 27, 4 y 2.
 
 El tiempo crece con el tamaño de las luminarias: con downlights chicas casi
 no cambia, con luminarias lineales largas es lo que dice la tabla. Un buen

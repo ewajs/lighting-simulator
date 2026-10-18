@@ -9,14 +9,14 @@ the machine that ran it.
 
 | Patch size (m) | Patches, 5 × 4 × 2.7 m room | Worst average | Worst far point | Time, all rooms (s) |
 |---|---|---|---|---|
-| 0.5 | 376 | 3.37 % | 8.58 % | 0.6 |
-| 0.25 (default) | 1432 | 3.29 % | 4.26 % | 2.7 |
-| 0.125 | 5728 | 3.24 % | 3.80 % | 22.0 |
+| 0.5 | 376 | 6.50 % | 13.58 % | 1.3 |
+| 0.25 (default) | 1432 | 6.13 % | 8.40 % | 5.8 |
+| 0.125 | 5728 | 5.97 % | 7.79 % | 52.1 |
 
 ## Worst far point, room by room
 
-| Patch size (m) | busy-open-plan | downlights-and-wall-washer | furnished-living | linear-pendant-over-table | single-downlight | track-spots | wall-sconce |
-|---|---|---|---|---|---|---|---|
-| 0.5 | 4.98 % | 6.59 % | 4.14 % | 4.11 % | 1.73 % | 3.08 % | 8.58 % |
-| 0.25 (default) | 2.43 % | 2.37 % | 1.46 % | 3.74 % | 0.56 % | 1.74 % | 4.26 % |
-| 0.125 | 2.32 % | 1.20 % | 0.96 % | 3.74 % | 0.50 % | 1.75 % | 3.80 % |
+| Patch size (m) | busy-open-plan | dark-room | downlights-and-wall-washer | furnished-living | linear-pendant-over-table | single-downlight | small-bathroom | tall-hall | track-spots | wall-sconce | wall-wash | white-room |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.5 | 4.98 % | 2.13 % | 6.59 % | 4.14 % | 4.11 % | 1.73 % | 13.58 % | 2.70 % | 3.08 % | 8.58 % | 6.43 % | 3.77 % |
+| 0.25 (default) | 2.43 % | 0.39 % | 2.37 % | 1.46 % | 3.74 % | 0.56 % | 8.40 % | 2.07 % | 1.74 % | 4.26 % | 2.68 % | 2.49 % |
+| 0.125 | 2.32 % | 0.36 % | 1.20 % | 0.96 % | 3.74 % | 0.50 % | 7.79 % | 1.99 % | 1.75 % | 3.80 % | 2.02 % | 2.05 % |

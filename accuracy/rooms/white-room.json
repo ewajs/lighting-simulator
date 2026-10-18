@@ -1,0 +1,67 @@
+{
+  "description": "The same four downlights in a white room: every surface reflects 90 %, so most of the light on the work plane has bounced, many times. Radiance follows 72 bounces here, leaving out 0.9⁷² ≈ 0.05 % of it.",
+  "room": {
+    "width": 5,
+    "depth": 4,
+    "height": 2.7
+  },
+  "surfaces": {
+    "floor": 0.9,
+    "walls": 0.9,
+    "ceiling": 0.9
+  },
+  "bounces": 72,
+  "luminaires": [
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -1.25,
+        "y": 2.67,
+        "z": -1
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 1.25,
+        "y": 2.67,
+        "z": -1
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -1.25,
+        "y": 2.67,
+        "z": 1
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 1.25,
+        "y": 2.67,
+        "z": 1
+      }
+    }
+  ],
+  "grids": [
+    {
+      "surface": "work-plane",
+      "spacingM": 0.25,
+      "heightM": 0.8
+    },
+    {
+      "surface": "floor",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "ceiling",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-x-",
+      "spacingM": 0.25
+    }
+  ]
+}

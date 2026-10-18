@@ -68,8 +68,9 @@ The same grid points inside furniture reach the app. Whenever a work-plane
 grid point lands inside a tall piece, the Analysis panel shows Emin = 0 and
 U₀ = 0, whatever the lighting. Checked with core: a bookcase under a downlight
 leaves the work plane's Emin at 63 lx at z = −1 m, where no point lands inside
-it. Moved 10 cm, two points do, and Emin drops to 0. In EN 12464-1, the task area is where the task happens, so points
-inside solid furniture arguably shouldn't count. Leaving them out is a
+it. Moved 10 cm, two points do, and Emin drops to 0. In EN 12464-1, the task
+area is where the task happens, so points inside solid furniture arguably
+shouldn't count. Leaving them out is a
 change to the calculation grid and to what the panel reports, so it's the
 owner's call.
 

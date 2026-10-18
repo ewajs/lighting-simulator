@@ -10,6 +10,11 @@ const rooms = {
   'wall-sconce': 'A wall sconce',
   'furnished-living': 'A furnished living room',
   'busy-open-plan': 'A busy open-plan room',
+  'dark-room': 'A dark room',
+  'white-room': 'A white room',
+  'tall-hall': 'A tall hall',
+  'small-bathroom': 'A small bathroom',
+  'wall-wash': 'Light on the walls',
 }
 </script>
 
@@ -52,7 +57,7 @@ order:
 
 It's been checked against **Radiance**, the research lighting simulator from
 Lawrence Berkeley National Laboratory, which reads IES files with its own
-code. Seven test rooms, with the demo's real files, and thousands of points,
+code. Twelve test rooms, with the demo's real files, and thousands of points,
 bounced light included. The largest difference, room by room:
 
 <LxAccuracy

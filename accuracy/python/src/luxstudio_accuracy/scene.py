@@ -70,6 +70,23 @@ BOUNCE_OPTIONS = (
 )
 """rtrace's options for total light; less BOUNCE_DIRECT_OPTIONS' direct light, the bounced light."""
 
+
+def bounce_options(bounces: int) -> tuple[str, ...]:
+    """BOUNCE_OPTIONS with up to ``bounces`` bounces instead of 24.
+
+    Args:
+        bounces: rtrace's ``-ab``. A room whose surfaces all reflect ρ loses
+            about ρ to the power of it: 24 leaves out 0.5 % at ρ = 0.8 and 8 %
+            at ρ = 0.9.
+
+    Returns:
+        The options.
+    """
+    options = list(BOUNCE_OPTIONS)
+    options[options.index("-ab") + 1] = str(bounces)
+    return tuple(options)
+
+
 PROCESSES = os.cpu_count() or 1
 """rtrace's processes (``-n``): every core. With no irradiance cache each point is
 computed on its own, so this changes how fast, not what."""

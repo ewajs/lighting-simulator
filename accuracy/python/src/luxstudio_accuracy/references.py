@@ -20,7 +20,6 @@ from luxstudio_accuracy.radiance import RELEASE, Radiance, machine
 from luxstudio_accuracy.rooms import IES_DIR, Room
 from luxstudio_accuracy.scene import (
     BOUNCE_DIRECT_OPTIONS,
-    BOUNCE_OPTIONS,
     DIRECT_OPTIONS,
     PROCESSES,
     DirectAndBounced,
@@ -28,6 +27,7 @@ from luxstudio_accuracy.scene import (
     RoomShell,
     RunTime,
     ShadowBox,
+    bounce_options,
     build_scene,
     direct_and_bounced,
 )
@@ -66,7 +66,8 @@ def compute_reference(radiance: Radiance, room: Room) -> dict[str, Any]:
         room.reflectances["ceiling"],
     )
     points = [(point.position, point.normal) for point in room.points]
-    measured = _measure_scene(radiance, luminaires, boxes, shell, points)
+    options = bounce_options(room.bounces)
+    measured = _measure_scene(radiance, luminaires, boxes, shell, points, options)
     direct = measured.direct
     total = [d + b for d, b in zip(measured.direct, measured.bounced, strict=True)]
     reference: dict[str, Any] = {
@@ -76,7 +77,7 @@ def compute_reference(radiance: Radiance, room: Room) -> dict[str, Any]:
         "radiance": {
             "release": RELEASE,
             "direct": list(DIRECT_OPTIONS),
-            "bounced": [list(BOUNCE_OPTIONS), list(BOUNCE_DIRECT_OPTIONS)],
+            "bounced": [list(options), list(BOUNCE_DIRECT_OPTIONS)],
             "timing": {
                 "machine": machine(),
                 "processes": PROCESSES,
@@ -97,7 +98,7 @@ def compute_reference(radiance: Radiance, room: Room) -> dict[str, Any]:
         ],
     }
     if boxes:
-        bare = _measure_scene(radiance, luminaires, [], shell, points)
+        bare = _measure_scene(radiance, luminaires, [], shell, points, options)
         reference["withoutFurniture"] = {
             "direct": [round(d, 4) for d in bare.direct],
             "total": [round(d + b, 4) for d, b in zip(bare.direct, bare.bounced, strict=True)],
@@ -111,11 +112,12 @@ def _measure_scene(
     boxes: list[ShadowBox],
     shell: RoomShell,
     points: list[tuple[Any, Any]],
+    options: tuple[str, ...],
 ) -> DirectAndBounced:
     """One scene: direct light and bounced light, timed."""
     with tempfile.TemporaryDirectory() as tmp:
         octree = build_scene(radiance, Path(tmp), luminaires, boxes, shell)
-        return direct_and_bounced(radiance, octree, points)
+        return direct_and_bounced(radiance, octree, points, options)
 
 
 def _seconds(run: RunTime) -> dict[str, float]:
