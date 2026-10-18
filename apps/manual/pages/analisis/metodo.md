@@ -38,9 +38,20 @@ referencia:
   distancia, donde la ley de la inversa del cuadrado es exacta. Una versión de
   Radiance con un error conocido en su lector de IES no pasa ninguna, y hay una
   prueba que lo demuestra.
-- **La esfera integradora:** en un cubo cerrado que refleja el 80 %, la luz
-  que rebota tiene que dar lo que dice la fórmula,
-  $E = \rho\,\Phi / (A\,(1-\rho))$, dentro del 2 %.
+- **La esfera integradora:** en una esfera hueca de 1,5 m de radio que
+  refleja el 80 %, con la luz en el centro, la luz que rebota es la misma en
+  cada punto y tiene que dar lo que dice la fórmula,
+  $E = \rho\,\Phi / (A\,(1-\rho))$, dentro del 0,1 %. Con 64 rebotes, da
+  177,778 lx, exactamente el valor de la fórmula. Con los 24 rebotes de las
+  referencias daría un 0,5 % menos: por eso la prueba usa más (en los
+  ambientes, cuyo piso refleja el 30 %, 24 alcanzan).
+- **Orientación, a mano:** en los spots de riel, el centro de cada círculo de
+  luz cae sobre el plano vertical de su haz, dentro de 1 cm, y donde lo pone
+  la inclinación; el bañador de pared da, junto a su pared, lo que se calcula
+  a mano desde su archivo IES, dentro del 0,4 %. Las cuentas salen de las
+  medidas del ambiente y de las convenciones escritas, no de ninguno de los
+  dos programas, y se comprueban sobre los puntos de los dos: un error al
+  describir el ambiente, como una luminaria girada, no pasaría.
 - **Convergencia:** más rayos, más rebotes o rayos más débiles no cambian el
   resultado, y la misma corrida dos veces da lo mismo salvo el ruido de
   muestreo, alrededor del 0,3 % por punto.

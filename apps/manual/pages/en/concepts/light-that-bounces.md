@@ -118,9 +118,10 @@ $\rho = 0.8$:
 
 $$E = \frac{0.8 \cdot 1257}{54 \cdot 0.2} = 93.1\ \text{lx}$$
 
-Lux Studio's tests use this sum to check the bounces, and Radiance has to
-match it, within 2 %, before it's used for comparison
-([How Lux Studio calculates](./how-it-calculates)).
+Lux Studio's tests use this sum to check the bounces. And before Radiance
+is used for comparison, it's asked the same in a real sphere, 1.5 m in
+radius, where the sum holds at every point: it must be within 0.1 %, and it
+gives exactly the formula's value ([How we compare](../analysis/method)).
 
 ## Furniture too
 

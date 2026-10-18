@@ -119,9 +119,11 @@ $\rho = 0{,}8$:
 
 $$E = \frac{0{,}8 \cdot 1257}{54 \cdot 0{,}2} = 93{,}1\ \text{lx}$$
 
-Las pruebas de Lux Studio usan esta cuenta para comprobar los rebotes, y
-Radiance tiene que dar lo mismo, dentro del 2 %, antes de usarlo para comparar
-([Cómo calcula Lux Studio](./como-calcula)).
+Las pruebas de Lux Studio usan esta cuenta para comprobar los rebotes. Y
+antes de usar Radiance para comparar, se le pide lo mismo en una esfera de
+verdad, de 1,5 m de radio, donde la cuenta vale en cada punto: tiene que dar
+dentro del 0,1 %, y da exactamente lo de la fórmula
+([Cómo comparamos](../analisis/metodo)).
 
 ## Los muebles también
 

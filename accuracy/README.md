@@ -52,8 +52,9 @@ of an Apple M1 Pro; `accuracy:check` runs Radiance's own tests in about a minute
    the value worked out by hand from its table, within 0.2 %. So must a made-up
    lopsided file at five aims, which checks orientation. A Radiance release
    with the known `ies2rad` bug fails every check, and a test proves it.
-2. **Its bounced light is checked too:** in a closed cube that reflects 80 %,
-   the average must match the integrating-sphere formula within 2 %, and a
+2. **Its bounced light is checked too:** in a hollow sphere that reflects
+   80 %, with a point source at its centre, bounced light must match the
+   integrating-sphere formula within 0.1 % (it matches exactly; ADR 0071), and a
    test (`python/tests/test_convergence.py`) shows that more rays, more
    bounces or fainter rays barely change a room's result, and that the same
    run twice gives the same values but for sampling noise.
@@ -61,7 +62,11 @@ of an Apple M1 Pro; `accuracy:check` runs Radiance's own tests in about a minute
    and total light with the room's surfaces reflecting diffusely. A room with
    furniture is computed again without it, so the report can show what
    letting bounced light through furniture costs Lux Studio.
-4. **Lux Studio computes the same points.** `npm test` fails if it strays
+4. **Orientation is checked by hand** (`typescript/src/orientation.test.ts`):
+   where the track spots' beams land and the wall washer's light beside its
+   wall, worked out from the room files and the written conventions, on both
+   programs' points. This catches mistakes in the room description they share.
+5. **Lux Studio computes the same points.** `npm test` fails if it strays
    beyond the tolerances in `typescript/src/references.test.ts`.
 
 ## Adding a room
