@@ -14,6 +14,7 @@ const room = ROOMS[page.summary.name].es
 const note = ROOM_NOTES[page.summary.name].es
 const m = (v) => v.toLocaleString('es-AR')
 const size = page.comparison.room.room
+const rho = page.summary.reflectances
 </script>
 
 # {{ room.name }}
@@ -30,7 +31,7 @@ const size = page.comparison.room.room
 </figure>
 
 <LxRoomPlan :page="page">
-  Visto desde arriba: {{ m(size.width) }} × {{ m(size.depth) }} m, y {{ m(size.height) }} m de alto. Los muebles, como las cajas con las que se calcula.
+  Visto desde arriba: {{ m(size.width) }} × {{ m(size.depth) }} m, y {{ m(size.height) }} m de alto. Los muebles, como las cajas con las que se calcula. Reflectancias: piso {{ m(rho.floor) }}, paredes {{ m(rho.walls) }} y techo {{ m(rho.ceiling) }}, todas difusas.
 </LxRoomPlan>
 
 ## Superficie por superficie

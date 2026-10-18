@@ -12,11 +12,22 @@ const release = data.summary.rooms[0].radianceRelease
 ## La referencia: Radiance
 
 **Radiance** es el simulador de iluminación de investigación del Lawrence
-Berkeley National Laboratory. Programas como DIALux y Relux se validan contra
-los mismos casos de prueba. Lee los archivos IES con su propio código, así que
-no comparte ni el código ni las suposiciones de Lux Studio. Se usa la versión
-6.0 parche 2 (`{{ release }}`), siempre la misma, verificada por su huella
-digital.
+Berkeley National Laboratory, muy usado como referencia en estudios de
+validación. Se usa la versión 6.0 parche 2 (`{{ release }}`), siempre la
+misma, verificada por su huella digital.
+
+**Qué es independiente y qué no.** El cálculo de Radiance y su lector de
+archivos IES son propios: no comparten código con Lux Studio. Lo que sí
+comparten es la descripción del ambiente: los dos reciben las mismas medidas,
+las mismas luminarias con su posición y su orientación, los muebles como
+cajas, y superficies que reflejan de forma difusa. Por eso, que coincidan
+dice que Lux Studio calcula bien ese ambiente simplificado, no que un
+ambiente real vaya a dar lo mismo. Y un error al describir el ambiente, como
+una luminaria girada al revés, saldría igual en los dos: lo cubren las
+pruebas hechas a mano, que no dependen de ninguno de los dos programas.
+
+DIALux y Relux se validan con los casos de prueba de la norma CIE 171:2006.
+Lux Studio todavía no los corrió.
 
 ## Antes de confiar en Radiance
 

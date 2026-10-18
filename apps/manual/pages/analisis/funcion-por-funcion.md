@@ -38,9 +38,9 @@ muebles la diferencia media por punto baja a menos del
 dividir su abertura en celdas de 10 cm corrige los puntos cercanos. El peor
 punto a menos de 1 m de una luminaria pasa de
 **{{ pct(f.nearBeforeSplit, 0) }}** a **{{ pct(f.nearAfterSplit, 0) }}**. A
-cambio, algún promedio empeora un poco, hasta {{ pct(f.splitAverageRise, 1) }}
-puntos: lejos de la luminaria, las celdas y el punto casi coinciden, y la
-diferencia es del tamaño del ruido.
+cambio, algún promedio empeora, hasta {{ pct(f.splitAverageRise, 1) }}
+puntos, en el aplique de pared. Eso es más que el ruido de Radiance, y todavía
+no está explicado.
 
 **\+ sombras de los muebles.** En los ambientes amueblados, la diferencia
 media por punto baja de **{{ pct(f.beforeShadows) }}** a

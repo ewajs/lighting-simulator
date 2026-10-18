@@ -9,7 +9,7 @@ installed (no maintenance factor). "Direct" is the light straight from the lumin
 
 A busy open-plan room, 6 × 5 m, with ten pieces of furniture: a living area (sofa, two armchairs, a coffee table and a TV unit), two bookcases on the back wall, a dining table under a linear pendant, a kitchen island and a desk. Nine luminaires: seven downlights, the pendant (Finelite HP-2) and a wall washer (Lightolier) on the back wall beside the bookcases. Finishes from walnut (0.15) to white (0.8). Measures how accuracy and time scale with a full room.
 
-Radiance rad6R0P2, 1924 points.
+Radiance rad6R0P2, 1924 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85, all diffuse.
 
 ### Total light
 
@@ -62,7 +62,7 @@ alike, the furniture is counted as well as the room is.
 
 Four downlights on a grid, and a wall washer (Lightolier, asymmetric) 0.5 m from the wall at x = −2.5, its beam turned onto that wall.
 
-Radiance rad6R0P2, 920 points.
+Radiance rad6R0P2, 920 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85, all diffuse.
 
 ### Total light
 
@@ -95,9 +95,9 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 
 ## furnished-living
 
-A furnished living room: four downlights over a sofa, a coffee table, a dining table and a bookcase, which block and reflect light as their finishes do (linen 0.55, oak 0.45). Measures how much furniture changes bounced light, which Lux Studio doesn't count yet.
+A furnished living room: four downlights over a sofa, a coffee table, a dining table and a bookcase, which block and reflect light as their finishes do (linen 0.55, oak 0.45). Measures what furniture does to light, bounced light included.
 
-Radiance rad6R0P2, 1036 points.
+Radiance rad6R0P2, 1036 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85, all diffuse.
 
 ### Total light
 
@@ -147,7 +147,7 @@ alike, the furniture is counted as well as the room is.
 
 A 1.2 m direct/indirect linear pendant (Finelite HP-2) at 1.55 m over a 1.6 × 0.9 m oak table top, lengthwise along it: close to a large luminaire, with a shadow on the floor and light on the ceiling.
 
-Radiance rad6R0P2, 1500 points.
+Radiance rad6R0P2, 1500 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85, all diffuse.
 
 ### Total light
 
@@ -194,7 +194,7 @@ alike, the furniture is counted as well as the room is.
 
 One 6-inch recessed downlight (Cooper, 1153 lm, a 15 cm disk) in the middle of a 5 × 4 × 2.7 m room, aimed straight down.
 
-Radiance rad6R0P2, 1036 points.
+Radiance rad6R0P2, 1036 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85, all diffuse.
 
 ### Total light
 
@@ -231,7 +231,7 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 
 Two narrow track spots (iGuzzini Palco, 17° beam, 2913 lm) hung at 2.5 m, tilted and panned: one onto the floor towards the wall at z = −2, one onto the wall at x = −2.5.
 
-Radiance rad6R0P2, 1130 points.
+Radiance rad6R0P2, 1130 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85, all diffuse.
 
 ### Total light
 
@@ -264,9 +264,9 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 
 ## wall-sconce
 
-An up/down wall sconce (Visa Colonnade, a 23 × 13 × 51 cm glowing box) on the wall at x = −2.5, its light 0.25 m out from it at 1.8 m: very close to the wall behind it.
+An up/down wall sconce (Visa Colonnade, a 23 × 13 × 51 cm glowing box) on the wall at x = −2.5, the box centred 0.25 m out from it at 1.8 m: very close to the wall behind it.
 
-Radiance rad6R0P2, 1140 points.
+Radiance rad6R0P2, 1140 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85, all diffuse.
 
 ### Total light
 
