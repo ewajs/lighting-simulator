@@ -34,6 +34,10 @@ M6 Windows and daylight, in progress.
   with the luminaires' light, and light leaves through the windows. A
   Daylight switch in the Analysis panel, daylight in the probe, and a
   false-colour scale to 10 000 lx by day (ADR 0080).
+- Daylight against Radiance: four reference rooms by day (side window and
+  skylight under the overcast sky, the sun through a window, daylight with
+  lamps), gensky's skies checked in the open; every surface's average within
+  1 % of Radiance's (ADR 0081).
 - Versions and this changelog; `npm run bump -- <version>` sets one version on
   every package and the dependencies between them (ADR 0077).
 

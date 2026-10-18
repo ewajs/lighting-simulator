@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from luxstudio_accuracy.radiance import install
-from luxstudio_accuracy.rooms import IES_DIR, all_rooms, load_room
+from luxstudio_accuracy.rooms import IES_DIR, Room, all_rooms, load_room
 from luxstudio_accuracy.scene import (
     BOUNCE_DIRECT_OPTIONS,
     BOUNCE_OPTIONS,
@@ -40,7 +40,7 @@ def test_radiance_bounced_light_is_converged() -> None:
         PlacedLuminaire(IES_DIR / item.ies, item.origin, item.tilt_deg, item.pan_deg)
         for item in room.luminaires
     ]
-    shell = RoomShell(room.width, room.depth, room.height, **_reflectances(room.reflectances))
+    shell = _shell(room)
     step = len(room.points) // POINTS
     points = [(p.position, p.normal) for p in room.points[::step]]
     with tempfile.TemporaryDirectory() as tmp:
@@ -66,8 +66,11 @@ def test_radiance_bounced_light_is_converged() -> None:
             assert statistics.mean(per_point) < POINT_CHANGE, flag
 
 
-def _reflectances(values: dict[str, float]) -> dict[str, float]:
-    return {"floor": values["floor"], "walls": values["walls"], "ceiling": values["ceiling"]}
+def _shell(room: Room) -> RoomShell:
+    rho = room.reflectances
+    return RoomShell(
+        room.width, room.depth, room.height, rho["floor"], rho["walls"], rho["ceiling"]
+    )
 
 
 REPEAT_POINT_CHANGE = 0.03
@@ -86,7 +89,7 @@ def test_radiance_bounced_light_repeats() -> None:
         for item in room.luminaires
     ]
     boxes = [ShadowBox(b.centre, b.half, b.yaw_deg, b.reflectance) for b in room.blockers]
-    shell = RoomShell(room.width, room.depth, room.height, **_reflectances(room.reflectances))
+    shell = _shell(room)
     floor = [p for p in room.points if p.surface == "floor"]
     points = [(p.position, p.normal) for p in floor[:: len(floor) // POINTS]]
     with tempfile.TemporaryDirectory() as tmp:

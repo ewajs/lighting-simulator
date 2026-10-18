@@ -106,7 +106,7 @@ function panelRow(cellM: number | undefined, name: string): string {
 // --- 2. Every reference room against Radiance. ---
 
 /** The lights the study pools: bounced light is in BOUNCE.md (ADR 0070). */
-type PooledLight = Exclude<Light, 'bounced'>;
+type PooledLight = Exclude<Light, 'bounced' | 'daylight'>;
 
 interface Pooled {
   worstAverage: number;

@@ -21,6 +21,9 @@ coordinates (metres, Y-up, the floor's centre at the origin):
 - ``bounces``: optionally, how many bounces Radiance follows (24 when left
   out). A room that reflects more than Lux Studio's default room needs more:
   Radiance leaves out about ρⁿ of the bounced light after n bounces.
+- ``windows`` and ``daylight``: optionally, openings in the walls and
+  ceiling and the daylight outside them, as Lux Studio's (ADRs 0078, 0079;
+  see ``windows.py`` and ``sky.py``). Clear windows only, all of one glass.
 - ``grids``: where to measure: a ``surface`` (``floor``, ``ceiling``,
   ``work-plane`` at ``heightM``, or a wall: ``wall-x-``, ``wall-x+``,
   ``wall-z-``, ``wall-z+``) and a ``spacingM``.
@@ -36,6 +39,8 @@ from pathlib import Path
 from typing import Any
 
 from luxstudio_accuracy.geometry import Vec3
+from luxstudio_accuracy.sky import Daylight, read_daylight
+from luxstudio_accuracy.windows import Window, read_windows
 
 DEFAULT_BOUNCES = 24
 """Radiance's bounces for a room that doesn't say: enough for the default room's
@@ -99,6 +104,9 @@ class Room:
     points: tuple[Point, ...]
     bounces: int
     """How many bounces Radiance follows for this room."""
+    windows: tuple[Window, ...]
+    daylight: Daylight | None
+    """The daylight through its windows; None for a room lit by its luminaires alone."""
     spec: dict[str, Any]
     """The room file as read, copied into its reference."""
 
@@ -148,6 +156,8 @@ def load_room(path: Path) -> Room:
         blockers=blockers,
         points=points,
         bounces=int(spec.get("bounces", DEFAULT_BOUNCES)),
+        windows=read_windows(spec.get("windows", [])),
+        daylight=read_daylight(spec["daylight"]) if "daylight" in spec else None,
         spec=spec,
     )
 

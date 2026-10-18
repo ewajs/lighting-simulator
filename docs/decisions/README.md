@@ -84,3 +84,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0078 | [Windows: glazed openings in walls and the ceiling](0078-windows.md) | Accepted |
 | 0079 | [Daylight settings: the sky, solar time, date and site, saved with the scene](0079-daylight-settings.md) | Accepted |
 | 0080 | [Daylight in the calculation: CIE skies through windows as area sources](0080-daylight-in-the-calculation.md) | Accepted |
+| 0081 | [Daylight against Radiance: open windows, gensky's CIE skies at Lux Studio's levels](0081-daylight-references.md) | Accepted |

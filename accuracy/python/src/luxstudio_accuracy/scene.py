@@ -20,6 +20,7 @@ from pathlib import Path
 
 from luxstudio_accuracy.geometry import Vec3, light_axes, to_radiance, xform_rotation
 from luxstudio_accuracy.radiance import LUMINOUS_EFFICACY, Radiance
+from luxstudio_accuracy.windows import Window, open_rectangles
 
 _COMMON = (
     "-h",  # No header.
@@ -69,6 +70,21 @@ BOUNCE_OPTIONS = (
     "1e-5",  # Follow rays until they carry less than this share of their light.
 )
 """rtrace's options for total light; less BOUNCE_DIRECT_OPTIONS' direct light, the bounced light."""
+
+
+DAYLIGHT_OPTIONS = (
+    *_COMMON,
+    "-ab",
+    "1",  # One bounce: the sky and the ground are glows, reached by sampling, not light sources.
+    "-ad",
+    "65536",  # Rays per point: a window fills a small share of a point's view.
+    "-as",
+    "0",
+    "-aa",
+    "0",  # No irradiance caching.
+)
+"""rtrace's options for daylight's first arrival (ADR 0081): in a black room, the sky, the
+ground and the sun through the windows, before any bounce."""
 
 
 def bounce_options(bounces: int) -> tuple[str, ...]:
@@ -127,6 +143,8 @@ class RoomShell:
     floor: float
     walls: float
     ceiling: float
+    windows: tuple[Window, ...] = ()
+    """Openings in its walls and ceiling: holes, the light outside beyond them (ADR 0081)."""
 
 
 @dataclass(frozen=True)
@@ -144,6 +162,7 @@ def build_scene(
     luminaires: list[PlacedLuminaire],
     boxes: list[ShadowBox],
     room: RoomShell | SphereShell | None,
+    sky: list[str] | None = None,
 ) -> Path:
     """Writes a scene and compiles it to an octree.
 
@@ -154,11 +173,12 @@ def build_scene(
         boxes: Boxes that block light.
         room: The reflecting surfaces around the luminaires: a room, a sphere,
             or None for luminaires alone.
+        sky: The sky outside, as scene lines (``sky.gensky_lines``), or None.
 
     Returns:
         The octree, ready for ``measure``.
     """
-    lines: list[str] = []
+    lines: list[str] = list(sky or [])
     if isinstance(room, SphereShell):
         lines += _sphere(room)
     elif room:
@@ -295,34 +315,41 @@ def illuminance(
 
 
 def _room(room: RoomShell) -> list[str]:
-    """The room's six surfaces, as grey diffuse materials and polygons.
+    """The room's six surfaces, as grey diffuse materials and polygons, with holes for its windows.
 
-    Radiance's plastic reflects from either side, so the polygons' winding
-    doesn't matter. Lux Studio's (x, y, z) is Radiance's (x, -z, y).
+    Each surface is split into rectangles around its windows. Radiance's
+    plastic reflects from either side, so the polygons' winding doesn't
+    matter. Lux Studio's (x, y, z) is Radiance's (x, -z, y).
     """
     w, d, h = room.width / 2, room.depth / 2, room.height
-    corners: dict[str, list[tuple[float, float, float]]] = {
-        "floor": [(-w, -d, 0), (w, -d, 0), (w, d, 0), (-w, d, 0)],
-        "ceiling": [(-w, -d, h), (-w, d, h), (w, d, h), (w, -d, h)],
-        "wall_x0": [(-w, -d, 0), (-w, d, 0), (-w, d, h), (-w, -d, h)],
-        "wall_x1": [(w, -d, 0), (w, -d, h), (w, d, h), (w, d, 0)],
-        "wall_y0": [(-w, -d, 0), (-w, -d, h), (w, -d, h), (w, -d, 0)],
-        "wall_y1": [(-w, d, 0), (w, d, 0), (w, d, h), (-w, d, h)],
-    }
-    reflectance = {
-        "floor": room.floor,
-        "ceiling": room.ceiling,
-        "wall_x0": room.walls,
-        "wall_x1": room.walls,
-        "wall_y0": room.walls,
-        "wall_y1": room.walls,
-    }
+    x, y, z = Vec3(1, 0, 0), Vec3(0, 1, 0), Vec3(0, 0, 1)
+    # Each surface: its name for the windows, a corner, two sides along it, and its reflectance.
+    surfaces = [
+        ("floor", Vec3(-w, 0, -d), x, room.width, z, room.depth, room.floor),
+        ("ceiling", Vec3(-w, h, -d), x, room.width, z, room.depth, room.ceiling),
+        ("wall-x-", Vec3(-w, 0, -d), z, room.depth, y, room.height, room.walls),
+        ("wall-x+", Vec3(w, 0, -d), z, room.depth, y, room.height, room.walls),
+        ("wall-z-", Vec3(-w, 0, -d), x, room.width, y, room.height, room.walls),
+        ("wall-z+", Vec3(-w, 0, d), x, room.width, y, room.height, room.walls),
+    ]
     lines = []
-    for name, vertices in corners.items():
-        rho = reflectance[name]
-        coordinates = "  ".join(f"{x} {y} {z}" for x, y, z in vertices)
-        lines.append(f"void plastic {name}_m 0 0 5 {rho} {rho} {rho} 0 0")
-        lines.append(f"{name}_m polygon {name} 0 0 12 {coordinates}")
+    for name, corner, u, lu, v, lv, rho in surfaces:
+        holes = []
+        for window in room.windows:
+            if window.surface != name:
+                continue
+            start, _, _ = window.rectangle()
+            a0, b0 = (start - corner).dot(u), (start - corner).dot(v)
+            holes.append((a0, a0 + window.width, b0, b0 + window.height))
+        material = name.replace("-", "_minus").replace("+", "_plus")
+        lines.append(f"void plastic {material}_m 0 0 5 {rho} {rho} {rho} 0 0")
+        for k, (a0, a1, b0, b1) in enumerate(open_rectangles((lu, lv), holes)):
+            at = [
+                corner + u.scaled(a) + v.scaled(b)
+                for a, b in ((a0, b0), (a1, b0), (a1, b1), (a0, b1))
+            ]
+            coordinates = "  ".join(f"{p.x} {p.y} {p.z}" for p in map(to_radiance, at))
+            lines.append(f"{material}_m polygon {material}_{k} 0 0 12 {coordinates}")
     return lines
 
 

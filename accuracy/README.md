@@ -6,7 +6,10 @@ Studio's, but both read the same room description (sizes, luminaires and
 their aims, furniture as boxes, diffuse surfaces), so agreement checks the
 calculation, not the description; hand-worked checks cover that. Covered: direct light
 ([ADR 0058](../docs/decisions/0058-accuracy-checks.md)) and bounced light
-([ADR 0060](../docs/decisions/0060-bounced-light.md)). The figures are in
+([ADR 0060](../docs/decisions/0060-bounced-light.md)), and daylight through
+windows ([ADR 0081](../docs/decisions/0081-daylight-references.md)): four
+`daylight-*` rooms, open to gensky's CIE skies at Lux Studio's levels, held to
+their bounds by `typescript/src/daylight.test.ts`. The figures are in
 [REPORT.md](REPORT.md), and the patch size's evidence in [PATCH-SIZE.md](PATCH-SIZE.md).
 
 ## What's here

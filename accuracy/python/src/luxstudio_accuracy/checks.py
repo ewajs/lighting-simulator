@@ -28,11 +28,20 @@ from luxstudio_accuracy.radiance import Radiance
 from luxstudio_accuracy.rooms import IES_DIR
 from luxstudio_accuracy.scene import (
     BOUNCE_OPTIONS,
+    DAYLIGHT_OPTIONS,
     PlacedLuminaire,
     SphereShell,
     build_scene,
     direct_and_bounced,
     illuminance,
+    measure,
+)
+from luxstudio_accuracy.sky import (
+    GROUND_REFLECTANCE,
+    Daylight,
+    gensky_lines,
+    sky_levels,
+    sun_position,
 )
 
 CHECK_DISTANCE_M = 20.0
@@ -123,6 +132,7 @@ def run_checks(radiance: Radiance) -> list[Check]:
                 radiance, work, lopsided, read_ies(lopsided), tilt, pan, _lopsided_angles
             )
         checks.append(sphere_check(radiance, work))
+        checks += sky_checks(radiance, work)
     return checks
 
 
@@ -259,3 +269,54 @@ def _measure(
         )
         for (v, h), lux in zip(directions, measured, strict=True)
     ]
+
+
+SKY_TOLERANCE = 0.01
+"""Gensky's sky against the levels it was set to, sampled by rtrace's 65 536 rays: 1 %."""
+
+CIE_OVERCAST_VERTICAL = 0.396
+"""Under the CIE overcast sky, a vertical plane gets this share of a horizontal one's
+light from the sky (Hopkinson, Petherbridge & Longmore, *Daylighting*, 1966)."""
+
+
+def sky_checks(radiance: Radiance, work: Path) -> list[Check]:
+    """Radiance's sky against the levels gensky was given (ADR 0081).
+
+    Out in the open, with nothing around, a horizontal plane gets the sky's
+    horizontal illuminance it was set to, plus the sun's on a clear day; a
+    vertical one under the overcast sky 39.6 % of the sky's, plus half the
+    ground's (it sees half the ground, a diffuse glow of ρg times all the
+    light on it).
+
+    Args:
+        radiance: The installed Radiance.
+        work: A folder for the scenes.
+
+    Returns:
+        The checks, at noon in Buenos Aires on the March equinox.
+    """
+    checks = []
+    up, north = (Vec3(0, 0, 0), Vec3(0, 1, 0)), (Vec3(0, 0, 0), Vec3(0, 0, -1))
+    for sky, with_sun in (("overcast", False), ("clear", False), ("clear", True)):
+        daylight = Daylight(sky, 12.0, 3, 21, -34.6, 0.0)
+        sun = sun_position(daylight)
+        levels = sky_levels(daylight, sun)
+        on_ground = (
+            levels.sun_normal_lx * math.sin(math.radians(sun.altitude_deg)) if with_sun else 0.0
+        )
+        name = f"{sky} sky{' and sun' if with_sun else ''}"
+        folder = work / name.replace(" ", "-")
+        folder.mkdir()
+        lines = gensky_lines(daylight, 1.0, with_sun)
+        octree = build_scene(radiance, folder, [], [], None, lines)
+        points = [up, north] if sky == "overcast" else [up]
+        lux = measure(radiance, octree, points, DAYLIGHT_OPTIONS)
+        horizontal = levels.horizontal_sky_lx + on_ground
+        checks.append(Check(f"{name}, horizontal, in the open", horizontal, lux[0], SKY_TOLERANCE))
+        if sky == "overcast":
+            ground = GROUND_REFLECTANCE * horizontal / 2
+            vertical = CIE_OVERCAST_VERTICAL * levels.horizontal_sky_lx + ground
+            checks.append(
+                Check("overcast sky, vertical, in the open", vertical, lux[1], SKY_TOLERANCE)
+            )
+    return checks

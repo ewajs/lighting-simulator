@@ -12,17 +12,20 @@ import {
   fixtureLayout,
   illuminanceAt,
   indirectLight,
+  daylightSources,
   luminaireFrame,
-  NO_DAYLIGHT,
   parseIes,
+  skyFor,
   type AnalysisSettings,
   type Blocker,
   type CalculationOptions,
   type Catalog,
+  type Daylight,
   type Luminaire,
   type Photometry,
   type Product,
   type Room,
+  type RoomWindow,
   type SceneLight,
   type Vec3,
 } from '@luxstudio/core';
@@ -52,6 +55,10 @@ export interface Reference {
       readonly yawDeg?: number;
       readonly reflectance?: number;
     }[];
+    /** Openings in the walls and ceiling, as Lux Studio's windows without ids (ADR 0081). */
+    readonly windows?: readonly Omit<RoomWindow, 'id'>[];
+    /** The daylight outside them, as Lux Studio's. */
+    readonly daylight?: Daylight;
   };
   readonly radiance: {
     readonly release: string;
@@ -59,6 +66,19 @@ export interface Reference {
     readonly bounced: readonly (readonly string[])[];
     /** How long Radiance took, on which machine and with how many processes (ADR 0061). */
     readonly timing?: RadianceTiming;
+    /** By day: rtrace's options for daylight's first arrival. */
+    readonly daylight?: readonly string[];
+  };
+  /**
+   * By day (ADR 0081): where the Python put the sun, the sky's and the sun's
+   * levels it gave gensky, and the windows' transmittance it dimmed them by.
+   */
+  readonly daylight?: {
+    readonly sun: { readonly altitudeDeg: number; readonly azimuthDeg: number };
+    readonly horizontalSkyLx: number;
+    readonly sunNormalLx: number;
+    readonly transmittance: number;
+    readonly sky: string;
   };
   readonly points: readonly {
     readonly surface: string;
@@ -66,6 +86,8 @@ export interface Reference {
     readonly normal: Vec3;
     readonly direct: number;
     readonly total: number;
+    /** By day: daylight's first arrival, from the sky, the ground and the sun, before any bounce. */
+    readonly daylight?: number;
   }[];
   /** For a room with furniture: Radiance's values again with the furniture taken out. */
   readonly withoutFurniture?: {
@@ -96,6 +118,9 @@ export interface PointComparison {
   readonly radianceTotalLx: number;
   readonly oursDirectLx: number;
   readonly oursTotalLx: number;
+  /** Daylight's first arrival on each side; 0 in a room with none. */
+  readonly radianceDaylightLx: number;
+  readonly oursDaylightLx: number;
   /** Covered by one of the room's pieces, as the app leaves out of its figures (ADR 0074). */
   readonly covered: boolean;
 }
@@ -189,8 +214,18 @@ export function referenceLight(
     ),
     blockers,
   };
-  // The reference rooms have no windows yet (W6 adds daylight rooms).
-  return { direct, daylight: NO_DAYLIGHT, indirect: indirectLight(room, direct, options) };
+  // By day, its windows and their daylight (ADR 0081): openings in any case.
+  const scene = {
+    room,
+    luminaires: [],
+    furniture: [],
+    windows: (reference.room.windows ?? []).map((window, k) => ({ ...window, id: `w${k}` })),
+    daylight: reference.room.daylight ?? DEFAULT_DAYLIGHT,
+  };
+  const sky = reference.room.daylight && options.daylight ? skyFor(scene.daylight) : undefined;
+  const cellM = options.splitOpenings ? options.sourceCellM : Number.POSITIVE_INFINITY;
+  const daylight = daylightSources(scene, cellM, sky);
+  return { direct, daylight, indirect: indirectLight(room, direct, options, undefined, daylight) };
 }
 
 /** The reference's boxes, as core's furniture blocks light with them. */
@@ -222,7 +257,7 @@ export function compareReference(
   if (!furniture && !bare) throw new Error('This reference has no values without furniture');
   const light = referenceLight(reference, iesFiles, options, furniture, blackFurniture);
   const boxes = furniture ? referenceBoxes(reference) : [];
-  return reference.points.map(({ surface, position, normal, direct, total }, k) => {
+  return reference.points.map(({ surface, position, normal, direct, total, daylight }, k) => {
     const ours = illuminanceAt(light, position, normal);
     return {
       surface,
@@ -231,6 +266,8 @@ export function compareReference(
       radianceTotalLx: furniture ? total : bare!.total[k]!,
       oursDirectLx: ours.directLx,
       oursTotalLx: ours.totalLx,
+      radianceDaylightLx: daylight ?? 0,
+      oursDaylightLx: ours.daylightLx,
       covered: coveredByFurniture(position, normal, boxes),
     };
   });
@@ -268,13 +305,17 @@ export interface SurfaceSummary {
 /** An Emin below this share of the surface's average isn't compared: see `SurfaceSummary.minError`. */
 export const MIN_SHARE = 0.01;
 
-/** Which light to summarise: straight from the luminaires, bounced (total less direct), or both. */
-export type Light = 'direct' | 'bounced' | 'total';
+/**
+ * Which light to summarise: straight from the luminaires, bounced (total
+ * less direct), both, or daylight's first arrival (ADR 0081).
+ */
+export type Light = 'direct' | 'bounced' | 'total' | 'daylight';
 
 /** Radiance's light at a point, in lx: direct, bounced or total. */
 export function radianceLx(point: PointComparison, light: Light): number {
   if (light === 'direct') return point.radianceDirectLx;
   if (light === 'total') return point.radianceTotalLx;
+  if (light === 'daylight') return point.radianceDaylightLx;
   return point.radianceTotalLx - point.radianceDirectLx;
 }
 
@@ -282,6 +323,7 @@ export function radianceLx(point: PointComparison, light: Light): number {
 export function oursLx(point: PointComparison, light: Light): number {
   if (light === 'direct') return point.oursDirectLx;
   if (light === 'total') return point.oursTotalLx;
+  if (light === 'daylight') return point.oursDaylightLx;
   return point.oursTotalLx - point.oursDirectLx;
 }
 
@@ -312,7 +354,8 @@ export function summarize(
     const on = points.filter((point) => point.surface === surface && !point.covered);
     const radianceAverageLx = on.reduce((sum, point) => sum + radiance(point), 0) / on.length;
     const oursAverageLx = on.reduce((sum, point) => sum + ours(point), 0) / on.length;
-    const bright = on.filter((point) => radiance(point) >= brightShare * brightest);
+    // In a room with no such light (direct light by day alone), no point is bright.
+    const bright = brightest > 0 ? on.filter((p) => radiance(p) >= brightShare * brightest) : [];
     const radianceMinLx = Math.min(...on.map(radiance));
     const oursMinLx = Math.min(...on.map(ours));
     const comparable = radianceMinLx >= MIN_SHARE * radianceAverageLx;
@@ -348,7 +391,7 @@ export function brightPointsOff(
   const radiance = (p: PointComparison) => radianceLx(p, light);
   const ours = (p: PointComparison) => oursLx(p, light);
   const brightest = Math.max(...points.map(radiance));
-  const bright = points.filter((p) => radiance(p) >= BRIGHT_SHARE * brightest);
+  const bright = brightest > 0 ? points.filter((p) => radiance(p) >= BRIGHT_SHARE * brightest) : [];
   const off = bright.filter((p) => Math.abs(ours(p) / radiance(p) - 1) > beyond).length;
   return { off, bright: bright.length };
 }

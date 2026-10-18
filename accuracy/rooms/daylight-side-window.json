@@ -1,0 +1,54 @@
+{
+  "description": "Daylight alone through a 2 × 1.4 m clear window in the back wall of a 4 × 5 × 2.7 m room, its sill at 0.9 m: the CIE overcast sky at noon on the March equinox in Buenos Aires.",
+  "room": {
+    "width": 4,
+    "depth": 5,
+    "height": 2.7
+  },
+  "luminaires": [],
+  "windows": [
+    {
+      "surface": "wall-z-",
+      "position": {
+        "x": 0,
+        "y": 1.6,
+        "z": -2.5
+      },
+      "width": 2,
+      "height": 1.4,
+      "glazing": "clear",
+      "covering": "none"
+    }
+  ],
+  "daylight": {
+    "sky": "overcast",
+    "solarHour": 12,
+    "month": 3,
+    "day": 21,
+    "latitudeDeg": -34.6,
+    "northDeg": 0
+  },
+  "grids": [
+    {
+      "surface": "work-plane",
+      "spacingM": 0.25,
+      "heightM": 0.8
+    },
+    {
+      "surface": "floor",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "ceiling",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-x-",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-z+",
+      "spacingM": 0.25
+    }
+  ]
+}
