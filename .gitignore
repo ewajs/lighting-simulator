@@ -7,8 +7,9 @@ dist/
 test-results
 playwright-report
 
-# VitePress build cache
-.vitepress/cache
+# VitePress's cache (npm run manual, manual:dev). With a slash in the middle a
+# pattern only matches at the root, so the manual's needs the leading **/.
+**/.vitepress/cache/
 
 # Unit test coverage reports (npm run coverage)
 coverage/

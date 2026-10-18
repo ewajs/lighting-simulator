@@ -52,10 +52,10 @@ In the app, the analysis runs apart from the 3D view, without freezing it,
 and keeps what depends only on the room. Measured on the same machine, with
 six luminaires:
 
-| | 3 pieces, 5 × 4 m | 10 pieces, 6 × 5 m |
+| | 3 pieces, 5 × 4 m | 9 pieces and 4 chairs, 6 × 5 m |
 |---|---|---|
-| From scratch, or after moving furniture | 0.7 s | 2.4 s |
-| When only the light changes | 0.13 s | 0.24 s |
+| From scratch, or after moving furniture | 0.7 s | 2.1 s |
+| When only the light changes | 0.12 s | 0.23 s |
 
 Moving or dimming a luminaire recalculates right away even in a full room;
 moving furniture takes a few seconds, because it changes the bounces of the

@@ -70,7 +70,7 @@ prueba.
 {{ h.rooms }} ambientes, cada uno pensado para probar algo: una luminaria
 sola, varias juntas, haces inclinados, una luminaria grande cerca, una caja
 que brilla pegada a la pared, un living con cuatro muebles y un ambiente
-integrado con diez, que muestra cómo crecen la diferencia y el tiempo con un
+integrado con nueve, que muestra cómo crecen la diferencia y el tiempo con un
 ambiente lleno. Y para ver otras condiciones: un ambiente oscuro (todo
 refleja el 20 %) y uno blanco (el 90 %), un salón alto de 8 × 6 × 5 m, un
 baño chico de 2 × 1,6 m, y uno iluminado casi solo por luz que rebota. Los

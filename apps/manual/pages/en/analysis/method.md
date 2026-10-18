@@ -66,7 +66,7 @@ it unrepeatable; both are fixed and covered by a test.
 {{ h.rooms }} rooms, each one meant to test something: a single luminaire,
 several together, tilted beams, a large luminaire close by, a glowing box
 against a wall, a living room with four pieces of furniture, and an
-open-plan room with ten, which shows how the difference and the time grow in
+open-plan room with nine, which shows how the difference and the time grow in
 a full room. And to see other conditions: a dark room (everything reflects
 20 %) and a white one (90 %), an 8 × 6 × 5 m hall, a 2 × 1.6 m bathroom, and
 one lit almost only by bounced light. The rest measure 5 × 4 × 2.7 m. They

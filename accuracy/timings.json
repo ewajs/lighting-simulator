@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-17",
+  "generated": "2026-10-18",
   "machine": {
     "cpu": "Apple M1 Pro",
     "cores": 10,
@@ -15,27 +15,27 @@
       "steps": [
         {
           "step": "point-sources",
-          "medianMs": 8
+          "medianMs": 7.9
         },
         {
           "step": "bounced-light",
-          "medianMs": 584
+          "medianMs": 595.9
         },
         {
           "step": "split-openings",
-          "medianMs": 716.8
+          "medianMs": 716.7
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 730.2
+          "medianMs": 747.5
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 3026
+          "medianMs": 2850.8
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 3736.2
+          "medianMs": 3760.2
         }
       ],
       "radiance": {
@@ -43,11 +43,11 @@
         "processes": 10,
         "direct": {
           "wallSeconds": 0.16,
-          "cpuSeconds": 0.62
+          "cpuSeconds": 0.6
         },
         "bounced": {
-          "wallSeconds": 215.31,
-          "cpuSeconds": 1894.29
+          "wallSeconds": 221.99,
+          "cpuSeconds": 1831.38
         }
       }
     },
@@ -57,27 +57,27 @@
       "steps": [
         {
           "step": "point-sources",
-          "medianMs": 1.3
+          "medianMs": 1.4
         },
         {
           "step": "bounced-light",
-          "medianMs": 277.7
+          "medianMs": 284.3
         },
         {
           "step": "split-openings",
-          "medianMs": 294.4
+          "medianMs": 308.8
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 296.7
+          "medianMs": 298.8
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 299.4
+          "medianMs": 307.4
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 294.1
+          "medianMs": 294.7
         }
       ],
       "radiance": {
@@ -99,27 +99,27 @@
       "steps": [
         {
           "step": "point-sources",
-          "medianMs": 2.2
+          "medianMs": 2.4
         },
         {
           "step": "bounced-light",
-          "medianMs": 271.5
+          "medianMs": 272.1
         },
         {
           "step": "split-openings",
-          "medianMs": 294.1
+          "medianMs": 296.8
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 291.6
+          "medianMs": 298.7
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 294.8
+          "medianMs": 294
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 292.7
+          "medianMs": 296.4
         }
       ],
       "radiance": {
@@ -145,23 +145,23 @@
         },
         {
           "step": "bounced-light",
-          "medianMs": 283.2
+          "medianMs": 280.7
         },
         {
           "step": "split-openings",
-          "medianMs": 303.7
+          "medianMs": 303.6
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 307.7
+          "medianMs": 309.2
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 895.5
+          "medianMs": 899.3
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 1000.5
+          "medianMs": 989.6
         }
       ],
       "radiance": {
@@ -187,23 +187,23 @@
         },
         {
           "step": "bounced-light",
-          "medianMs": 328.3
+          "medianMs": 329.6
         },
         {
           "step": "split-openings",
-          "medianMs": 387.2
+          "medianMs": 390.3
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 390.5
+          "medianMs": 395.8
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 601
+          "medianMs": 609.6
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 629.9
+          "medianMs": 677.6
         }
       ],
       "radiance": {
@@ -229,23 +229,23 @@
         },
         {
           "step": "bounced-light",
-          "medianMs": 273.5
+          "medianMs": 277.2
         },
         {
           "step": "split-openings",
-          "medianMs": 286.3
+          "medianMs": 284.9
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 281.8
+          "medianMs": 282.2
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 280.9
+          "medianMs": 281.8
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 282
+          "medianMs": 280.6
         }
       ],
       "radiance": {
@@ -271,23 +271,23 @@
         },
         {
           "step": "bounced-light",
-          "medianMs": 75.2
+          "medianMs": 75.1
         },
         {
           "step": "split-openings",
-          "medianMs": 140.7
+          "medianMs": 140.8
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 140.1
+          "medianMs": 141.2
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 141.7
+          "medianMs": 139.9
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 141
+          "medianMs": 141.5
         }
       ],
       "radiance": {
@@ -309,27 +309,27 @@
       "steps": [
         {
           "step": "point-sources",
-          "medianMs": 4.6
+          "medianMs": 4.2
         },
         {
           "step": "bounced-light",
-          "medianMs": 1426.3
+          "medianMs": 1416.3
         },
         {
           "step": "split-openings",
-          "medianMs": 2150.6
+          "medianMs": 2144.9
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 2142.6
+          "medianMs": 2180.8
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 2174.3
+          "medianMs": 2201.8
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 2165
+          "medianMs": 2158.8
         }
       ],
       "radiance": {
@@ -355,23 +355,23 @@
         },
         {
           "step": "bounced-light",
-          "medianMs": 289.4
+          "medianMs": 293.9
         },
         {
           "step": "split-openings",
-          "medianMs": 289.3
+          "medianMs": 295.1
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 294
+          "medianMs": 291.5
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 290.8
+          "medianMs": 288.5
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 289.1
+          "medianMs": 295.1
         }
       ],
       "radiance": {
@@ -397,23 +397,23 @@
         },
         {
           "step": "bounced-light",
-          "medianMs": 301.2
+          "medianMs": 300.2
         },
         {
           "step": "split-openings",
-          "medianMs": 448.9
+          "medianMs": 451
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 447
+          "medianMs": 452
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 447.7
+          "medianMs": 451
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 450.9
+          "medianMs": 454.6
         }
       ],
       "radiance": {
@@ -435,27 +435,27 @@
       "steps": [
         {
           "step": "point-sources",
-          "medianMs": 1.9
+          "medianMs": 2.1
         },
         {
           "step": "bounced-light",
-          "medianMs": 349.3
+          "medianMs": 362.5
         },
         {
           "step": "split-openings",
-          "medianMs": 341.8
+          "medianMs": 355.5
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 346.5
+          "medianMs": 353.3
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 347.9
+          "medianMs": 349.6
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 352.7
+          "medianMs": 351.1
         }
       ],
       "radiance": {
@@ -477,27 +477,27 @@
       "steps": [
         {
           "step": "point-sources",
-          "medianMs": 1.2
+          "medianMs": 1.1
         },
         {
           "step": "bounced-light",
-          "medianMs": 340.8
+          "medianMs": 339.4
         },
         {
           "step": "split-openings",
-          "medianMs": 366
+          "medianMs": 361.8
         },
         {
           "step": "furniture-shadows",
-          "medianMs": 365.8
+          "medianMs": 365.6
         },
         {
           "step": "furniture-hides-bounce",
-          "medianMs": 368.4
+          "medianMs": 363.5
         },
         {
           "step": "furniture-in-bounce",
-          "medianMs": 359.4
+          "medianMs": 365.3
         }
       ],
       "radiance": {

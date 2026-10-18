@@ -28,8 +28,8 @@ right for that room, not that a real room will read exactly the same.
   **{{ pct(h.worstAverage) }}** of Radiance's, and no lit point
   ([at least 10 % of the brightest](./method#what-the-cutoff-leaves-out)) more
   than 1 m from a luminaire is off by more than **{{ pct(h.worstFar) }}**. The
-  two exceptions are explained. In the [room with ten pieces of
-  furniture](./busy-open-plan), a few points in the penumbra of a piece's edge
+  two exceptions are explained. In the [busy open-plan
+  room](./busy-open-plan), a few points in the penumbra of a piece's edge
   reach {{ pct(h.busyWorstFar, 0) }}. In the [small
   bathroom](./small-bathroom), everything is close to the luminaires, whose
   bodies hide light in Radiance and not in Lux Studio: averages read up to
@@ -39,7 +39,7 @@ right for that room, not that a real room will read exactly the same.
   ([Uniformity](../concepts/uniformity)), are within
   **{{ pct(h.worstMin) }}** in those {{ h.usualRooms }} rooms. Next to a
   luminaire's body, they aren't: a ceiling point right above a downlight reads
-  {{ pct(h.busyWorstMin, 0) }} high in the room with ten pieces of furniture
+  {{ pct(h.busyWorstMin, 0) }} high in the busy open-plan room
   and {{ pct(h.smallWorstMin, 0) }} in the bathroom.
 - **Furniture counts for bounced light too:** it hides it and reflects it, as
   its finish does. In the furnished rooms, that took the mean difference per

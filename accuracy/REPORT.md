@@ -8,7 +8,7 @@ installed (no maintenance factor). "Direct" is the light straight from the lumin
 
 ## busy-open-plan
 
-A busy open-plan room, 6 × 5 m, with ten pieces of furniture: a living area (sofa, two armchairs, a coffee table and a TV unit), two bookcases on the back wall, a dining table under a linear pendant, a kitchen island and a desk. Nine luminaires: seven downlights, the pendant (Finelite HP-2) and a wall washer (Lightolier) on the back wall beside the bookcases. Finishes from walnut (0.15) to white (0.8). Measures how accuracy and time scale with a full room.
+A busy open-plan room, 6 × 5 m: a living area (a sofa facing a TV unit, two armchairs and a coffee table), two bookcases on the back wall, a dining table with four chairs under a linear pendant, and a kitchen island. Nine pieces block light; chairs don't, in Lux Studio, so they're in the picture only. Nine luminaires: seven downlights, the pendant (Finelite HP-2) and a wall washer (Lightolier) on the back wall beside the bookcases. Finishes from walnut (0.15) to white (0.8). Measures how accuracy and time scale with a full room.
 
 Radiance rad6R0P2, 1924 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85, all diffuse.
 
@@ -16,31 +16,31 @@ Radiance rad6R0P2, 1924 points. Reflectances: floor 0.3, walls 0.8, ceiling 0.85
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 480 | 468.3 | 468.7 | 0.09 % | 11.65 % | 1.16 % |
-| floor | 480 | 254.4 | 255.4 | 0.37 % | 44.94 % | – |
-| ceiling | 480 | 278.2 | 279.5 | 0.44 % | 1.86 % | 4.09 % |
-| wall-x- | 220 | 176.7 | 176.5 | -0.16 % | 2.01 % | 0.93 % |
-| wall-z- | 264 | 186.7 | 188.4 | 0.93 % | 2.10 % | 1.70 % |
+| work-plane | 480 | 462.9 | 463.3 | 0.10 % | 13.33 % | 1.03 % |
+| floor | 480 | 265.5 | 265.9 | 0.15 % | 46.82 % | – |
+| ceiling | 480 | 272.3 | 273.5 | 0.41 % | 1.95 % | 5.68 % |
+| wall-x- | 220 | 175.0 | 174.6 | -0.21 % | 2.64 % | 1.73 % |
+| wall-z- | 264 | 184.7 | 186.4 | 0.92 % | 1.91 % | 1.00 % |
 
 ### Direct light
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 480 | 257.9 | 257.7 | -0.08 % | 0.54 % | 0.61 % |
-| floor | 480 | 121.9 | 122.6 | 0.56 % | 68.37 % | – |
+| work-plane | 480 | 257.9 | 257.7 | -0.09 % | 0.54 % | 0.63 % |
+| floor | 480 | 129.3 | 129.4 | 0.10 % | 63.12 % | – |
 | ceiling | 480 | 86.2 | 86.4 | 0.20 % | 0.12 % | 0.11 % |
-| wall-x- | 220 | 44.4 | 44.4 | -0.11 % | 0.32 % | – |
+| wall-x- | 220 | 44.4 | 44.4 | -0.10 % | 0.32 % | – |
 | wall-z- | 264 | 51.3 | 51.3 | -0.05 % | 0.80 % | 0.99 % |
 
 ### Bounced light
 
 | Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
 |---|---|---|---|---|---|---|
-| work-plane | 480 | 210.4 | 211.0 | 0.29 % | 13.93 % | 4.84 % |
-| floor | 480 | 132.6 | 132.8 | 0.19 % | 11.52 % | – |
-| ceiling | 480 | 192.0 | 193.1 | 0.54 % | 2.53 % | 497.44 % |
-| wall-x- | 220 | 132.3 | 132.1 | -0.18 % | 12.24 % | 0.97 % |
-| wall-z- | 264 | 135.4 | 137.1 | 1.30 % | 2.64 % | 1.97 % |
+| work-plane | 480 | 205.0 | 205.7 | 0.35 % | 13.57 % | 4.15 % |
+| floor | 480 | 136.2 | 136.4 | 0.21 % | 12.40 % | – |
+| ceiling | 480 | 186.1 | 187.1 | 0.51 % | 2.26 % | 539.70 % |
+| wall-x- | 220 | 130.5 | 130.2 | -0.25 % | 13.33 % | 2.05 % |
+| wall-z- | 264 | 133.4 | 135.1 | 1.29 % | 2.93 % | 1.36 % |
 
 ### Emin and uniformity, total light
 
@@ -50,7 +50,7 @@ What a report quotes beside Ē: the least illuminance on each surface, and U₀ 
 |---|---|---|---|---|
 | work-plane | 0.0 | 0.0 | – | – |
 | floor | 0.0 | 0.0 | – | – |
-| ceiling | 46.2 | 100.5 | 117.25 % | 116.30 % |
+| ceiling | 43.1 | 99.0 | 129.83 % | 128.88 % |
 | wall-x- | 0.1 | 0.2 | – | – |
 | wall-z- | 0.0 | 0.0 | – | – |
 
@@ -61,10 +61,10 @@ here at a tenth of that too, to show what it leaves out.
 
 | Light | Cutoff | Points counted | Worst far point | Worst near point |
 |---|---|---|---|---|
-| direct | 10 % | 943 of 1924 | 68.37 % | 0.99 % |
+| direct | 10 % | 965 of 1924 | 63.12 % | 0.99 % |
 | direct | 1 % | 1510 of 1924 | 100.00 % | 329.58 % |
-| total | 10 % | 1643 of 1924 | 44.94 % | 4.09 % |
-| total | 1 % | 1715 of 1924 | 44.94 % | 504.67 % |
+| total | 10 % | 1640 of 1924 | 46.82 % | 5.68 % |
+| total | 1 % | 1715 of 1924 | 46.82 % | 540.63 % |
 
 ### Feature by feature
 
@@ -72,12 +72,12 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 
 | Step | Worst surface average | Mean bright point | Worst far point | Worst near point |
 |---|---|---|---|---|
-| point-sources | 71.83 % | 60.92 % | 167.35 % | 98.51 % |
-| bounced-light | 77.82 % | 17.94 % | 320.50 % | 30.44 % |
-| split-openings | 77.69 % | 17.29 % | 320.19 % | 21.34 % |
-| furniture-shadows | 22.91 % | 15.93 % | 90.73 % | 36.55 % |
-| furniture-hides-bounce | 42.97 % | 34.11 % | 88.71 % | 62.05 % |
-| furniture-in-bounce | 0.93 % | 0.93 % | 44.94 % | 4.09 % |
+| point-sources | 71.54 % | 61.03 % | 177.00 % | 98.49 % |
+| bounced-light | 70.42 % | 15.66 % | 335.69 % | 30.86 % |
+| split-openings | 70.29 % | 14.94 % | 335.37 % | 20.55 % |
+| furniture-shadows | 20.27 % | 14.27 % | 99.10 % | 35.17 % |
+| furniture-hides-bounce | 41.15 % | 31.65 % | 88.68 % | 60.19 % |
+| furniture-in-bounce | 0.92 % | 0.90 % | 46.82 % | 5.68 % |
 
 ### Furniture and bounced light
 
@@ -87,11 +87,11 @@ alike, the furniture is counted as well as the room is.
 
 | Surface | Ē difference, furnished | Ē difference, empty | Worst far point, furnished | Worst far point, empty |
 |---|---|---|---|---|
-| work-plane | 0.09 % | 0.53 % | 11.65 % | 1.75 % |
-| floor | 0.37 % | 0.54 % | 44.94 % | 1.37 % |
-| ceiling | 0.44 % | 1.01 % | 1.86 % | 2.34 % |
-| wall-x- | -0.16 % | 0.69 % | 2.01 % | 1.75 % |
-| wall-z- | 0.93 % | 0.89 % | 2.10 % | 2.43 % |
+| work-plane | 0.10 % | 0.51 % | 13.33 % | 1.80 % |
+| floor | 0.15 % | 0.54 % | 46.82 % | 1.35 % |
+| ceiling | 0.41 % | 1.04 % | 1.95 % | 2.17 % |
+| wall-x- | -0.21 % | 0.69 % | 2.64 % | 1.87 % |
+| wall-z- | 0.92 % | 0.89 % | 1.91 % | 2.38 % |
 
 ## dark-room
 

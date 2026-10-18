@@ -62,7 +62,8 @@ const scene: Scene = {
   ],
 };
 // The busy reference room's furniture (accuracy/rooms/busy-open-plan.json, ADR 0068):
-// ten pieces at their usual sizes in a 6 × 5 m room, under the same luminaires.
+// nine pieces at their usual sizes in a 6 × 5 m room, and four chairs around the
+// dining table, which block no light (ADR 0057), under the same luminaires.
 const usual = (id: string, kind: Furniture['kind'], x: number, z: number, rotationDeg = 0) => ({
   id,
   kind,
@@ -76,15 +77,18 @@ const busy: Scene = {
   luminaires,
   furniture: [
     usual('tv', 'tv-unit', -2.77, 0.8, 90),
-    usual('sofa', 'sofa', -0.75, 0.8, 90),
+    usual('sofa', 'sofa', -0.75, 0.8, -90),
     usual('coffee', 'coffee-table', -1.8, 0.8, 90),
-    usual('a1', 'armchair', -1.8, 2),
+    usual('a1', 'armchair', -1.8, 2, 180),
     usual('a2', 'armchair', -1.8, -0.4),
     usual('b1', 'bookcase', -2.2, -2.32),
     usual('b2', 'bookcase', -1.1, -2.32),
     usual('dining', 'dining-table', 1.2, 0.4, 90),
     usual('island', 'kitchen-island', 1.6, -1.4),
-    usual('desk', 'desk', 2.6, 1.75, 90),
+    ...[0, 0.8].flatMap((z, k) => [
+      usual(`c${k}a`, 'chair', 0.6, z, 90),
+      usual(`c${k}b`, 'chair', 1.8, z, -90),
+    ]),
   ],
 };
 const inputs: AnalysisInputs = { catalog, photometry: () => FILE, modelFile: () => undefined };
@@ -135,4 +139,4 @@ function bench(label: string, scene: Scene): void {
 }
 
 bench('6 luminaires × 12 cells, 3 pieces of furniture, 5 × 4 m room', scene);
-bench('6 luminaires × 12 cells, 10 pieces of furniture, 6 × 5 m room', busy);
+bench('6 luminaires × 12 cells, 9 pieces of furniture and 4 chairs, 6 × 5 m room', busy);

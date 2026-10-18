@@ -11,11 +11,11 @@ as a glowing surface does in Radiance.
 
 | Room | Surface | As calculated | Bodies hide bounced light |
 |---|---|---|---|
-| busy-open-plan | work-plane | +0.29 % | -1.03 % |
-| busy-open-plan | floor | +0.19 % | -0.80 % |
-| busy-open-plan | ceiling | +0.54 % | -0.72 % |
-| busy-open-plan | wall-x- | -0.18 % | -0.89 % |
-| busy-open-plan | wall-z- | +1.30 % | +0.33 % |
+| busy-open-plan | work-plane | +0.35 % | -0.98 % |
+| busy-open-plan | floor | +0.21 % | -0.76 % |
+| busy-open-plan | ceiling | +0.51 % | -0.77 % |
+| busy-open-plan | wall-x- | -0.25 % | -0.96 % |
+| busy-open-plan | wall-z- | +1.29 % | +0.32 % |
 | dark-room | work-plane | +0.37 % | +0.07 % |
 | dark-room | floor | +0.02 % | -0.14 % |
 | dark-room | ceiling | +0.00 % | -0.02 % |
@@ -59,7 +59,7 @@ as a glowing surface does in Radiance.
 | white-room | ceiling | +1.84 % | +0.84 % |
 | white-room | wall-x- | +1.98 % | +0.89 % |
 | **Mean** | | +1.56 % | +0.16 % |
-| **Mean of the sizes** | | 1.59 % | 0.38 % |
+| **Mean of the sizes** | | 1.59 % | 0.39 % |
 
 ## What's left, against the patch size
 
@@ -68,9 +68,9 @@ with the patches is the patches'; one that doesn't is elsewhere.
 
 | Patch size (m) | Mean difference | Mean size | Worst |
 |---|---|---|---|
-| 0.5 | +0.29 % | 1.01 % | 2.98 % |
-| 0.25 (default) | +0.16 % | 0.38 % | 1.03 % |
-| 0.125 | +0.06 % | 0.21 % | 0.74 % |
+| 0.5 | +0.32 % | 0.98 % | 2.84 % |
+| 0.25 (default) | +0.16 % | 0.39 % | 0.98 % |
+| 0.125 | +0.06 % | 0.22 % | 0.79 % |
 
 ## The sconce's split-openings step
 

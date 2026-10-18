@@ -26,6 +26,12 @@ interface ReferenceRoom {
     readonly tiltDeg?: number;
     readonly panDeg?: number;
   }[];
+  /** Pieces for the picture only, which neither calculation counts (chairs: see `decor` in rooms.py). */
+  readonly decor?: readonly {
+    readonly kind: FurnitureKind;
+    readonly at: { readonly x: number; readonly z: number };
+    readonly rotationDeg?: number;
+  }[];
   readonly blockers?: readonly {
     readonly centre: Vec3;
     readonly half: Vec3;
@@ -90,6 +96,9 @@ function sceneOf(room: ReferenceRoom): string {
   for (const box of room.blockers ?? []) {
     const { kind, rotationDeg } = kindOf(box);
     sim.addFurniture(kind, { at: { x: box.centre.x, z: box.centre.z }, rotationDeg });
+  }
+  for (const { kind, at, rotationDeg = 0 } of room.decor ?? []) {
+    sim.addFurniture(kind, { at, rotationDeg });
   }
   return serializeScene(sim.scene);
 }
