@@ -1027,6 +1027,22 @@
   <source>Analysis, in the left panel, gives the lux on the work plane and each surface. Press 3 to paint them in colour, and point anywhere to read its lux.</source>
   <target>Análisis, en el panel de la izquierda, da los lux del plano de trabajo y de cada superficie. Apretá 3 para pintarlos en colores, y señalá cualquier punto para leer sus lux.</target>
 </trans-unit>
+<trans-unit id="s1e9087313b6f1de2">
+  <source>Shadow detail</source>
+  <target>Detalle de las sombras</target>
+</trans-unit>
+<trans-unit id="s13aeb11163f22d31">
+  <source>Each luminaire is split into cells of this size: smaller is more exact at shadow edges and close to large luminaires, and slower.</source>
+  <target>Cada luminaria se divide en celdas de este tamaño: más chicas son más exactas en el borde de las sombras y cerca de las luminarias grandes, y más lentas.</target>
+</trans-unit>
+<trans-unit id="sf87b542402053bfe">
+  <source><x id="0" equiv-text="${cm}"/> cm, faster</source>
+  <target><x id="0" equiv-text="${cm}"/> cm, más rápido</target>
+</trans-unit>
+<trans-unit id="scf70d6e5653f3055">
+  <source><x id="0" equiv-text="${cm}"/> cm, more exact</source>
+  <target><x id="0" equiv-text="${cm}"/> cm, más exacto</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

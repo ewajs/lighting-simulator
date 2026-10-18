@@ -3,14 +3,7 @@
 // are regression bounds set from the measured agreement; the figures
 // themselves are in accuracy/REPORT.md (`npm run accuracy:report`).
 import { describe, expect, it } from 'vitest';
-import {
-  BRIGHT_SHARE,
-  compareReference,
-  summarize,
-  type Light,
-  type PointComparison,
-  type SurfaceSummary,
-} from './compare';
+import { brightPointsOff, compareReference, summarize, type SurfaceSummary } from './compare';
 import { IES_FILES, REFERENCES } from './inputs';
 
 /** Each surface's average: measured worst 0.56 % (the wall sconce's ceiling). */
@@ -79,7 +72,8 @@ describe('Lux Studio against Radiance', () => {
     if (penumbrae) {
       it(`${name}: few bright points off by over 10 %, in penumbrae`, () => {
         for (const light of ['direct', 'total'] as const) {
-          expect(shareOff(points, light), light).toBeLessThan(penumbrae.share);
+          const { off, bright } = brightPointsOff(points, light, OFF);
+          expect(off / bright, light).toBeLessThan(penumbrae.share);
         }
       });
     }
@@ -106,14 +100,4 @@ function expectWithin(
     expect(summary.worstFar, `${where}: points ≥ 1 m away`).toBeLessThan(worst ?? bounds.far);
     expect(summary.worstNear, `${where}: points < 1 m away`).toBeLessThan(worst ?? bounds.near);
   }
-}
-
-/** The share of the room's bright points (as `summarize` counts them) off by over OFF. */
-function shareOff(points: readonly PointComparison[], light: Light): number {
-  const radiance = (p: PointComparison) =>
-    light === 'direct' ? p.radianceDirectLx : p.radianceTotalLx;
-  const ours = (p: PointComparison) => (light === 'direct' ? p.oursDirectLx : p.oursTotalLx);
-  const brightest = Math.max(...points.map(radiance));
-  const bright = points.filter((p) => radiance(p) >= BRIGHT_SHARE * brightest);
-  return bright.filter((p) => Math.abs(ours(p) / radiance(p) - 1) > OFF).length / bright.length;
 }

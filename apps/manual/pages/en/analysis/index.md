@@ -61,7 +61,9 @@ Each room has its own page, with its maps point by point:
 - **Furniture is boxes:** a sofa is a block, a table is just its top.
 - **Shadows have stepped edges.** A luminaire's opening is split into 10 cm
   cells, and each one is hidden or not. In the penumbra of a piece's edge, a
-  point can read 0 or double Radiance's, which sees part of the opening.
+  point can read 0 or double Radiance's, which sees part of the opening. With
+  finer shadow detail (5 or 2.5 cm), those points come closer, at a cost in
+  time ([Analysing the light](../analysing)).
 - **Luminaires don't hide bounced light.** A large sconce right against
   its wall reads a few points higher than in Radiance.
 - **Every surface reflects diffusely:** no gloss, no mirrors.

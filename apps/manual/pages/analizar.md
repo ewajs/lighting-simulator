@@ -38,6 +38,10 @@ cálculo tarda unos segundos.
   números del panel son valores mantenidos.
 - **Altura del plano de trabajo** y **borde:** a qué altura se mide, y qué
   franja junto a las paredes queda afuera.
+- **Detalle de las sombras:** el tamaño de las celdas en que se divide cada
+  luminaria, 10, 5 o 2,5 cm. Más chicas, el borde de las sombras y los puntos
+  muy cerca de una luminaria grande dan más exacto, y el cálculo tarda más
+  (ver abajo).
 - **Luz que rebota:** apagada, cuenta solo la luz directa. Es más rápido,
   pero da un tercio o más por debajo de lo real.
 - **Muebles en la luz que rebota:** apagado, los muebles hacen sombra solo a
@@ -48,6 +52,27 @@ Cuánto mejora el resultado y cuánto tarda cada uno, medido contra Radiance:
 [Función por función](./analisis/funcion-por-funcion). Por ahora, los
 ajustes no se guardan con la escena: al recargar la página vuelven a los de
 siempre.
+
+## Cuánto detalle en las sombras
+
+Cada luminaria se calcula como una grilla de pequeñas fuentes de luz. Contra
+el valor exacto de un panel que brilla parejo, la grilla queda dentro del 1 %
+desde dos celdas de distancia, y cada vez que las celdas se achican a la
+mitad, la diferencia baja unas cuatro veces. Lo que más cambia es la
+**penumbra**: un punto que ve una luminaria apenas por encima del borde de un
+mueble. Medido contra Radiance en los siete ambientes de prueba:
+
+| Detalle | Puntos iluminados a más del 10 % de Radiance | Tiempo al cambiar una luz |
+|---|---|---|
+| 10 cm (el de siempre) | 31 de 6534 | 1 vez |
+| 5 cm | 8 de 6534 | hasta 3 veces |
+| 2,5 cm | 6 de 6534 | hasta 8 veces |
+
+El tiempo crece con el tamaño de las luminarias: con downlights chicas casi
+no cambia, con luminarias lineales largas es lo que dice la tabla. Un buen
+uso: diseñar con 10 cm y revisar el resultado final con 5 cm. El detalle
+completo está en
+[SOURCE-CELL.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/SOURCE-CELL.md).
 
 ## La vista Iluminancia
 

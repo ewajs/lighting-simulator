@@ -37,6 +37,10 @@ calculation takes a few seconds.
   is a maintained value.
 - **Work plane height** and **border:** how high it's measured, and the strip
   along the walls that's left out.
+- **Shadow detail:** the size of the cells each luminaire is split into, 10,
+  5 or 2.5 cm. Smaller, shadow edges and points very close to a large
+  luminaire come out more exact, and the calculation takes longer (see
+  below).
 - **Light that bounces:** off, only direct light counts. It's faster, but a
   third or more too dark.
 - **Furniture in bounced light:** off, furniture shades direct light only.
@@ -47,6 +51,26 @@ How much each one improves the result and how long it takes, measured against
 Radiance: [Feature by feature](./analysis/feature-by-feature). For now, the
 settings aren't saved with the scene: reloading the page puts them back to
 the usual ones.
+
+## How much shadow detail
+
+Each luminaire is calculated as a grid of small light sources. Against the
+exact value for a panel that glows evenly, the grid is within 1 % from two
+cells away, and each time the cells halve, the difference drops about four
+times. What changes most is the **penumbra**: a point that sees a luminaire
+just past a piece of furniture's edge. Measured against Radiance in the seven
+test rooms:
+
+| Detail | Lit points more than 10 % from Radiance | Time when a light changes |
+|---|---|---|
+| 10 cm (the usual) | 31 of 6534 | 1 × |
+| 5 cm | 8 of 6534 | up to 3 × |
+| 2.5 cm | 6 of 6534 | up to 8 × |
+
+The time grows with the size of the luminaires: with small downlights it
+barely changes, with long linear luminaires it's what the table says. A good
+habit: design at 10 cm and check the final result at 5 cm. The full detail is
+in [SOURCE-CELL.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/SOURCE-CELL.md).
 
 ## The Illuminance view
 

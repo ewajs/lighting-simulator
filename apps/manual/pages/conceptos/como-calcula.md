@@ -19,8 +19,11 @@ Lux Studio calcula la iluminancia con las mismas ideas de estas páginas, en
 este orden:
 
 1. **Cada luminaria es una fuente de luz** con la distribución de su archivo IES.
-   Si su abertura mide más de 10 cm, se divide en celdas de 10 cm como máximo,
-   a lo ancho, a lo largo y en altura ([Distancia y ángulo](./distancia-y-angulo)).
+   Si su abertura mide más de 10 cm, se divide en celdas de 10 cm como máximo
+   (5 o 2,5 cm si elegís más detalle en las sombras), a lo ancho, a lo largo y
+   en altura ([Distancia y ángulo](./distancia-y-angulo)). Contra el valor
+   exacto de un panel que brilla parejo, las celdas quedan dentro del 1 % desde
+   dos celdas de distancia.
    Sin archivo IES, se estima repartiendo su flujo en su ángulo de haz, y el
    resultado lo avisa.
 2. **En cada punto de la cuadrícula** ([El plano de trabajo](./plano-de-trabajo))

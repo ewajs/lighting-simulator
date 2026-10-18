@@ -284,6 +284,24 @@ export function summarize(
   });
 }
 
+/**
+ * How many of the room's bright points (as `summarize` counts them) are off
+ * Radiance by more than `beyond` (a share: 0.1 is 10 %), out of how many.
+ */
+export function brightPointsOff(
+  points: readonly PointComparison[],
+  light: Light,
+  beyond: number,
+): { readonly off: number; readonly bright: number } {
+  const radiance = (p: PointComparison) =>
+    light === 'direct' ? p.radianceDirectLx : p.radianceTotalLx;
+  const ours = (p: PointComparison) => (light === 'direct' ? p.oursDirectLx : p.oursTotalLx);
+  const brightest = Math.max(...points.map(radiance));
+  const bright = points.filter((p) => radiance(p) >= BRIGHT_SHARE * brightest);
+  const off = bright.filter((p) => Math.abs(ours(p) / radiance(p) - 1) > beyond).length;
+  return { off, bright: bright.length };
+}
+
 function subtract(a: Vec3, b: Vec3): Vec3 {
   return { x: a.x - b.x, y: a.y - b.y, z: a.z - b.z };
 }
