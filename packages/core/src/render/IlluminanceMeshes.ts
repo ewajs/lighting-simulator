@@ -62,7 +62,7 @@ export class IlluminanceMeshes {
 /** A surface's grid lifted this far off it along its normal, in m, so it doesn't fight the room's surface for depth. */
 const LIFT_M = 0.002;
 
-function plane({ grid, illuminanceLx }: SurfaceResult): THREE.Mesh {
+function plane({ grid, illuminanceLx, covered }: SurfaceResult): THREE.Mesh {
   const { corner, u, v, lengthU, lengthV } = grid.rect;
   const at = (a: number, b: number) =>
     new THREE.Vector3(
@@ -89,7 +89,7 @@ function plane({ grid, illuminanceLx }: SurfaceResult): THREE.Mesh {
   geometry.setIndex(facesIn ? [0, 1, 2, 0, 2, 3] : [0, 2, 1, 0, 3, 2]);
 
   const material = new THREE.MeshBasicMaterial({
-    map: texture(grid.columns, grid.rows, illuminanceLx),
+    map: texture(grid.columns, grid.rows, illuminanceLx, covered),
     toneMapped: false,
   });
   const mesh = new THREE.Mesh(geometry, material);
@@ -97,11 +97,22 @@ function plane({ grid, illuminanceLx }: SurfaceResult): THREE.Mesh {
   return mesh;
 }
 
-/** One texel per grid point, in its row and column, coloured by its illuminance. */
-function texture(columns: number, rows: number, lux: readonly number[]): THREE.DataTexture {
+/**
+ * A point covered by furniture, not measured (ADR 0074): a neutral grey, which
+ * no part of the false-colour scale is.
+ */
+export const COVERED_COLOUR: readonly [number, number, number] = [128, 128, 128];
+
+/** One texel per grid point, in its row and column, coloured by its illuminance, grey where covered. */
+function texture(
+  columns: number,
+  rows: number,
+  lux: readonly number[],
+  covered: readonly boolean[],
+): THREE.DataTexture {
   const data = new Uint8Array(columns * rows * 4);
   lux.forEach((lx, k) => {
-    const [r, g, b] = falseColour(lx);
+    const [r, g, b] = covered[k] ? COVERED_COLOUR : falseColour(lx);
     data.set([r, g, b, 255], k * 4);
   });
   const map = new THREE.DataTexture(data, columns, rows, THREE.RGBAFormat);

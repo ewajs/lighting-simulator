@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import { TOP_THICKNESS } from '../render/furniture/style';
 import type { Furniture, FurnitureKind } from '../types';
-import { FURNITURE_BLOCKING, furnitureBlockers, segmentBlocked, TABLE_TOP_M } from './occlusion';
+import {
+  coveredByFurniture,
+  FURNITURE_BLOCKING,
+  furnitureBlockers,
+  segmentBlocked,
+  TABLE_TOP_M,
+} from './occlusion';
 
 const piece = (kind: FurnitureKind, extra: Partial<Furniture> = {}): Furniture => ({
   id: kind,
@@ -71,5 +77,42 @@ describe('segmentBlocked', () => {
     // Sideways, below the top: clear. From above, through the top: blocked.
     expect(segmentBlocked({ x: -3, y: 0.3, z: 0 }, { x: 3, y: 0.3, z: 0 }, table)).toBe(false);
     expect(segmentBlocked({ x: 0, y: 0, z: 0 }, { x: 0, y: 2.7, z: 0 }, table)).toBe(true);
+  });
+});
+
+describe('coveredByFurniture', () => {
+  // A 2 × 1 m sofa, 0.8 m high, at the origin, and the same turned a quarter.
+  const sofa = furnitureBlockers([piece('sofa')]);
+  const turned = furnitureBlockers([piece('sofa', { rotationDeg: 90 })]);
+  const UP = { x: 0, y: 1, z: 0 };
+
+  it('covers a point inside the piece, and the floor under it', () => {
+    expect(coveredByFurniture({ x: 0.5, y: 0.4, z: 0.2 }, UP, sofa)).toBe(true);
+    expect(coveredByFurniture({ x: 0.9, y: 0, z: 0.4 }, UP, sofa)).toBe(true);
+  });
+
+  it('covers a wall with a piece standing a few centimetres in front of it', () => {
+    // A wall at z = −0.53, facing +z: the sofa's back is 3 cm away, then 6 cm.
+    const toward = { x: 0, y: 0, z: 1 };
+    expect(coveredByFurniture({ x: 0, y: 0.4, z: -0.53 }, toward, sofa)).toBe(true);
+    expect(coveredByFurniture({ x: 0, y: 0.4, z: -0.56 }, toward, sofa)).toBe(false);
+  });
+
+  it('leaves out the floor beside the piece, and a point on its top', () => {
+    expect(coveredByFurniture({ x: 1.02, y: 0, z: 0 }, UP, sofa)).toBe(false);
+    expect(coveredByFurniture({ x: 0, y: 0.8, z: 0 }, UP, sofa)).toBe(false);
+  });
+
+  it('follows the piece when it turns', () => {
+    // Turned a quarter, the sofa runs along z: 0.9 m out along x is beside it.
+    expect(coveredByFurniture({ x: 0, y: 0, z: 0.9 }, UP, turned)).toBe(true);
+    expect(coveredByFurniture({ x: 0.9, y: 0, z: 0 }, UP, turned)).toBe(false);
+  });
+
+  it('covers nothing under a table: its top is far above the floor', () => {
+    const table = furnitureBlockers([
+      piece('dining-table', { size: { width: 1.6, depth: 0.9, height: 0.75 } }),
+    ]);
+    expect(coveredByFurniture({ x: 0, y: 0, z: 0 }, UP, table)).toBe(false);
   });
 });

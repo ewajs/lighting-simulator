@@ -305,7 +305,7 @@ export const WORDS: Record<Lang, Record<string, string>> = {
     tableFar: 'Peor > 1 m',
     tableNear: 'Peor < 1 m',
     tableNote:
-      'Ē es el promedio de la superficie. "Peor" es la mayor diferencia en un punto iluminado (al menos el 10 % del más iluminado), a más o a menos de 1 m de una luminaria. Emin y U₀: la diferencia en la iluminancia mínima y en la uniformidad (– donde el mínimo es casi 0: un punto dentro de un mueble). Verde: dentro del 1 %; ámbar: dentro del 5 %; rosa: más.',
+      'Ē es el promedio de la superficie. "Peor" es la mayor diferencia en un punto iluminado (al menos el 10 % del más iluminado), a más o a menos de 1 m de una luminaria. Emin y U₀: la diferencia en la iluminancia mínima y en la uniformidad, sin los puntos tapados por un mueble, como en la aplicación. Verde: dentro del 1 %; ámbar: dentro del 5 %; rosa: más.',
     stepError: 'Diferencia media por punto',
     stepTime: 'Tiempo de cálculo (ms)',
     emptyLegend: 'Sin muebles, en los dos programas',
@@ -356,7 +356,7 @@ export const WORDS: Record<Lang, Record<string, string>> = {
     tableFar: 'Worst > 1 m',
     tableNear: 'Worst < 1 m',
     tableNote:
-      'Ē is the surface\'s average. "Worst" is the largest difference at a lit point (at least 10 % of the brightest one\'s light), more or less than 1 m from a luminaire. Emin and U₀: the difference in the least illuminance and in the uniformity (– where the least is about 0: a point inside furniture). Green: within 1 %; amber: within 5 %; rose: beyond.',
+      'Ē is the surface\'s average. "Worst" is the largest difference at a lit point (at least 10 % of the brightest one\'s light), more or less than 1 m from a luminaire. Emin and U₀: the difference in the least illuminance and in the uniformity, without the points covered by furniture, as in the app. Green: within 1 %; amber: within 5 %; rose: beyond.',
     stepError: 'Mean difference per point',
     stepTime: 'Calculation time (ms)',
     emptyLegend: 'Without furniture, in both programs',

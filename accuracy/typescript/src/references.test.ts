@@ -40,12 +40,14 @@ const PENUMBRAE: Record<string, { readonly share: number; readonly worst: number
   'busy-open-plan': { share: 0.035, worst: 0.75 },
 };
 /**
- * Emin and U₀ in total light (ADR 0072), on surfaces where Radiance's Emin is
- * above 1 % of the average (not a point inside furniture). Measured worsts:
- * Emin 3.2 % (the sconce), U₀ 2.5 % (the track spots' floor), both from the
- * bounced-light excess (ADR 0070). MIN_EXCEPTIONS are left out, with why.
+ * Emin and U₀ in total light (ADR 0072), over the points the app counts:
+ * those covered by furniture are left out (ADR 0074). Measured worsts: Emin
+ * 7.2 % (the wall-wash room's floor), 7.0 % (the bathroom's back wall), 6.9 %
+ * (the busy room's floor, in a piece's shadow); the least-lit points get
+ * mostly bounced light, which reads high (ADR 0070). MIN_EXCEPTIONS are left
+ * out, with why.
  */
-const MIN_TOLERANCE = 0.04;
+const MIN_TOLERANCE = 0.075;
 const MIN_EXCEPTIONS: Record<string, string> = {
   // Its least-lit point is right above a downlight, 3 cm below it, whose
   // glowing body hides the room from it in Radiance: +130 % (ADR 0070).
@@ -71,7 +73,6 @@ const KNOWN_GAPS: Record<
     readonly why: string;
     readonly direct?: Partial<Bounds>;
     readonly total?: Partial<Bounds>;
-    readonly min?: number;
   }
 > = {
   'small-bathroom': {
@@ -80,21 +81,19 @@ const KNOWN_GAPS: Record<
     // Bounced light reads +6 to +9 %; with bodies, within 0.7 % (BOUNCE.md).
     // The downlight's disc, 3 cm under the ceiling, also shades the ceiling
     // from the wall light's uplight: a near point 34 % off in direct light,
-    // 161 % in total. Measured: total averages 6.1 %, far 8.4 %, Emin 7.0 %.
+    // 161 % in total. Measured: total averages 6.1 %, far 8.4 %.
     why: 'luminaire bodies',
     direct: { near: 0.4 },
     total: { average: 0.07, far: 0.09, near: 1.7 },
-    min: 0.08,
   },
   'wall-wash': {
     // The ceiling gets only the spots' light far off their axis, from 20 cm
     // below: there each program models the 9.5 cm opening differently
     // (direct average −4.5 %, a small share of its total, which is −0.3 %).
     // The bright pools on the walls are spread by 25 cm patches, so the
-    // least-lit points get up to 7.2 % too much bounced light.
+    // least-lit points get up to 7.2 % too much bounced light (within MIN_TOLERANCE).
     why: 'grazing light, bright pools',
     direct: { average: 0.05 },
-    min: 0.08,
   },
 };
 
@@ -126,7 +125,6 @@ describe('Lux Studio against Radiance', () => {
     const gap = KNOWN_GAPS[name];
     const known = gap ? ` (known gap: ${gap.why})` : '';
     const direct = { average: AVERAGE_TOLERANCE, far: FAR_TOLERANCE, near: NEAR_TOLERANCE };
-    const minTolerance = gap?.min ?? MIN_TOLERANCE;
 
     it(`${name}, direct: averages within 1 %, bright points within 3.5 % (15 % within 1 m of a luminaire)${known}`, () => {
       const bounds = { ...direct, ...gap?.direct };
@@ -138,12 +136,12 @@ describe('Lux Studio against Radiance', () => {
       expectWithin(name, summarize(points, origins, 'total'), bounds, penumbrae?.worst);
     });
 
-    it(`${name}, total: Emin and U₀ within 4 % where they can be compared${known}`, () => {
+    it(`${name}, total: Emin and U₀ within 7.5 % where they can be compared${known}`, () => {
       for (const s of summarize(points, origins, 'total')) {
         const where = `${name} ${s.surface}`;
         if (MIN_EXCEPTIONS[where] || s.minError === null || s.uniformityError === null) continue;
-        expect(Math.abs(s.minError), `${where}: Emin`).toBeLessThan(minTolerance);
-        expect(Math.abs(s.uniformityError), `${where}: U₀`).toBeLessThan(minTolerance);
+        expect(Math.abs(s.minError), `${where}: Emin`).toBeLessThan(MIN_TOLERANCE);
+        expect(Math.abs(s.uniformityError), `${where}: U₀`).toBeLessThan(MIN_TOLERANCE);
       }
     });
 

@@ -6,6 +6,7 @@
 import {
   DEFAULT_CALCULATION_OPTIONS,
   DEFAULT_ROOM,
+  coveredByFurniture,
   directLight,
   fixtureLayout,
   illuminanceAt,
@@ -93,6 +94,8 @@ export interface PointComparison {
   readonly radianceTotalLx: number;
   readonly oursDirectLx: number;
   readonly oursTotalLx: number;
+  /** Covered by one of the room's pieces, as the app leaves out of its figures (ADR 0074). */
+  readonly covered: boolean;
 }
 
 /** No maintenance factor and no border: Radiance computes the light as installed, everywhere. */
@@ -172,14 +175,9 @@ export function referenceLight(
 
   // The reference's boxes stand in for furniture: they cast shadows when the
   // options say furniture does.
-  const boxes = furniture && options.furnitureShadows ? (reference.room.blockers ?? []) : [];
-  const blockers: Blocker[] = boxes.map(({ centre, half, yawDeg, reflectance }) => ({
-    centre,
-    half,
-    yawRad: ((yawDeg ?? 0) * Math.PI) / 180,
-    // As in the reference; black for the feature study's "furniture only hides" step.
-    reflectance: blackFurniture ? 0 : (reflectance ?? 0),
-  }));
+  const boxes = furniture && options.furnitureShadows ? referenceBoxes(reference) : [];
+  // As in the reference; black for the feature study's "furniture only hides" step.
+  const blockers = blackFurniture ? boxes.map((box) => ({ ...box, reflectance: 0 })) : boxes;
   const direct = {
     ...directLight(
       { room, luminaires, furniture: [] },
@@ -190,6 +188,16 @@ export function referenceLight(
     blockers,
   };
   return { direct, indirect: indirectLight(room, direct, options) };
+}
+
+/** The reference's boxes, as core's furniture blocks light with them. */
+export function referenceBoxes(reference: Reference): Blocker[] {
+  return (reference.room.blockers ?? []).map(({ centre, half, yawDeg, reflectance }) => ({
+    centre,
+    half,
+    yawRad: ((yawDeg ?? 0) * Math.PI) / 180,
+    reflectance: reflectance ?? 0,
+  }));
 }
 
 /**
@@ -210,6 +218,7 @@ export function compareReference(
   const bare = reference.withoutFurniture;
   if (!furniture && !bare) throw new Error('This reference has no values without furniture');
   const light = referenceLight(reference, iesFiles, options, furniture, blackFurniture);
+  const boxes = furniture ? referenceBoxes(reference) : [];
   return reference.points.map(({ surface, position, normal, direct, total }, k) => {
     const ours = illuminanceAt(light, position, normal);
     return {
@@ -219,6 +228,7 @@ export function compareReference(
       radianceTotalLx: furniture ? total : bare!.total[k]!,
       oursDirectLx: ours.directLx,
       oursTotalLx: ours.totalLx,
+      covered: coveredByFurniture(position, normal, boxes),
     };
   });
 }
@@ -295,7 +305,8 @@ export function summarize(
     Math.max(0, ...selected.map((point) => Math.abs(ours(point) / radiance(point) - 1)));
   const surfaces = [...new Set(points.map((point) => point.surface))];
   return surfaces.map((surface) => {
-    const on = points.filter((point) => point.surface === surface);
+    // As the app does (ADR 0074): a point inside a piece isn't measured.
+    const on = points.filter((point) => point.surface === surface && !point.covered);
     const radianceAverageLx = on.reduce((sum, point) => sum + radiance(point), 0) / on.length;
     const oursAverageLx = on.reduce((sum, point) => sum + ours(point), 0) / on.length;
     const bright = on.filter((point) => radiance(point) >= brightShare * brightest);

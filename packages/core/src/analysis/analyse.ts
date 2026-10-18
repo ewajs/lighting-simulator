@@ -7,6 +7,7 @@ import { roomGrids, type CalcGrid } from './calc-grid';
 import { DEFAULT_CALCULATION_OPTIONS, type CalculationOptions } from './options';
 import { bounceGeometryKey, type AnalysisCache } from './cache';
 import { directIlluminance } from './direct';
+import { coveredByFurniture, furnitureBlockers } from './occlusion';
 import { indirectFromViews, pointViews } from './radiosity';
 import { sceneLight, type SceneLight } from './scene-light';
 import { boxVisibility } from './visibility';
@@ -20,7 +21,13 @@ export interface SurfaceResult {
   readonly illuminanceLx: readonly number[];
   readonly directLx: readonly number[];
   readonly indirectLx: readonly number[];
-  /** The total's figures; undefined when the grid has no points, e.g. a border wider than the room. */
+  /**
+   * Whether each point is covered by a piece of furniture (ADR 0074): inside
+   * it, or the floor or wall right against it. No one measures there, so the
+   * figures leave these points out.
+   */
+  readonly covered: readonly boolean[];
+  /** The total's figures over the uncovered points; undefined when there are none, e.g. a border wider than the room. */
   readonly stats: IlluminanceStats | undefined;
 }
 
@@ -72,6 +79,8 @@ export function analyseSceneLight(
   const grids = roomGrids(scene.room, settings.workPlaneHeightM, settings.borderM);
   const { patches, blockers } = light.indirect;
   const key = bounceGeometryKey(scene.room, blockers, options.patchSizeM);
+  // Whatever the options count, a point inside a piece is covered by it.
+  const furniture = furnitureBlockers(scene.furniture);
   const surfaces = grids.map((grid): SurfaceResult => {
     const directLx = grid.points.map((point) =>
       directIlluminance(point, grid.normal, light.direct.sources, light.direct.blockers),
@@ -81,12 +90,15 @@ export function analyseSceneLight(
     const views = cache ? cache.gridViews(key, grid, compute) : compute();
     const indirectLx = grid.points.map((_, k) => indirectFromViews(views, k, light.indirect));
     const illuminanceLx = directLx.map((direct, k) => direct + indirectLx[k]!);
+    const covered = grid.points.map((point) => coveredByFurniture(point, grid.normal, furniture));
+    const measured = illuminanceLx.filter((_, k) => !covered[k]);
     return {
       grid,
       illuminanceLx,
       directLx,
       indirectLx,
-      stats: illuminanceLx.length > 0 ? illuminanceStats(illuminanceLx) : undefined,
+      covered,
+      stats: measured.length > 0 ? illuminanceStats(measured) : undefined,
     };
   });
   return {

@@ -123,6 +123,7 @@
 's683a4a4b18ab2866': `Tu trabajo se guarda solo en este navegador. Arriba, Nuevo empieza desde una plantilla, Guardar y Abrir usan archivos, y Compartir crea un enlace.`,
 's684b6bfe5d516e5c': str`Paso ${0} de ${1}`,
 's6962e8cc419777e5': `El imán ajusta a 10 cm y alinea; mantené Alt para mover libre. ⌘Z deshace.`,
+'s6a567bdc8c639893': str`Puntos tapados por muebles, sin contar en las cifras: ${0}.`,
 's6b7d7afabc24ff1c': `Propiedades`,
 's6b9afc6c1bfd5ff7': `Tocá algo para elegirlo y arrastralo con un dedo. Las flechas lo mueven en una sola dirección; el aro en el piso gira los muebles.`,
 's6bb329b249dd1ee7': `Encender`,

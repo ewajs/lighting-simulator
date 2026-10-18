@@ -77,3 +77,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0071 | [Tighter reference checks: a real sphere, and orientation by hand](0071-tighter-reference-checks.md) | Accepted |
 | 0072 | [Emin, uniformity, and what the bright-point cutoff leaves out](0072-emin-uniformity-and-the-cutoff.md) | Accepted |
 | 0073 | [More kinds of room](0073-more-kinds-of-room.md) | Accepted |
+| 0074 | [Points covered by furniture don't count](0074-points-covered-by-furniture.md) | Accepted |
