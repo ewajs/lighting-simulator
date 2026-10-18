@@ -880,3 +880,113 @@ Each step adds one feature to the one before, against Radiance's full light (ADR
 | furniture-hides-bounce | 1.86 % | 1.68 % | 2.49 % | 2.75 % |
 | furniture-in-bounce | 1.86 % | 1.68 % | 2.49 % | 2.75 % |
 | luminaire-bodies | 0.84 % | 0.71 % | 1.37 % | 1.44 % |
+
+# By day: daylight through windows
+
+Rooms lit through their windows by gensky's CIE skies, at the levels Lux Studio sets
+(ADRs 0080, 0081). "Daylight" is its first arrival: the sky, the ground and the sun
+through the windows, before any bounce; "total" adds every bounce, and any luminaires.
+
+## daylight-and-lamps
+
+Late daylight and two downlights together: a 1.5 × 1.2 m clear window in the right wall of a 5 × 4 × 2.7 m room, the CIE overcast sky at 17:00 solar time on the March equinox in Buenos Aires, and two 6-inch recessed downlights.
+
+Radiance rad6R0P2, 1356 points. The sun 12.3° up, bearing 278.6°; the sky 4788 lx on the ground; the glass lets 80 % through.
+
+### Total light
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 320 | 320.3 | 321.5 | 0.35 % | 4.92 % | – |
+| floor | 320 | 284.0 | 284.6 | 0.20 % | 3.78 % | – |
+| ceiling | 320 | 113.3 | 113.5 | 0.24 % | 3.18 % | 1.99 % |
+| wall-z- | 220 | 133.9 | 134.4 | 0.35 % | 5.21 % | – |
+| wall-x- | 176 | 127.0 | 127.7 | 0.54 % | 5.36 % | – |
+
+### Daylight's first arrival
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 320 | 116.7 | 117.2 | 0.38 % | 1.28 % | – |
+| floor | 320 | 86.3 | 86.3 | 0.01 % | 1.31 % | – |
+| ceiling | 320 | 20.7 | 20.7 | -0.00 % | – | – |
+| wall-z- | 220 | 35.8 | 35.9 | 0.36 % | – | – |
+| wall-x- | 176 | 29.1 | 29.4 | 0.86 % | – | – |
+
+## daylight-side-window
+
+Daylight alone through a 2 × 1.4 m clear window in the back wall of a 4 × 5 × 2.7 m room, its sill at 0.9 m: the CIE overcast sky at noon on the March equinox in Buenos Aires.
+
+Radiance rad6R0P2, 1356 points. The sun 55.5° up, bearing 360.0°; the sky 17600 lx on the ground; the glass lets 80 % through.
+
+### Total light
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 320 | 1024.1 | 1029.1 | 0.49 % | 4.13 % | – |
+| floor | 320 | 869.0 | 872.8 | 0.44 % | 7.44 % | – |
+| ceiling | 320 | 459.3 | 460.8 | 0.31 % | 5.07 % | – |
+| wall-x- | 220 | 556.7 | 560.3 | 0.66 % | 3.56 % | – |
+| wall-z+ | 176 | 466.4 | 471.0 | 0.98 % | 2.76 % | – |
+
+### Daylight's first arrival
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 320 | 639.7 | 641.8 | 0.33 % | 1.53 % | – |
+| floor | 320 | 470.5 | 470.4 | -0.02 % | 1.28 % | – |
+| ceiling | 320 | 123.5 | 123.4 | -0.14 % | 0.83 % | – |
+| wall-x- | 220 | 216.6 | 217.5 | 0.41 % | 2.87 % | – |
+| wall-z+ | 176 | 171.3 | 173.0 | 0.99 % | – | – |
+
+## daylight-skylight
+
+Daylight alone through a 1.2 × 1.2 m clear skylight in the middle of a 4 × 4 × 3 m room's ceiling: the CIE overcast sky at noon on the March equinox in Buenos Aires.
+
+Radiance rad6R0P2, 960 points. The sun 55.5° up, bearing 360.0°; the sky 17600 lx on the ground; the glass lets 80 % through.
+
+### Total light
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 256 | 1238.6 | 1241.4 | 0.22 % | 4.60 % | – |
+| floor | 256 | 1049.7 | 1051.1 | 0.13 % | 6.75 % | – |
+| ceiling | 256 | 484.4 | 486.4 | 0.42 % | 7.38 % | – |
+| wall-x- | 192 | 702.8 | 704.6 | 0.25 % | 7.75 % | – |
+
+### Daylight's first arrival
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 256 | 730.8 | 730.7 | -0.01 % | 1.62 % | – |
+| floor | 256 | 532.9 | 532.9 | 0.01 % | 2.24 % | – |
+| ceiling | 256 | 0.0 | 0.0 | 0.00 % | – | – |
+| wall-x- | 192 | 244.9 | 245.3 | 0.17 % | 2.67 % | – |
+
+## daylight-sun
+
+The side-window room on a clear morning: the CIE clear sky and the sun at 10:00 solar time on the March equinox in Buenos Aires, north behind the window's wall, so the sun comes in through it.
+
+Radiance rad6R0P2, 1576 points. The sun 45.5° up, bearing 45.5°; the sky 13893 lx on the ground, the sun 95723 lx facing it; the glass lets 80 % through.
+
+### Total light
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 320 | 8437.5 | 8442.7 | 0.06 % | 0.16 % | – |
+| floor | 320 | 7783.7 | 7783.2 | -0.01 % | 0.71 % | – |
+| ceiling | 320 | 2688.0 | 2686.1 | -0.07 % | – | – |
+| wall-x- | 220 | 3775.0 | 3798.7 | 0.63 % | 10.25 % | – |
+| wall-x+ | 220 | 2315.0 | 2310.3 | -0.20 % | – | – |
+| wall-z+ | 176 | 2090.5 | 2094.8 | 0.21 % | – | – |
+
+### Daylight's first arrival
+
+| Surface | Points | Radiance Ē (lx) | Lux Studio Ē (lx) | Ē difference | Worst bright point, far | Worst bright point, near |
+|---|---|---|---|---|---|---|
+| work-plane | 320 | 6347.3 | 6348.3 | 0.02 % | 0.12 % | – |
+| floor | 320 | 5532.5 | 5531.5 | -0.02 % | 0.04 % | – |
+| ceiling | 320 | 578.3 | 576.1 | -0.37 % | – | – |
+| wall-x- | 220 | 1414.5 | 1415.0 | 0.04 % | 0.04 % | – |
+| wall-x+ | 220 | 392.5 | 391.5 | -0.25 % | – | – |
+| wall-z+ | 176 | 485.1 | 485.9 | 0.16 % | – | – |

@@ -4,7 +4,7 @@
 
 | Para… | Con el mouse | En pantallas táctiles |
 |---|---|---|
-| Girar alrededor | Arrastrar en un lugar vacío | Un dedo en un lugar vacío |
+| Girar alrededor (también por debajo, para ver el techo) | Arrastrar en un lugar vacío | Un dedo en un lugar vacío |
 | Desplazar | Arrastrar con el botón derecho | Dos dedos |
 | Acercar o alejar | La rueda | Pellizcar |
 

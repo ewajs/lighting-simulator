@@ -73,7 +73,9 @@ CSS variables. Below, token names are listed without the prefix.
 blue → cyan → green → yellow → orange → red → white, at 0, 50, 100, 200, 300,
 500, 1000 and 2000 lx (roughly logarithmic; ADR 0066). Core's
 `FALSE_COLOUR_STOPS` is the same table, which the 3D view and the legend
-read. The legend always shows the scale and the range.
+read. By day the same colours stretch to 0, 100, 300, 500, 1000, 2000, 5000
+and 10 000 lx (`DAYLIGHT_FALSE_COLOUR_STOPS`, ADR 0080), chosen when any
+daylight came in. The legend always shows the scale and the range.
 
 ## Layout
 

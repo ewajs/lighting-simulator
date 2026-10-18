@@ -150,6 +150,32 @@ for (const language of LANGUAGES) {
         .screenshot({ path: out(language, 'furniture-inspector') });
     });
 
+    test('windows and daylight', async ({ page }) => {
+      await open(page, language);
+      const es = language === 'es';
+      await page.getByRole('radio', { name: es ? 'Ventanas' : 'Windows', exact: true }).click();
+      await page.locator('lxs-library').screenshot({ path: out(language, 'windows-catalog') });
+      await page
+        .locator('lxs-window-list')
+        .getByRole('button', { name: es ? /^Ventanal / : /^Tall window / })
+        .click();
+      await page.locator('lxs-inspector').screenshot({ path: out(language, 'window-inspector') });
+      // Buenos Aires, 10:00 at the equinox: the sun in the north-east, behind the back wall.
+      await page.evaluate(() => {
+        // The manual doesn't import the app's types: just the call it needs.
+        const app = document.querySelector('lxs-app') as unknown as {
+          simulator: { setDaylight(patch: { sky: string; solarHour: number }): void };
+        };
+        app.simulator.setDaylight({ sky: 'clear', solarHour: 10 });
+      });
+      await page.keyboard.press('Escape');
+      await page.waitForTimeout(600);
+      await page.locator('lxs-viewport').screenshot({ path: out(language, 'sun-through-window') });
+      const settings = page.locator('lxs-daylight-inspector');
+      await settings.scrollIntoViewIfNeeded();
+      await settings.screenshot({ path: out(language, 'daylight-settings') });
+    });
+
     test('room', async ({ page }) => {
       await open(page, language);
       await page.locator('lxs-inspector').screenshot({ path: out(language, 'room-inspector') });

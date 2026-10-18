@@ -35,16 +35,22 @@ order:
 3. **Furniture casts shadows:** if a piece stands in the way, that source adds
    nothing. Tables block with their top only; chairs, plants and pictures
    don't block.
-4. **It adds the light that bounces:** the floor, ceiling and walls are split
+4. **It adds daylight:** each window is a source as bright as the sky seen
+   through it (CIE's overcast and clear skies, at IES levels), split into
+   cells; the sun comes in as a beam. With frosted glass or a covering, the
+   window glows evenly ([Windows and daylight](../windows)).
+5. **It adds the light that bounces:** the floor, ceiling and walls are split
    into 25 cm patches, and each sends back the share of the light it receives
    that its reflectance says, bounce after bounce, until nothing changes. It's
    the radiosity method, a classic of interior lighting calculation
    ([Light that bounces](./light-that-bounces)). Furniture counts too: it
    hides bounced light, and each of its faces reflects it as its finish does.
    And each luminaire's body, the box of its opening, hides it too, as a
-   glowing surface does.
-5. **It multiplies by the maintenance factor** ([Maintenance factor](./maintenance)).
-6. **It sums up** each surface: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ and
+   glowing surface does. Daylight bounces the same way, and what reaches a
+   window leaves the room.
+6. **It multiplies the luminaires' light by the maintenance factor**
+   ([Maintenance factor](./maintenance)).
+7. **It sums up** each surface: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ and
    $U_0$ ([Uniformity](./uniformity)).
 
 ## What it doesn't count yet
@@ -53,7 +59,9 @@ order:
 - **A luminaire's body is a box:** its opening's, not tilted. Right above a
   downlight it shows (see below).
 - **Every surface reflects diffusely:** no gloss, no mirrors.
-- **Rooms are rectangular**, and there are no windows yet.
+- **Rooms are rectangular**, and walls have no thickness.
+- **Glass lets the same through at any angle**, and there's no weather: one
+  sky, at one time.
 
 ## How accurate it is
 

@@ -5301,5 +5301,595 @@
         }
       ]
     }
+  ],
+  "daylightRooms": [
+    {
+      "name": "daylight-and-lamps",
+      "description": "Late daylight and two downlights together: a 1.5 × 1.2 m clear window in the right wall of a 5 × 4 × 2.7 m room, the CIE overcast sky at 17:00 solar time on the March equinox in Buenos Aires, and two 6-inch recessed downlights.",
+      "radianceRelease": "rad6R0P2",
+      "points": 1356,
+      "sun": {
+        "altitudeDeg": 12.33907,
+        "azimuthDeg": 278.59647
+      },
+      "horizontalSkyLx": 4787.628,
+      "sunNormalLx": 0,
+      "transmittance": 0.8,
+      "daylight": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 116.7,
+          "oursAverageLx": 117.2,
+          "averageError": 0.00381,
+          "worstFar": 0.01282,
+          "worstNear": 0,
+          "radianceMinLx": 5.4,
+          "oursMinLx": 5.4,
+          "minError": 0.00099,
+          "uniformityError": -0.0028
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 86.3,
+          "oursAverageLx": 86.3,
+          "averageError": 0.00006,
+          "worstFar": 0.01306,
+          "worstNear": 0,
+          "radianceMinLx": 12.2,
+          "oursMinLx": 12.1,
+          "minError": -0.00679,
+          "uniformityError": -0.00684
+        },
+        {
+          "surface": "ceiling",
+          "points": 320,
+          "radianceAverageLx": 20.7,
+          "oursAverageLx": 20.7,
+          "averageError": -0.00003,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 3.1,
+          "oursMinLx": 3,
+          "minError": -0.00884,
+          "uniformityError": -0.00882
+        },
+        {
+          "surface": "wall-z-",
+          "points": 220,
+          "radianceAverageLx": 35.8,
+          "oursAverageLx": 35.9,
+          "averageError": 0.00364,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 4.9,
+          "oursMinLx": 4.8,
+          "minError": -0.01717,
+          "uniformityError": -0.02073
+        },
+        {
+          "surface": "wall-x-",
+          "points": 176,
+          "radianceAverageLx": 29.1,
+          "oursAverageLx": 29.4,
+          "averageError": 0.00862,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 12.4,
+          "oursMinLx": 12.3,
+          "minError": -0.0033,
+          "uniformityError": -0.01181
+        }
+      ],
+      "total": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 320.3,
+          "oursAverageLx": 321.5,
+          "averageError": 0.0035,
+          "worstFar": 0.04918,
+          "worstNear": 0,
+          "radianceMinLx": 96.6,
+          "oursMinLx": 100.5,
+          "minError": 0.04042,
+          "uniformityError": 0.03679
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 284,
+          "oursAverageLx": 284.6,
+          "averageError": 0.00198,
+          "worstFar": 0.03785,
+          "worstNear": 0,
+          "radianceMinLx": 106.7,
+          "oursMinLx": 111.6,
+          "minError": 0.04571,
+          "uniformityError": 0.04365
+        },
+        {
+          "surface": "ceiling",
+          "points": 320,
+          "radianceAverageLx": 113.3,
+          "oursAverageLx": 113.5,
+          "averageError": 0.00241,
+          "worstFar": 0.03178,
+          "worstNear": 0.01994,
+          "radianceMinLx": 75.2,
+          "oursMinLx": 76.1,
+          "minError": 0.01154,
+          "uniformityError": 0.00911
+        },
+        {
+          "surface": "wall-z-",
+          "points": 220,
+          "radianceAverageLx": 133.9,
+          "oursAverageLx": 134.4,
+          "averageError": 0.00352,
+          "worstFar": 0.0521,
+          "worstNear": 0,
+          "radianceMinLx": 80.4,
+          "oursMinLx": 80.3,
+          "minError": -0.00122,
+          "uniformityError": -0.00472
+        },
+        {
+          "surface": "wall-x-",
+          "points": 176,
+          "radianceAverageLx": 127,
+          "oursAverageLx": 127.7,
+          "averageError": 0.00541,
+          "worstFar": 0.05363,
+          "worstNear": 0,
+          "radianceMinLx": 83.2,
+          "oursMinLx": 85.7,
+          "minError": 0.03066,
+          "uniformityError": 0.02511
+        }
+      ]
+    },
+    {
+      "name": "daylight-side-window",
+      "description": "Daylight alone through a 2 × 1.4 m clear window in the back wall of a 4 × 5 × 2.7 m room, its sill at 0.9 m: the CIE overcast sky at noon on the March equinox in Buenos Aires.",
+      "radianceRelease": "rad6R0P2",
+      "points": 1356,
+      "sun": {
+        "altitudeDeg": 55.465924,
+        "azimuthDeg": 359.999999
+      },
+      "horizontalSkyLx": 17599.573,
+      "sunNormalLx": 0,
+      "transmittance": 0.8,
+      "daylight": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 639.7,
+          "oursAverageLx": 641.8,
+          "averageError": 0.00332,
+          "worstFar": 0.0153,
+          "worstNear": 0,
+          "radianceMinLx": 34.6,
+          "oursMinLx": 35.4,
+          "minError": 0.0249,
+          "uniformityError": 0.02151
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 470.5,
+          "oursAverageLx": 470.4,
+          "averageError": -0.00016,
+          "worstFar": 0.01284,
+          "worstNear": 0,
+          "radianceMinLx": 71.6,
+          "oursMinLx": 73.1,
+          "minError": 0.02101,
+          "uniformityError": 0.02117
+        },
+        {
+          "surface": "ceiling",
+          "points": 320,
+          "radianceAverageLx": 123.5,
+          "oursAverageLx": 123.4,
+          "averageError": -0.0014,
+          "worstFar": 0.0083,
+          "worstNear": 0,
+          "radianceMinLx": 15.5,
+          "oursMinLx": 16,
+          "minError": 0.02854,
+          "uniformityError": 0.02999
+        },
+        {
+          "surface": "wall-x-",
+          "points": 220,
+          "radianceAverageLx": 216.6,
+          "oursAverageLx": 217.5,
+          "averageError": 0.0041,
+          "worstFar": 0.02868,
+          "worstNear": 0,
+          "radianceMinLx": 29.3,
+          "oursMinLx": 28,
+          "minError": -0.04395,
+          "uniformityError": -0.04786
+        },
+        {
+          "surface": "wall-z+",
+          "points": 176,
+          "radianceAverageLx": 171.3,
+          "oursAverageLx": 173,
+          "averageError": 0.00986,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 74.6,
+          "oursMinLx": 71.1,
+          "minError": -0.04611,
+          "uniformityError": -0.05543
+        }
+      ],
+      "total": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 1024.1,
+          "oursAverageLx": 1029.1,
+          "averageError": 0.00487,
+          "worstFar": 0.04134,
+          "worstNear": 0,
+          "radianceMinLx": 356.1,
+          "oursMinLx": 373.8,
+          "minError": 0.04975,
+          "uniformityError": 0.04466
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 869,
+          "oursAverageLx": 872.8,
+          "averageError": 0.00436,
+          "worstFar": 0.07443,
+          "worstNear": 0,
+          "radianceMinLx": 400.2,
+          "oursMinLx": 414,
+          "minError": 0.0345,
+          "uniformityError": 0.03
+        },
+        {
+          "surface": "ceiling",
+          "points": 320,
+          "radianceAverageLx": 459.3,
+          "oursAverageLx": 460.8,
+          "averageError": 0.00306,
+          "worstFar": 0.05071,
+          "worstNear": 0,
+          "radianceMinLx": 272.6,
+          "oursMinLx": 278.6,
+          "minError": 0.02194,
+          "uniformityError": 0.01881
+        },
+        {
+          "surface": "wall-x-",
+          "points": 220,
+          "radianceAverageLx": 556.7,
+          "oursAverageLx": 560.3,
+          "averageError": 0.00656,
+          "worstFar": 0.03558,
+          "worstNear": 0,
+          "radianceMinLx": 301,
+          "oursMinLx": 304.1,
+          "minError": 0.01037,
+          "uniformityError": 0.00379
+        },
+        {
+          "surface": "wall-z+",
+          "points": 176,
+          "radianceAverageLx": 466.4,
+          "oursAverageLx": 471,
+          "averageError": 0.00979,
+          "worstFar": 0.0276,
+          "worstNear": 0,
+          "radianceMinLx": 337.3,
+          "oursMinLx": 337.7,
+          "minError": 0.00106,
+          "uniformityError": -0.00865
+        }
+      ]
+    },
+    {
+      "name": "daylight-skylight",
+      "description": "Daylight alone through a 1.2 × 1.2 m clear skylight in the middle of a 4 × 4 × 3 m room's ceiling: the CIE overcast sky at noon on the March equinox in Buenos Aires.",
+      "radianceRelease": "rad6R0P2",
+      "points": 960,
+      "sun": {
+        "altitudeDeg": 55.465924,
+        "azimuthDeg": 359.999999
+      },
+      "horizontalSkyLx": 17599.573,
+      "sunNormalLx": 0,
+      "transmittance": 0.8,
+      "daylight": [
+        {
+          "surface": "work-plane",
+          "points": 256,
+          "radianceAverageLx": 730.8,
+          "oursAverageLx": 730.7,
+          "averageError": -0.00005,
+          "worstFar": 0.01619,
+          "worstNear": 0,
+          "radianceMinLx": 224,
+          "oursMinLx": 226,
+          "minError": 0.00905,
+          "uniformityError": 0.0091
+        },
+        {
+          "surface": "floor",
+          "points": 256,
+          "radianceAverageLx": 532.9,
+          "oursAverageLx": 532.9,
+          "averageError": 0.00006,
+          "worstFar": 0.02244,
+          "worstNear": 0,
+          "radianceMinLx": 245.9,
+          "oursMinLx": 245.7,
+          "minError": -0.00079,
+          "uniformityError": -0.00085
+        },
+        {
+          "surface": "ceiling",
+          "points": 256,
+          "radianceAverageLx": 0,
+          "oursAverageLx": 0,
+          "averageError": 0,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 0,
+          "oursMinLx": 0,
+          "minError": null,
+          "uniformityError": null
+        },
+        {
+          "surface": "wall-x-",
+          "points": 192,
+          "radianceAverageLx": 244.9,
+          "oursAverageLx": 245.3,
+          "averageError": 0.00172,
+          "worstFar": 0.02669,
+          "worstNear": 0,
+          "radianceMinLx": 10.8,
+          "oursMinLx": 14.3,
+          "minError": 0.3233,
+          "uniformityError": 0.32103
+        }
+      ],
+      "total": [
+        {
+          "surface": "work-plane",
+          "points": 256,
+          "radianceAverageLx": 1238.6,
+          "oursAverageLx": 1241.4,
+          "averageError": 0.0022,
+          "worstFar": 0.04599,
+          "worstNear": 0,
+          "radianceMinLx": 701.3,
+          "oursMinLx": 729.9,
+          "minError": 0.04079,
+          "uniformityError": 0.03851
+        },
+        {
+          "surface": "floor",
+          "points": 256,
+          "radianceAverageLx": 1049.7,
+          "oursAverageLx": 1051.1,
+          "averageError": 0.0013,
+          "worstFar": 0.06749,
+          "worstNear": 0,
+          "radianceMinLx": 691,
+          "oursMinLx": 705.9,
+          "minError": 0.02156,
+          "uniformityError": 0.02024
+        },
+        {
+          "surface": "ceiling",
+          "points": 256,
+          "radianceAverageLx": 484.4,
+          "oursAverageLx": 486.4,
+          "averageError": 0.0042,
+          "worstFar": 0.07381,
+          "worstNear": 0,
+          "radianceMinLx": 364.6,
+          "oursMinLx": 379.8,
+          "minError": 0.0415,
+          "uniformityError": 0.03715
+        },
+        {
+          "surface": "wall-x-",
+          "points": 192,
+          "radianceAverageLx": 702.8,
+          "oursAverageLx": 704.6,
+          "averageError": 0.00247,
+          "worstFar": 0.07754,
+          "worstNear": 0,
+          "radianceMinLx": 376.1,
+          "oursMinLx": 405.3,
+          "minError": 0.07753,
+          "uniformityError": 0.07487
+        }
+      ]
+    },
+    {
+      "name": "daylight-sun",
+      "description": "The side-window room on a clear morning: the CIE clear sky and the sun at 10:00 solar time on the March equinox in Buenos Aires, north behind the window's wall, so the sun comes in through it.",
+      "radianceRelease": "rad6R0P2",
+      "points": 1576,
+      "sun": {
+        "altitudeDeg": 45.521212,
+        "azimuthDeg": 45.530832
+      },
+      "horizontalSkyLx": 13892.775,
+      "sunNormalLx": 95722.676,
+      "transmittance": 0.8,
+      "daylight": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 6347.3,
+          "oursAverageLx": 6348.3,
+          "averageError": 0.00016,
+          "worstFar": 0.00116,
+          "worstNear": 0,
+          "radianceMinLx": 52.3,
+          "oursMinLx": 52.5,
+          "minError": null,
+          "uniformityError": null
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 5532.5,
+          "oursAverageLx": 5531.5,
+          "averageError": -0.00018,
+          "worstFar": 0.0004,
+          "worstNear": 0,
+          "radianceMinLx": 30.5,
+          "oursMinLx": 32.7,
+          "minError": null,
+          "uniformityError": null
+        },
+        {
+          "surface": "ceiling",
+          "points": 320,
+          "radianceAverageLx": 578.3,
+          "oursAverageLx": 576.1,
+          "averageError": -0.00374,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 75.7,
+          "oursMinLx": 74.6,
+          "minError": -0.01503,
+          "uniformityError": -0.01133
+        },
+        {
+          "surface": "wall-x-",
+          "points": 220,
+          "radianceAverageLx": 1414.5,
+          "oursAverageLx": 1415,
+          "averageError": 0.0004,
+          "worstFar": 0.00036,
+          "worstNear": 0,
+          "radianceMinLx": 116.4,
+          "oursMinLx": 116.4,
+          "minError": -0.00063,
+          "uniformityError": -0.00102
+        },
+        {
+          "surface": "wall-x+",
+          "points": 220,
+          "radianceAverageLx": 392.5,
+          "oursAverageLx": 391.5,
+          "averageError": -0.00247,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 39.4,
+          "oursMinLx": 38.9,
+          "minError": -0.01255,
+          "uniformityError": -0.01011
+        },
+        {
+          "surface": "wall-z+",
+          "points": 176,
+          "radianceAverageLx": 485.1,
+          "oursAverageLx": 485.9,
+          "averageError": 0.00164,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 298.7,
+          "oursMinLx": 295.9,
+          "minError": -0.00946,
+          "uniformityError": -0.01108
+        }
+      ],
+      "total": [
+        {
+          "surface": "work-plane",
+          "points": 320,
+          "radianceAverageLx": 8437.5,
+          "oursAverageLx": 8442.7,
+          "averageError": 0.00062,
+          "worstFar": 0.00155,
+          "worstNear": 0,
+          "radianceMinLx": 1524.1,
+          "oursMinLx": 1569.7,
+          "minError": 0.02989,
+          "uniformityError": 0.02926
+        },
+        {
+          "surface": "floor",
+          "points": 320,
+          "radianceAverageLx": 7783.7,
+          "oursAverageLx": 7783.2,
+          "averageError": -0.00006,
+          "worstFar": 0.0071,
+          "worstNear": 0,
+          "radianceMinLx": 1501.6,
+          "oursMinLx": 1465.3,
+          "minError": -0.02414,
+          "uniformityError": -0.02408
+        },
+        {
+          "surface": "ceiling",
+          "points": 320,
+          "radianceAverageLx": 2688,
+          "oursAverageLx": 2686.1,
+          "averageError": -0.00071,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 1482.3,
+          "oursMinLx": 1479.3,
+          "minError": -0.00207,
+          "uniformityError": -0.00136
+        },
+        {
+          "surface": "wall-x-",
+          "points": 220,
+          "radianceAverageLx": 3775,
+          "oursAverageLx": 3798.7,
+          "averageError": 0.00627,
+          "worstFar": 0.10249,
+          "worstNear": 0,
+          "radianceMinLx": 1394.5,
+          "oursMinLx": 1427.3,
+          "minError": 0.02352,
+          "uniformityError": 0.01715
+        },
+        {
+          "surface": "wall-x+",
+          "points": 220,
+          "radianceAverageLx": 2315,
+          "oursAverageLx": 2310.3,
+          "averageError": -0.00203,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 1334.3,
+          "oursMinLx": 1330,
+          "minError": -0.00324,
+          "uniformityError": -0.00121
+        },
+        {
+          "surface": "wall-z+",
+          "points": 176,
+          "radianceAverageLx": 2090.5,
+          "oursAverageLx": 2094.8,
+          "averageError": 0.00209,
+          "worstFar": 0,
+          "worstNear": 0,
+          "radianceMinLx": 1476.4,
+          "oursMinLx": 1486.6,
+          "minError": 0.00688,
+          "uniformityError": 0.00478
+        }
+      ]
+    }
   ]
 }

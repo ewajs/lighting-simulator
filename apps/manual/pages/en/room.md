@@ -21,3 +21,6 @@ was. So what you see matches how much light the surface sends back.
 
 Reflectance changes how much light bounces around the room. That's why a dark
 room looks dimmer with the same luminaires.
+
+At the end of the panel is the **daylight**: the sky, the time, the month, the
+latitude and north ([Windows and daylight](./windows#the-daylight)).

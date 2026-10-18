@@ -64,11 +64,25 @@ export interface RoomSummary {
   readonly cutoffs: readonly Cutoff[];
 }
 
+/** One reference room by day in summary.json (ADR 0081). */
+export interface DaylightRoomSummary {
+  readonly name: string;
+  readonly points: number;
+  readonly sun: { readonly altitudeDeg: number; readonly azimuthDeg: number };
+  readonly horizontalSkyLx: number;
+  readonly sunNormalLx: number;
+  readonly transmittance: number;
+  /** Daylight's first arrival, before any bounce. */
+  readonly daylight: readonly SurfaceSummary[];
+  readonly total: readonly SurfaceSummary[];
+}
+
 /** accuracy/summary.json. */
 export interface AccuracySummary {
   readonly brightShare: number;
   readonly nearM: number;
   readonly rooms: readonly RoomSummary[];
+  readonly daylightRooms: readonly DaylightRoomSummary[];
 }
 
 /** A point in Lux Studio's coordinates, in m: x right, y up, z towards the front. */

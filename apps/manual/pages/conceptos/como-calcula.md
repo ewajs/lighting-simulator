@@ -35,17 +35,23 @@ este orden:
    suma lo que le llega de cada fuente: $E = I \cos\alpha / d^2$.
 3. **Los muebles hacen sombra:** si uno se interpone, esa fuente no suma. Las
    mesas tapan solo con la tapa; sillas, plantas y cuadros no tapan.
-4. **Suma la luz que rebota:** el piso, el techo y las paredes se dividen en
+4. **Suma la luz natural:** cada ventana es una fuente con el brillo del cielo
+   que se ve a través de ella (los cielos nublado y despejado de la CIE, a los
+   niveles de la IES), dividida en celdas; el sol entra como un haz. Con
+   vidrio esmerilado o cortina, la ventana brilla pareja
+   ([Ventanas y luz natural](../ventanas)).
+5. **Suma la luz que rebota:** el piso, el techo y las paredes se dividen en
    parches de 25 cm, y cada uno devuelve la parte de la luz que recibe que
    indica su reflectancia, rebote tras rebote, hasta que no cambia nada. Es el
    método de radiosidad, clásico en el cálculo de iluminación de interiores
    ([La luz que rebota](./luz-que-rebota)). Los muebles también cuentan: tapan
    la luz que rebota, y cada una de sus caras la refleja según su terminación.
    Y el cuerpo de cada luminaria, la caja de su abertura, también la tapa,
-   como una superficie que brilla.
-5. **Multiplica por el factor de mantenimiento**
+   como una superficie que brilla. La luz natural rebota igual, y la que
+   llega a una ventana sale del ambiente.
+6. **Multiplica por el factor de mantenimiento** la luz de las luminarias
    ([Factor de mantenimiento](./mantenimiento)).
-6. **Resume** cada superficie: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ y $U_0$
+7. **Resume** cada superficie: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ y $U_0$
    ([Uniformidad](./uniformidad)).
 
 ## Lo que todavía no cuenta
@@ -54,7 +60,9 @@ este orden:
 - **El cuerpo de una luminaria es una caja:** la de su abertura, sin
   inclinar. Justo encima de una downlight se nota (ver abajo).
 - **Todas las superficies reflejan de forma difusa:** no hay brillos ni espejos.
-- **Los ambientes son rectangulares**, y todavía no hay ventanas.
+- **Los ambientes son rectangulares**, y las paredes no tienen espesor.
+- **El vidrio deja pasar lo mismo desde cualquier ángulo**, y no hay clima:
+  un cielo, a una hora.
 
 ## Cuán preciso es
 

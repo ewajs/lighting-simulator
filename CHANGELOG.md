@@ -8,7 +8,7 @@ milestones and their PRs, to give the history a shape.
 
 ## [Unreleased]
 
-M6 Windows and daylight, in progress.
+## [0.6.0] — M6 Windows and daylight, 2026-10-18
 
 ### Added
 - Windows in the scene model: in a wall or the ceiling (a skylight), with
@@ -41,6 +41,8 @@ M6 Windows and daylight, in progress.
 - Daylight in the 3D view: the sun's beam through the windows, with shadows,
   each window glowing with the sky behind it, the exposure adapting to a
   bright room by day, and the sky outside grey, blue or dark (ADR 0082).
+- The manual: Windows and daylight, in both languages, and a Daylight page in
+  its Analysis section; REPORT.md and summary.json carry the rooms by day.
 - Versions and this changelog; `npm run bump -- <version>` sets one version on
   every package and the dependencies between them (ADR 0077).
 

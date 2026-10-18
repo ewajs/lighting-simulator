@@ -4,7 +4,7 @@
 
 | To… | With a mouse | On a touch screen |
 |---|---|---|
-| Orbit | Drag on empty space | One finger on empty space |
+| Orbit (below too, to see the ceiling) | Drag on empty space | One finger on empty space |
 | Pan | Right-drag | Two fingers |
 | Zoom | The wheel | Pinch |
 

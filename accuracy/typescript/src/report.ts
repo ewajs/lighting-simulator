@@ -12,7 +12,7 @@ import {
   type SurfaceSummary,
 } from './compare';
 import { featureStudy, type FeatureResult } from './features';
-import { IES_FILES, REFERENCES } from './inputs';
+import { DAYLIGHT_REFERENCES, IES_FILES, REFERENCES } from './inputs';
 
 /** One reference room's results. */
 export interface RoomSummary {
@@ -60,11 +60,29 @@ export interface Cutoff {
 /** The cutoffs the report compares: the one the figures use, and ten times lower. */
 const CUTOFFS = [BRIGHT_SHARE, BRIGHT_SHARE / 10];
 
+/** One reference room by day (ADR 0081). */
+export interface DaylightRoomSummary {
+  readonly name: string;
+  readonly description: string;
+  readonly radianceRelease: string;
+  readonly points: number;
+  /** Where the sun was, the sky's and the sun's levels, and the glass's transmittance. */
+  readonly sun: { readonly altitudeDeg: number; readonly azimuthDeg: number };
+  readonly horizontalSkyLx: number;
+  readonly sunNormalLx: number;
+  readonly transmittance: number;
+  /** Daylight's first arrival: the sky, the ground and the sun through the windows. */
+  readonly daylight: readonly SurfaceSummary[];
+  /** Everything, every bounce: daylight and any luminaires. */
+  readonly total: readonly SurfaceSummary[];
+}
+
 /** Every reference room's results, with the thresholds they were judged by. */
 export interface AccuracySummary {
   readonly brightShare: number;
   readonly nearM: number;
   readonly rooms: readonly RoomSummary[];
+  readonly daylightRooms: readonly DaylightRoomSummary[];
 }
 
 /** Compares every reference room and summarises it. */
@@ -113,7 +131,24 @@ export function accuracySummary(): AccuracySummary {
       }),
     };
   });
-  return { brightShare: BRIGHT_SHARE, nearM: NEAR_M, rooms };
+  const daylightRooms = Object.entries(DAYLIGHT_REFERENCES).map(([name, reference]) => {
+    const points = compareReference(reference, IES_FILES);
+    const origins = reference.room.luminaires.map((luminaire) => luminaire.origin);
+    const sky = reference.daylight!;
+    return {
+      name,
+      description: reference.room.description,
+      radianceRelease: reference.radiance.release,
+      points: points.length,
+      sun: sky.sun,
+      horizontalSkyLx: sky.horizontalSkyLx,
+      sunNormalLx: sky.sunNormalLx,
+      transmittance: sky.transmittance,
+      daylight: summarize(points, origins, 'daylight'),
+      total: summarize(points, origins, 'total'),
+    };
+  });
+  return { brightShare: BRIGHT_SHARE, nearM: NEAR_M, rooms, daylightRooms };
 }
 
 const percent = (value: number) => `${(value * 100).toFixed(2)} %`;
@@ -241,7 +276,45 @@ export function reportMarkdown(summary: AccuracySummary): string {
       );
     }
   }
+  lines.push(...daylightMarkdown(summary.daylightRooms));
   return `${lines.join('\n').trimEnd()}\n`;
+}
+
+/** The rooms by day (ADR 0081), after the others. */
+function daylightMarkdown(rooms: readonly DaylightRoomSummary[]): string[] {
+  const lines = [
+    '# By day: daylight through windows',
+    '',
+    "Rooms lit through their windows by gensky's CIE skies, at the levels Lux Studio sets",
+    '(ADRs 0080, 0081). "Daylight" is its first arrival: the sky, the ground and the sun',
+    'through the windows, before any bounce; "total" adds every bounce, and any luminaires.',
+    '',
+  ];
+  for (const room of rooms) {
+    lines.push(
+      `## ${room.name}`,
+      '',
+      room.description,
+      '',
+      `Radiance ${room.radianceRelease}, ${room.points} points. The sun ${room.sun.altitudeDeg.toFixed(1)}° ` +
+        `up, bearing ${room.sun.azimuthDeg.toFixed(1)}°; the sky ${Math.round(room.horizontalSkyLx)} lx on ` +
+        `the ground` +
+        (room.sunNormalLx > 0 ? `, the sun ${Math.round(room.sunNormalLx)} lx facing it` : '') +
+        `; the glass lets ${room.transmittance * 100} % through.`,
+      '',
+      '### Total light',
+      '',
+      ...TABLE_HEAD,
+      ...tableRows(room.total),
+      '',
+      "### Daylight's first arrival",
+      '',
+      ...TABLE_HEAD,
+      ...tableRows(room.daylight),
+      '',
+    );
+  }
+  return lines;
 }
 
 /** The summary as accuracy/summary.json, rounded so it changes only when the results do. */
@@ -282,6 +355,11 @@ export function summaryJson(summary: AccuracySummary): string {
         worstFar: round(c.worstFar, 5),
         worstNear: round(c.worstNear, 5),
       })),
+    })),
+    daylightRooms: summary.daylightRooms.map((room) => ({
+      ...room,
+      daylight: room.daylight.map(roundSurface),
+      total: room.total.map(roundSurface),
     })),
   };
   return `${JSON.stringify(rounded, null, 2)}\n`;

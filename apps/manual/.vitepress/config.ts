@@ -31,6 +31,7 @@ function sidebar(
         'aiming',
         'light',
         'furniture',
+        'windows',
         'room',
         'views',
         'analyse',
@@ -53,7 +54,7 @@ function sidebar(
     {
       text: t.analysis,
       items: [
-        ...['standing', 'features', 'speed', 'method'].map(item),
+        ...['standing', 'features', 'daylight', 'speed', 'method'].map(item),
         {
           text: t.rooms,
           collapsed: true,
@@ -113,6 +114,7 @@ export default defineConfig({
             aiming: ['orientar', 'Orientar'],
             light: ['luz', 'Ajustar la luz'],
             furniture: ['mobiliario', 'Mobiliario'],
+            windows: ['ventanas', 'Ventanas y luz natural'],
             room: ['ambiente', 'El ambiente'],
             views: ['vista', 'La vista'],
             analyse: ['analizar', 'Analizar la luz'],
@@ -127,6 +129,7 @@ export default defineConfig({
             howItCalculates: ['conceptos/como-calcula', 'Cómo calcula Lux Studio'],
             standing: ['analisis/', 'Dónde estamos'],
             features: ['analisis/funcion-por-funcion', 'Función por función'],
+            daylight: ['analisis/luz-natural', 'Luz natural'],
             speed: ['analisis/velocidad', 'Velocidad'],
             method: ['analisis/metodo', 'Cómo comparamos'],
             files: ['guardar', 'Guardar, abrir y compartir'],
@@ -169,6 +172,7 @@ export default defineConfig({
             aiming: ['aiming', 'Aiming'],
             light: ['light', 'Adjusting the light'],
             furniture: ['furniture', 'Furniture'],
+            windows: ['windows', 'Windows and daylight'],
             room: ['room', 'The room'],
             views: ['views', 'The view'],
             analyse: ['analysing', 'Analysing the light'],
@@ -183,6 +187,7 @@ export default defineConfig({
             howItCalculates: ['concepts/how-it-calculates', 'How Lux Studio calculates'],
             standing: ['analysis/', 'Where we stand'],
             features: ['analysis/feature-by-feature', 'Feature by feature'],
+            daylight: ['analysis/daylight', 'Daylight'],
             speed: ['analysis/speed', 'Speed'],
             method: ['analysis/method', 'How we compare'],
             files: ['saving', 'Saving, opening and sharing'],

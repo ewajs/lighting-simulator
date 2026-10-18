@@ -23,3 +23,6 @@ foto. Así lo que ves coincide con cuánta luz devuelve la superficie.
 
 La reflectancia cambia cuánta luz rebota en el ambiente. Por eso un ambiente
 oscuro se ve más apagado con las mismas luminarias.
+
+Al final del panel está la **luz natural**: el cielo, la hora, el mes, la
+latitud y el norte ([Ventanas y luz natural](./ventanas#la-luz-natural)).

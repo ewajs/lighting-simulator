@@ -172,6 +172,10 @@ Illuminance has two parts, computed in a Web Worker so rendering never blocks
   iterating a few bounces, using each surface's reflectance. In light rooms
   this adds roughly 20–40%, so leaving it out would make results read low
   compared with DIALux/Relux.
+- **Daylight** (M6, ADR 0080): through each window, from a CIE overcast or
+  clear sky at IES availability levels, the ground and the sun, for the
+  scene's date, solar time, latitude and north (ADR 0079). It joins the
+  direct light and bounces with it; light reaching a window leaves the room.
 
 The numbers are independent of the rendered image, so they stay the same
 whatever the visual quality.
