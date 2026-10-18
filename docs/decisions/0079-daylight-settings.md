@@ -17,11 +17,8 @@ The library knows no client or location (ADR 0002).
 
 **`Scene.daylight`**, plain data saved and undone with the rest of the scene:
 
-- **`sky`**: one of three kinds.
-  - `overcast`: the CIE overcast sky, no sun.
-  - `clear`: a clear sky with the sun.
-  - `night`: no daylight. Only the luminaires light the room.
-- **`solarHour`**: local *solar* time, 0–24, where 12 is when the sun is highest. Clock time would also need the longitude, the time zone and the equation of time. That's up to ±16 minutes plus the zone's offset, which matters to a clock but not to how a room looks. The UI offers *Mañana* 9, *Mediodía* 12 and *Tarde* 16 as presets, plus a slider.
+- **`sky`**: `overcast` (the CIE overcast sky, no sun) or `clear` (a clear sky, with the sun). Night isn't a sky but a time: once the sun is below the horizon there's no daylight, whatever the sky. A first version had `night` as a third sky; the owner moved it to the times of day, so there's one way to get night and the sky's choice stays meaningful.
+- **`solarHour`**: local *solar* time, 0–24, where 12 is when the sun is highest. Clock time would also need the longitude, the time zone and the equation of time. That's up to ±16 minutes plus the zone's offset, which matters to a clock but not to how a room looks. The UI offers *Mañana* 9, *Mediodía* 12, *Tarde* 16 and *Noche* 22 as presets, plus a slider. By 22:00 solar time the sun has set everywhere but near the poles in summer.
 - **`month` and `day`**: the date, in a 365-day year. The UI picks a month and keeps the day, so the 21st, the default, lands on the solstices and equinoxes.
 - **`latitudeDeg`**: the site's latitude, with north positive.
 - **`northDeg`**: which way north is, clockwise seen from above from the room's −z. At 0, north is behind the back wall.

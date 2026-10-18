@@ -50,7 +50,7 @@ const SUN_WHITE_KELVIN = 5500;
 const SUN_WHITE_ALTITUDE_DEG = 40;
 const DEG = Math.PI / 180;
 
-/** No daylight: night, or the sun set. */
+/** No daylight: the sun has set. */
 const NONE = { sun: undefined, windows: [], fluxLm: 0 } as const;
 
 /** The lights `scene`'s daylight brings in through its windows. */

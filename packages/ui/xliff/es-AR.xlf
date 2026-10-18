@@ -1135,10 +1135,6 @@
   <source>Overcast</source>
   <target>Nublado</target>
 </trans-unit>
-<trans-unit id="sec566e3841a184c8">
-  <source>Clear, with sun</source>
-  <target>Despejado, con sol</target>
-</trans-unit>
 <trans-unit id="s0f3699a7bd401f61">
   <source>Night</source>
   <target>Noche</target>
@@ -1175,10 +1171,6 @@
   <source>North 0° is behind the back wall; 90° behind the right wall. Southern latitudes are negative.</source>
   <target>Norte 0° queda detrás de la pared del fondo; 90°, detrás de la pared derecha. Las latitudes sur son negativas.</target>
 </trans-unit>
-<trans-unit id="s9bc578fa58ae4a5a">
-  <source>No daylight: only the luminaires light the room.</source>
-  <target>Sin luz natural: solo iluminan las luminarias.</target>
-</trans-unit>
 <trans-unit id="scd954566a970dbfe">
   <source>The sun is below the horizon: no daylight.</source>
   <target>El sol está bajo el horizonte: no hay luz natural.</target>
@@ -1210,6 +1202,11 @@
 <trans-unit id="s9419e66defe45dbe">
   <source>No luminaires or windows to calculate.</source>
   <target>No hay luminarias ni ventanas para calcular.</target>
+</trans-unit>
+<trans-unit id="sky-clear">
+  <source>Clear</source>
+  <target>Despejado</target>
+  <note from="lit-localize">A clear sky, with the sun</note>
 </trans-unit>
 </body>
 </file>

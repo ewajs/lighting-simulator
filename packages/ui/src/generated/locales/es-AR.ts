@@ -201,7 +201,6 @@
 's99fffbc10b85f65b': `Agregá luminarias o ventanas para ver cuánta luz llega a cada superficie.`,
 's9b0c180237f7fb88': `Madera`,
 's9b4177c33e262c04': `Pared izquierda`,
-'s9bc578fa58ae4a5a': `Sin luz natural: solo iluminan las luminarias.`,
 's9c08620ecd68022e': str`Calculado en ${0} ms`,
 's9c7496d1d3b850cc': `Aberturas`,
 's9e16dc1b700aac47': `Ajustes del cálculo`,
@@ -280,7 +279,6 @@
 'seadfab8a55957cd4': `Probá tu propio archivo IES`,
 'seb04ebf6768e4e7c': `Agregá luminarias y muebles`,
 'sec03b178ce8d3711': `Tu trabajo se guarda solo en este navegador. En el menú ⋯, Nuevo empieza desde una plantilla, Guardar y Abrir usan archivos, y Compartir manda un enlace.`,
-'sec566e3841a184c8': `Despejado, con sol`,
 'see8c452e529b36fa': str`A ${0} m de altura, sin un borde de ${1} m`,
 'seefafd134250edba': `Sillón`,
 'sef191ab7b2c9f986': `Marco`,
@@ -310,6 +308,7 @@
 'sfd83c8376c6e2b37': str`${0} no es un archivo de escena.`,
 'sfe81d5d73a35a2cf': `Calcular`,
 'sffdadf0a576fd802': `Altura`,
+'sky-clear': `Despejado`,
 'tool-aim': `Orientar`,
     };
   

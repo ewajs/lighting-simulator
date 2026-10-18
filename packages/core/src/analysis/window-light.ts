@@ -54,7 +54,7 @@ export interface WindowSource {
 
 /** A scene's daylight, ready to be read at any point with `daylightIlluminance`. */
 export interface DaylightSources {
-  /** The sky, or undefined with no daylight: night, the sun set, or daylight left out. */
+  /** The sky, or undefined with no daylight: the sun set, or daylight left out. */
   readonly sky: Sky | undefined;
   /** What the daylight depends on, as a string: equal keys, equal daylight everywhere (cache.ts). */
   readonly key: string;

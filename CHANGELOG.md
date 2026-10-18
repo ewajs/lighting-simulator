@@ -23,8 +23,8 @@ milestones and their PRs, to give the history a shape.
   along their wall, with dimension lines to the corner and the floor; an
   inspector for the surface, size, position, glass and covering; and a
   Windows group in the Scene list.
-- Daylight settings, saved with the scene: an overcast or clear sky or night,
-  the solar time (morning, noon, afternoon presets), the month, the latitude
+- Daylight settings, saved with the scene: an overcast or clear sky, the
+  solar time (morning, noon, afternoon and night presets), the month, the latitude
   and which way north is, in the Room panel; the sun's position from them,
   checked against Duffie & Beckman. The demo's rooms are in Buenos Aires
   (ADR 0079).

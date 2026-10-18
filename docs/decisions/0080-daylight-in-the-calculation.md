@@ -21,7 +21,7 @@ Windows (ADR 0078) and the daylight settings (ADR 0079) are in the scene. The ca
 
 Their levels follow the IES daylight availability model (IES Lighting Handbook, 9th ed., ch. 8). The sky's horizontal illuminance is 0.3 + 21 sin αs klx overcast and 0.8 + 15.5 √(sin αs) klx clear. The zenith luminance is set so that the distribution integrates to it. On a clear day the sun adds a beam of 127.5 klx · e^(−0.21 / sin αs), with the Earth's orbit's ±3.4 %.
 
-Below the horizon is the ground, a diffuse reflector of 0.2 (Radiance gensky's default) lit by the sky and the sun. Night, or the sun below the horizon, means no daylight. Twilight isn't modelled.
+Below the horizon is the ground, a diffuse reflector of 0.2 (Radiance gensky's default) lit by the sky and the sun. The sun below the horizon, at night, means no daylight. Twilight isn't modelled.
 
 **Windows are area sources** (`analysis/window-light.ts`):
 

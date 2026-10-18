@@ -20,7 +20,7 @@
 import { sunDirection, sunPosition, dayOfYear } from '../daylight';
 import type { Daylight, Vec3 } from '../types';
 
-/** The sky's light, for a daylight that has any: Night, or the sun set, has none. */
+/** The sky's light, for a daylight that has any: with the sun set, there's none. */
 export interface Sky {
   /** Luminance in cd/m² seen looking along `direction` (a unit vector, y up), sky or ground. */
   readonly luminance: (direction: Vec3) => number;
@@ -49,9 +49,8 @@ const DEG = Math.PI / 180;
 const ALTITUDE_STEPS = 90;
 const AZIMUTH_STEPS = 180;
 
-/** The sky for `daylight`, or undefined when there is no daylight: night, or the sun below the horizon. */
+/** The sky for `daylight`, or undefined when there is no daylight: the sun below the horizon. */
 export function skyFor(daylight: Daylight): Sky | undefined {
-  if (daylight.sky === 'night') return undefined;
   const { altitudeDeg } = sunPosition(daylight);
   if (altitudeDeg <= 0) return undefined;
   const sinSun = Math.sin(altitudeDeg * DEG);

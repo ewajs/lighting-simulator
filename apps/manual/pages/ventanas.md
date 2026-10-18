@@ -52,10 +52,11 @@ Con nada elegido, al final del panel **Ambiente**:
 
 ![La luz natural: cielo, momento del día, mes, latitud y norte](/screenshots/es/daylight-settings.png)
 
-- **Cielo:** **nublado** (el cielo nublado de la CIE, sin sol),
-  **despejado, con sol**, o **noche** (sin luz natural).
-- **Momento del día:** **mañana** (9), **mediodía** (12) o **tarde** (16), o
-  cualquier hora con la barra. Es la **hora solar**: a las 12 el sol está en
+- **Cielo:** **nublado** (el cielo nublado de la CIE, sin sol) o
+  **despejado** (con sol, mientras esté arriba del horizonte).
+- **Momento del día:** **mañana** (9), **mediodía** (12), **tarde** (16) o
+  **noche** (22: el sol ya se puso, no hay luz natural), o cualquier hora
+  con la barra. Es la **hora solar**: a las 12 el sol está en
   lo más alto. Puede diferir del reloj en hasta una hora.
 - **Mes:** el día 21, para que caigan los solsticios y equinoccios.
 - **Latitud:** dónde está el proyecto; las del sur son negativas (Buenos

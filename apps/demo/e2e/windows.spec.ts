@@ -114,15 +114,17 @@ test('the daylight is set in the Room panel, one undo step each', async ({ page 
   await openDemo(page);
   // The demo's rooms are in Buenos Aires; the equinox sun at 16:00 there is 24° up.
   await expect(page.getByRole('textbox', { name: 'Latitud' })).toHaveValue('-34,6');
-  await page.getByRole('radio', { name: 'Despejado, con sol' }).click();
+  await page.getByRole('radio', { name: 'Despejado' }).click();
   await page.getByRole('radio', { name: 'Tarde' }).click();
   await expect(page.getByText('El sol está a 24° sobre el horizonte.')).toBeVisible();
+  // Night is a time of day: the sky stays as it was.
   await page.getByRole('radio', { name: 'Noche' }).click();
-  await expect(page.getByText('Sin luz natural: solo iluminan las luminarias.')).toBeVisible();
+  await expect(page.getByText('El sol está bajo el horizonte: no hay luz natural.')).toBeVisible();
+  await checked(page, 'Despejado');
   await page.keyboard.press('ControlOrMeta+z');
   await page.keyboard.press('ControlOrMeta+z');
   await checked(page, 'Mediodía');
-  await checked(page, 'Despejado, con sol');
+  await checked(page, 'Despejado');
 });
 
 test(

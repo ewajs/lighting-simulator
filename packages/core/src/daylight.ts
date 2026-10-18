@@ -8,7 +8,7 @@ import type { Daylight, Scene, SkyKind, Vec3 } from './types';
 import { assertFinite, assertInRange } from './validate';
 
 /** Every kind of sky, in the order the UI offers them. */
-export const SKY_KINDS: readonly SkyKind[] = ['overcast', 'clear', 'night'];
+export const SKY_KINDS: readonly SkyKind[] = ['overcast', 'clear'];
 
 /**
  * A neutral starting point: an overcast noon at the March equinox, on the

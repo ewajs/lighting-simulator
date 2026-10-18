@@ -29,7 +29,7 @@ const scene = (daylight: Daylight, ...windows: RoomWindow[]): Scene => ({
 
 describe('daylightLighting', () => {
   it('brings nothing in at night, or without windows', () => {
-    expect(daylightLighting(scene({ ...MORNING, sky: 'night' }, BACK))).toMatchObject({
+    expect(daylightLighting(scene({ ...MORNING, solarHour: 22 }, BACK))).toMatchObject({
       sun: undefined,
       windows: [],
       fluxLm: 0,

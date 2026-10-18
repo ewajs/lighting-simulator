@@ -20,6 +20,8 @@ const TIME_PRESETS: readonly { label: () => string; hour: number }[] = [
   { label: () => msg('Morning'), hour: 9 },
   { label: () => msg('Noon'), hour: 12 },
   { label: () => msg('Afternoon'), hour: 16 },
+  // By 22:00 solar time the sun has set everywhere but near the poles in summer.
+  { label: () => msg('Night'), hour: 22 },
 ];
 const MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const;
 /** Days in each month of a 365-day year, to keep the day valid when the month changes. */
@@ -30,7 +32,11 @@ const HOUR_STEP = 0.25;
 const NORTH_STEP_DEG = 15;
 
 const skyLabel = (sky: SkyKind): string =>
-  ({ overcast: msg('Overcast'), clear: msg('Clear, with sun'), night: msg('Night') })[sky];
+  ({
+    overcast: msg('Overcast'),
+    // Not glass's "Clear" (transparent): a clear sky.
+    clear: msg('Clear', { id: 'sky-clear', desc: 'A clear sky, with the sun' }),
+  })[sky];
 
 /**
  * Edits the daylight outside the windows (ADR 0079): the sky, the time of day
@@ -151,7 +157,6 @@ export class LxsDaylightInspector extends LitElement {
 
   /** Where the sun is, or that it isn't up, so the settings read as a sky. */
   #sunText(daylight: Daylight): string {
-    if (daylight.sky === 'night') return msg('No daylight: only the luminaires light the room.');
     const { altitudeDeg } = sunPosition(daylight);
     if (altitudeDeg <= 0) return msg('The sun is below the horizon: no daylight.');
     const altitude = formatNumber(altitudeDeg);

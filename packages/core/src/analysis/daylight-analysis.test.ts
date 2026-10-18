@@ -142,7 +142,7 @@ describe('daylight in the calculation', () => {
   });
 
   it('is none at night, or with daylight left out', () => {
-    const night = workPlane(scene({ ...NOON, sky: 'night' }, SIDE_WINDOW));
+    const night = workPlane(scene({ ...NOON, solarHour: 22 }, SIDE_WINDOW));
     expect(Math.max(...night.daylightLx)).toBe(0);
     const off = workPlane(scene(NOON, SIDE_WINDOW), {
       ...DEFAULT_CALCULATION_OPTIONS,
@@ -173,7 +173,7 @@ describe('light leaving through the windows', () => {
       on: true,
       cct: 3000,
     };
-    const night = { ...NOON, sky: 'night' as const };
+    const night = { ...NOON, solarHour: 22 };
     const closed = { ...scene(night), luminaires: [lamp] };
     const open = { ...closed, windows: [SIDE_WINDOW, SKYLIGHT] };
     const bounced = (s: Scene) =>

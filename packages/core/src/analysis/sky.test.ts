@@ -49,7 +49,7 @@ describe('skyFor', () => {
   });
 
   it('has none at night or with the sun set', () => {
-    expect(skyFor(at({ sky: 'night' }))).toBeUndefined();
+    expect(skyFor(at({ solarHour: 22 }))).toBeUndefined();
     expect(skyFor(at({ solarHour: 3 }))).toBeUndefined();
   });
 });

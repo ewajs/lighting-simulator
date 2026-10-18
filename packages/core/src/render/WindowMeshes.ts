@@ -21,7 +21,10 @@ const FRAME_COLOR = '#f2f2ef';
  * out would look no different. Its colour follows the sky: pale grey when
  * overcast, blue when clear, dark at night (ADR 0082).
  */
-const OUTSIDE_COLORS: Readonly<Record<SkyKind, string>> = {
+/** What's outside: a sky by day, or night once the sun has set. */
+export type Outside = SkyKind | 'night';
+
+const OUTSIDE_COLORS: Readonly<Record<Outside, string>> = {
   overcast: '#dde3e8',
   clear: '#a9cdef',
   night: '#0e1626',
@@ -98,7 +101,7 @@ export class WindowMeshes {
   }
 
   /** Colours what's seen through the windows for the sky outside: `night` once the sun has set. */
-  setOutside(sky: SkyKind): void {
+  setOutside(sky: Outside): void {
     this.#outside.value.set(OUTSIDE_COLORS[sky]);
   }
 

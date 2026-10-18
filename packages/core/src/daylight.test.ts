@@ -91,6 +91,8 @@ describe('updateDaylight', () => {
     expect(() => updateDaylight(emptyScene, { month: 2, day: 30 })).toThrow(/day/);
     expect(() => updateDaylight(emptyScene, { solarHour: 25 })).toThrow(/solarHour/);
     expect(() => updateDaylight(emptyScene, { latitudeDeg: -91 })).toThrow(/latitude/);
+    // Night is a time, not a sky.
+    expect(() => updateDaylight(emptyScene, { sky: 'night' as never })).toThrow(/sky/);
   });
 });
 

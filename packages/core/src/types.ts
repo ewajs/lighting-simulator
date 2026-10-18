@@ -187,8 +187,11 @@ export type PickTarget =
   | { readonly kind: 'furniture'; readonly id: string }
   | { readonly kind: 'window'; readonly id: string };
 
-/** The sky outside: overcast, clear with the sun, or night (no daylight). */
-export type SkyKind = 'overcast' | 'clear' | 'night';
+/**
+ * The sky outside: overcast, or clear with the sun. Night is a time, not a
+ * sky: once the sun is below the horizon there's no daylight.
+ */
+export type SkyKind = 'overcast' | 'clear';
 
 /**
  * The daylight outside the room's windows (ADR 0079): the sky, when, and

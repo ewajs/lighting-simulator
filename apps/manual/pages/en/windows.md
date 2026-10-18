@@ -52,10 +52,10 @@ With nothing picked, at the end of the **Room** panel:
 
 ![The daylight: sky, time of day, month, latitude and north](/screenshots/en/daylight-settings.png)
 
-- **Sky:** **overcast** (CIE's overcast sky, no sun), **clear, with sun**, or
-  **night** (no daylight).
-- **Time of day:** **morning** (9), **noon** (12) or **afternoon** (16), or any
-  time with the slider. It's **solar time**: at 12 the sun is at its highest.
+- **Sky:** **overcast** (CIE's overcast sky, no sun) or **clear** (with the
+  sun, while it's above the horizon).
+- **Time of day:** **morning** (9), **noon** (12), **afternoon** (16) or
+  **night** (22: the sun has set, no daylight), or any time with the slider. It's **solar time**: at 12 the sun is at its highest.
   It can differ from the clock by up to an hour.
 - **Month:** on the 21st, so the solstices and equinoxes fall on it.
 - **Latitude:** where the project is; southern ones are negative (Buenos

@@ -40,7 +40,7 @@ class Daylight:
     """A room's daylight, as Lux Studio's ``Daylight``."""
 
     sky: str
-    """``overcast`` or ``clear``: the rooms leave out night, which has none."""
+    """``overcast`` or ``clear``. The rooms are by day: the sun must be up."""
     solar_hour: float
     month: int
     day: int
