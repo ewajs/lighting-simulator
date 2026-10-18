@@ -240,7 +240,20 @@ export interface SurfaceSummary {
   readonly worstFar: number;
   /** The same among bright points nearer than NEAR_M; 0 if none. */
   readonly worstNear: number;
+  /** The surface's least illuminance, Emin, on each side: what a report quotes with Ē. */
+  readonly radianceMinLx: number;
+  readonly oursMinLx: number;
+  /**
+   * ours / Radiance − 1 for Emin, and for the uniformity U₀ = Emin / Ē; null
+   * when Radiance's Emin is below MIN_SHARE of its average (a point inside a
+   * piece of furniture, where both are near 0 and the ratio means nothing).
+   */
+  readonly minError: number | null;
+  readonly uniformityError: number | null;
 }
+
+/** An Emin below this share of the surface's average isn't compared: see `SurfaceSummary.minError`. */
+export const MIN_SHARE = 0.01;
 
 /** Which light to summarise: straight from the luminaires, bounced (total less direct), or both. */
 export type Light = 'direct' | 'bounced' | 'total';
@@ -268,6 +281,7 @@ export function summarize(
   points: readonly PointComparison[],
   origins: readonly Vec3[],
   light: Light,
+  brightShare = BRIGHT_SHARE,
 ): SurfaceSummary[] {
   const radiance = (p: PointComparison) => radianceLx(p, light);
   const ours = (p: PointComparison) => oursLx(p, light);
@@ -284,7 +298,10 @@ export function summarize(
     const on = points.filter((point) => point.surface === surface);
     const radianceAverageLx = on.reduce((sum, point) => sum + radiance(point), 0) / on.length;
     const oursAverageLx = on.reduce((sum, point) => sum + ours(point), 0) / on.length;
-    const bright = on.filter((point) => radiance(point) >= BRIGHT_SHARE * brightest);
+    const bright = on.filter((point) => radiance(point) >= brightShare * brightest);
+    const radianceMinLx = Math.min(...on.map(radiance));
+    const oursMinLx = Math.min(...on.map(ours));
+    const comparable = radianceMinLx >= MIN_SHARE * radianceAverageLx;
     return {
       surface,
       points: on.length,
@@ -293,6 +310,12 @@ export function summarize(
       averageError: oursAverageLx / radianceAverageLx - 1,
       worstFar: worst(bright.filter((point) => !near(point))),
       worstNear: worst(bright.filter(near)),
+      radianceMinLx,
+      oursMinLx,
+      minError: comparable ? oursMinLx / radianceMinLx - 1 : null,
+      uniformityError: comparable
+        ? oursMinLx / oursAverageLx / (radianceMinLx / radianceAverageLx) - 1
+        : null,
     };
   });
 }

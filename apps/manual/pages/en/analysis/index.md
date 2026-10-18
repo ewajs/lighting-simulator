@@ -25,10 +25,16 @@ right for that room, not that a real room will read exactly the same.
 
 - **It agrees with Radiance.** In all {{ h.rooms }} rooms, furniture
   included, each surface's average is within **{{ pct(h.worstAverage) }}** of
-  Radiance's, and no lit point more than 1 m from a luminaire is off by more
-  than **{{ pct(h.worstFar) }}**. The exception is a few points in the [room
+  Radiance's, and no lit point
+  ([at least 10 % of the brightest](./method#what-the-cutoff-leaves-out)) more
+  than 1 m from a luminaire is off by more than **{{ pct(h.worstFar) }}**. The exception is a few points in the [room
   with ten pieces of furniture](./busy-open-plan), in the penumbra of a piece's
   edge: up to {{ pct(h.busyWorstFar, 0) }}.
+- **The minimum and the uniformity,** what decides whether a project passes
+  ([Uniformity](../concepts/uniformity)), are within
+  **{{ pct(h.worstMin) }}**. The exception is a ceiling point in the room with
+  ten pieces of furniture, right above a downlight, which the luminaire's body
+  hides in Radiance: {{ pct(h.busyWorstMin, 0) }}.
 - **Furniture counts for bounced light too:** it hides it and reflects it, as
   its finish does. In the furnished rooms, that took the mean difference per
   point from {{ pct(h.furnishedBefore) }} to **{{ pct(h.furnishedAfter) }}**.

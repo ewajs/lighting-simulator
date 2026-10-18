@@ -1,10 +1,15 @@
 <script setup>
 import { data } from '../../.vitepress/theme/diagrams/analysis.data'
 import { headline } from '../../.vitepress/theme/analysis/headline'
+import { ROOM_ORDER, ROOMS } from '../../.vitepress/theme/analysis/names'
 
 const h = headline(data.summary, data.timings)
 const n = (v) => Math.round(v).toLocaleString('es-AR')
 const release = data.summary.rooms[0].radianceRelease
+const pct = (v) => `${(v * 100).toLocaleString('es-AR', { maximumFractionDigits: 1, minimumFractionDigits: 1 })} %`
+const cutoff = (room, share) =>
+  data.summary.rooms.find((r) => r.name === room).cutoffs.find((c) => c.light === 'total' && c.brightShare === share)
+const points = (room) => data.summary.rooms.find((r) => r.name === room).points
 </script>
 
 # Cómo comparamos
@@ -75,11 +80,45 @@ trabajo, el piso, el techo y las paredes: {{ n(h.points) }} puntos en total.
 - **Promedio de cada superficie:** Lux Studio / Radiance − 1. Es lo que
   muestra un informe de iluminación.
 - **Puntos iluminados:** solo los que reciben al menos el 10 % de la luz del
-  punto más iluminado del ambiente. En un rincón oscuro, 1 lx contra 2 lx es un
-  100 % que no le importa a nadie.
+  punto más iluminado del ambiente, porque en un rincón oscuro una diferencia
+  chica en lux es un porcentaje grande. Ese corte deja cosas afuera, y abajo
+  se muestra cuáles.
+- **Mínimo y uniformidad:** la iluminancia mínima $E_{min}$ de cada superficie
+  y la uniformidad $U_0 = E_{min} / \bar{E}$ se comparan aparte, porque salen
+  justo de los rincones oscuros que el corte deja afuera. Solo no se comparan
+  donde el mínimo es casi 0, un punto dentro de un mueble.
 - **Lejos y cerca:** a menos de 1 m de una luminaria, los dos programas
   aproximan de forma distinta una abertura que brilla, y el archivo IES no dice
   cómo es la luz tan de cerca. Se cuentan aparte.
+
+## Qué deja afuera el corte
+
+Los mismos puntos, luz total, con el corte del 10 % y con uno diez veces más
+bajo:
+
+<table>
+  <thead><tr><th>Ambiente</th><th>Puntos, 10 %</th><th>Puntos, 1 %</th><th>Peor a más de 1 m, 10 %</th><th>Peor a más de 1 m, 1 %</th></tr></thead>
+  <tbody>
+    <tr v-for="id in ROOM_ORDER" :key="id">
+      <td>{{ ROOMS[id].es.name }}</td>
+      <td>{{ cutoff(id, 0.1).counted }} de {{ points(id) }}</td>
+      <td>{{ cutoff(id, 0.01).counted }} de {{ points(id) }}</td>
+      <td>{{ pct(cutoff(id, 0.1).worstFar) }}</td>
+      <td>{{ pct(cutoff(id, 0.01).worstFar) }}</td>
+    </tr>
+  </tbody>
+</table>
+
+En los spots de riel, el 10 % deja casi todo afuera: los círculos de luz son
+tan brillantes que el resto del ambiente queda por debajo. Con el 1 %, los
+peores puntos aparecen en el borde de un haz o de una sombra, donde la luz
+cambia mucho en pocos centímetros, y en la luz que rebota cerca de un círculo
+de luz muy brillante, que los parches de 25 cm reparten. Cerca de las
+luminarias, también un punto del techo justo encima de una downlight, que en
+Radiance el cuerpo de la downlight tapa (ver
+[Dónde estamos](./#lo-que-todavia-no-cuenta)). El detalle de cada ambiente
+está en el
+[informe](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/REPORT.md).
 
 ## Siempre al día
 

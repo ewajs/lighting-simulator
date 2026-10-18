@@ -1,10 +1,15 @@
 <script setup>
 import { data } from '../../../.vitepress/theme/diagrams/analysis.data'
 import { headline } from '../../../.vitepress/theme/analysis/headline'
+import { ROOM_ORDER, ROOMS } from '../../../.vitepress/theme/analysis/names'
 
 const h = headline(data.summary, data.timings)
 const n = (v) => Math.round(v).toLocaleString('en')
 const release = data.summary.rooms[0].radianceRelease
+const pct = (v) => `${(v * 100).toLocaleString('en', { maximumFractionDigits: 1, minimumFractionDigits: 1 })} %`
+const cutoff = (room, share) =>
+  data.summary.rooms.find((r) => r.name === room).cutoffs.find((c) => c.light === 'total' && c.brightShare === share)
+const points = (room) => data.summary.rooms.find((r) => r.name === room).points
 </script>
 
 # How we compare
@@ -71,11 +76,42 @@ the ceiling and the walls: {{ n(h.points) }} in all.
 - **Each surface's average:** Lux Studio / Radiance − 1. It's what a lighting
   report shows.
 - **Lit points:** only those getting at least 10 % of the room's brightest
-  point's light. In a dark corner, 1 lx against 2 lx is a 100 % nobody cares
-  about.
+  point's light, because in a dark corner a small difference in lux is a large
+  percentage. That cutoff leaves things out, and below it shows which.
+- **Minimum and uniformity:** each surface's least illuminance $E_{min}$ and
+  its uniformity $U_0 = E_{min} / \bar{E}$ are compared on their own, because
+  they come from exactly the dark corners the cutoff leaves out. They're only
+  not compared where the minimum is about 0, a point inside furniture.
 - **Far and near:** within 1 m of a luminaire, the two programs approximate a
   glowing opening differently, and the IES file doesn't say what the light is
   like that close. They're counted apart.
+
+## What the cutoff leaves out
+
+The same points, total light, with the 10 % cutoff and with one ten times
+lower:
+
+<table>
+  <thead><tr><th>Room</th><th>Points, 10 %</th><th>Points, 1 %</th><th>Worst over 1 m away, 10 %</th><th>Worst over 1 m away, 1 %</th></tr></thead>
+  <tbody>
+    <tr v-for="id in ROOM_ORDER" :key="id">
+      <td>{{ ROOMS[id].en.name }}</td>
+      <td>{{ cutoff(id, 0.1).counted }} of {{ points(id) }}</td>
+      <td>{{ cutoff(id, 0.01).counted }} of {{ points(id) }}</td>
+      <td>{{ pct(cutoff(id, 0.1).worstFar) }}</td>
+      <td>{{ pct(cutoff(id, 0.01).worstFar) }}</td>
+    </tr>
+  </tbody>
+</table>
+
+For the track spots, 10 % leaves nearly everything out: the pools of light
+are so bright that the rest of the room falls below it. At 1 %, the worst
+points show up at the edge of a beam or a shadow, where the light changes a
+lot within a few centimetres, and in bounced light next to a very bright pool,
+which the 25 cm patches spread out. Near the luminaires, also a ceiling point
+right above a downlight, which the downlight's body hides in Radiance (see
+[Where we stand](./#what-it-doesn-t-count-yet)). Each room's detail is in the
+[report](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/REPORT.md).
 
 ## Always current
 

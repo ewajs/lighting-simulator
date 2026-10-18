@@ -355,6 +355,18 @@
   text-align: right;
   white-space: nowrap;
 }
+/* Eight columns since Emin and U₀ joined: tighter, headers wrap, cells don't. */
+.lx-surface-table th,
+.lx-surface-table td {
+  padding: 8px 10px;
+  font-size: 13px;
+}
+.lx-surface-table th.num {
+  white-space: normal;
+}
+.lx-surface-table .chip {
+  padding: 0 6px;
+}
 /* Differences graded: within 1 % (Radiance's own noise is 0.3 %), within 5 %, beyond. */
 .chip {
   display: inline-block;

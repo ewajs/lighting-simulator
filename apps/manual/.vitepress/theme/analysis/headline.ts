@@ -6,6 +6,14 @@ const worstAverage = (surfaces: readonly SurfaceSummary[]) =>
   Math.max(...surfaces.map((s) => Math.abs(s.averageError)));
 const worstFar = (surfaces: readonly SurfaceSummary[]) =>
   Math.max(...surfaces.map((s) => s.worstFar));
+/** The largest Emin or U₀ difference where they can be compared. */
+const worstMin = (surfaces: readonly SurfaceSummary[]) =>
+  Math.max(
+    0,
+    ...surfaces.flatMap((s) =>
+      [s.minError, s.uniformityError].flatMap((e) => (e === null ? [] : [Math.abs(e)])),
+    ),
+  );
 
 /**
  * The busy open-plan room, whose worst points are penumbrae between furniture
@@ -24,6 +32,9 @@ export interface Headline {
   /** The worst far point, every room but BUSY_ROOM; and BUSY_ROOM's. */
   readonly worstFar: number;
   readonly busyWorstFar: number;
+  /** The worst Emin or U₀ difference in total light, every room but BUSY_ROOM; and BUSY_ROOM's. */
+  readonly worstMin: number;
+  readonly busyWorstMin: number;
   /** The furnished rooms' worst mean point error before furniture took part in bounced light, and after. */
   readonly furnishedBefore: number;
   readonly furnishedAfter: number;
@@ -54,6 +65,10 @@ export function headline(summary: AccuracySummary, timings: Timings): Headline {
       ...summary.rooms.filter((r) => r.name !== BUSY_ROOM).map((r) => worstFar(r.total)),
     ),
     busyWorstFar: worstFar(summary.rooms.find((r) => r.name === BUSY_ROOM)?.total ?? []),
+    worstMin: Math.max(
+      ...summary.rooms.filter((r) => r.name !== BUSY_ROOM).map((r) => worstMin(r.total)),
+    ),
+    busyWorstMin: worstMin(summary.rooms.find((r) => r.name === BUSY_ROOM)?.total ?? []),
     furnishedBefore: Math.max(
       ...furnished.map(
         (r) => r.features.find((f) => f.step === 'furniture-shadows')!.meanPointError,

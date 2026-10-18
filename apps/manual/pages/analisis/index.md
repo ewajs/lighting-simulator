@@ -27,11 +27,17 @@ real vaya a dar exactamente lo mismo.
 
 - **Coincide con Radiance.** En los {{ h.rooms }} ambientes, muebles
   incluidos, el promedio de cada superficie queda dentro del
-  **{{ pct(h.worstAverage) }}** del de Radiance, y ningún punto iluminado a más
-  de 1 m de una luminaria se aleja más del **{{ pct(h.worstFar) }}**. La
+  **{{ pct(h.worstAverage) }}** del de Radiance, y ningún punto iluminado
+  ([al menos el 10 % del más iluminado](./metodo#que-deja-afuera-el-corte)) a
+  más de 1 m de una luminaria se aleja más del **{{ pct(h.worstFar) }}**. La
   excepción son unos pocos puntos del [ambiente con diez
   muebles](./busy-open-plan), en la penumbra del borde de un mueble: hasta un
   {{ pct(h.busyWorstFar, 0) }}.
+- **El mínimo y la uniformidad,** lo que decide si un proyecto cumple
+  ([Uniformidad](../conceptos/uniformidad)), quedan dentro del
+  **{{ pct(h.worstMin) }}**. La excepción es un punto del techo del ambiente
+  con diez muebles, justo encima de una downlight, que en Radiance tapa el
+  cuerpo de la luminaria: {{ pct(h.busyWorstMin, 0) }}.
 - **Los muebles cuentan también para la luz que rebota:** la tapan y la
   reflejan, como su terminación. En los ambientes amueblados, eso llevó la
   diferencia media por punto de un {{ pct(h.furnishedBefore) }} a un
