@@ -6,7 +6,10 @@ Studio's, but both read the same room description (sizes, luminaires and
 their aims, furniture as boxes, diffuse surfaces), so agreement checks the
 calculation, not the description; hand-worked checks cover that. Covered: direct light
 ([ADR 0058](../docs/decisions/0058-accuracy-checks.md)) and bounced light
-([ADR 0060](../docs/decisions/0060-bounced-light.md)). The figures are in
+([ADR 0060](../docs/decisions/0060-bounced-light.md)), and daylight through
+windows ([ADR 0081](../docs/decisions/0081-daylight-references.md)): four
+`daylight-*` rooms, open to gensky's CIE skies at Lux Studio's levels, held to
+their bounds by `typescript/src/daylight.test.ts`. The figures are in
 [REPORT.md](REPORT.md), and the patch size's evidence in [PATCH-SIZE.md](PATCH-SIZE.md).
 
 ## What's here
@@ -38,7 +41,8 @@ npm run accuracy:source-cell  regenerate SOURCE-CELL.md (about 30 s)
 npm run accuracy:bounce       regenerate BOUNCE.md (about 3 min)
 npm run accuracy:timings      regenerate timings.json (about 50 s, on an idle machine)
 npm run accuracy:docs         browse the Python's docs, live
-npm test                      includes the comparison (accuracy/typescript)
+npm run test:accuracy         the comparison (accuracy/typescript), not in npm test (ADR 0076)
+npm run test:accuracy-report  that REPORT.md and its JSON are current (recomputes everything)
 ```
 
 Radiance (6.0 patch 2) downloads on first use into `python/.cache`, checked by
@@ -66,7 +70,7 @@ of an Apple M1 Pro; `accuracy:check` runs Radiance's own tests in about a minute
    where the track spots' beams land and the wall washer's light beside its
    wall, worked out from the room files and the written conventions, on both
    programs' points. This catches mistakes in the room description they share.
-5. **Lux Studio computes the same points.** `npm test` fails if it strays
+5. **Lux Studio computes the same points.** `npm run test:accuracy` fails if it strays
    beyond the tolerances in `typescript/src/references.test.ts`.
 
 ## Adding a room

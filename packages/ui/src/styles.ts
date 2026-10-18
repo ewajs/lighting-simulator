@@ -227,3 +227,109 @@ export const segmentedStyles = css`
     cursor: default;
   }
 `;
+
+/**
+ * A list of add-to-room cards with a square icon, a name and a spec line, as
+ * the furniture and window lists show them, each list scrolling on its own.
+ */
+export const cardListStyles = css`
+  :host {
+    display: block;
+    overflow-y: auto;
+    padding: 0 var(--lxs-sp-2) var(--lxs-sp-3);
+  }
+  .card {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--lxs-sp-3);
+    width: 100%;
+    padding: var(--lxs-sp-2);
+    border: 1px solid transparent;
+    border-radius: var(--lxs-r-md);
+    background: transparent;
+    text-align: left;
+    cursor: grab;
+  }
+  .card:hover {
+    background: var(--lxs-surface-2);
+    border-color: var(--lxs-line);
+  }
+  .thumb {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--lxs-line);
+    border-radius: var(--lxs-r-md);
+    background: var(--lxs-surface-2);
+    color: var(--lxs-text-muted);
+  }
+  .thumb .icon {
+    width: 24px;
+    height: 24px;
+  }
+  .name {
+    font-weight: 600;
+    font-size: var(--lxs-fs-sm);
+  }
+  .spec {
+    color: var(--lxs-text-faint);
+    font-size: var(--lxs-fs-xs);
+    font-variant-numeric: tabular-nums;
+  }
+  .add {
+    opacity: 0;
+    color: var(--lxs-text-muted);
+  }
+  .card:hover .add,
+  .card:focus-visible .add {
+    opacity: 1;
+  }
+  @media (hover: none) {
+    .add {
+      opacity: 1;
+    }
+  }
+`;
+
+/**
+ * Radio chips for a choice among a few named options, each group under a
+ * small label: finishes, glass, coverings, skies.
+ */
+export const chipStyles = css`
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--lxs-sp-1);
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: var(--lxs-chip-h);
+    padding: 0 var(--lxs-sp-2);
+    border: 1px solid var(--lxs-line);
+    border-radius: calc(var(--lxs-chip-h) / 2);
+    background: transparent;
+    color: var(--lxs-text-muted);
+    font-size: var(--lxs-fs-xs);
+    cursor: pointer;
+  }
+  .chip:hover {
+    color: var(--lxs-text);
+    border-color: var(--lxs-line-strong);
+  }
+  .chip[aria-checked='true'] {
+    border-color: var(--lxs-accent);
+    color: var(--lxs-text);
+  }
+  .part {
+    display: grid;
+    gap: var(--lxs-sp-2);
+  }
+  .part-label {
+    color: var(--lxs-text-muted);
+    font-size: var(--lxs-fs-sm);
+  }
+`;

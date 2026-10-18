@@ -1,5 +1,6 @@
 import { constrainFurniture } from './furniture';
 import { constrainPosition } from './placement';
+import { constrainWindow } from './windows';
 import type { Catalog, Room, Scene, Surface, SurfaceName } from './types';
 import { assertHexColor, assertInRange, assertPositive } from './validate';
 
@@ -18,17 +19,20 @@ export const DEFAULT_ROOM: Room = {
 /** Room dimensions that can be changed together. */
 export type RoomSize = Pick<Room, 'width' | 'depth' | 'height'>;
 
-/** Resizes the room, moving luminaires and furniture back inside where they can be. */
+/** Resizes the room, moving luminaires, furniture and windows back inside where they can be. */
 export function resizeRoom(scene: Scene, size: Partial<RoomSize>, catalog: Catalog): Scene {
   const room = { ...scene.room, ...size };
   assertRoomSize(room);
   return {
+    ...scene,
     room,
     luminaires: scene.luminaires.map((luminaire) => ({
       ...luminaire,
       position: constrainPosition(luminaire.position, catalog.get(luminaire.productId), room),
     })),
     furniture: scene.furniture.map((piece) => constrainFurniture(piece, room)),
+    // A window stays on its wall as the wall moves, and shrinks if it no longer fits.
+    windows: scene.windows.map((window) => constrainWindow(window, room)),
   };
 }
 

@@ -1,3 +1,4 @@
+import { addWindow, updateWindow, type WindowPatch, type WindowPreset } from './windows';
 import {
   addFurniture,
   updateFurniture,
@@ -33,6 +34,7 @@ import type {
   TextureImage,
   TextureProvider,
 } from './types';
+import { DEFAULT_DAYLIGHT, updateDaylight, type DaylightPatch } from './daylight';
 
 /** Options for edits that can be merged into one undo step. */
 export interface EditOptions {
@@ -95,7 +97,13 @@ export class Simulator {
   #history = history.emptyHistory<Scene>();
 
   constructor({ catalog, scene, photometry, models, textures, logger }: SimulatorOptions) {
-    const initial = scene ?? { room: DEFAULT_ROOM, luminaires: [], furniture: [] };
+    const initial = scene ?? {
+      room: DEFAULT_ROOM,
+      luminaires: [],
+      furniture: [],
+      windows: [],
+      daylight: DEFAULT_DAYLIGHT,
+    };
     assertScene(initial);
     this.#catalog = catalog;
     this.#logger = logger ?? consoleLogger();
@@ -105,7 +113,7 @@ export class Simulator {
     this.#scene = initial;
     const { width, depth, height } = initial.room;
     this.#logger.debug(
-      `[scene] Started: ${width} × ${depth} × ${height} m room, ${initial.luminaires.length} luminaires, ${initial.furniture.length} pieces of furniture`,
+      `[scene] Started: ${width} × ${depth} × ${height} m room, ${initial.luminaires.length} luminaires, ${initial.furniture.length} pieces of furniture, ${initial.windows.length} windows`,
     );
   }
 
@@ -231,6 +239,14 @@ export class Simulator {
   }
 
   /**
+   * Changes the daylight: the sky, the solar time, the date, the latitude or
+   * which way north is (ADR 0079). Throws for an invalid value.
+   */
+  setDaylight(patch: DaylightPatch, options?: EditOptions): void {
+    this.#commit(updateDaylight(this.#scene, patch), options, 'Daylight', patch);
+  }
+
+  /**
    * Adds a luminaire and returns its id. It starts at the product's defaults,
    * standing over `at`, with any other fields given set as by
    * `updateLuminaire`, all in one undo step. Throws if the product isn't in the
@@ -292,7 +308,34 @@ export class Simulator {
   }
 
   /**
-   * Removes these luminaires and pieces of furniture, as one undo step. An
+   * Adds a window of `preset` (ADR 0078): on its surface, centred along it, at
+   * its sill height on a wall. `patch` overrides any field, e.g. another wall,
+   * and the result is kept on its surface. Returns the new window's id.
+   */
+  addWindow(preset: WindowPreset, patch: WindowPatch = {}): string {
+    const id = crypto.randomUUID();
+    this.#commit(addWindow(this.#scene, preset, id, patch), undefined, 'Add window', {
+      preset,
+      id,
+      ...patch,
+    });
+    return id;
+  }
+
+  /**
+   * Changes a window's surface, place, size, glazing or covering. The result
+   * is kept on its surface, inside its edges. Throws for an unknown id or an
+   * invalid value.
+   */
+  updateWindow(id: string, patch: WindowPatch, options?: EditOptions): void {
+    this.#commit(updateWindow(this.#scene, id, patch), options, 'Update window', {
+      id,
+      ...patch,
+    });
+  }
+
+  /**
+   * Removes these luminaires, pieces of furniture and windows, as one undo step. An
    * empty list changes nothing. Throws for an unknown id.
    */
   remove(ids: readonly string[]): void {

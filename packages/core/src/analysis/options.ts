@@ -45,6 +45,11 @@ export interface CalculationOptions {
    * doesn't see the room through it. Needs `bouncedLight`.
    */
   readonly luminaireBodies: boolean;
+  /**
+   * Daylight through the windows, from the scene's sky (ADR 0080). Off, the
+   * windows still let the room's own light out, but none in.
+   */
+  readonly daylight: boolean;
 }
 
 /** The defaults: everything counted, sizes chosen by measurement (ADRs 0060, 0069; accuracy/PATCH-SIZE.md, SOURCE-CELL.md). */
@@ -57,6 +62,7 @@ export const DEFAULT_CALCULATION_OPTIONS: CalculationOptions = {
   bouncedLight: true,
   furnitureInBouncedLight: true,
   luminaireBodies: true,
+  daylight: true,
 };
 
 /**

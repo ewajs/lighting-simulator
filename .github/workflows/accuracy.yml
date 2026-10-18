@@ -1,0 +1,26 @@
+name: Accuracy
+
+# Lux Studio against Radiance (ADRs 0058, 0076): every reference room, then
+# that the report is current. Minutes, so only when the calculation or
+# accuracy/ changes, or by hand from the Actions tab.
+on:
+  pull_request:
+    paths:
+      - 'packages/core/src/analysis/**'
+      - 'packages/core/src/luminaire-frame.ts'
+      - 'packages/core/src/photometry/**'
+      - 'accuracy/**'
+  workflow_dispatch:
+
+jobs:
+  accuracy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run test:accuracy
+      - run: npm run test:accuracy-report

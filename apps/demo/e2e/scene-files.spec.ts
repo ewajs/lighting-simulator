@@ -55,7 +55,7 @@ test('saving downloads the scene as a .luxstudio.json file', async ({ page }) =>
   const { name, text } = await save(page);
   expect(name).toMatch(/^escena-\d{4}-\d{2}-\d{2}-\d{4}\.luxstudio\.json$/);
   const file = JSON.parse(text) as SceneFile;
-  expect(file).toMatchObject({ format: 'lux-studio-scene', version: 1 });
+  expect(file).toMatchObject({ format: 'lux-studio-scene', version: 2 });
   expect(file.scene.luminaires).toHaveLength(5);
   expect(file.scene.furniture).toHaveLength(7);
   expect(file.scene.room.surfaces.floor.texture).toBe('oak-planks');
@@ -105,7 +105,7 @@ test('a file that isn’t a valid scene is reported and changes nothing', async 
   const { text } = await save(page);
   await drop(page, 'damaged.luxstudio.json', text.replace('"dimming": 1', '"dimming": "full"'));
   await expect(notice(page)).toHaveText('damaged.luxstudio.json está dañado y no se puede abrir.');
-  await drop(page, 'future.luxstudio.json', text.replace('"version": 1', '"version": 9'));
+  await drop(page, 'future.luxstudio.json', text.replace('"version": 2', '"version": 9'));
   await expect(notice(page)).toContainText(
     'future.luxstudio.json se guardó con una versión más nueva',
   );

@@ -1,7 +1,16 @@
 name: CI
 
+# The fast checks, on every pull request that changes code (ADR 0076): about a
+# minute. The accuracy comparison against Radiance runs in accuracy.yml, only
+# when the calculation or accuracy/ changes. Markdown-only changes skip this,
+# but the manual's own pages still run it, for its dead-link check.
 on:
   pull_request:
+    paths:
+      - '**'
+      - '!**/*.md'
+      - '!docs/**'
+      - 'apps/manual/**'
 
 jobs:
   check:
@@ -21,6 +30,7 @@ jobs:
       - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck
+      # core, ui and demo: seconds. The accuracy comparison is in accuracy.yml.
       - run: npm test
       - run: npm run build
       # The docs site: fails on an undocumented export or a broken link.

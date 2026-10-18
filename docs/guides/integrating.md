@@ -13,7 +13,7 @@ is a complete, working example of everything here.
 Packages are consumed from TypeScript source, not from npm
 ([ADR 0017](../decisions/0017-consume-packages-from-source.md)). A bundler
 such as Vite compiles them with the host's code. The delivery format for
-clients is decided in milestone M6.
+clients is decided in milestone M7.
 
 ## Two ways to use it
 

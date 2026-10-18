@@ -9,6 +9,7 @@ import type {
   Room,
   Scene,
 } from './types';
+import { DEFAULT_DAYLIGHT } from './daylight';
 
 export function product(mount: MountType, extra: Partial<Product> = {}): Product {
   return { id: `test-${mount}`, mount, power: 10, flux: 800, cct: 3000, beamDeg: 36, ...extra };
@@ -30,7 +31,13 @@ export const catalog: Catalog = {
 /** DEFAULT_ROOM is 5 × 4 × 2.7 m: x ∈ [−2.5, 2.5], z ∈ [−2, 2]. */
 export const room: Room = DEFAULT_ROOM;
 
-export const emptyScene: Scene = { room, luminaires: [], furniture: [] };
+export const emptyScene: Scene = {
+  room,
+  luminaires: [],
+  furniture: [],
+  windows: [],
+  daylight: DEFAULT_DAYLIGHT,
+};
 
 /** A point source's opening: what most IES files state. */
 export const POINT_OPENING: LuminousOpening = { widthM: 0, lengthM: 0, heightM: 0, round: false };

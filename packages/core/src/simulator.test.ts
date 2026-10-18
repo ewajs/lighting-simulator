@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { Simulator } from './simulator';
 import { catalog } from './test-fixtures';
+import { DEFAULT_DAYLIGHT } from './daylight';
 
 const create = () => new Simulator({ catalog });
 
@@ -13,7 +14,13 @@ describe('Simulator', () => {
   });
 
   it('rejects an invalid starting scene', () => {
-    const scene = { room: { ...create().scene.room, width: -1 }, luminaires: [], furniture: [] };
+    const scene = {
+      room: { ...create().scene.room, width: -1 },
+      luminaires: [],
+      furniture: [],
+      windows: [],
+      daylight: DEFAULT_DAYLIGHT,
+    };
     expect(() => new Simulator({ catalog, scene })).toThrow(/room.width/);
   });
 
@@ -210,6 +217,8 @@ describe('Simulator furniture', () => {
           finish: { main: 'linen' as const, accent: 'oak' as const },
         },
       ],
+      windows: [],
+      daylight: DEFAULT_DAYLIGHT,
     };
     expect(() => new Simulator({ catalog, scene })).toThrow(/position.z/);
   });

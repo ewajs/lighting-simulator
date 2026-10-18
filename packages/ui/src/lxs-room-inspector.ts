@@ -11,6 +11,7 @@ import {
 import { newMergeKey, type FieldChange } from './field-change';
 import { formatNumber } from './format';
 import { icon } from './icons';
+import './lxs-daylight-inspector';
 import './lxs-number-field';
 import './lxs-slider-field';
 import { sharedStyles, inspectorStyles } from './styles';
@@ -23,7 +24,7 @@ const MAX_REFLECTANCE = 0.95;
 
 /**
  * Edits the room: dimensions and surface finishes, a colour or one of the
- * host's materials (ADR 0050).
+ * host's materials (ADR 0050), and the daylight outside it (ADR 0079).
  */
 @customElement('lxs-room-inspector')
 @localized()
@@ -141,6 +142,10 @@ export class LxsRoomInspector extends LitElement {
       </section>
       ${this.#surface('floor', msg('Floor'))} ${this.#surface('walls', msg('Walls'))}
       ${this.#surface('ceiling', msg('Ceiling'))}
+      <lxs-daylight-inspector
+        .simulator=${this.simulator}
+        .scene=${this.scene}
+      ></lxs-daylight-inspector>
       <p class="hint">
         ${msg('Select a luminaire or a piece of furniture in the viewport or the Scene list to edit it.')}
       </p>

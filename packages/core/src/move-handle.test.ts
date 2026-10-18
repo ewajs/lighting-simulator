@@ -5,6 +5,7 @@ import type { Ray } from './placement';
 import { Simulator } from './simulator';
 import { catalog, product, room } from './test-fixtures';
 import type { Luminaire } from './types';
+import { DEFAULT_DAYLIGHT } from './daylight';
 
 const at = (productId: string, x: number, y: number, z: number): Luminaire => ({
   id: `${productId}@${x},${y},${z}`,
@@ -44,7 +45,10 @@ describe('luminaireAxes', () => {
 describe('groupAxes', () => {
   /** The axes the luminaires share, in a scene of just them. */
   const shared = (...luminaires: Luminaire[]) => {
-    const sim = new Simulator({ catalog, scene: { room, luminaires, furniture: [] } });
+    const sim = new Simulator({
+      catalog,
+      scene: { room, luminaires, furniture: [], windows: [], daylight: DEFAULT_DAYLIGHT },
+    });
     return groupAxes(
       itemRules(sim, 'luminaire'),
       luminaires.map((l) => l.id),

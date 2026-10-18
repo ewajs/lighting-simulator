@@ -42,7 +42,11 @@ npm run dev           demo dev server (apps/demo)
 npm run build         production build of the demo → apps/demo/dist
 npm run lint          ESLint (type-aware, plus the boundary rule)
 npm run typecheck     tsc in every workspace
-npm test              Vitest in every workspace (seconds)
+npm test              Vitest in core, ui and demo (seconds)
+npm run test:accuracy   Lux Studio against Radiance, every reference room
+                      (minutes; ADR 0076: when the calculation changes)
+npm run test:accuracy-report   that REPORT.md and its JSON are current
+                      (recomputes everything; before a milestone's docs PR)
 npm run coverage      unit test coverage over all source files, per workspace
                       (HTML report in each workspace's coverage/)
 npm run mutation-check -w packages/core   plants known mistakes in the
@@ -81,17 +85,29 @@ npm run i18n:build    regenerate locale modules after editing the XLIFF
 npm run i18n:check    fail if any UI string lacks a translation
 ```
 
-CI runs `format:check`, lint, typecheck, test, build, docs and manual on every PR. Run
-them locally before opening one, plus `test:e2e` (CI doesn't run it, ADR 0015).
-Run `npm run i18n:build` first if translations changed.
+CI runs `format:check`, lint, typecheck, test, build, docs and manual on every PR
+that changes code, in about a minute; the accuracy workflow runs the comparison
+against Radiance only when the calculation or `accuracy/` changes (ADR 0076). Run
+them locally before opening a PR. CI doesn't run `test:e2e` (ADR 0015). Run
+`npm run i18n:build` first if translations changed.
 
-### Running tests while working (ADR 0056)
+### Running tests while working (ADRs 0056, 0076)
 
-- **While working:** `npm test`, plus the e2e specs for the area changed,
-  on chrome: `npm run test:e2e:quick -- <spec files>`.
-- **Before opening the PR:** the full `npm run test:e2e`, **once**. A failure
-  that only shows under the full run's load gets one rerun of that test
-  before being treated as real.
+- **While working, and before each PR:** `npm test`, plus the e2e specs for
+  the area changed, on chrome: `npm run test:e2e:quick -- <spec files>`.
+- **The heavy runs only when they answer something about the change:**
+  `test:accuracy` when the calculation changes; a Radiance reference only
+  for a room that's new or changed; the mutation check after changing the
+  illuminance maths. Never just to bring docs up to date.
+- **Once per milestone, in its last PR (the docs and results PR):** the full
+  `npm run test:e2e`, `test:accuracy-report`, and the regenerated report,
+  studies, timings, benchmarks and manual screenshots. Until then they may be
+  stale. A failure that only shows under the full e2e run's load gets one
+  rerun of that test before being treated as real.
+- **Versions:** every PR bumps the patch version (`npm run bump -- <version>`,
+  then `npm install`) and adds its line under Unreleased in `CHANGELOG.md`;
+  a milestone's last PR bumps the minor version and dates the release
+  (ADR 0077).
 - **Baselines:** refresh only what changed on purpose, with
   `--update-snapshots=changed` on the affected specs, and look at each new
   image. Never `=all`: it rewrites every image and buries real changes in
@@ -104,6 +120,7 @@ Run `npm run i18n:build` first if translations changed.
 | Catalog, inspector, room panel, top bar, shortcuts, i18n | `smoke`, `surfaces` |
 | Selection, dragging, handles, snapping, distances | `manipulation` |
 | Furniture | `furniture` |
+| Windows | `windows` |
 | IES files, lights, models, rendering | `smoke`, `models`, `ies-import` |
 | Illuminance maths (`analysis/`, `luminaire-frame.ts`) | unit tests (the Radiance comparison is among them), `mutation-check`, and `models` if the renderer's frame changed |
 | The Analysis panel, its worker and settings, the illuminance view, the probe | `analysis` |

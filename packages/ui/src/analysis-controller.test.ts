@@ -141,4 +141,28 @@ describe('AnalysisController', () => {
     expect(sent.options.bouncedLight).toBe(false);
     expect(sent.snapshot.products).toEqual([product]);
   });
+
+  it('calculates a room lit only by its windows', () => {
+    const { worker, controller, simulator } = setUp();
+    simulator.remove([simulator.scene.luminaires[0]!.id]);
+    simulator.addWindow('window');
+    controller.changed();
+    controller.setVisible(true);
+    expect(worker.sent).toHaveLength(1);
+  });
+
+  it('drops the results once nothing is left to light the room, and ignores a late answer', () => {
+    const { worker, controller, simulator } = setUp();
+    controller.setVisible(true);
+    worker.answerLast();
+    expect(controller.state.analysis).toBeDefined();
+    // A calculation in flight, then the last luminaire goes.
+    controller.calculate();
+    simulator.remove([simulator.scene.luminaires[0]!.id]);
+    controller.changed();
+    expect(controller.state).toMatchObject({ analysis: undefined, stale: false });
+    worker.answerLast();
+    expect(controller.state.analysis).toBeUndefined();
+    expect(worker.sent).toHaveLength(2);
+  });
 });

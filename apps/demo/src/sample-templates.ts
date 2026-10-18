@@ -11,6 +11,18 @@ interface SampleTemplate {
 }
 
 const DEG = Math.PI / 180;
+/**
+ * Where the demo's rooms are: Buenos Aires, 34.6° S (ADR 0079). The library
+ * knows no location; New keeps the visitor's own once they change it.
+ */
+const BUENOS_AIRES_LATITUDE_DEG = -34.6;
+
+/** A scratch simulator to build a template with, its daylight in Buenos Aires. */
+function scratch(catalog: Catalog): Simulator {
+  const sim = new Simulator({ catalog });
+  sim.setDaylight({ latitudeDeg: BUENOS_AIRES_LATITUDE_DEG });
+  return sim;
+}
 
 /**
  * Room templates for New (ADR 0052), lit by the demo's products. Each is
@@ -47,7 +59,7 @@ export function localizedTemplates(
  * light on the right wall.
  */
 function diningRoom(catalog: Catalog): Scene {
-  const sim = new Simulator({ catalog });
+  const sim = scratch(catalog);
   sim.setSurface('floor', { texture: 'oak-planks', reflectance: 0.3 });
   sim.addLuminaire('ies-linear-pendant');
   // Pan 180° turns their forward throw (C0, local +z) towards the back wall at z = −2.
@@ -76,7 +88,7 @@ function diningRoom(catalog: Catalog): Scene {
  * sofa and a track spot on the picture above it.
  */
 function livingRoom(catalog: Catalog): Scene {
-  const sim = new Simulator({ catalog });
+  const sim = scratch(catalog);
   sim.setRoomSize({ width: 5.5, depth: 4.5, height: 2.7 });
   sim.setSurface('floor', { texture: 'oak-planks', reflectance: 0.3 });
   sim.setSurface('walls', { texture: 'plaster', reflectance: 0.75 });
@@ -104,7 +116,7 @@ function livingRoom(catalog: Catalog): Scene {
  * armchair with a floor lamp in the front corner, and two dimmed downlights.
  */
 function bedroom(catalog: Catalog): Scene {
-  const sim = new Simulator({ catalog });
+  const sim = scratch(catalog);
   sim.setRoomSize({ width: 4, depth: 4, height: 2.7 });
   sim.setSurface('floor', { texture: 'oak-planks', reflectance: 0.3 });
   sim.setSurface('walls', { texture: 'plaster', reflectance: 0.75 });
@@ -131,7 +143,7 @@ function bedroom(catalog: Catalog): Scene {
  * default view looks through the right wall, so nothing hangs there.)
  */
 function homeOffice(catalog: Catalog): Scene {
-  const sim = new Simulator({ catalog });
+  const sim = scratch(catalog);
   sim.setRoomSize({ width: 4, depth: 3.5, height: 2.7 });
   sim.setSurface('floor', { texture: 'concrete', reflectance: 0.4 });
 
@@ -157,7 +169,7 @@ function homeOffice(catalog: Catalog): Scene {
  * counter and a plant.
  */
 function shop(catalog: Catalog): Scene {
-  const sim = new Simulator({ catalog });
+  const sim = scratch(catalog);
   sim.setRoomSize({ width: 7, depth: 5, height: 3.2 });
   sim.setSurface('floor', { texture: 'concrete', reflectance: 0.4 });
   sim.setSurface('walls', { color: '#f2f0ec', reflectance: 0.8 });

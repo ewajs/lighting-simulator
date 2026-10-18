@@ -44,7 +44,7 @@ mesa), un clic elige la luminaria. Para elegir el mueble, hacé clic en otra
 parte de él, o elegilo en la lista de **Escena**, donde los muebles tienen
 su propia sección.
 
-Una selección tiene luminarias o muebles, nunca las dos cosas: con
+Una selección tiene luminarias, muebles o ventanas, nunca de dos clases: con
 **Mayús**-clic en un mueble mientras hay luminarias elegidas, empezás una
 selección nueva.
 

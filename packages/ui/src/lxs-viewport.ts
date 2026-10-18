@@ -3,6 +3,7 @@ import {
   type Diagnostics,
   type FloorPoint,
   type FurnitureKind,
+  type WindowPreset,
   type HandleMode,
   type Measurement,
   type MoveStartEvent,
@@ -21,6 +22,7 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { formatFixed } from './format';
 import { PRODUCT_DRAG_TYPE } from './lxs-catalog-panel';
 import { FURNITURE_DRAG_TYPE } from './lxs-furniture-list';
+import { WINDOW_DRAG_TYPE } from './lxs-window-list';
 import './lxs-probe';
 
 /** How often the diagnostics overlay refreshes, in ms. */
@@ -45,6 +47,7 @@ const LOADER_DELAY_MS = 250;
  *   MoveStartEvent: `{ target, event }`. The drag itself edits the Simulator.
  * @fires lxs-drop-product - a catalog card was dropped: `detail: { productId, at }`.
  * @fires lxs-drop-furniture - a furniture card was dropped: `detail: { kind, at }`.
+ * @fires lxs-drop-window - a window card was dropped: `detail: { preset, at }`.
  * @fires lxs-drop-file - a file was dropped, e.g. a scene file: `detail: { file }`.
  * @fires lxs-probe - in the illuminance mode, the pointer over a calculated
  *   surface: `detail: ProbeDetail`, or `null` when it leaves (ADR 0067).
@@ -435,7 +438,7 @@ export class LxsViewport extends LitElement {
   #onDragOver = (event: DragEvent): void => {
     const transfer = event.dataTransfer;
     const types = transfer?.types ?? [];
-    const accepted = [PRODUCT_DRAG_TYPE, FURNITURE_DRAG_TYPE, 'Files'];
+    const accepted = [PRODUCT_DRAG_TYPE, FURNITURE_DRAG_TYPE, WINDOW_DRAG_TYPE, 'Files'];
     if (!transfer || !accepted.some((type) => types.includes(type))) return;
     event.preventDefault(); // Allows the drop.
     transfer.dropEffect = 'copy';
@@ -449,6 +452,8 @@ export class LxsViewport extends LitElement {
     }
     const kind = event.dataTransfer?.getData(FURNITURE_DRAG_TYPE) as FurnitureKind | undefined;
     if (kind) return this.#onDropFurniture(event, kind);
+    const preset = event.dataTransfer?.getData(WINDOW_DRAG_TYPE) as WindowPreset | undefined;
+    if (preset) return this.#onDropWindow(event, preset);
     const productId = event.dataTransfer?.getData(PRODUCT_DRAG_TYPE);
     const at = productId && this.#viewport?.dropPoint(productId, event.clientX, event.clientY);
     if (!productId || !at) return;
@@ -467,6 +472,14 @@ export class LxsViewport extends LitElement {
     if (!at) return;
     event.preventDefault();
     this.#emit<DropFurnitureDetail>('lxs-drop-furniture', { kind, at });
+  }
+
+  /** A window goes in the wall nearest where it's dropped, or a skylight overhead, as for furniture. */
+  #onDropWindow(event: DragEvent, preset: WindowPreset): void {
+    const at = this.#viewport?.furnitureDropPoint(event.clientX, event.clientY);
+    if (!at) return;
+    event.preventDefault();
+    this.#emit<DropWindowDetail>('lxs-drop-window', { preset, at });
   }
 
   #emit<T>(type: string, detail: T): void {
@@ -497,6 +510,12 @@ export interface DropFurnitureDetail {
   readonly at: FloorPoint;
 }
 
+/** Detail of `lxs-drop-window`: which preset, and the floor point it was dropped over (see `windowAt`). */
+export interface DropWindowDetail {
+  readonly preset: WindowPreset;
+  readonly at: FloorPoint;
+}
+
 declare global {
   interface HTMLElementTagNameMap {
     'lxs-viewport': LxsViewport;
@@ -507,6 +526,7 @@ declare global {
     'lxs-move-start': CustomEvent<MoveStartEvent>;
     'lxs-drop-product': CustomEvent<DropProductDetail>;
     'lxs-drop-furniture': CustomEvent<DropFurnitureDetail>;
+    'lxs-drop-window': CustomEvent<DropWindowDetail>;
     'lxs-drop-file': CustomEvent<DropFileDetail>;
   }
 }

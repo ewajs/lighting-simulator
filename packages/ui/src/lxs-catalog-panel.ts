@@ -1,4 +1,4 @@
-import { FURNITURE_KINDS, type Catalog, type MountType } from '@luxstudio/core';
+import { FURNITURE_KINDS, WINDOW_TYPES, type Catalog, type MountType } from '@luxstudio/core';
 import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
@@ -17,22 +17,24 @@ import { mountLabel } from './labels';
 import { icon, mountIcon } from './icons';
 import './lxs-furniture-list';
 import './lxs-ies-import';
+import './lxs-window-list';
 import { segmentedStyles, sharedStyles } from './styles';
 
 /** dataTransfer type carrying a productId while a product card is dragged. */
 export const PRODUCT_DRAG_TYPE = 'application/x-lxs-product';
 
-/** The catalog's two halves, switched at its top. */
-type CatalogSection = 'luminaires' | 'furniture';
+/** The catalog's sections, switched at its top. */
+type CatalogSection = 'luminaires' | 'furniture' | 'windows';
 
 /**
  * Browse, search and filter the host's catalog, or switch to the built-in
- * furniture (ADR 0047). Clicking a product (or pressing Enter on it) asks to
+ * furniture (ADR 0047) or windows (ADR 0078). Clicking a product (or pressing Enter on it) asks to
  * add it; cards can also be dragged into the viewport. With `iesImport`, a
  * footer lets the user load their own IES file.
  *
  * @fires lxs-add-product - `detail: { productId }`
  * @fires lxs-add-furniture - from the furniture list, `detail: { kind }`
+ * @fires lxs-add-window - from the window list, `detail: { preset }`
  * @fires lxs-import-ies - from the IES import footer, `detail: ImportIesDetail`
  */
 @customElement('lxs-catalog-panel')
@@ -53,10 +55,14 @@ export class LxsCatalogPanel extends LitElement {
       .switch .segmented {
         display: flex;
       }
+      /* Three sections share the panel's width: narrower padding than a usual segment. */
       .switch button {
         flex: 1;
+        min-width: 0;
+        padding: 0 var(--lxs-sp-1);
       }
-      lxs-furniture-list {
+      lxs-furniture-list,
+      lxs-window-list {
         flex: 1;
         min-height: 0;
         padding-top: var(--lxs-sp-2);
@@ -212,26 +218,42 @@ export class LxsCatalogPanel extends LitElement {
   @state() private section: CatalogSection = 'luminaires';
 
   override render() {
-    const furniture = this.section === 'furniture';
     return html`
       <div class="panel-header" part="header">
         <h2>${msg('Catalog')}</h2>
-        <span class="meta"
-          >${
-            furniture
-              ? msg(str`${FURNITURE_KINDS.length} pieces`)
-              : msg(str`${this.display.items.length} products`)
-          }</span
-        >
+        <span class="meta">${this.#count()}</span>
       </div>
       <div class="switch">
         <div class="segmented" role="radiogroup" aria-label=${msg('Catalog section')}>
           ${this.#sectionButton('luminaires', msg('Luminaires'))}
           ${this.#sectionButton('furniture', msg('Furniture'))}
+          ${this.#sectionButton('windows', msg('Windows'))}
         </div>
       </div>
-      ${furniture ? html`<lxs-furniture-list></lxs-furniture-list>` : this.#luminaires()}
+      ${this.#section()}
     `;
+  }
+
+  #count(): string {
+    switch (this.section) {
+      case 'luminaires':
+        return msg(str`${this.display.items.length} products`);
+      case 'furniture':
+        return msg(str`${FURNITURE_KINDS.length} pieces`);
+      case 'windows':
+        return msg(str`${Object.keys(WINDOW_TYPES).length} kinds`);
+    }
+  }
+
+  #section() {
+    switch (this.section) {
+      case 'luminaires':
+        return this.#luminaires();
+      case 'furniture':
+        return html`<lxs-furniture-list></lxs-furniture-list>`;
+      case 'windows':
+        return html`<lxs-window-list></lxs-window-list>`;
+    }
   }
 
   #sectionButton(section: CatalogSection, label: string) {

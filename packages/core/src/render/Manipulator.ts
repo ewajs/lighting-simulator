@@ -10,6 +10,7 @@ import { FURNITURE_TYPES } from '../furniture-kinds';
 import { itemRules } from '../item-rules';
 import {
   furnitureDimensions,
+  windowDimensions,
   groupDimensions,
   luminaireDimensions,
   type Dimension,
@@ -215,7 +216,11 @@ export class Manipulator {
           : new TurnDrag(simulator, { kind: 'luminaire', id: highlighted }, grabbed);
     } else if (target.kind === 'rotate' && highlighted) {
       drag = new TurnDrag(simulator, { kind: 'furniture', id: highlighted }, grabbed);
-    } else if (target.kind === 'luminaire' || target.kind === 'furniture') {
+    } else if (
+      target.kind === 'luminaire' ||
+      target.kind === 'furniture' ||
+      target.kind === 'window'
+    ) {
       const { id } = target;
       // Undo or delete may have removed it since the press.
       if (!findItem(simulator.scene, id)) return undefined;
@@ -234,7 +239,9 @@ export class Manipulator {
     });
     // Where the drag is measured: what was grabbed, or the handle's centre.
     const grabbedItem =
-      target.kind === 'luminaire' || target.kind === 'furniture' ? target : undefined;
+      target.kind === 'luminaire' || target.kind === 'furniture' || target.kind === 'window'
+        ? target
+        : undefined;
     return (event) => {
       const anchor = this.#anchor(grabbedItem);
       const snap =
@@ -254,12 +261,16 @@ export class Manipulator {
     if (target.kind === 'aim') return [];
     const { scene, catalog } = this.#options.simulator;
     const ids =
-      target.kind === 'luminaire' || target.kind === 'furniture' ? [target.id] : this.#highlighted;
+      target.kind === 'luminaire' || target.kind === 'furniture' || target.kind === 'window'
+        ? [target.id]
+        : this.#highlighted;
     // A pendant's height is measured only while an arrow slides it up or down.
     const withHeight = target.kind === 'move-axis' && target.axis === 'y';
     const dimensions = ids.flatMap((id) => {
       const found = findItem(scene, id);
       if (found?.kind === 'furniture') return furnitureDimensions(found.item, scene.room);
+      if (found?.kind === 'window') return windowDimensions(found.item, scene.room);
+      if (found?.kind !== 'luminaire') return [];
       const mount = found && catalog.get(found.item.productId)?.mount;
       return mount
         ? luminaireDimensions({ position: found.item.position, mount }, scene.room, withHeight)
@@ -311,6 +322,7 @@ function describeTarget(target: PressTarget): string {
   switch (target.kind) {
     case 'luminaire':
     case 'furniture':
+    case 'window':
       return `Moving ${target.kind} ${target.id}`;
     case 'move-axis':
       return `Sliding along ${target.axis}`;

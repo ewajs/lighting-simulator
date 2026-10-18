@@ -5,8 +5,8 @@ import { customElement, property } from 'lit/decorators.js';
 import { EMPTY_DISPLAY_CATALOG, luminaireNames, type DisplayCatalog } from './display-catalog';
 import { formatNumber } from './format';
 import { furnitureIcon } from './furniture-icons';
-import { mountIcon } from './icons';
-import { furnitureNames } from './labels';
+import { iconPresetFor, mountIcon, windowIcon } from './icons';
+import { furnitureNames, surfaceLabel, windowNames } from './labels';
 import { sharedStyles } from './styles';
 
 /**
@@ -19,7 +19,7 @@ export interface SelectDetail {
 }
 
 /**
- * Scene totals and the lists of luminaires and furniture. Rows report clicks;
+ * Scene totals and the lists of luminaires, furniture and windows. Rows report clicks;
  * the selection itself is owned by the host (ADR 0019).
  *
  * @fires lxs-select - `detail: SelectDetail`
@@ -118,6 +118,7 @@ export class LxsScenePanel extends LitElement {
     const scene = this.scene;
     const count = scene?.luminaires.length ?? 0;
     const pieces = scene?.furniture.length ?? 0;
+    const windows = scene?.windows.length ?? 0;
     return html`
       <div class="panel-header" part="header">
         <h2>${msg('Scene')}</h2>
@@ -126,9 +127,10 @@ export class LxsScenePanel extends LitElement {
       ${scene && this.products ? this.#stats(scene, this.products) : ''}
       <div class="list">
         ${
-          scene && count + pieces > 0
-            ? html`${count > 0 ? this.#luminaireRows(scene, pieces > 0) : ''}
-              ${pieces > 0 ? this.#furnitureRows(scene) : ''}`
+          scene && count + pieces + windows > 0
+            ? html`${count > 0 ? this.#luminaireRows(scene, pieces + windows > 0) : ''}
+              ${pieces > 0 ? this.#furnitureRows(scene) : ''}
+              ${windows > 0 ? this.#windowRows(scene) : ''}`
             : this.#empty()
         }
       </div>
@@ -150,7 +152,7 @@ export class LxsScenePanel extends LitElement {
     </div>`;
   }
 
-  /** The luminaires, headed when the furniture list follows. */
+  /** The luminaires, headed when another list follows. */
   #luminaireRows(scene: Scene, headed: boolean) {
     const names = luminaireNames(scene, this.display);
     return html`${headed ? html`<div class="group-label" aria-hidden="true">${msg('Luminaires')}</div>` : ''}
@@ -174,6 +176,23 @@ export class LxsScenePanel extends LitElement {
       <div role="listbox" aria-multiselectable="true" aria-label=${msg('Furniture')}>
         ${scene.furniture.map((piece) =>
           this.#row(piece.id, furnitureIcon(piece.kind), names.get(piece.id), '', ''),
+        )}
+      </div>`;
+  }
+
+  /** The windows, each with its wall; a skylight's name already says where it is. */
+  #windowRows(scene: Scene) {
+    const names = windowNames(scene);
+    return html`<div class="group-label" aria-hidden="true">${msg('Windows')}</div>
+      <div role="listbox" aria-multiselectable="true" aria-label=${msg('Windows')}>
+        ${scene.windows.map((window) =>
+          this.#row(
+            window.id,
+            windowIcon(iconPresetFor(window.surface)),
+            names.get(window.id),
+            window.surface === 'ceiling' ? '' : surfaceLabel(window.surface),
+            '',
+          ),
         )}
       </div>`;
   }
@@ -202,7 +221,7 @@ export class LxsScenePanel extends LitElement {
 
   #empty() {
     return html`<div class="empty">
-      <p>${msg('Nothing here yet. Add luminaires or furniture from the catalog.')}</p>
+      <p>${msg('Nothing here yet. Add luminaires, furniture or windows from the catalog.')}</p>
       <button
         class="btn"
         type="button"

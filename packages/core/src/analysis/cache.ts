@@ -37,6 +37,8 @@ export class AnalysisCache {
   #key: string | undefined;
   #factors: FormFactors | undefined;
   readonly #views = new Map<string, Float64Array>();
+  #daylightKey: string | undefined;
+  #daylight: Float64Array | undefined;
   #hits = 0;
   #misses = 0;
 
@@ -67,6 +69,19 @@ export class AnalysisCache {
       this.#views.set(gridKey, views);
     }
     return views;
+  }
+
+  /**
+   * The daylight on each patch (ADR 0080), for the patches and daylight `key`
+   * describes, computed by `compute` the first time: a change to the
+   * luminaires alone doesn't change it. The latest one only.
+   */
+  patchDaylight(key: string, compute: () => Float64Array): Float64Array {
+    if (key !== this.#daylightKey || !this.#daylight) {
+      this.#daylightKey = key;
+      this.#daylight = compute();
+    }
+    return this.#daylight;
   }
 
   /** How many calculations reused the form factors, and how many computed them. */

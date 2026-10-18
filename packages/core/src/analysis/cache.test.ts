@@ -7,6 +7,7 @@ import { analyseIlluminance, type IlluminanceAnalysis } from './analyse';
 import { AnalysisCache } from './cache';
 import { DEFAULT_CALCULATION_OPTIONS } from './options';
 import { DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs } from './settings';
+import { DEFAULT_DAYLIGHT } from '../daylight';
 
 const inputs: AnalysisInputs = {
   catalog,
@@ -34,6 +35,8 @@ const scene = (changes: Partial<Scene> = {}): Scene => ({
   room,
   luminaires: [luminaire(-1), luminaire(1)],
   furniture: [table(0)],
+  windows: [],
+  daylight: DEFAULT_DAYLIGHT,
   ...changes,
 });
 const values = (analysis: IlluminanceAnalysis) => analysis.surfaces.map((s) => s.illuminanceLx);
@@ -43,7 +46,13 @@ const run = (cache: AnalysisCache, s: Scene) =>
     analyseIlluminance(s, inputs, DEFAULT_ANALYSIS_SETTINGS, DEFAULT_CALCULATION_OPTIONS, cache),
   );
 
-describe('AnalysisCache', () => {
+/**
+ * Each test runs up to five full calculations of a furnished room: about 4 s
+ * on a CI runner, near Vitest's default 5 s limit, which a slow runner crossed.
+ */
+const FULL_CALCULATIONS_TIMEOUT_MS = 20_000;
+
+describe('AnalysisCache', { timeout: FULL_CALCULATIONS_TIMEOUT_MS }, () => {
   it('gives exactly the results of a calculation without it', () => {
     expect(run(new AnalysisCache(), scene())).toEqual(uncached(scene()));
   });

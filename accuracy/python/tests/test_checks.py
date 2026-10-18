@@ -17,9 +17,12 @@ def test_the_pinned_radiance_reproduces_every_hand_value() -> None:
 @pytest.mark.radiance
 def test_the_checks_catch_the_ies2rad_multiplier_bug() -> None:
     # Releases from 2026-02-20 until the 2026-10-15 fix drop ies2rad's
-    # multiplier. Every check must fail with one of them.
+    # multiplier. Every check of a luminaire must fail with one of them; the
+    # sky's (ADR 0081) read no IES file.
     checks = run_checks(install(BUGGY_RELEASE))
-    assert all(not check.passed for check in checks)
+    lit = [check for check in checks if "in the open" not in check.name]
+    assert lit
+    assert all(not check.passed for check in lit)
 
 
 @pytest.mark.radiance

@@ -5,6 +5,7 @@ import {
   type AnalysisInputs,
   type AnalysisSettings,
   type CalculationOptions,
+  type Scene,
   type Simulator,
   type Vec3,
 } from '@luxstudio/core';
@@ -12,6 +13,14 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import type { AnalysisResponse } from './analysis-request';
 import { analysisWorker, AnalysisRunner, type WorkerLike } from './analysis-runner';
 import { NO_ANALYSIS, type AnalysisState } from './lxs-analysis-panel';
+
+/**
+ * Whether a scene has anything to light it: luminaires, or windows letting
+ * daylight in (ADR 0080). Without either there's nothing to calculate.
+ */
+export function hasLightToCalculate(scene: Scene): boolean {
+  return scene.luminaires.length > 0 || scene.windows.length > 0;
+}
 
 /**
  * The app's illuminance calculation (ADR 0064): what it's set to, where it
@@ -119,7 +128,13 @@ export class AnalysisController implements ReactiveController {
     const simulator = this.#simulator;
     if (!simulator || !this.#visible || !(this.auto || forced)) return;
     const scene = simulator.scene;
-    if (scene.luminaires.length === 0) return;
+    if (!hasLightToCalculate(scene)) {
+      // Last results would describe light that's gone: drop them.
+      if (this.state.analysis || this.state.stale) {
+        this.#set({ analysis: undefined, probe: undefined, stale: false, calculating: false });
+      }
+      return;
+    }
     const inputs: AnalysisInputs = {
       catalog: simulator.catalog,
       photometry: (id) => simulator.photometry(id),
@@ -152,6 +167,11 @@ export class AnalysisController implements ReactiveController {
   }
 
   #onResponse(response: AnalysisResponse): void {
+    // Answered after the last light went: nothing to show.
+    if (this.#simulator && !hasLightToCalculate(this.#simulator.scene)) {
+      this.#set({ calculating: false });
+      return;
+    }
     const stale = this.#changesSent !== this.#changes;
     if ('error' in response) {
       this.#simulator?.logger.error(`[analysis] The calculation failed: ${response.error}`);

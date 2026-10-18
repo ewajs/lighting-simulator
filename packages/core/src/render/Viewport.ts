@@ -21,12 +21,22 @@ import { itemIdOf } from './overlay';
 import type { IlluminanceAnalysis } from '../analysis/analyse';
 import { IlluminanceMeshes, type SurfacePoint } from './IlluminanceMeshes';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
+import { WindowMeshes } from './WindowMeshes';
+import { DaylightLights } from './DaylightLights';
+import {
+  daylightExposureScale,
+  daylightLighting,
+  type DaylightLighting,
+} from './daylight-lighting';
 import { SurfaceTextures, type PreparedTexture } from './SurfaceTextures';
 
 const VIEW_TRANSITION_MS = 450;
 const SURFACE_NAMES: readonly SurfaceName[] = ['floor', 'walls', 'ceiling'];
 /** Weight of each new frame in the smoothed frame time: about a second's memory at 60 fps. */
 const FRAME_SMOOTHING = 0.05;
+/** How far below the horizon the camera may orbit, in radians from straight down: 0.85 π, 63° below. */
+const MAX_POLAR_ANGLE = Math.PI * 0.85;
+
 /** A click this close to a fixture on screen still picks it: thin fixtures, fingers. In px. */
 const PICK_SLOP_PX = 10;
 /** Camera distance when framing a selection, in m. */
@@ -124,6 +134,10 @@ export class Viewport {
   readonly #luminaires: LuminaireMeshes;
   readonly #models: FixtureModels;
   readonly #furniture = new FurnitureMeshes();
+  readonly #windows = new WindowMeshes();
+  readonly #daylight = new DaylightLights();
+  /** The daylight's lights, kept while the room, its windows and the daylight stay. */
+  #daylightLighting: { readonly from: Scene; readonly lighting: DaylightLighting } | undefined;
   readonly #textures: SurfaceTextures;
   // Uniform stand-in for inter-reflections (SPEC §6).
   readonly #bounce = new THREE.HemisphereLight(0xffffff, 0xffffff, 0);
@@ -173,7 +187,10 @@ export class Viewport {
     this.#renderer.library.addLight(IesLightNode, IesLight);
     this.#controls = new OrbitControls(this.#camera, this.#renderer.domElement);
     this.#controls.enableDamping = true;
-    this.#controls.maxPolarAngle = Math.PI * 0.495; // Stay above the floor.
+    // Below the horizon too, so the ceiling and its skylights can be seen from
+    // under the room: the floor drops away from below, as the near walls do
+    // from outside (ADR 0078).
+    this.#controls.maxPolarAngle = MAX_POLAR_ANGLE;
     this.#controls.maxDistance = 40;
     this.#manipulator = new Manipulator({
       simulator,
@@ -190,6 +207,8 @@ export class Viewport {
       this.#illuminance.group,
       this.#luminaires.group,
       this.#furniture.group,
+      this.#windows.group,
+      this.#daylight.group,
       manipulator,
       this.#bounce,
     );
@@ -232,6 +251,7 @@ export class Viewport {
       this.#measureFrame(now);
       this.#transition?.(now);
       this.#controls.update();
+      this.#windows.updateVisibility(this.#camera);
       this.#manipulator.updateSizes();
       this.#reportMeasurements();
       if (this.#captures.length > 0) this.#renderCaptures();
@@ -310,12 +330,33 @@ export class Viewport {
    */
   #applyLighting(scene: Scene): void {
     const illuminance = this.#renderMode === 'illuminance';
+    const daylight = this.#daylightFor(scene);
+    this.#daylight.update(daylight, scene.room, !illuminance);
+    this.#windows.setOutside(daylight.windows.length > 0 || daylight.sun ? daylight.sky : 'night');
     this.#renderer.toneMapping = illuminance ? THREE.NoToneMapping : THREE.AgXToneMapping;
-    this.#renderer.toneMappingExposure = illuminance ? 1 : toneMappingExposure(this.#exposureEv);
+    // By day the eye adapts to a brighter room (ADR 0082).
+    this.#renderer.toneMappingExposure = illuminance
+      ? 1
+      : toneMappingExposure(this.#exposureEv) * daylightExposureScale(daylight.fluxLm, scene.room);
     this.#bounce.groundColor.set(illuminance ? STUDIO_GROUND : 0xffffff);
+    const flux = this.#luminaires.totalFlux() + daylight.fluxLm;
     this.#bounce.intensity = illuminance
       ? STUDIO_INTENSITY
-      : indirectIlluminance(this.#luminaires.totalFlux(), scene.room) + MIN_FILL_LUX;
+      : indirectIlluminance(flux, scene.room) + MIN_FILL_LUX;
+  }
+
+  /** The daylight's lights for `scene`, worked out again only when what they depend on changed. */
+  #daylightFor(scene: Scene): DaylightLighting {
+    const kept = this.#daylightLighting;
+    const same =
+      kept &&
+      kept.from.room === scene.room &&
+      kept.from.windows === scene.windows &&
+      kept.from.daylight === scene.daylight;
+    if (same) return kept.lighting;
+    const lighting = daylightLighting(scene);
+    this.#daylightLighting = { from: scene, lighting };
+    return lighting;
   }
 
   /** User exposure in EV stops; 0 is the calibrated default. */
@@ -405,6 +446,7 @@ export class Viewport {
     this.#highlighted = ids;
     this.#luminaires.sync(this.#simulator.scene, ids, this.#renderMode);
     this.#furniture.sync(this.#simulator.scene, ids, this.#shading);
+    this.#windows.sync(this.#simulator.scene, ids, this.#shading);
     this.#manipulator.setHighlighted(ids);
   }
 
@@ -476,6 +518,8 @@ export class Viewport {
     this.#illuminance.dispose();
     this.#luminaires.dispose();
     this.#furniture.dispose();
+    this.#windows.dispose();
+    this.#daylight.dispose();
     this.#models.dispose();
     this.#textures.dispose();
     this.#manipulator.dispose();
@@ -494,6 +538,7 @@ export class Viewport {
     const source = this.#renderer.domElement;
     this.#luminaires.setOutlinesVisible(false);
     this.#furniture.setOutlinesVisible(false);
+    this.#windows.setOutlinesVisible(false);
     this.#manipulator.group.visible = false;
     this.#renderer.render(this.#scene, this.#camera);
     for (const { options, resolve, reject } of captures) {
@@ -517,14 +562,19 @@ export class Viewport {
     }
     this.#luminaires.setOutlinesVisible(true);
     this.#furniture.setOutlinesVisible(true);
+    this.#windows.setOutlinesVisible(true);
     this.#manipulator.group.visible = true;
   }
 
   #sync(scene: Scene, previous: Scene | undefined): void {
-    if (scene.room !== previous?.room) this.#updateRoom();
+    // Windows cut holes in the room's surfaces: the shell is rebuilt when they change.
+    if (scene.room !== previous?.room || scene.windows !== previous?.windows) this.#updateRoom();
     this.#luminaires.sync(scene, this.#highlighted, this.#renderMode);
     this.#furniture.sync(scene, this.#highlighted, this.#shading);
+    this.#windows.sync(scene, this.#highlighted, this.#shading);
     this.#applyLighting(scene);
+    // Whatever moved, the sun's shadows follow.
+    this.#daylight.requestShadows();
     this.#manipulator.refresh();
     this.#reportLoading();
   }
@@ -534,9 +584,9 @@ export class Viewport {
    * While a new texture loads, the surface keeps the one it had.
    */
   #updateRoom(): void {
-    const { room } = this.#simulator.scene;
+    const { room, windows } = this.#simulator.scene;
     const shown: Partial<Record<SurfaceName, PreparedTexture>> = {};
-    this.#room.update(room, this.#shading, (name) => {
+    this.#room.update(room, windows, this.#shading, (name) => {
       const id = room.surfaces[name].texture;
       const texture = id && this.#textures.get(id, this.#simulator.texture(id));
       shown[name] =
@@ -684,16 +734,24 @@ export class Viewport {
   }
 
   /**
-   * The luminaire or piece under a screen point. Luminaires come first, even
-   * a little off them or behind a piece: they're small, often over furniture
-   * (a pendant over a table), and what the tool is about. Pieces can also be
-   * picked from the scene list.
+   * The luminaire, piece or window under a screen point. Luminaires come
+   * first, even a little off them or behind a piece: they're small, often over
+   * furniture (a pendant over a table), and what the tool is about. Otherwise
+   * the nearer of a piece and a window. Items can also be picked from the
+   * scene list.
    */
   #itemAt(clientX: number, clientY: number): PickTarget | null {
     const luminaireId = this.#luminaireAt(clientX, clientY);
     if (luminaireId) return { kind: 'luminaire', id: luminaireId };
-    const hit = this.#furnitureHit(clientX, clientY);
-    const furnitureId = hit && itemIdOf(hit.object);
+    const piece = this.#furnitureHit(clientX, clientY);
+    // Only windows drawn: one in a wall seen from outside is hidden with it.
+    const shown = this.#windows.group.children.filter((root) => root.visible);
+    const window = this.#raycasterAt(clientX, clientY).intersectObjects(shown, true)[0];
+    if (window && (!piece || window.distance < piece.distance)) {
+      const id = itemIdOf(window.object);
+      return id ? { kind: 'window', id } : null;
+    }
+    const furnitureId = piece && itemIdOf(piece.object);
     return furnitureId ? { kind: 'furniture', id: furnitureId } : null;
   }
 

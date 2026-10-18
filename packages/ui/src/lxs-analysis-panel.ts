@@ -288,7 +288,7 @@ export class LxsAnalysisPanel extends LitElement {
   @property({ type: Boolean }) auto = true;
   /** The room's height, in m: the work plane must stay below it. */
   @property({ type: Number }) roomHeight = 2.7;
-  /** Whether the scene has any luminaires to calculate. */
+  /** Whether the scene has nothing to light it: no luminaires, no windows. */
   @property({ type: Boolean }) empty = false;
 
   override render() {
@@ -318,7 +318,7 @@ export class LxsAnalysisPanel extends LitElement {
 
   #empty() {
     return html`<div class="empty">
-      <p>${msg('Add luminaires to see how much light reaches each surface.')}</p>
+      <p>${msg('Add luminaires or windows to see how much light reaches each surface.')}</p>
       <button class="btn" type="button" @click=${() => this.#fire('lxs-open-catalog')}>
         ${msg('Open the catalog')}
       </button>
@@ -426,7 +426,7 @@ export class LxsAnalysisPanel extends LitElement {
       ${
         covered > 0
           ? html`<p class="meta">
-              ${msg(str`Points covered by furniture, left out of the figures: ${covered}.`)}
+              ${msg(str`Points covered by furniture or on windows, left out of the figures: ${covered}.`)}
             </p>`
           : nothing
       }
@@ -537,6 +537,12 @@ export class LxsAnalysisPanel extends LitElement {
           'They hide bounced light, as in reality. Off: a little too much light near them, and moving one is faster.',
         ),
         !options.bouncedLight,
+      )}
+      ${this.#switch(
+        msg('Daylight'),
+        options.daylight,
+        (daylight) => setOptions({ daylight }),
+        msg('Through the windows, from the sky set in the Room panel. Off: as at night.'),
       )}
     </section>`;
   }

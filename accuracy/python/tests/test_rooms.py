@@ -9,6 +9,10 @@ def test_every_room_loads_with_its_points() -> None:
     assert names == [
         "busy-open-plan",
         "dark-room",
+        "daylight-and-lamps",
+        "daylight-side-window",
+        "daylight-skylight",
+        "daylight-sun",
         "downlights-and-wall-washer",
         "furnished-living",
         "linear-pendant-over-table",

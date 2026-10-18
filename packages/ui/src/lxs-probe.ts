@@ -67,7 +67,15 @@ export class LxsProbe extends LitElement {
     return html`
       <div class="total">${formatNumber(lux.totalLx)}<small> lx</small></div>
       <div class="parts">
-        ${msg(str`Direct ${formatNumber(lux.directLx)} · bounced ${formatNumber(lux.indirectLx)}`)}
+        ${
+          lux.daylightLx > 0
+            ? msg(
+                str`Direct ${formatNumber(lux.directLx)} · daylight ${formatNumber(lux.daylightLx)} · bounced ${formatNumber(lux.indirectLx)}`,
+              )
+            : msg(
+                str`Direct ${formatNumber(lux.directLx)} · bounced ${formatNumber(lux.indirectLx)}`,
+              )
+        }
       </div>
       ${this.surface ? html`<div class="surface">${surfaceLabel(this.surface)}</div>` : nothing}
     `;

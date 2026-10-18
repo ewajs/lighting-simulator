@@ -6,24 +6,36 @@
 import { assertFurniture } from './furniture';
 import { assertLuminaire } from './luminaires';
 import { assertRoom } from './room';
+import { assertWindow } from './windows';
+import { assertDaylight, DEFAULT_DAYLIGHT } from './daylight';
 import type {
   Catalog,
+  Daylight,
   FinishName,
-  FurnitureKind,
   Furniture,
+  FurnitureKind,
+  GlazingKind,
   Luminaire,
   Room,
+  RoomWindow,
   Scene,
+  SkyKind,
   Surface,
   Vec3,
+  WindowCovering,
+  WindowSurface,
 } from './types';
 
 /**
  * Turns the scene of a file of one version into the next version's: index i
- * upgrades version i + 1. Empty while only version 1 exists.
+ * upgrades version i + 1.
  */
 export type SceneUpgrade = (scene: unknown) => unknown;
-const UPGRADES: readonly SceneUpgrade[] = [];
+const UPGRADES: readonly SceneUpgrade[] = [
+  // 1 → 2: scenes gained windows (ADR 0078), and daylight (ADR 0079): a
+  // version 1 scene has no windows, and the neutral daylight.
+  (scene) => (isRecord(scene) ? { ...scene, windows: [], daylight: DEFAULT_DAYLIGHT } : scene),
+];
 
 /** What every scene file says it is, so other JSON files are told apart. */
 export const SCENE_FILE_FORMAT = 'lux-studio-scene';
@@ -106,8 +118,10 @@ export function assertScene(scene: Scene): void {
   assertRoom(scene.room);
   scene.luminaires.forEach(assertLuminaire);
   scene.furniture.forEach(assertFurniture);
+  scene.windows.forEach(assertWindow);
+  assertDaylight(scene.daylight);
   const ids = new Set<string>();
-  for (const { id } of [...scene.luminaires, ...scene.furniture]) {
+  for (const { id } of [...scene.luminaires, ...scene.furniture, ...scene.windows]) {
     if (ids.has(id)) throw new RangeError(`Two items share the id "${id}"`);
     ids.add(id);
   }
@@ -129,6 +143,34 @@ function readScene(value: unknown): Scene {
     room: readRoom(scene.room),
     luminaires: list(scene.luminaires, 'luminaires').map(readLuminaire),
     furniture: list(scene.furniture, 'furniture').map(readFurniture),
+    windows: list(scene.windows, 'windows').map(readWindow),
+    daylight: readDaylight(scene.daylight),
+  };
+}
+
+function readDaylight(value: unknown): Daylight {
+  const daylight = record(value, 'daylight');
+  return {
+    sky: string(daylight.sky, 'daylight.sky') as SkyKind,
+    solarHour: number(daylight.solarHour, 'daylight.solarHour'),
+    month: number(daylight.month, 'daylight.month'),
+    day: number(daylight.day, 'daylight.day'),
+    latitudeDeg: number(daylight.latitudeDeg, 'daylight.latitudeDeg'),
+    northDeg: number(daylight.northDeg, 'daylight.northDeg'),
+  };
+}
+
+function readWindow(value: unknown, index: number): RoomWindow {
+  const window = record(value, `windows[${index}]`);
+  const name = `windows[${index}]`;
+  return {
+    id: string(window.id, `${name}.id`),
+    surface: string(window.surface, `${name}.surface`) as WindowSurface,
+    position: vec3(window.position, `${name}.position`),
+    width: number(window.width, `${name}.width`),
+    height: number(window.height, `${name}.height`),
+    glazing: string(window.glazing, `${name}.glazing`) as GlazingKind,
+    covering: string(window.covering, `${name}.covering`) as WindowCovering,
   };
 }
 

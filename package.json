@@ -1,5 +1,6 @@
 {
   "name": "luxstudio",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -15,7 +16,9 @@
     "build": "npm run build -w apps/demo",
     "lint": "eslint .",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
+    "test": "npm run test -w packages/core -w packages/ui -w apps/demo",
+    "test:accuracy": "npm run test -w accuracy/typescript",
+    "test:accuracy-report": "npm run test:report -w accuracy/typescript",
     "coverage": "npm run coverage --workspaces --if-present",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -35,7 +38,8 @@
     "accuracy:patch-size": "npm run patch-size -w accuracy/typescript",
     "accuracy:source-cell": "npm run source-cell -w accuracy/typescript",
     "accuracy:bounce": "npm run bounce -w accuracy/typescript",
-    "accuracy:timings": "npm run timings -w accuracy/typescript"
+    "accuracy:timings": "npm run timings -w accuracy/typescript",
+    "bump": "node scripts/bump-version.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

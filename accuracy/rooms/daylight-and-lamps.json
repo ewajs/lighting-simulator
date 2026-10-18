@@ -1,0 +1,71 @@
+{
+  "description": "Late daylight and two downlights together: a 1.5 × 1.2 m clear window in the right wall of a 5 × 4 × 2.7 m room, the CIE overcast sky at 17:00 solar time on the March equinox in Buenos Aires, and two 6-inch recessed downlights.",
+  "room": {
+    "width": 5,
+    "depth": 4,
+    "height": 2.7
+  },
+  "luminaires": [
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": -1.2,
+        "y": 2.67,
+        "z": 0
+      }
+    },
+    {
+      "ies": "LX6C15D010-EX6C159030-6LBMH.ies",
+      "origin": {
+        "x": 0.6,
+        "y": 2.67,
+        "z": 0
+      }
+    }
+  ],
+  "windows": [
+    {
+      "surface": "wall-x+",
+      "position": {
+        "x": 2.5,
+        "y": 1.5,
+        "z": 0
+      },
+      "width": 1.5,
+      "height": 1.2,
+      "glazing": "clear",
+      "covering": "none"
+    }
+  ],
+  "daylight": {
+    "sky": "overcast",
+    "solarHour": 17,
+    "month": 3,
+    "day": 21,
+    "latitudeDeg": -34.6,
+    "northDeg": 0
+  },
+  "grids": [
+    {
+      "surface": "work-plane",
+      "spacingM": 0.25,
+      "heightM": 0.8
+    },
+    {
+      "surface": "floor",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "ceiling",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-z-",
+      "spacingM": 0.25
+    },
+    {
+      "surface": "wall-x-",
+      "spacingM": 0.25
+    }
+  ]
+}

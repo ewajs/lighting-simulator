@@ -3,6 +3,7 @@
 // manual is built. The pages draw it; nothing is computed in the browser.
 import { defineLoader } from 'vitepress';
 import {
+  DEFAULT_DAYLIGHT,
   beamAngleDeg,
   candelaAt,
   directIlluminance,
@@ -120,7 +121,7 @@ function lightAt(origin: Vec3, photometry: Photometry) {
     cct: 3000,
   };
   const light = directLight(
-    { room: ROOM, luminaires: [luminaire], furniture: [] },
+    { room: ROOM, luminaires: [luminaire], furniture: [], windows: [], daylight: DEFAULT_DAYLIGHT },
     { catalog, photometry: () => photometry, modelFile: () => undefined },
     AS_INSTALLED,
   );

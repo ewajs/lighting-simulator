@@ -1,7 +1,7 @@
 import * as THREE from 'three/webgpu';
 import type { IlluminanceAnalysis, SurfaceResult } from '../analysis/analyse';
 import type { CalcSurfaceName } from '../analysis/calc-grid';
-import { falseColour } from '../analysis/false-colour';
+import { falseColour, falseColourStops, type FalseColourStop } from '../analysis/false-colour';
 import type { Vec3 } from '../types';
 
 /** A point on a calculated surface, as the illuminance view shows it (ADR 0067). */
@@ -25,8 +25,10 @@ export class IlluminanceMeshes {
   /** Draws `analysis`'s surfaces, or nothing. */
   update(analysis: IlluminanceAnalysis | undefined): void {
     this.#clear();
-    for (const surface of analysis?.surfaces ?? []) {
-      if (surface.grid.points.length > 0) this.group.add(plane(surface));
+    if (!analysis) return;
+    const stops = falseColourStops(analysis);
+    for (const surface of analysis.surfaces) {
+      if (surface.grid.points.length > 0) this.group.add(plane(surface, stops));
     }
   }
 
@@ -62,7 +64,10 @@ export class IlluminanceMeshes {
 /** A surface's grid lifted this far off it along its normal, in m, so it doesn't fight the room's surface for depth. */
 const LIFT_M = 0.002;
 
-function plane({ grid, illuminanceLx, covered }: SurfaceResult): THREE.Mesh {
+function plane(
+  { grid, illuminanceLx, covered }: SurfaceResult,
+  stops: readonly FalseColourStop[],
+): THREE.Mesh {
   const { corner, u, v, lengthU, lengthV } = grid.rect;
   const at = (a: number, b: number) =>
     new THREE.Vector3(
@@ -89,7 +94,7 @@ function plane({ grid, illuminanceLx, covered }: SurfaceResult): THREE.Mesh {
   geometry.setIndex(facesIn ? [0, 1, 2, 0, 2, 3] : [0, 2, 1, 0, 3, 2]);
 
   const material = new THREE.MeshBasicMaterial({
-    map: texture(grid.columns, grid.rows, illuminanceLx, covered),
+    map: texture(grid.columns, grid.rows, illuminanceLx, covered, stops),
     toneMapped: false,
   });
   const mesh = new THREE.Mesh(geometry, material);
@@ -98,8 +103,8 @@ function plane({ grid, illuminanceLx, covered }: SurfaceResult): THREE.Mesh {
 }
 
 /**
- * A point covered by furniture, not measured (ADR 0074): a neutral grey, which
- * no part of the false-colour scale is.
+ * A point covered by furniture or on a window's glass, not measured (ADRs
+ * 0074, 0080): a neutral grey, which no part of the false-colour scales is.
  */
 export const COVERED_COLOUR: readonly [number, number, number] = [128, 128, 128];
 
@@ -109,10 +114,11 @@ function texture(
   rows: number,
   lux: readonly number[],
   covered: readonly boolean[],
+  stops: readonly FalseColourStop[],
 ): THREE.DataTexture {
   const data = new Uint8Array(columns * rows * 4);
   lux.forEach((lx, k) => {
-    const [r, g, b] = covered[k] ? COVERED_COLOUR : falseColour(lx);
+    const [r, g, b] = covered[k] ? COVERED_COLOUR : falseColour(lx, stops);
     data.set([r, g, b, 255], k * 4);
   });
   const map = new THREE.DataTexture(data, columns, rows, THREE.RGBAFormat);

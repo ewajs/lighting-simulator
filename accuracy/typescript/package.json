@@ -1,6 +1,6 @@
 {
   "name": "@luxstudio/accuracy",
-  "version": "0.0.0",
+  "version": "0.6.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,9 +10,10 @@
     "patch-size": "vite build --ssr src/patch-size.ts --outDir .report --emptyOutDir --logLevel warn && node .report/patch-size.js > ../PATCH-SIZE.md",
     "timings": "vite build --ssr src/timings.ts --outDir .report --emptyOutDir --logLevel warn && node .report/timings.js > ../timings.json",
     "source-cell": "vite build --ssr src/source-cell.ts --outDir .report --emptyOutDir --logLevel warn && node .report/source-cell.js > ../SOURCE-CELL.md",
-    "bounce": "vite build --ssr src/bounce.ts --outDir .report --emptyOutDir --logLevel warn && node .report/bounce.js > ../BOUNCE.md"
+    "bounce": "vite build --ssr src/bounce.ts --outDir .report --emptyOutDir --logLevel warn && node .report/bounce.js > ../BOUNCE.md",
+    "test:report": "vitest run --config vitest.report.config.ts"
   },
   "dependencies": {
-    "@luxstudio/core": "0.0.0"
+    "@luxstudio/core": "0.6.0"
   }
 }

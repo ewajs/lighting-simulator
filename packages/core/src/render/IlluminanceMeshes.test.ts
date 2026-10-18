@@ -4,6 +4,7 @@ import { analyseIlluminance } from '../analysis/analyse';
 import { falseColour } from '../analysis/false-colour';
 import { catalog, isotropic, room } from '../test-fixtures';
 import { COVERED_COLOUR, IlluminanceMeshes } from './IlluminanceMeshes';
+import { DEFAULT_DAYLIGHT } from '../daylight';
 
 const analysis = analyseIlluminance(
   {
@@ -20,6 +21,8 @@ const analysis = analyseIlluminance(
       },
     ],
     furniture: [],
+    windows: [],
+    daylight: DEFAULT_DAYLIGHT,
   },
   { catalog, photometry: () => isotropic(300), modelFile: () => undefined },
 );

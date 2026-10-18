@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { DEFAULT_ROOM, type Furniture, type Luminaire, type Scene } from '@luxstudio/core';
+import {
+  DEFAULT_DAYLIGHT,
+  DEFAULT_ROOM,
+  type Furniture,
+  type Luminaire,
+  type Scene,
+} from '@luxstudio/core';
 import { pruneSelection, selectionAfterPick, selectionForMove, selectionKind } from './selection';
 
 const luminaire = (id: string) => ({ id }) as Luminaire;
@@ -9,6 +15,8 @@ const scene: Scene = {
   room: DEFAULT_ROOM,
   luminaires: ['a', 'b', 'c'].map(luminaire),
   furniture: ['f', 'g'].map(piece),
+  windows: [],
+  daylight: DEFAULT_DAYLIGHT,
 };
 
 describe('selectionKind', () => {

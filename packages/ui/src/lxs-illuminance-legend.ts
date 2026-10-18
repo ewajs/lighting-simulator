@@ -1,5 +1,5 @@
-import { FALSE_COLOUR_STOPS } from '@luxstudio/core';
-import { localized, msg } from '@lit/localize';
+import { FALSE_COLOUR_STOPS, type FalseColourStop } from '@luxstudio/core';
+import { localized, msg, str } from '@lit/localize';
 import { css, html, LitElement, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { formatNumber } from './format';
@@ -47,15 +47,18 @@ export class LxsIlluminanceLegend extends LitElement {
 
   /** How current the map is, e.g. "Calculating…"; nothing when it is. */
   @property() note = '';
+  /** The scale the map is coloured with: by day, the daylight one (ADR 0080). */
+  @property({ attribute: false }) stops: readonly FalseColourStop[] = FALSE_COLOUR_STOPS;
 
   override render() {
-    const stops = FALSE_COLOUR_STOPS;
+    const { stops } = this;
+    const top = formatNumber(stops[stops.length - 1]!.lx);
     const gradient = stops
       .map(({ rgb }, k) => `rgb(${rgb.join(' ')}) ${(k / (stops.length - 1)) * 100}%`)
       .join(', ');
     return html`
       <div class="title">${msg('Illuminance (lx)')}</div>
-      <div class="scale" role="img" aria-label=${msg('False-colour scale from 0 to 2000 lx')}>
+      <div class="scale" role="img" aria-label=${msg(str`False-colour scale from 0 to ${top} lx`)}>
         <div class="bar" style="background: linear-gradient(to top, ${gradient})"></div>
         <div class="ticks">${stops.map(({ lx }) => html`<span>${formatNumber(lx)}</span>`)}</div>
       </div>

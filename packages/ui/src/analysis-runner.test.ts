@@ -1,4 +1,5 @@
 import {
+  DEFAULT_DAYLIGHT,
   DEFAULT_ANALYSIS_SETTINGS,
   DEFAULT_CALCULATION_OPTIONS,
   DEFAULT_ROOM,
@@ -70,7 +71,13 @@ function clock() {
 }
 
 const request = (width: number): Omit<AnalysisRequest, 'id' | 'type'> => ({
-  scene: { room: { ...DEFAULT_ROOM, width }, luminaires: [], furniture: [] },
+  scene: {
+    room: { ...DEFAULT_ROOM, width },
+    luminaires: [],
+    furniture: [],
+    windows: [],
+    daylight: DEFAULT_DAYLIGHT,
+  },
   snapshot: { products: [], photometry: {}, modelFiles: {} },
   settings: DEFAULT_ANALYSIS_SETTINGS,
   options: DEFAULT_CALCULATION_OPTIONS,

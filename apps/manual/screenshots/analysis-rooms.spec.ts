@@ -103,7 +103,9 @@ function sceneOf(room: ReferenceRoom): string {
   return serializeScene(sim.scene);
 }
 
-for (const file of readdirSync(ROOMS_DIR).filter((name: string) => name.endsWith('.json'))) {
+// The rooms by day (ADR 0081) have no page of their own: Luz natural shows them together.
+const pictured = (name: string) => name.endsWith('.json') && !name.startsWith('daylight-');
+for (const file of readdirSync(ROOMS_DIR).filter(pictured)) {
   const name = file.replace(/\.json$/, '');
   test(`analysis room: ${name}`, async ({ page }) => {
     const room = JSON.parse(readFileSync(new URL(file, ROOMS_DIR), 'utf8')) as ReferenceRoom;

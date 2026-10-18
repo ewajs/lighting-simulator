@@ -1,4 +1,4 @@
-// How luminaires and furniture move, one set of rules per kind (ADR 0048):
+// How luminaires, furniture and windows move, one set of rules per kind (ADRs 0048, 0078):
 // where each item can be, which axes it slides along, and how a move is
 // applied. Dragging an item and the move arrows both go through these.
 
@@ -7,7 +7,8 @@ import { FURNITURE_TYPES } from './furniture-kinds';
 import type { MoveAxis } from './move-handle';
 import { constrainPosition, wallNormalAxis } from './placement';
 import type { EditOptions, Simulator } from './simulator';
-import type { Furniture, ItemKind, Product, Room, Vec3 } from './types';
+import type { Furniture, ItemKind, Product, Room, Vec3, WindowSurface } from './types';
+import { constrainWindow } from './windows';
 
 /** How the items of one kind move. Unknown ids are ignored. */
 export interface ItemRules {
@@ -21,7 +22,7 @@ export interface ItemRules {
   move(id: string, position: Vec3, options: EditOptions): void;
 }
 
-/** The rules for luminaires or furniture in `simulator`'s scene, read as it changes. */
+/** The rules for luminaires, furniture or windows in `simulator`'s scene, read as it changes. */
 export function itemRules(simulator: Simulator, kind: ItemKind): ItemRules {
   const room = () => simulator.scene.room;
   if (kind === 'luminaire') {
@@ -37,6 +38,21 @@ export function itemRules(simulator: Simulator, kind: ItemKind): ItemRules {
         return found ? luminaireAxes(found, position, room()) : [];
       },
       move: (id, position, options) => simulator.updateLuminaire(id, { position }, options),
+    };
+  }
+  if (kind === 'window') {
+    const window = (id: string) => simulator.scene.windows.find((w) => w.id === id);
+    return {
+      items: () => simulator.scene.windows,
+      constrain: (id, position) => {
+        const found = window(id);
+        return found ? constrainWindow({ ...found, position }, room()).position : position;
+      },
+      axes: (id) => {
+        const found = window(id);
+        return found ? windowAxes(found.surface) : [];
+      },
+      move: (id, position, options) => simulator.updateWindow(id, { position }, options),
     };
   }
   const piece = (id: string) => simulator.scene.furniture.find((f) => f.id === id);
@@ -75,6 +91,20 @@ export function luminaireAxes(product: Product, position: Vec3, room: Room): Mov
 /** The axes a piece can slide along: across the floor; along its wall and up for wall pieces. */
 function furnitureAxes(piece: Furniture, position: Vec3, room: Room): MoveAxis[] {
   return FURNITURE_TYPES[piece.kind].onWall ? alongWallAndUp(position, room) : ['x', 'z'];
+}
+
+/** The axes a window slides along: its own surface's. */
+function windowAxes(surface: WindowSurface): MoveAxis[] {
+  switch (surface) {
+    case 'wall-x-':
+    case 'wall-x+':
+      return ['z', 'y'];
+    case 'wall-z-':
+    case 'wall-z+':
+      return ['x', 'y'];
+    case 'ceiling':
+      return ['x', 'z'];
+  }
 }
 
 function alongWallAndUp(position: Vec3, room: Room): MoveAxis[] {

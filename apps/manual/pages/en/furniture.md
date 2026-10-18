@@ -43,7 +43,7 @@ When a luminaire is right over a piece (a pendant over a table), a click
 picks the luminaire. To pick the piece, click another part of it, or pick it
 in the **Scene** list, where furniture has its own section.
 
-A selection holds luminaires or furniture, never both: **Shift**-clicking a
+A selection holds luminaires, furniture or windows, never two kinds: **Shift**-clicking a
 piece while luminaires are picked starts a new selection.
 
 ## Properties

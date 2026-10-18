@@ -4,5 +4,5 @@
     // Vite's types know `?raw` and `import.meta.glob`, which read the IES files and references.
     "types": ["vite/client"]
   },
-  "include": ["src", "vitest.config.ts"]
+  "include": ["src", "vitest.config.ts", "vitest.report.config.ts"]
 }

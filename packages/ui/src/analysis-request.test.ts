@@ -1,4 +1,5 @@
 import {
+  DEFAULT_DAYLIGHT,
   DEFAULT_ANALYSIS_SETTINGS,
   DEFAULT_CALCULATION_OPTIONS,
   DEFAULT_ROOM,
@@ -32,6 +33,8 @@ const request = (id: number, dimming = 1): AnalysisRequest => ({
       },
     ],
     furniture: [],
+    windows: [],
+    daylight: DEFAULT_DAYLIGHT,
   },
   snapshot: { products: [product], photometry: {}, modelFiles: {} },
   settings: DEFAULT_ANALYSIS_SETTINGS,

@@ -1,8 +1,12 @@
 import {
+  FALSE_COLOUR_STOPS,
+  falseColourStops,
   serializeScene,
   type AnalysisSettings,
   type CalculationOptions,
   type FurnitureKind,
+  type WindowPreset,
+  windowAt,
   type Logger,
   type MoveStartEvent,
   type PickEvent,
@@ -16,7 +20,7 @@ import { localized, msg, str } from '@lit/localize';
 import { html, LitElement, nothing, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { ChartColumn, Eye, Layers, LayoutGrid, SlidersHorizontal } from 'lucide';
-import { AnalysisController } from './analysis-controller';
+import { AnalysisController, hasLightToCalculate } from './analysis-controller';
 import { appStyles } from './lxs-app.styles';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { newMergeKey } from './field-change';
@@ -53,6 +57,7 @@ import './lxs-viewport';
 import type {
   DropFileDetail,
   DropFurnitureDetail,
+  DropWindowDetail,
   DropProductDetail,
   LxsViewport,
   ProbeDetail,
@@ -211,6 +216,7 @@ export class LxsApp extends LitElement {
         .autoCalculate=${this.#analysis.auto}
         @lxs-add-product=${this.#onAddProduct}
         @lxs-add-furniture=${this.#onAddFurniture}
+        @lxs-add-window=${this.#onAddWindow}
         @lxs-select=${this.#onSelect}
         @lxs-library-tab=${({ detail }: CustomEvent<{ tab: LibraryTab }>) => (this.libraryTab = detail.tab)}
         @lxs-analysis-settings=${this.#onAnalysisSettings}
@@ -275,6 +281,7 @@ export class LxsApp extends LitElement {
           .iesImport=${this.iesImport}
           @lxs-add-product=${this.#onAddProduct}
           @lxs-add-furniture=${this.#onAddFurniture}
+          @lxs-add-window=${this.#onAddWindow}
         ></lxs-catalog-panel>`;
       case 'scene':
         return html`<lxs-scene-panel
@@ -292,7 +299,7 @@ export class LxsApp extends LitElement {
           .options=${this.#analysis.options}
           .auto=${this.#analysis.auto}
           .roomHeight=${this.scene?.room.height ?? 0}
-          .empty=${(this.scene?.luminaires.length ?? 0) === 0}
+          .empty=${!this.scene || !hasLightToCalculate(this.scene)}
           @lxs-analysis-settings=${this.#onAnalysisSettings}
           @lxs-calculation-options=${this.#onCalculationOptions}
           @lxs-auto-calculate=${this.#onAutoCalculate}
@@ -347,6 +354,7 @@ export class LxsApp extends LitElement {
         (this.selection = selectionForMove(this.selection, detail.target.id))}
       @lxs-drop-product=${this.#onDropProduct}
       @lxs-drop-furniture=${this.#onDropFurniture}
+      @lxs-drop-window=${this.#onDropWindow}
       @lxs-drop-file=${({ detail }: CustomEvent<DropFileDetail>) => void this.#open(detail.file)}
     ></lxs-viewport>`;
   }
@@ -459,7 +467,9 @@ export class LxsApp extends LitElement {
   /** New: the template replaces the scene as one undo step, framed in the current view. */
   #onTemplatePick = ({ detail }: CustomEvent<TemplatePickDetail>): void => {
     if (!this.simulator) return;
-    this.simulator.setScene(detail.scene);
+    // A template is a room, not a place: the daylight, with its location, stays the visitor's.
+    const daylight = this.scene?.daylight ?? detail.scene.daylight;
+    this.simulator.setScene({ ...detail.scene, daylight });
     this.#showNewScene();
     this.notice = { kind: 'info', text: msg(str`New scene: ${detail.name}.`) };
   };
@@ -512,6 +522,11 @@ export class LxsApp extends LitElement {
       .view=${this.view}
       .exposureEv=${this.exposureEv}
       legend-note=${this.#legendNote()}
+      .legendStops=${
+        this.#analysis.state.analysis
+          ? falseColourStops(this.#analysis.state.analysis)
+          : FALSE_COLOUR_STOPS
+      }
       @lxs-tool-change=${({ detail }: CustomEvent<{ tool: EditTool }>) => (this.tool = detail.tool)}
       @lxs-snapping-change=${({ detail }: CustomEvent<{ snapping: boolean }>) =>
         (this.snapping = detail.snapping)}
@@ -635,7 +650,9 @@ export class LxsApp extends LitElement {
   /** Under the illuminance view's legend: how current the map is. */
   #legendNote(): string {
     const { state } = this.#analysis;
-    if ((this.scene?.luminaires.length ?? 0) === 0) return msg('No luminaires to calculate.');
+    if (!this.scene || !hasLightToCalculate(this.scene)) {
+      return msg('No luminaires or windows to calculate.');
+    }
     if (state.calculating) return msg('Calculating…');
     if (state.error) return msg('Calculation failed');
     if (!state.analysis || state.stale) return msg('Out of date');
@@ -788,6 +805,20 @@ export class LxsApp extends LitElement {
       this.selection = [this.simulator.addFurniture(detail.kind, { at: detail.at })];
   };
 
+  #onAddWindow = ({ detail }: CustomEvent<{ preset: WindowPreset }>): void => {
+    if (!this.simulator) return;
+    this.selection = [this.simulator.addWindow(detail.preset)];
+    if (this.phone) this.#openPhoneTab('properties');
+  };
+
+  #onDropWindow = ({ detail }: CustomEvent<DropWindowDetail>): void => {
+    const sim = this.simulator;
+    if (sim)
+      this.selection = [
+        sim.addWindow(detail.preset, windowAt(detail.preset, detail.at, sim.scene.room)),
+      ];
+  };
+
   #onKeyDown = (event: KeyboardEvent): void => {
     // The help is modal: shortcuts mustn't act on the app behind it, and Esc is its own.
     if (this.helpOpen || this.newOpen || isTyping(event)) return;
@@ -814,10 +845,12 @@ export class LxsApp extends LitElement {
       case 'select-all': {
         // All of the kind selected, luminaires when nothing is.
         if (!this.scene) return;
-        const furniture = selectionKind(this.selection, this.scene) === 'furniture';
-        this.selection = (furniture ? this.scene.furniture : this.scene.luminaires).map(
-          (i) => i.id,
-        );
+        const items = {
+          luminaire: this.scene.luminaires,
+          furniture: this.scene.furniture,
+          window: this.scene.windows,
+        }[selectionKind(this.selection, this.scene) ?? 'luminaire'];
+        this.selection = items.map((i) => i.id);
         return;
       }
       case 'deselect':

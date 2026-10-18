@@ -30,6 +30,15 @@ export { directLight } from './analysis/direct-light';
 export type { DirectLight } from './analysis/direct-light';
 export { illuminanceAt, indirectLight, sceneLight } from './analysis/scene-light';
 export type { PointIlluminance, SceneLight } from './analysis/scene-light';
+export {
+  daylightIlluminance,
+  daylightSources,
+  inWindow,
+  NO_DAYLIGHT,
+} from './analysis/window-light';
+export type { DaylightSources, WindowSource } from './analysis/window-light';
+export { GROUND_REFLECTANCE, skyFor } from './analysis/sky';
+export type { Sky } from './analysis/sky';
 export { AnalysisCache, bounceGeometryKey } from './analysis/cache';
 export type { FormFactors } from './analysis/radiosity';
 export { analysisSnapshot, snapshotInputs } from './analysis/snapshot';
@@ -41,7 +50,12 @@ export type { Patch } from './analysis/patches';
 export { directIlluminance } from './analysis/direct';
 export { maxGridSpacing } from './analysis/calc-grid';
 export type { CalcGrid, CalcSurfaceName, GridRect } from './analysis/calc-grid';
-export { FALSE_COLOUR_STOPS, falseColour } from './analysis/false-colour';
+export {
+  DAYLIGHT_FALSE_COLOUR_STOPS,
+  FALSE_COLOUR_STOPS,
+  falseColour,
+  falseColourStops,
+} from './analysis/false-colour';
 export type { FalseColourStop } from './analysis/false-colour';
 export {
   COVERED_GAP_M,
@@ -83,6 +97,7 @@ export type {
   FurnitureFinish,
   FurnitureKind,
   FurnitureSize,
+  GlazingKind,
   ItemKind,
   Luminaire,
   LuminousOpening,
@@ -93,6 +108,9 @@ export type {
   PickTarget,
   Product,
   Room,
+  RoomWindow,
+  Daylight,
+  SkyKind,
   Scene,
   SceneItem,
   SceneStorage,
@@ -102,4 +120,33 @@ export type {
   TextureImage,
   TextureProvider,
   Vec3,
+  WindowCovering,
+  WindowSurface,
 } from './types';
+export {
+  addWindow,
+  assertWindow,
+  constrainWindow,
+  copyWindow,
+  COVERINGS,
+  GLAZINGS,
+  MIN_WINDOW_SIDE_M,
+  updateWindow,
+  WINDOW_MARGIN_M,
+  WINDOW_SURFACES,
+  WINDOW_TYPES,
+  windowAt,
+  windowRect,
+} from './windows';
+export type { WindowPatch, WindowPreset, WindowRect, WindowType } from './windows';
+export {
+  assertDaylight,
+  dayOfYear,
+  DEFAULT_DAYLIGHT,
+  SKY_KINDS,
+  solarDeclinationDeg,
+  sunDirection,
+  sunPosition,
+  updateDaylight,
+} from './daylight';
+export type { DaylightPatch, SunPosition } from './daylight';
