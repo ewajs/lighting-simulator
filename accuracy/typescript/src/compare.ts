@@ -13,6 +13,7 @@ import {
   illuminanceAt,
   indirectLight,
   luminaireFrame,
+  NO_DAYLIGHT,
   parseIes,
   type AnalysisSettings,
   type Blocker,
@@ -188,7 +189,8 @@ export function referenceLight(
     ),
     blockers,
   };
-  return { direct, indirect: indirectLight(room, direct, options) };
+  // The reference rooms have no windows yet (W6 adds daylight rooms).
+  return { direct, daylight: NO_DAYLIGHT, indirect: indirectLight(room, direct, options) };
 }
 
 /** The reference's boxes, as core's furniture blocks light with them. */

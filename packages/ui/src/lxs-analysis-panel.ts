@@ -426,7 +426,7 @@ export class LxsAnalysisPanel extends LitElement {
       ${
         covered > 0
           ? html`<p class="meta">
-              ${msg(str`Points covered by furniture, left out of the figures: ${covered}.`)}
+              ${msg(str`Points covered by furniture or on windows, left out of the figures: ${covered}.`)}
             </p>`
           : nothing
       }
@@ -537,6 +537,12 @@ export class LxsAnalysisPanel extends LitElement {
           'They hide bounced light, as in reality. Off: a little too much light near them, and moving one is faster.',
         ),
         !options.bouncedLight,
+      )}
+      ${this.#switch(
+        msg('Daylight'),
+        options.daylight,
+        (daylight) => setOptions({ daylight }),
+        msg('Through the windows, from the sky set in the Room panel. Off: as at night.'),
       )}
     </section>`;
   }

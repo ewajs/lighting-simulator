@@ -28,6 +28,12 @@ M6 Windows and daylight, in progress.
   and which way north is, in the Room panel; the sun's position from them,
   checked against Duffie & Beckman. The demo's rooms are in Buenos Aires
   (ADR 0079).
+- Daylight in the illuminance calculation: the CIE overcast or clear sky,
+  the ground and the sun through the windows, clear glass showing the sky
+  and frosted glass or coverings glowing evenly; it bounces round the room
+  with the luminaires' light, and light leaves through the windows. A
+  Daylight switch in the Analysis panel, daylight in the probe, and a
+  false-colour scale to 10 000 lx by day (ADR 0080).
 - Versions and this changelog; `npm run bump -- <version>` sets one version on
   every package and the dependencies between them (ADR 0077).
 

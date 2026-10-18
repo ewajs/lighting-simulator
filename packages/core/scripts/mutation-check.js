@@ -178,6 +178,43 @@ const MISTAKES = [
     correct: 'const measured = illuminanceLx.filter((_, k) => !covered[k]);',
     slip: 'const measured = illuminanceLx;',
   },
+  // Daylight (ADR 0080).
+  {
+    name: 'clear glass seen square-on from every angle',
+    file: 'src/analysis/window-light.ts',
+    correct: 'lux += (transmittance * sky.luminance(d) * cosPoint * cosWindow * cellArea) / r2;',
+    slip: 'lux += (transmittance * sky.luminance(d) * cosPoint * cellArea) / r2;',
+  },
+  {
+    name: 'the sun through the whole plane of a window',
+    file: 'src/analysis/window-light.ts',
+    correct: 'if (a < 0 || a > rect.width || b < 0 || b > rect.height) return 0;',
+    slip: 'if (a < 0 || b < 0) return 0;',
+  },
+  {
+    name: "a scattering window's luminance not divided by π",
+    file: 'src/analysis/window-light.ts',
+    correct: 'panelLuminance: diffusing ? (transmittance * outsideLx) / Math.PI : undefined,',
+    slip: 'panelLuminance: diffusing ? transmittance * outsideLx : undefined,',
+  },
+  {
+    name: 'light reaching a window reflected as off the wall',
+    file: 'src/analysis/scene-light.ts',
+    correct: 'withoutOpenings(patch, daylight.windows),',
+    slip: 'withoutOpenings(patch, []),',
+  },
+  {
+    name: 'an overcast sky as bright at the horizon as overhead',
+    file: 'src/analysis/sky.ts',
+    correct: 'return (1 + 2 * d.y) / 3;',
+    slip: 'return 1;',
+  },
+  {
+    name: 'the sun as bright low as high',
+    file: 'src/analysis/sky.ts',
+    correct: 'return outside * Math.exp(-CLEAR_EXTINCTION / sinAltitude);',
+    slip: 'return outside * Math.exp(-CLEAR_EXTINCTION);',
+  },
 ];
 
 const sandbox = mkdtempSync(join(tmpdir(), 'luxstudio-mutation-'));

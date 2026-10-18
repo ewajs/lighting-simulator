@@ -1,4 +1,6 @@
 import {
+  FALSE_COLOUR_STOPS,
+  falseColourStops,
   serializeScene,
   type AnalysisSettings,
   type CalculationOptions,
@@ -520,6 +522,11 @@ export class LxsApp extends LitElement {
       .view=${this.view}
       .exposureEv=${this.exposureEv}
       legend-note=${this.#legendNote()}
+      .legendStops=${
+        this.#analysis.state.analysis
+          ? falseColourStops(this.#analysis.state.analysis)
+          : FALSE_COLOUR_STOPS
+      }
       @lxs-tool-change=${({ detail }: CustomEvent<{ tool: EditTool }>) => (this.tool = detail.tool)}
       @lxs-snapping-change=${({ detail }: CustomEvent<{ snapping: boolean }>) =>
         (this.snapping = detail.snapping)}

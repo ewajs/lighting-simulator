@@ -1,4 +1,9 @@
-import type { RenderMode, ViewName } from '@luxstudio/core';
+import {
+  FALSE_COLOUR_STOPS,
+  type FalseColourStop,
+  type RenderMode,
+  type ViewName,
+} from '@luxstudio/core';
 import { localized, msg } from '@lit/localize';
 import { css, html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
@@ -195,6 +200,8 @@ export class LxsViewportControls extends LitElement {
   @property({ type: Number }) exposureEv = 0;
   /** In the illuminance mode, how current the map is: shown under its legend. */
   @property({ attribute: 'legend-note' }) legendNote = '';
+  /** The scale the illuminance map is coloured with, for its legend. */
+  @property({ attribute: false }) legendStops: readonly FalseColourStop[] = FALSE_COLOUR_STOPS;
 
   override render() {
     const views: [ViewName, string][] = [
@@ -285,6 +292,7 @@ export class LxsViewportControls extends LitElement {
           ? html`<lxs-illuminance-legend
               class="glass legend"
               note=${this.legendNote}
+              .stops=${this.legendStops}
             ></lxs-illuminance-legend>`
           : this.#exposure()
       }

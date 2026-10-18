@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { FALSE_COLOUR_STOPS, falseColour } from './false-colour';
+import { DAYLIGHT_FALSE_COLOUR_STOPS, FALSE_COLOUR_STOPS, falseColour } from './false-colour';
 
 describe('falseColour', () => {
   it('gives each stop its own colour', () => {
@@ -17,7 +17,14 @@ describe('falseColour', () => {
   });
 
   it('has its stops ascending', () => {
-    const lx = FALSE_COLOUR_STOPS.map((s) => s.lx);
-    expect([...lx].sort((a, b) => a - b)).toEqual(lx);
+    for (const stops of [FALSE_COLOUR_STOPS, DAYLIGHT_FALSE_COLOUR_STOPS]) {
+      const lx = stops.map((s) => s.lx);
+      expect([...lx].sort((a, b) => a - b)).toEqual(lx);
+    }
+  });
+
+  it('reads another scale when given one: by day, white only from 10 000 lx', () => {
+    expect(falseColour(5000, DAYLIGHT_FALSE_COLOUR_STOPS)).toEqual([229, 50, 45]);
+    expect(falseColour(20_000, DAYLIGHT_FALSE_COLOUR_STOPS)).toEqual([255, 246, 230]);
   });
 });

@@ -1003,10 +1003,6 @@
   <source>Illuminance (lx)</source>
   <target>Iluminancia (lx)</target>
 </trans-unit>
-<trans-unit id="s1772719ac2f6f0d6">
-  <source>False-colour scale from 0 to 2000 lx</source>
-  <target>Escala de colores falsos de 0 a 2000 lx</target>
-</trans-unit>
 <trans-unit id="s8ca77553a77523bd">
   <source>Direct <x id="0" equiv-text="${formatNumber(lux.directLx)}"/> · bounced <x id="1" equiv-text="${formatNumber(lux.indirectLx)}"/></source>
   <target>Directa <x id="0" equiv-text="${formatNumber(lux.directLx)}"/> · rebotada <x id="1" equiv-text="${formatNumber(lux.indirectLx)}"/></target>
@@ -1038,10 +1034,6 @@
 <trans-unit id="scf70d6e5653f3055">
   <source><x id="0" equiv-text="${cm}"/> cm, more exact</source>
   <target><x id="0" equiv-text="${cm}"/> cm, más exacto</target>
-</trans-unit>
-<trans-unit id="s6a567bdc8c639893">
-  <source>Points covered by furniture, left out of the figures: <x id="0" equiv-text="${covered}"/>.</source>
-  <target>Puntos tapados por muebles, sin contar en las cifras: <x id="0" equiv-text="${covered}"/>.</target>
 </trans-unit>
 <trans-unit id="s579c13c4c1fe6217">
   <source>Luminaire bodies</source>
@@ -1202,6 +1194,22 @@
 <trans-unit id="s1665003edbbd5b81">
   <source>The sun is <x id="0" equiv-text="${altitude}"/>° above the horizon.</source>
   <target>El sol está a <x id="0" equiv-text="${altitude}"/>° sobre el horizonte.</target>
+</trans-unit>
+<trans-unit id="s1d61e73b24e6d84f">
+  <source>Through the windows, from the sky set in the Room panel. Off: as at night.</source>
+  <target>Por las ventanas, del cielo que se elige en el panel Ambiente. Apagada: como de noche.</target>
+</trans-unit>
+<trans-unit id="se5708cd478963182">
+  <source>Direct <x id="0" equiv-text="${formatNumber(lux.directLx)}"/> · daylight <x id="1" equiv-text="${formatNumber(lux.daylightLx)}"/> · bounced <x id="2" equiv-text="${formatNumber(lux.indirectLx)}"/></source>
+  <target>Directa <x id="0" equiv-text="${formatNumber(lux.directLx)}"/> · natural <x id="1" equiv-text="${formatNumber(lux.daylightLx)}"/> · rebotada <x id="2" equiv-text="${formatNumber(lux.indirectLx)}"/></target>
+</trans-unit>
+<trans-unit id="se8c54ea33fc0985e">
+  <source>Points covered by furniture or on windows, left out of the figures: <x id="0" equiv-text="${covered}"/>.</source>
+  <target>Puntos tapados por muebles o en ventanas, sin contar en las cifras: <x id="0" equiv-text="${covered}"/>.</target>
+</trans-unit>
+<trans-unit id="s27e82dcb8078f24e">
+  <source>False-colour scale from 0 to <x id="0" equiv-text="${top}"/> lx</source>
+  <target>Escala de colores falsos de 0 a <x id="0" equiv-text="${top}"/> lx</target>
 </trans-unit>
 </body>
 </file>

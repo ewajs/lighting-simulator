@@ -178,6 +178,21 @@ test(
   },
 );
 
+test('daylight through a window lights the room; at night, or switched off, it is gone', async ({
+  page,
+}) => {
+  await openAnalysis(page);
+  const byLamps = await average(page);
+  // The starter scene is in Buenos Aires: an overcast noon at the equinox.
+  await page.evaluate(() => document.querySelector('lxs-app')!.simulator!.addWindow('tall-window'));
+  await expect.poll(() => average(page)).toBeGreaterThan(byLamps + 500);
+  await panel(page)
+    .getByRole('switch', { name: /^Luz natural/ })
+    .uncheck();
+  // The window still lets the room's own light out: a little darker than before it.
+  await expect.poll(() => average(page)).toBeLessThan(byLamps);
+});
+
 test.describe('probing on a phone', () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true });
 

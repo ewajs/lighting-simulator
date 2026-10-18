@@ -1,7 +1,7 @@
 // How long an illuminance calculation takes for a furnished room and a busy one, to measure
 // before optimising (CLAUDE.md) and to size the live calculation's budget
 // (M5.4): from scratch, and with the room cached, as when only the light
-// changes (ADR 0065). `npm run bench -w packages/core` bundles this file with Vite
+// changes (ADR 0065); and by day, through windows (ADR 0080). `npm run bench -w packages/core` bundles this file with Vite
 // and runs it in Node, so it times the code as the app ships it: under
 // Vitest, every import goes through a getter that distorts the timing.
 import { analyseIlluminance } from '../src/analysis/analyse';
@@ -12,7 +12,7 @@ import { DEFAULT_ANALYSIS_SETTINGS } from '../src/analysis/settings';
 import { FURNITURE_TYPES } from '../src/furniture-kinds';
 import type { AnalysisInputs } from '../src/analysis/settings';
 import { catalog, photometry, room } from '../src/test-fixtures';
-import type { Furniture, Luminaire, Scene } from '../src/types';
+import type { Furniture, Luminaire, RoomWindow, Scene } from '../src/types';
 
 /** Runs before timing, so the JIT has compiled the hot paths. */
 const WARM_UP_RUNS = 3;
@@ -143,5 +143,24 @@ function bench(label: string, scene: Scene): void {
   );
 }
 
+// The furnished room by day (ADR 0080): a window on the back wall and a tall
+// one on the right, with a sheer, and a skylight, under a clear sky with the sun.
+const windows: RoomWindow[] = [
+  { id: 'w1', surface: 'wall-z-', position: { x: 0, y: 1.5, z: -2 }, width: 1.2, height: 1.2 },
+  { id: 'w2', surface: 'wall-x+', position: { x: 2.5, y: 1.15, z: 0 }, width: 1.8, height: 2.1 },
+  { id: 'w3', surface: 'ceiling', position: { x: -1, y: 2.7, z: 0 }, width: 0.9, height: 0.9 },
+].map((w, k) => ({
+  ...w,
+  surface: w.surface as RoomWindow['surface'],
+  glazing: 'clear' as const,
+  covering: k === 1 ? ('sheer' as const) : ('none' as const),
+}));
+const byDay: Scene = {
+  ...scene,
+  windows,
+  daylight: { ...DEFAULT_DAYLIGHT, sky: 'clear', latitudeDeg: -34.6, solarHour: 10 },
+};
+
 bench('6 luminaires × 12 cells, 3 pieces of furniture, 5 × 4 m room', scene);
+bench('the same by day: 3 windows, clear sky and sun', byDay);
 bench('6 luminaires × 12 cells, 9 pieces of furniture and 4 chairs, 6 × 5 m room', busy);

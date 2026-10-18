@@ -1,6 +1,7 @@
-// The illuminance on a room's calculation surfaces (ADR 0057, 0060): direct
-// light from the luminaires, with furniture's shadows, plus the light the room
-// reflects, on EN 12464-1 grids, maintained.
+// The illuminance on a room's calculation surfaces (ADR 0057, 0060, 0080):
+// direct light from the luminaires, with furniture's shadows, daylight through
+// the windows, plus the light the room reflects, on EN 12464-1 grids. The
+// luminaires' light is maintained.
 
 import type { Scene } from '../types';
 import { roomGrids, type CalcGrid } from './calc-grid';
@@ -11,20 +12,24 @@ import { coveredByFurniture, furnitureBlockers } from './occlusion';
 import { indirectFromViews, pointViews } from './radiosity';
 import { sceneLight, type SceneLight } from './scene-light';
 import { boxVisibility } from './visibility';
+import { daylightIlluminance, inWindow } from './window-light';
 import { DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs, type AnalysisSettings } from './settings';
 import { illuminanceStats, type IlluminanceStats } from './stats';
 
 /** One surface's grid and the illuminance at each of its points, in lx, in the grid's order. */
 export interface SurfaceResult {
   readonly grid: CalcGrid;
-  /** Direct plus indirect: what a light meter would read. */
+  /** Direct, daylight and indirect: what a light meter would read. */
   readonly illuminanceLx: readonly number[];
+  /** Straight from the luminaires. */
   readonly directLx: readonly number[];
+  /** Through the windows, before any bounce (ADR 0080). */
+  readonly daylightLx: readonly number[];
   readonly indirectLx: readonly number[];
   /**
    * Whether each point is covered by a piece of furniture (ADR 0074): inside
-   * it, or the floor or wall right against it. No one measures there, so the
-   * figures leave these points out.
+   * it, or the floor or wall right against it; or is on a window's glass
+   * (ADR 0080). No one measures there, so the figures leave these points out.
    */
   readonly covered: readonly boolean[];
   /** The total's figures over the uncovered points; undefined when there are none, e.g. a border wider than the room. */
@@ -46,8 +51,8 @@ export interface IlluminanceAnalysis {
 }
 
 /**
- * The illuminance on the work plane and every room surface, direct and
- * bounced, in maintained lux. With a `cache` held between calls, a room
+ * The illuminance on the work plane and every room surface, direct, through
+ * the windows and bounced, in lux; the luminaires' light maintained. With a `cache` held between calls, a room
  * calculated before reuses its form factors and grid views (ADR 0065): a
  * change to the light alone is several times faster.
  *
@@ -85,17 +90,25 @@ export function analyseSceneLight(
     const directLx = grid.points.map((point) =>
       directIlluminance(point, grid.normal, light.direct.sources, light.direct.blockers),
     );
+    const daylightLx = grid.points.map((point) =>
+      daylightIlluminance(point, grid.normal, light.daylight, light.direct.blockers),
+    );
     // What each point sees of each patch is the same while the room is: kept in the cache.
     const compute = () => pointViews(grid.points, grid.normal, patches, boxVisibility(blockers));
     const views = cache ? cache.gridViews(key, grid, compute) : compute();
     const indirectLx = grid.points.map((_, k) => indirectFromViews(views, k, light.indirect));
-    const illuminanceLx = directLx.map((direct, k) => direct + indirectLx[k]!);
-    const covered = grid.points.map((point) => coveredByFurniture(point, grid.normal, furniture));
+    const illuminanceLx = directLx.map((direct, k) => direct + daylightLx[k]! + indirectLx[k]!);
+    const covered = grid.points.map(
+      (point) =>
+        coveredByFurniture(point, grid.normal, furniture) ||
+        inWindow(point, grid.normal, light.daylight.windows),
+    );
     const measured = illuminanceLx.filter((_, k) => !covered[k]);
     return {
       grid,
       illuminanceLx,
       directLx,
+      daylightLx,
       indirectLx,
       covered,
       stats: measured.length > 0 ? illuminanceStats(measured) : undefined,
