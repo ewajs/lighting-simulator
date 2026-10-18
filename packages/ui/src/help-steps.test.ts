@@ -3,10 +3,10 @@ import { helpSeen, markHelpSeen } from './help-seen';
 import { helpSteps } from './help-steps';
 
 describe('helpSteps', () => {
-  it('has nine steps, plus one about IES files when import is on', () => {
-    expect(helpSteps({ touch: false, iesImport: false })).toHaveLength(9);
+  it('has ten steps, plus one about IES files when import is on', () => {
+    expect(helpSteps({ touch: false, iesImport: false })).toHaveLength(10);
     const withIes = helpSteps({ touch: false, iesImport: true });
-    expect(withIes).toHaveLength(10);
+    expect(withIes).toHaveLength(11);
     expect(withIes.at(-1)?.illustration).toBe('ies');
   });
 

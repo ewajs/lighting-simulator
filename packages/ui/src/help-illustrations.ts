@@ -10,6 +10,7 @@
 import { svg, type SVGTemplateResult } from 'lit';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import {
+  ChartColumn,
   FilePlus,
   FolderOpen,
   Lightbulb,
@@ -27,7 +28,17 @@ import { iconMarkup } from './icons';
 
 /** The illustrations, one per help step. */
 export type IllustrationName =
-  'welcome' | 'add' | 'move' | 'aim' | 'light' | 'room' | 'view' | 'precision' | 'files' | 'ies';
+  | 'welcome'
+  | 'add'
+  | 'move'
+  | 'aim'
+  | 'light'
+  | 'room'
+  | 'view'
+  | 'analysis'
+  | 'precision'
+  | 'files'
+  | 'ies';
 
 /** Where the floor's middle is: pools of light lie on it. */
 const FLOOR_Y = 118;
@@ -194,6 +205,40 @@ const illustrations: Record<IllustrationName, SVGTemplateResult> = {
     <g class="orbit">${room}${fixture(120, 30)}</g>
     <g class="drag"><g transform="translate(70,58)">${pointer}</g></g>
     ${glyph(Rotate3d, 206, 22, 18, 'glyph muted')}
+  `,
+
+  // The room turns to false colour, brightest under the light, and pointing reads the lux there.
+  analysis: svg`
+    <defs>
+      <clipPath id="floor-clip"><polygon points="40,96 200,96 236,140 4,140" /></clipPath>
+      <clipPath id="wall-clip"><rect x="40" y=${CEILING_Y} width="160" height="82" /></clipPath>
+    </defs>
+    ${room}
+    <g class="heat">
+      <rect class="heat-1" x="40" y=${CEILING_Y} width="160" height="82" />
+      <g clip-path="url(#wall-clip)">
+        <ellipse class="heat-2" cx="140" cy=${CEILING_Y} rx="44" ry="42" />
+        <ellipse class="heat-3" cx="140" cy=${CEILING_Y} rx="20" ry="18" />
+      </g>
+      <polygon class="heat-2" points="40,96 200,96 236,140 4,140" />
+      <g clip-path="url(#floor-clip)">
+        <ellipse class="heat-3" cx="140" cy=${FLOOR_Y} rx="96" ry="20" />
+        <ellipse class="heat-4" cx="140" cy=${FLOOR_Y} rx="62" ry="13" />
+        <ellipse class="heat-5" cx="140" cy=${FLOOR_Y} rx="30" ry="7" />
+      </g>
+    </g>
+    <rect class="body" x="133" y=${CEILING_Y - 3} width="14" height="5" rx="1.5" />
+    <rect class="panel" x="6" y="22" width="56" height="100" rx="5" />
+    ${glyph(ChartColumn, 12, 28, 12)}
+    <text class="figure" x="12" y="62">420</text>
+    <text class="figure-unit" x="12" y="74">lx Ē</text>
+    <rect class="card" x="11" y="84" width="46" height="8" rx="2" />
+    <rect class="card" x="11" y="98" width="34" height="8" rx="2" />
+    <g class="probe">
+      <g transform="translate(150,114)">${pointer}</g>
+      <rect class="readout" x="160" y="84" width="46" height="18" rx="4" />
+      <text class="readout-text" x="183" y="96" text-anchor="middle">612 lx</text>
+    </g>
   `,
 
   // Steps on the 10 cm grid, a guide when lined up, then Undo puts it back.

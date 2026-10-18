@@ -1015,6 +1015,18 @@
   <source>Direct <x id="0" equiv-text="${formatNumber(lux.directLx)}"/> · bounced <x id="1" equiv-text="${formatNumber(lux.indirectLx)}"/></source>
   <target>Directa <x id="0" equiv-text="${formatNumber(lux.directLx)}"/> · rebotada <x id="1" equiv-text="${formatNumber(lux.indirectLx)}"/></target>
 </trans-unit>
+<trans-unit id="s805e67e9597d25d0">
+  <source>See the light in numbers</source>
+  <target>Mirá la luz en números</target>
+</trans-unit>
+<trans-unit id="s55d22e5692557a4d">
+  <source>Analysis gives the lux on the work plane and each surface. The Illuminance view, under View, paints them in colour; tap a surface to read its lux.</source>
+  <target>Análisis da los lux del plano de trabajo y de cada superficie. La vista Iluminancia, en Vista, los pinta en colores; tocá una superficie para leer sus lux.</target>
+</trans-unit>
+<trans-unit id="s1fe64e51ff7da52a">
+  <source>Analysis, in the left panel, gives the lux on the work plane and each surface. Press 3 to paint them in colour, and point anywhere to read its lux.</source>
+  <target>Análisis, en el panel de la izquierda, da los lux del plano de trabajo y de cada superficie. Apretá 3 para pintarlos en colores, y señalá cualquier punto para leer sus lux.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

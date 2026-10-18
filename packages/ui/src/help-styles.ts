@@ -202,6 +202,37 @@ export const illustrationStyles = css`
     fill: var(--lxs-accent);
     font: 700 9px var(--lxs-font-ui);
   }
+  .art .heat-1 {
+    fill: var(--lxs-heat-1);
+  }
+  .art .heat-2 {
+    fill: var(--lxs-heat-2);
+  }
+  .art .heat-3 {
+    fill: var(--lxs-heat-3);
+  }
+  .art .heat-4 {
+    fill: var(--lxs-heat-4);
+  }
+  .art .heat-5 {
+    fill: var(--lxs-heat-5);
+  }
+  .art .figure {
+    fill: var(--lxs-text);
+    font: 700 13px var(--lxs-font-mono);
+  }
+  .art .figure-unit {
+    fill: var(--lxs-text-muted);
+    font: 8px var(--lxs-font-ui);
+  }
+  .art .readout {
+    fill: var(--lxs-surface-1);
+    stroke: var(--lxs-line-strong);
+  }
+  .art .readout-text {
+    fill: var(--lxs-text);
+    font: 700 9px var(--lxs-font-mono);
+  }
   .art .polar {
     fill: none;
     stroke: var(--lxs-line-strong);
@@ -313,6 +344,12 @@ export const illustrationStyles = css`
   }
   .ies .drop {
     animation: drop 5s ease-in-out infinite;
+  }
+  .analysis .heat {
+    animation: heat 6s ease-in-out infinite;
+  }
+  .analysis .probe {
+    animation: probe 6s ease-in-out infinite;
   }
   .ies .chart {
     transform-origin: 50% 0%;
@@ -695,6 +732,35 @@ export const illustrationStyles = css`
     50%,
     100% {
       transform: translateY(40px) scale(0.6);
+      opacity: 0;
+    }
+  }
+  /* The colours come in, then the pointer arrives and reads one point. */
+  @keyframes heat {
+    0%,
+    10% {
+      opacity: 0;
+    }
+    30%,
+    92% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes probe {
+    0%,
+    40% {
+      transform: translate(30px, 20px);
+      opacity: 0;
+    }
+    55%,
+    92% {
+      transform: translate(0, 0);
+      opacity: 1;
+    }
+    100% {
       opacity: 0;
     }
   }
