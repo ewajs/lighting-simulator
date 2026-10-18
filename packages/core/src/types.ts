@@ -147,24 +147,52 @@ export interface Furniture {
   readonly finish: FurnitureFinish;
 }
 
-/** The two kinds of things placed in a room. */
-export type ItemKind = 'luminaire' | 'furniture';
+/** The surfaces a window can be in: a wall, or the ceiling (a skylight). */
+export type WindowSurface = 'wall-x-' | 'wall-x+' | 'wall-z-' | 'wall-z+' | 'ceiling';
 
-/** A luminaire or a piece of furniture, with its kind, e.g. as found by `findItem`. */
+/** The glass in a window: clear, tinted (darker), or frosted (it scatters what it lets through). */
+export type GlazingKind = 'clear' | 'tinted' | 'frosted';
+
+/** What covers a window: nothing, a sheer curtain (it scatters light), or a closed blind. */
+export type WindowCovering = 'none' | 'sheer' | 'blind';
+
+/**
+ * An opening in a wall or the ceiling, glazed (ADR 0078). On a wall, `width`
+ * runs along it and `height` up it; in the ceiling, `width` runs along x and
+ * `height` along z. Named RoomWindow so it doesn't hide the DOM's Window.
+ */
+export interface RoomWindow {
+  readonly id: string;
+  readonly surface: WindowSurface;
+  /** The opening's centre, on its surface (a wall's plane, or the ceiling's). */
+  readonly position: Vec3;
+  readonly width: number;
+  readonly height: number;
+  readonly glazing: GlazingKind;
+  readonly covering: WindowCovering;
+}
+
+/** The three kinds of things placed in a room. */
+export type ItemKind = 'luminaire' | 'furniture' | 'window';
+
+/** A luminaire, a piece of furniture or a window, with its kind, e.g. as found by `findItem`. */
 export type SceneItem =
   | { readonly kind: 'luminaire'; readonly item: Luminaire }
-  | { readonly kind: 'furniture'; readonly item: Furniture };
+  | { readonly kind: 'furniture'; readonly item: Furniture }
+  | { readonly kind: 'window'; readonly item: RoomWindow };
 
-/** A luminaire or a piece of furniture by id, e.g. as picked in the viewport. */
+/** A luminaire, a piece of furniture or a window by id, e.g. as picked in the viewport. */
 export type PickTarget =
   | { readonly kind: 'luminaire'; readonly id: string }
-  | { readonly kind: 'furniture'; readonly id: string };
+  | { readonly kind: 'furniture'; readonly id: string }
+  | { readonly kind: 'window'; readonly id: string };
 
 /** The editable document: everything that is saved and undoable. */
 export interface Scene {
   readonly room: Room;
   readonly luminaires: readonly Luminaire[];
   readonly furniture: readonly Furniture[];
+  readonly windows: readonly RoomWindow[];
 }
 
 /**

@@ -71,7 +71,7 @@ export default defineLoader({
   load(): RoomsData {
     const photometry = parseIes(iesText('downlight'));
     const empty = analyseIlluminance(
-      { room: ROOM, luminaires: [], furniture: [] },
+      { room: ROOM, luminaires: [], furniture: [], windows: [] },
       inputs(photometry),
     );
     const grid = empty.surfaces[0]!.grid;
@@ -87,7 +87,12 @@ export default defineLoader({
       [-0.4, 0.4],
       [0.4, 0.4],
     ]);
-    const scene = { room: ROOM, luminaires: downlights(spread.luminaires), furniture: [] };
+    const scene = {
+      room: ROOM,
+      luminaires: downlights(spread.luminaires),
+      furniture: [],
+      windows: [],
+    };
     const maintained = analyseIlluminance(scene, inputs(photometry), DEFAULT_ANALYSIS_SETTINGS);
     const spacingRule: XY[] = [];
     for (let d = 1; d <= 30; d += 0.5) spacingRule.push([d, maxGridSpacing(d)]);
@@ -135,7 +140,7 @@ function downlights(at: readonly XY[]): Luminaire[] {
 }
 
 function roomMap(photometry: Photometry, at: XY[]): RoomMap {
-  const scene = { room: ROOM, luminaires: downlights(at), furniture: [] };
+  const scene = { room: ROOM, luminaires: downlights(at), furniture: [], windows: [] };
   const stats = analyseIlluminance(scene, inputs(photometry), AS_INSTALLED).surfaces[0]!.stats!;
   const light = sceneLight(scene, inputs(photometry), AS_INSTALLED);
   const values: number[][] = [];

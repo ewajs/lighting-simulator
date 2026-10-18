@@ -120,7 +120,7 @@ function lightAt(origin: Vec3, photometry: Photometry) {
     cct: 3000,
   };
   const light = directLight(
-    { room: ROOM, luminaires: [luminaire], furniture: [] },
+    { room: ROOM, luminaires: [luminaire], furniture: [], windows: [] },
     { catalog, photometry: () => photometry, modelFile: () => undefined },
     AS_INSTALLED,
   );

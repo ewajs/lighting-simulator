@@ -13,7 +13,12 @@ describe('Simulator', () => {
   });
 
   it('rejects an invalid starting scene', () => {
-    const scene = { room: { ...create().scene.room, width: -1 }, luminaires: [], furniture: [] };
+    const scene = {
+      room: { ...create().scene.room, width: -1 },
+      luminaires: [],
+      furniture: [],
+      windows: [],
+    };
     expect(() => new Simulator({ catalog, scene })).toThrow(/room.width/);
   });
 
@@ -210,6 +215,7 @@ describe('Simulator furniture', () => {
           finish: { main: 'linen' as const, accent: 'oak' as const },
         },
       ],
+      windows: [],
     };
     expect(() => new Simulator({ catalog, scene })).toThrow(/position.z/);
   });

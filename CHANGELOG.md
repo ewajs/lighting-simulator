@@ -8,11 +8,13 @@ milestones and their PRs, to give the history a shape.
 
 ## [Unreleased]
 
-### Fixed
-- The app's "Read the full manual" link opened the app itself under `npm run dev`;
-  the dev server now serves the manual as last built, or says how to build it.
+M6 Windows and daylight, in progress.
 
 ### Added
+- Windows in the scene model: in a wall or the ceiling (a skylight), with
+  glazing and a covering, kept on their surface, moved along it, copied,
+  removed and undone like other items. Scene files are now version 2;
+  version 1 files open without windows (ADR 0078).
 - Versions and this changelog; `npm run bump -- <version>` sets one version on
   every package and the dependencies between them (ADR 0077).
 
@@ -22,6 +24,10 @@ milestones and their PRs, to give the history a shape.
   `npm run test:accuracy-report`. CI runs the fast checks in about a minute,
   and the accuracy workflow only when the calculation changes. Generated
   results and the full e2e suite run once per milestone (ADR 0076, #74).
+
+### Fixed
+- The app's "Read the full manual" link opened the app itself under `npm run dev`;
+  the dev server now serves the manual as last built, or says how to build it.
 
 ## [0.5.0] — M5 Analysis, 2026-10-16 to 2026-10-18
 

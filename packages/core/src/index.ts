@@ -83,6 +83,7 @@ export type {
   FurnitureFinish,
   FurnitureKind,
   FurnitureSize,
+  GlazingKind,
   ItemKind,
   Luminaire,
   LuminousOpening,
@@ -93,6 +94,7 @@ export type {
   PickTarget,
   Product,
   Room,
+  RoomWindow,
   Scene,
   SceneItem,
   SceneStorage,
@@ -102,4 +104,21 @@ export type {
   TextureImage,
   TextureProvider,
   Vec3,
+  WindowCovering,
+  WindowSurface,
 } from './types';
+export {
+  addWindow,
+  assertWindow,
+  constrainWindow,
+  copyWindow,
+  COVERINGS,
+  GLAZINGS,
+  MIN_WINDOW_SIDE_M,
+  updateWindow,
+  WINDOW_MARGIN_M,
+  WINDOW_SURFACES,
+  WINDOW_TYPES,
+  windowRect,
+} from './windows';
+export type { WindowPatch, WindowPreset, WindowRect, WindowType } from './windows';

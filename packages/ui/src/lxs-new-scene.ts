@@ -16,7 +16,7 @@ export interface TemplatePickDetail {
 }
 
 /** The default room with nothing in it: always offered first. */
-const EMPTY_SCENE: Scene = { room: DEFAULT_ROOM, luminaires: [], furniture: [] };
+const EMPTY_SCENE: Scene = { room: DEFAULT_ROOM, luminaires: [], furniture: [], windows: [] };
 
 /**
  * New: a modal dialog to start a scene from a template (ADR 0052). An empty

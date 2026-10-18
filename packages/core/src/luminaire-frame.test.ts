@@ -186,7 +186,7 @@ describe('the renderer and the calculation agree', () => {
       modelFile: () => undefined,
       logger: { debug() {}, info() {}, warn() {}, error() {} },
     });
-    meshes.sync({ room, luminaires: [placed], furniture: [] }, [], 'realistic');
+    meshes.sync({ room, luminaires: [placed], furniture: [], windows: [] }, [], 'realistic');
     let light: THREE.Object3D | undefined;
     meshes.group.traverse((object) => {
       if ((object as THREE.Light).isLight) light = object;

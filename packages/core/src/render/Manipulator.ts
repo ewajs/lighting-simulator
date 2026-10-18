@@ -254,12 +254,16 @@ export class Manipulator {
     if (target.kind === 'aim') return [];
     const { scene, catalog } = this.#options.simulator;
     const ids =
-      target.kind === 'luminaire' || target.kind === 'furniture' ? [target.id] : this.#highlighted;
+      target.kind === 'luminaire' || target.kind === 'furniture' || target.kind === 'window'
+        ? [target.id]
+        : this.#highlighted;
     // A pendant's height is measured only while an arrow slides it up or down.
     const withHeight = target.kind === 'move-axis' && target.axis === 'y';
     const dimensions = ids.flatMap((id) => {
       const found = findItem(scene, id);
       if (found?.kind === 'furniture') return furnitureDimensions(found.item, scene.room);
+      // Windows' dimension lines come with their editing (W3).
+      if (found?.kind !== 'luminaire') return [];
       const mount = found && catalog.get(found.item.productId)?.mount;
       return mount
         ? luminaireDimensions({ position: found.item.position, mount }, scene.room, withHeight)
@@ -311,6 +315,7 @@ function describeTarget(target: PressTarget): string {
   switch (target.kind) {
     case 'luminaire':
     case 'furniture':
+    case 'window':
       return `Moving ${target.kind} ${target.id}`;
     case 'move-axis':
       return `Sliding along ${target.axis}`;

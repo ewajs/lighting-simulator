@@ -66,7 +66,12 @@ describe('the Cooper downlight, by hand from its file', () => {
   // Its light sits 3 cm below the fixture (the placeholder's and the model's
   // `light` node): placed at 2.73 m, it shines from 2.70 m above the floor.
   const light = directLight(
-    { room, luminaires: [placed('ies-downlight', { x: 0, y: 2.73, z: 0 })], furniture: [] },
+    {
+      room,
+      luminaires: [placed('ies-downlight', { x: 0, y: 2.73, z: 0 })],
+      furniture: [],
+      windows: [],
+    },
     inputs,
     FULL,
   );
@@ -140,7 +145,7 @@ describe('each real file’s flux lands on the room', () => {
         const position =
           id === 'ies-wall-up-down' ? { x: 0.6, y: 1.35, z: -0.4 } : { x: 0.3, y: 1.35, z: 0.2 };
         const light = directLight(
-          { room, luminaires: [placed(id, position, tilt, pan)], furniture: [] },
+          { room, luminaires: [placed(id, position, tilt, pan)], furniture: [], windows: [] },
           inputs,
           FULL,
         );

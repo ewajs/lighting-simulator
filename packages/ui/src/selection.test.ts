@@ -9,6 +9,7 @@ const scene: Scene = {
   room: DEFAULT_ROOM,
   luminaires: ['a', 'b', 'c'].map(luminaire),
   furniture: ['f', 'g'].map(piece),
+  windows: [],
 };
 
 describe('selectionKind', () => {

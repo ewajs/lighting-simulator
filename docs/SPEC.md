@@ -34,7 +34,8 @@ but it is not a certified calculation tool.
 ### Non-goals (for now)
 
 - Certified lighting calculations, standards compliance reports (EN 12464, etc.).
-- Daylight simulation.
+- Annual daylight metrics, glare, and weather data. Daylight from a given sky
+  at a given time is in scope since M6 (ADR 0078).
 - Arbitrary CAD/BIM import (IFC, DWG). Possibly later via glTF.
 - Multi-user real-time editing.
 
@@ -99,7 +100,7 @@ Priority: **P0** = first version, **P1** = next, **P2** = later.
   also show a texture from the host, its brightness matched to ρ
   ([ADR 0050](./decisions/0050-surface-textures.md)).
 - P1: L-shaped / polygon floor plans drawn in a 2D plan view.
-- P1: Openings (doors, windows) as cut-outs.
+- P1: Openings as cut-outs: windows and skylights (M6, ADR 0078); doors later.
 - P1: Simple parametric furniture and props (table, sofa, desk, shelf) for
   scale and to catch light: 14 procedural pieces, moved, turned and measured
   like luminaires ([ADRs 0047](./decisions/0047-furniture.md),
@@ -315,4 +316,4 @@ get every feature in a layout of their own, with a tab bar and sheets
 4. **Customer mode**: a separate set of components, or a configuration of
    the same ones?
 5. **Delivery format** for clients (bundled script, git dependency, private
-   registry): decided in M6.
+   registry): decided in M7.

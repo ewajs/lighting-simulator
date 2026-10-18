@@ -22,6 +22,7 @@ const scene: Scene = {
     luminaire('c', 'not-in-the-catalog'),
   ],
   furniture: [],
+  windows: [],
 };
 const model = new ArrayBuffer(8);
 const inputs: AnalysisInputs = {

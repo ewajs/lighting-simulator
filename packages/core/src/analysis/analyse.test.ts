@@ -227,7 +227,12 @@ describe('analyseIlluminance', () => {
     photometry: () => isotropic(100),
     modelFile: () => undefined,
   };
-  const scene = (luminaires: Luminaire[]): Scene => ({ room, luminaires, furniture: [] });
+  const scene = (luminaires: Luminaire[]): Scene => ({
+    room,
+    luminaires,
+    furniture: [],
+    windows: [],
+  });
 
   it('gives each surface its grid, values and figures, the work plane first', () => {
     const result = analyseIlluminance(scene([placed('recessed', { x: 0, y: 2.7, z: 0 })]), ies);
@@ -310,7 +315,10 @@ describe('analyseIlluminance', () => {
       finish: { main: 'oak', accent: 'white' },
     };
     const luminaires = [placed('recessed', { x: 0, y: 2.7, z: 0 })];
-    const result = analyseIlluminance({ room, luminaires, furniture: [bookcase] }, ies);
+    const result = analyseIlluminance(
+      { room, luminaires, furniture: [bookcase], windows: [] },
+      ies,
+    );
     const workPlane = result.surfaces[0]!;
     const covered = workPlane.illuminanceLx.filter((_, k) => workPlane.covered[k]);
     expect(covered).toEqual([0, 0]);
@@ -344,7 +352,7 @@ describe('analyseIlluminance: bounced light', () => {
   });
 
   it('adds the room’s reflections to the direct light at every point', () => {
-    const result = analyseIlluminance({ room, luminaires: one, furniture: [] }, ies);
+    const result = analyseIlluminance({ room, luminaires: one, furniture: [], windows: [] }, ies);
     for (const surface of result.surfaces) {
       surface.illuminanceLx.forEach((total, k) => {
         expect(total).toBeCloseTo(surface.directLx[k]! + surface.indirectLx[k]!, 9);
@@ -357,7 +365,7 @@ describe('analyseIlluminance: bounced light', () => {
 
   it('reflects nothing from a black room', () => {
     const result = analyseIlluminance(
-      { room: withReflectance(0), luminaires: one, furniture: [] },
+      { room: withReflectance(0), luminaires: one, furniture: [], windows: [] },
       ies,
     );
     for (const surface of result.surfaces) expect(Math.max(...surface.indirectLx)).toBe(0);
@@ -366,7 +374,7 @@ describe('analyseIlluminance: bounced light', () => {
   it('reflects more from lighter surfaces', () => {
     const average = (rho: number) =>
       analyseIlluminance(
-        { room: withReflectance(rho), luminaires: one, furniture: [] },
+        { room: withReflectance(rho), luminaires: one, furniture: [], windows: [] },
         ies,
       ).surfaces[0]!.indirectLx.reduce((sum, value, _, all) => sum + value / all.length, 0);
     expect(average(0.7)).toBeGreaterThan(2 * average(0.4));
@@ -391,6 +399,7 @@ describe('analyseIlluminance: features switched off', () => {
     room,
     luminaires: [placed('recessed', { x: 0, y: 2.7, z: 0 })],
     furniture: [sofa],
+    windows: [],
   };
   const withOptions = (changes: Partial<CalculationOptions>) =>
     analyseIlluminance(scene, ies, DEFAULT_ANALYSIS_SETTINGS, {
@@ -498,7 +507,7 @@ describe('analyseIlluminance: luminaire bodies (ADR 0075)', () => {
   const luminaire = placed('recessed', { x: 0, y: 2.7, z: 0 });
   const analyse = (luminaireBodies: boolean, luminaires = [luminaire], cache?: AnalysisCache) =>
     analyseIlluminance(
-      { room, luminaires, furniture: [] },
+      { room, luminaires, furniture: [], windows: [] },
       panel,
       DEFAULT_ANALYSIS_SETTINGS,
       { ...DEFAULT_CALCULATION_OPTIONS, luminaireBodies },
@@ -535,11 +544,11 @@ describe('analyseIlluminance: luminaire bodies (ADR 0075)', () => {
 
   it('come from luminous openings only: a point source has none', () => {
     const point = analyseIlluminance(
-      { room, luminaires: [luminaire], furniture: [] },
+      { room, luminaires: [luminaire], furniture: [], windows: [] },
       { ...panel, photometry: () => isotropic(100) },
     );
     const pointOff = analyseIlluminance(
-      { room, luminaires: [luminaire], furniture: [] },
+      { room, luminaires: [luminaire], furniture: [], windows: [] },
       { ...panel, photometry: () => isotropic(100) },
       DEFAULT_ANALYSIS_SETTINGS,
       { ...DEFAULT_CALCULATION_OPTIONS, luminaireBodies: false },

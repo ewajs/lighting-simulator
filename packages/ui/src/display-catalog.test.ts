@@ -78,6 +78,7 @@ describe('luminaireNames', () => {
         luminaire('4', 'zzz'),
       ],
       furniture: [],
+      windows: [],
     };
     expect([...luminaireNames(scene, { categories: [], items }).values()]).toEqual([
       'Downlight 7 W 1',

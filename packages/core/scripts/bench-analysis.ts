@@ -55,6 +55,7 @@ const piece = (id: string, kind: Furniture['kind'], x: number, z: number): Furni
 const scene: Scene = {
   room,
   luminaires,
+  windows: [],
   furniture: [
     piece('t', 'dining-table', 0, 0),
     piece('s', 'sofa', -1.5, 1.4),
@@ -75,6 +76,7 @@ const usual = (id: string, kind: Furniture['kind'], x: number, z: number, rotati
 const busy: Scene = {
   room: { ...room, width: 6, depth: 5 },
   luminaires,
+  windows: [],
   furniture: [
     usual('tv', 'tv-unit', -2.77, 0.8, 90),
     usual('sofa', 'sofa', -0.75, 0.8, -90),

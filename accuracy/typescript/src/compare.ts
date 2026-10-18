@@ -180,7 +180,7 @@ export function referenceLight(
   const blockers = blackFurniture ? boxes.map((box) => ({ ...box, reflectance: 0 })) : boxes;
   const direct = {
     ...directLight(
-      { room, luminaires, furniture: [] },
+      { room, luminaires, furniture: [], windows: [] },
       { catalog, photometry: (id) => photometry.get(id), modelFile: () => undefined },
       AS_INSTALLED,
       options,

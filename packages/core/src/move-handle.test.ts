@@ -44,7 +44,7 @@ describe('luminaireAxes', () => {
 describe('groupAxes', () => {
   /** The axes the luminaires share, in a scene of just them. */
   const shared = (...luminaires: Luminaire[]) => {
-    const sim = new Simulator({ catalog, scene: { room, luminaires, furniture: [] } });
+    const sim = new Simulator({ catalog, scene: { room, luminaires, furniture: [], windows: [] } });
     return groupAxes(
       itemRules(sim, 'luminaire'),
       luminaires.map((l) => l.id),

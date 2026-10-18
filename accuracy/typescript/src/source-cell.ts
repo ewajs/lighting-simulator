@@ -77,7 +77,7 @@ const inputs = {
 /** One row of errors at each distance; `cellM` undefined: the opening as one point. */
 function panelRow(cellM: number | undefined, name: string): string {
   const light = sceneLight(
-    { room: DEFAULT_ROOM, luminaires: [luminaire], furniture: [] },
+    { room: DEFAULT_ROOM, luminaires: [luminaire], furniture: [], windows: [] },
     inputs,
     AS_INSTALLED,
     {

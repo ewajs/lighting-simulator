@@ -32,6 +32,7 @@ const request = (id: number, dimming = 1): AnalysisRequest => ({
       },
     ],
     furniture: [],
+    windows: [],
   },
   snapshot: { products: [product], photometry: {}, modelFiles: {} },
   settings: DEFAULT_ANALYSIS_SETTINGS,

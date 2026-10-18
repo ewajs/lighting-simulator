@@ -20,6 +20,7 @@ const analysis = analyseIlluminance(
       },
     ],
     furniture: [],
+    windows: [],
   },
   { catalog, photometry: () => isotropic(300), modelFile: () => undefined },
 );

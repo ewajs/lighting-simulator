@@ -34,6 +34,7 @@ const scene = (changes: Partial<Scene> = {}): Scene => ({
   room,
   luminaires: [luminaire(-1), luminaire(1)],
   furniture: [table(0)],
+  windows: [],
   ...changes,
 });
 const values = (analysis: IlluminanceAnalysis) => analysis.surfaces.map((s) => s.illuminanceLx);
