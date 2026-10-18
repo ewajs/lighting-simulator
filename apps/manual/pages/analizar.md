@@ -51,6 +51,12 @@ cálculo tarda unos segundos.
 - **Muebles en la luz que rebota:** apagado, los muebles hacen sombra solo a
   la luz directa. Es más rápido en un ambiente amueblado, y menos preciso
   cerca de los muebles. Necesita la luz que rebota encendida.
+- **Cuerpo de las luminarias:** encendido, el cuerpo de cada luminaria (la
+  caja de su abertura) tapa la luz que rebota, como en la realidad: la pared
+  detrás de un aplique no ve el ambiente a través de él. Apagado, da un poco
+  más de luz cerca de las luminarias, sobre todo en ambientes chicos y claros,
+  y mover una luminaria se recalcula más rápido. Necesita la luz que rebota
+  encendida.
 
 Cuánto mejora el resultado y cuánto tarda cada uno, medido contra Radiance:
 [Función por función](./analisis/funcion-por-funcion). Por ahora, los
@@ -68,13 +74,13 @@ mueble. Medido contra Radiance en los doce ambientes de prueba:
 
 | Detalle | Puntos iluminados a más del 10 % de Radiance | Tiempo al cambiar una luz |
 |---|---|---|
-| 10 cm (el de siempre) | 61 de 11042 | 1 vez |
-| 5 cm | 40 de 11042 | hasta 3 veces |
-| 2,5 cm | 34 de 11042 | hasta 8 veces |
+| 10 cm (el de siempre) | 37 de 11042 | 1 vez |
+| 5 cm | 18 de 11042 | hasta 3 veces |
+| 2,5 cm | 9 de 11042 | hasta 8 veces |
 
-De esos puntos, 32 no cambian con las celdas: están en el baño chico y junto
-al aplique, donde lo que falta es el cuerpo de las luminarias. Los que sí
-cambian son los de penumbra, en el ambiente lleno de muebles: 29, 8 y 2.
+Los que cambian son los de penumbra, en el ambiente lleno de muebles: 29, 10
+y 2. Los demás, en el baño chico y junto al aplique, casi no cambian: están a
+pocos centímetros del cuerpo de una luminaria.
 
 El tiempo crece con el tamaño de las luminarias: con downlights chicas casi
 no cambia, con luminarias lineales largas es lo que dice la tabla. Un buen
@@ -107,6 +113,6 @@ la escena.
   [Dónde estamos](./analisis/).
 - Los muebles cuentan como cajas: un sillón es un bloque, una mesa es solo
   su tapa.
-- En un ambiente con muchos muebles, mover un mueble tarda unos segundos en
-  recalcularse; mover o atenuar una luminaria, mucho menos
-  ([Velocidad](./analisis/velocidad)).
+- En un ambiente con muchos muebles, mover un mueble o una luminaria tarda
+  unos segundos en recalcularse; atenuar o encender una luminaria, mucho
+  menos ([Velocidad](./analisis/velocidad)).

@@ -59,7 +59,7 @@ no regression. Splitting the box puts cells nearer the wall behind it. That
 wall then gets more light, which Radiance's box partly hides and Lux Studio
 returns in full. The manual no longer calls it noise.
 
-## The feature this points to (not built)
+## The feature this points to (built: ADR 0075)
 
 Making luminaires hide bounced light in core would bring every room's average
 to about Radiance's. Its costs:

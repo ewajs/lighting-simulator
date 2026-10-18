@@ -129,5 +129,6 @@ dentro del 0,1 %, y da exactamente lo de la fórmula
 
 Los muebles son parte del ambiente: tapan la luz que rebota (el piso debajo de
 una mesa no ve el techo) y cada una de sus caras es un parche más, que refleja
-según su terminación. Las luminarias, en cambio, no tapan la luz que rebota.
+según su terminación. Y el cuerpo de las luminarias también la tapa: la
+pared detrás de un aplique no ve el ambiente a través de él.
 Cuánto cambia cada cosa lo ves en [Función por función](../analisis/funcion-por-funcion).

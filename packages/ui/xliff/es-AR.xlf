@@ -1047,6 +1047,14 @@
   <source>Points covered by furniture, left out of the figures: <x id="0" equiv-text="${covered}"/>.</source>
   <target>Puntos tapados por muebles, sin contar en las cifras: <x id="0" equiv-text="${covered}"/>.</target>
 </trans-unit>
+<trans-unit id="s579c13c4c1fe6217">
+  <source>Luminaire bodies</source>
+  <target>Cuerpo de las luminarias</target>
+</trans-unit>
+<trans-unit id="sb40a0c938f9fea5b">
+  <source>They hide bounced light, as in reality. Off: a little too much light near them, and moving one is faster.</source>
+  <target>Tapan la luz que rebota, como en la realidad. Apagado: un poco de luz de más cerca de ellas, y mover una se recalcula más rápido.</target>
+</trans-unit>
 </body>
 </file>
 </xliff>

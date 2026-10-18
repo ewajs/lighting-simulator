@@ -2,7 +2,7 @@
 import LxFeatureStory from '../../.vitepress/theme/components/analysis/LxFeatureStory.vue'
 import { data } from '../../.vitepress/theme/diagrams/analysis.data'
 import { headline, stepFigures } from '../../.vitepress/theme/analysis/headline'
-import { STEPS } from '../../.vitepress/theme/analysis/names'
+import { ROOMS, STEPS } from '../../.vitepress/theme/analysis/names'
 
 const h = headline(data.summary, data.timings)
 const f = stepFigures(data.summary, data.timings)
@@ -39,10 +39,10 @@ dividir su abertura en celdas de 10 cm corrige los puntos cercanos. El peor
 punto a menos de 1 m de una luminaria pasa de
 **{{ pct(f.nearBeforeSplit, 0) }}** a **{{ pct(f.nearAfterSplit, 0) }}**. A
 cambio, algún promedio empeora, hasta {{ pct(f.splitAverageRise, 1) }}
-puntos, en el aplique de pared. Es la misma causa que la luz que rebota de
-más ([Dónde estamos](./#lo-que-todavia-no-cuenta)): en una prueba en la que el
-cuerpo del aplique tapa la luz que rebota, como en Radiance, dividirlo deja de
-empeorar el promedio ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
+puntos, en el aplique de pared. Lo explica el último paso: dividir la caja
+del aplique acerca celdas a la pared de atrás, y hasta ese paso el cuerpo del
+aplique no le tapa a esa pared la luz que rebota. Con el cuerpo, dividirlo ya
+no empeora el promedio ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
 
 **\+ sombras de los muebles.** En los ambientes amueblados, la diferencia
 media por punto baja de **{{ pct(f.beforeShadows) }}** a
@@ -64,6 +64,16 @@ parche más, que refleja según su terminación (el roble, un 45 %; el lino, un
 ambientes amueblados baja a **{{ pct(f.hidesAndReflects) }}**: lo mismo que en
 los ambientes sin muebles. Por eso las dos mitades van juntas, con un solo
 interruptor.
+
+**\+ el cuerpo de las luminarias tapa la luz que rebota.** En Radiance, una
+superficie que brilla tapa la luz que rebota como un cuerpo negro; acá, el
+cuerpo de cada luminaria es la caja de su abertura. La luz que rebota daba en
+promedio un **{{ pct(f.bouncedBeforeBodies) }}** de más en todas las
+superficies, y con los cuerpos da un **{{ pct(f.bouncedAfterBodies) }}**. Donde
+más se nota es en el {{ ROOMS[f.bodiesWorstRoom].es.name.replace(/^Una? /, '').toLowerCase() }}, donde
+todo está cerca de una luminaria: la diferencia media por punto pasa de
+{{ pct(f.bodiesWorstBefore) }} a **{{ pct(f.bodiesWorstAfter) }}**. Tiene su
+interruptor, porque hace que mover una luminaria recalcule el ambiente.
 
 ## Lo que cuesta cada paso
 

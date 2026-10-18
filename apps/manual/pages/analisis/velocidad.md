@@ -54,10 +54,11 @@ luminarias:
 
 | | 3 muebles, 5 × 4 m | 9 muebles y 4 sillas, 6 × 5 m |
 |---|---|---|
-| Desde cero, o al mover un mueble | 0,7 s | 2,1 s |
-| Al cambiar solo la luz | 0,12 s | 0,23 s |
+| Desde cero, o al mover un mueble o una luminaria | 0,86 s | 2,4 s |
+| Al atenuar, encender o apagar una luminaria | 0,12 s | 0,23 s |
 
-Mover o atenuar una luminaria se recalcula enseguida aun en un ambiente
-lleno; mover un mueble tarda unos segundos, porque cambia los rebotes de todo
-el ambiente. Todavía no se midió en otras máquinas: en un teléfono o una
+Atenuar o encender una luminaria se recalcula enseguida aun en un ambiente
+lleno. Mover un mueble, o una luminaria, tarda unos segundos, porque cambia
+los rebotes de todo el ambiente: el cuerpo de las luminarias tapa la luz que
+rebota. Con ese ajuste apagado, mover una luminaria vuelve a ser inmediato. Todavía no se midió en otras máquinas: en un teléfono o una
 computadora más vieja, va a tardar más.

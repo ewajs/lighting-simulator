@@ -4,7 +4,7 @@ import { candela } from '../photometry/estimate';
 import { isotropic, product, room } from '../test-fixtures';
 import type { LuminousOpening } from '../types';
 import { DEFAULT_CALCULATION_OPTIONS } from './options';
-import { distributionOf, intensityAt, luminaireSources } from './sources';
+import { distributionOf, intensityAt, luminaireBody, luminaireSources } from './sources';
 
 const frame = luminaireFrame(
   {
@@ -105,5 +105,55 @@ describe('distributionOf', () => {
     const wide = product('floor', { beamDeg: 160, flux: 800 });
     const estimated = distributionOf(wide, undefined);
     expect(intensityAt(estimated, 170, 0)).toBeCloseTo(800 / (4 * Math.PI), 12);
+  });
+});
+
+describe('luminaireBody', () => {
+  it('is the box of the opening, centred on the light', () => {
+    const body = luminaireBody(frame, {
+      widthM: 0.235,
+      lengthM: 0.131,
+      heightM: 0.509,
+      round: false,
+    })!;
+    expect(body.centre).toEqual(frame.origin);
+    expect(body.half.x).toBeCloseTo(0.1175, 12);
+    expect(body.half.y).toBeCloseTo(0.2545, 12);
+    expect(body.half.z).toBeCloseTo(0.0655, 12);
+    expect(body.reflectance).toBe(0);
+  });
+
+  it('makes a flat opening a thin plate, and a round one the square of the same area', () => {
+    const disk = luminaireBody(frame, opening(0.1524, 0.1524, true))!;
+    expect(disk.half.y).toBeLessThan(0.001);
+    expect((2 * disk.half.x) ** 2).toBeCloseTo(Math.PI * 0.0762 ** 2, 12);
+  });
+
+  it('has none for a point source', () => {
+    expect(luminaireBody(frame, opening(0, 0))).toBeUndefined();
+    expect(luminaireBody(frame, undefined)).toBeUndefined();
+  });
+
+  it('turns with the luminaire: a linear opening panned a quarter runs along x', () => {
+    const panned = luminaireFrame(
+      {
+        id: 'l',
+        productId: 'test-recessed',
+        position: { x: 0, y: 2.7, z: 0 },
+        aim: { tiltDeg: 0, panDeg: 90 },
+        dimming: 1,
+        on: true,
+        cct: 3000,
+      },
+      'recessed',
+      room,
+      { lightOrigin: { x: 0, y: 0, z: 0 } },
+    );
+    // Length along the frame's forward: +z unpanned, +x panned a quarter.
+    const body = luminaireBody(panned, opening(0.054, 1.22))!;
+    const [cos, sin] = [Math.cos(body.yawRad), Math.sin(body.yawRad)];
+    // The box's own z axis in the room is (sin, 0, cos) of its yaw.
+    expect(Math.abs(sin)).toBeCloseTo(1, 9);
+    expect(Math.abs(cos)).toBeCloseTo(0, 9);
   });
 });

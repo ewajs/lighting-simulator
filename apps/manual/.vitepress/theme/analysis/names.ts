@@ -210,6 +210,10 @@ export const STEPS: Record<string, Record<Lang, { name: string; short: string }>
     es: { name: '+ los muebles también la reflejan', short: '+ reflejan' },
     en: { name: '+ furniture reflects it too', short: '+ reflects' },
   },
+  'luminaire-bodies': {
+    es: { name: '+ el cuerpo de las luminarias tapa la luz que rebota', short: '+ cuerpos' },
+    en: { name: '+ luminaire bodies hide bounced light', short: '+ bodies' },
+  },
 };
 
 /** A name from one of the tables above, or the id itself if it's missing. */
@@ -383,8 +387,8 @@ export const ROOM_NOTES: Record<string, Record<Lang, string>> = {
     en: 'Close to a large luminaire, with a piece of furniture that reflects. Splitting the opening into cells fixes the points close to it. The table reflects light to the ceiling and shades the floor below from bounced light too: without counting that, the ceiling read 7 % low.',
   },
   'wall-sconce': {
-    es: 'Una caja que brilla, centrada a 25 cm de la pared. Muy cerca, los dos programas aproximan de forma distinta una abertura grande. Toda la habitación da algo más que en Radiance, porque allá el cuerpo del aplique tapa parte de la luz que rebota en la pared de atrás; en Lux Studio, las luminarias no tapan luz. Una prueba que le da cuerpo lo confirma: la luz que rebota pasa de un 3,4–4,5 % de más a un 0,3 %.',
-    en: "A glowing box centred 25 cm from its wall. Very close, the two programs approximate a large opening differently. The whole room reads a little higher than in Radiance, because there the sconce's body hides some of the light bouncing off the wall behind it; in Lux Studio, luminaires don't hide light. A trial that gives it a body confirms it: bounced light goes from 3.4–4.5 % high to 0.3 %.",
+    es: 'Una caja que brilla, centrada a 25 cm de la pared. Muy cerca, los dos programas aproximan de forma distinta una abertura grande. El cuerpo del aplique le tapa a la pared de atrás la luz que rebota en el resto del ambiente: sin contarlo, todo daba entre un 3,4 y un 4,5 % más que en Radiance; con él, dentro del 0,4 %.',
+    en: "A glowing box centred 25 cm from its wall. Very close, the two programs approximate a large opening differently. The sconce's body hides the light bouncing around the room from the wall behind it: without it, everything read 3.4 to 4.5 % higher than in Radiance; with it, within 0.4 %.",
   },
   'furnished-living': {
     es: 'Cuatro muebles que tapan y reflejan la luz, también la que rebota. Probalo con Paso en los mapas: si los muebles solo tapan la luz que rebota, como cajas negras, todo da menos que en Radiance; cuando además la reflejan, como su terminación, coincide. Algunos puntos del plano de trabajo caen dentro de la biblioteca, donde los dos programas dan casi 0.',
@@ -395,20 +399,20 @@ export const ROOM_NOTES: Record<string, Record<Lang, string>> = {
     en: "Nine pieces of furniture that block light, four chairs that don't, nine luminaires and a larger room, to see how the difference and the time grow. Averages stay within 1 % of Radiance. The worst points are on the floor between furniture: between the sofa and the coffee table, or behind the island, a downlight shows only just past an edge. Radiance sees part of its 15 cm opening; in Lux Studio each 7.6 cm cell is seen or not, so the point reads 0 or double. They're few: under 3 % of the lit points are off by more than 10 %. Beside the island, 2.5 cm from its side and 10 cm below its top, the work plane reads up to 13 % low, all of it in bounced light. Patches half the size only bring it to 10 %, so it isn't the patch size; the cause isn't clear yet.",
   },
   'dark-room': {
-    es: 'Con poca luz que rebota, casi todo es luz directa, y los dos programas coinciden dentro del 0,2 % en cada promedio. La luz que rebota da un 0,4 % de más en el plano de trabajo; con los cuerpos de las luminarias tapándola, como en Radiance, un 0,1 %.',
-    en: "With little light bouncing, nearly everything is direct, and the two programs agree within 0.2 % on every average. Bounced light reads 0.4 % high on the work plane; with the luminaires' bodies hiding it, as in Radiance, 0.1 %.",
+    es: 'Con poca luz que rebota, casi todo es luz directa, y los dos programas coinciden dentro del 0,2 % en cada promedio. La luz que rebota, también: dentro del 0,2 %.',
+    en: 'With little light bouncing, nearly everything is direct, and the two programs agree within 0.2 % on every average. Bounced light does too: within 0.2 %.',
   },
   'white-room': {
-    es: 'Con todo reflejando el 90 %, la luz rebota muchas veces y la diferencia de la luz que rebota se acumula: un 2 % de más. Con los cuerpos de las luminarias tapándola, baja a 0,85 %; lo que queda todavía no está explicado. Radiance sigue acá 72 rebotes, porque con 24 dejaría afuera un 8 % de la luz.',
-    en: "With everything reflecting 90 %, light bounces many times and the bounced-light difference adds up: 2 % high. With the luminaires' bodies hiding it, it drops to 0.85 %; what's left isn't explained yet. Radiance follows 72 bounces here, because 24 would leave out 8 % of the light.",
+    es: 'Con todo reflejando el 90 %, la luz rebota muchas veces, y cada vez pasa junto al cuerpo de las luminarias: sin contarlo, la luz que rebota daba un 2 % de más; con él, un 0,85 %. Lo que queda todavía no está explicado. Radiance sigue acá 72 rebotes, porque con 24 dejaría afuera un 8 % de la luz.',
+    en: "With everything reflecting 90 %, light bounces many times, and passes the luminaires' bodies every time: without them, bounced light read 2 % high; with them, 0.85 %. What's left isn't explained yet. Radiance follows 72 bounces here, because 24 would leave out 8 % of the light.",
   },
   'tall-hall': {
-    es: 'Un salón grande y alto, con colgantes que mandan mucha luz al techo. La luz directa coincide dentro del 0,1 %; la que rebota da hasta un 2 % de más en el techo, por el cuerpo de los colgantes, que en Radiance la tapa (con la prueba de los cuerpos, 0,6 %). Tarda más que los otros: tiene más parches.',
-    en: "A large, tall hall, with pendants sending much of their light to the ceiling. Direct light agrees within 0.1 %; bounced light reads up to 2 % high on the ceiling, because of the pendants' bodies, which hide it in Radiance (0.6 % in the bodies trial). It takes longer than the others: it has more patches.",
+    es: 'Un salón grande y alto, con colgantes que mandan mucha luz al techo. La luz directa coincide dentro del 0,1 %. La que rebota daba hasta un 2 % de más en el techo, porque el cuerpo de los colgantes la tapa; contándolo, dentro del 0,6 %. Tarda más que los otros: tiene más parches.',
+    en: "A large, tall hall, with pendants sending much of their light to the ceiling. Direct light agrees within 0.1 %. Bounced light read up to 2 % high on the ceiling, because the pendants' bodies hide it; counting them, within 0.6 %. It takes longer than the others: it has more patches.",
   },
   'small-bathroom': {
-    es: 'Todo está cerca de todo, y eso muestra lo que Lux Studio todavía no cuenta: el cuerpo de las luminarias, que en Radiance tapa luz. Los promedios dan entre un 3,5 y un 6 % de más, y la luz que rebota entre un 6 y un 9 %; con los cuerpos tapándola, dentro del 0,7 %. El peor punto está en el techo justo encima de la downlight, que su disco, 3 cm más abajo, tapa en Radiance. La luz directa, en cambio, coincide dentro del 0,3 % en cada promedio.',
-    en: "Everything is close to everything, and that shows what Lux Studio doesn't count yet: the luminaires' bodies, which hide light in Radiance. Averages read 3.5 to 6 % high, and bounced light 6 to 9 %; with the bodies hiding it, within 0.7 %. The worst point is on the ceiling right above the downlight, which its disc, 3 cm below, hides in Radiance. Direct light, though, agrees within 0.3 % on every average.",
+    es: 'Todo está cerca de todo, así que el cuerpo de las luminarias pesa más que en ningún otro ambiente. Sin contarlo, los promedios daban entre un 3,5 y un 6 % de más, y la luz que rebota entre un 6 y un 9 %; con él, dentro del 0,4 % y del 0,7 %. Queda un punto: el del techo justo encima de la downlight, a 3 cm de su disco, que acá es un cuadrado de la misma superficie y no le hace sombra a la luz directa del aplique.',
+    en: "Everything is close to everything, so the luminaires' bodies weigh more than in any other room. Without them, averages read 3.5 to 6 % high, and bounced light 6 to 9 %; with them, within 0.4 % and 0.7 %. One point remains: the ceiling right above the downlight, 3 cm from its disc, which here is a square of the same area and doesn't shade the wall light's direct light.",
   },
   'wall-wash': {
     es: 'Casi toda la luz del plano de trabajo y del piso rebotó antes, y aun así los promedios coinciden dentro del 0,8 %. Los círculos de luz sobre las paredes son brillantes y los parches de 25 cm los reparten, así que los puntos menos iluminados reciben hasta un 7 % de más. El techo recibe solo la luz más de costado de los spots, desde 20 cm: ahí la luz directa da un 4,5 % menos, pero es poca, y en total la diferencia es −0,3 %.',

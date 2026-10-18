@@ -15,6 +15,7 @@ import type {
   Vec3,
 } from '../types';
 import { analyseIlluminance, type IlluminanceAnalysis } from './analyse';
+import { AnalysisCache } from './cache';
 import { DEFAULT_CALCULATION_OPTIONS, type CalculationOptions } from './options';
 import { DEFAULT_ANALYSIS_SETTINGS, type AnalysisInputs } from './settings';
 import { directIlluminance } from './direct';
@@ -410,7 +411,11 @@ describe('analyseIlluminance: features switched off', () => {
   });
 
   it('without bounced light: no patches, and nothing indirect anywhere', () => {
-    const result = withOptions({ bouncedLight: false, furnitureInBouncedLight: false });
+    const result = withOptions({
+      bouncedLight: false,
+      furnitureInBouncedLight: false,
+      luminaireBodies: false,
+    });
     expect(result.indirect).toEqual({ patches: 0, iterations: 0 });
     for (const surface of result.surfaces) expect(Math.max(...surface.indirectLx)).toBe(0);
     expect(result.surfaces[0]!.directLx).toEqual(withOptions({}).surfaces[0]!.directLx);
@@ -442,6 +447,12 @@ describe('analyseIlluminance: features switched off', () => {
     expect(() => withOptions({ tolerance: 1 })).toThrow(/tolerance/);
   });
 
+  it('refuses luminaire bodies without bounced light', () => {
+    expect(() => withOptions({ bouncedLight: false, furnitureInBouncedLight: false })).toThrow(
+      /luminaireBodies needs/,
+    );
+  });
+
   it('refuses furniture in bounced light without bounced light or furniture shadows', () => {
     expect(() => withOptions({ bouncedLight: false })).toThrow(/furnitureInBouncedLight needs/);
     expect(() => withOptions({ furnitureShadows: false })).toThrow(/furnitureInBouncedLight needs/);
@@ -471,5 +482,68 @@ describe('analyseIlluminance: features switched off', () => {
     // The sofa covers the floor point, so no patch is in sight of it.
     expect(underLight(withOptions({})).indirect).toBe(0);
     expect(underLight(withOptions({ furnitureInBouncedLight: false })).indirect).toBeGreaterThan(0);
+  });
+});
+
+describe('analyseIlluminance: luminaire bodies (ADR 0075)', () => {
+  // A 60 × 60 cm flat panel shining down only, its light 3 cm under the
+  // ceiling: its body hides the ceiling right above it from the room.
+  const downOnly = photometry([0, 89, 90, 180], [0], [[100, 100, 0, 0]], {
+    widthM: 0.6,
+    lengthM: 0.6,
+    heightM: 0,
+    round: false,
+  });
+  const panel: AnalysisInputs = { catalog, photometry: () => downOnly, modelFile: () => undefined };
+  const luminaire = placed('recessed', { x: 0, y: 2.7, z: 0 });
+  const analyse = (luminaireBodies: boolean, luminaires = [luminaire], cache?: AnalysisCache) =>
+    analyseIlluminance(
+      { room, luminaires, furniture: [] },
+      panel,
+      DEFAULT_ANALYSIS_SETTINGS,
+      { ...DEFAULT_CALCULATION_OPTIONS, luminaireBodies },
+      cache,
+    );
+  /** The bounced light at the ceiling point nearest a spot. */
+  const ceilingAt = (result: IlluminanceAnalysis, x: number, z: number) => {
+    const ceiling = result.surfaces[2]!;
+    const k = ceiling.grid.points.reduce(
+      (best, p, i) =>
+        Math.hypot(p.x - x, p.z - z) <
+        Math.hypot(ceiling.grid.points[best]!.x - x, ceiling.grid.points[best]!.z - z)
+          ? i
+          : best,
+      0,
+    );
+    return ceiling.indirectLx[k]!;
+  };
+
+  it('hide the ceiling above a panel from the room, and barely matter far from it', () => {
+    const [off, on] = [analyse(false), analyse(true)];
+    expect(ceilingAt(on, 0, 0)).toBeLessThan(0.2 * ceilingAt(off, 0, 0));
+    expect(ceilingAt(on, 2, 1.5) / ceilingAt(off, 2, 1.5)).toBeGreaterThan(0.97);
+  });
+
+  it('are part of the room: moving a luminaire recalculates it, dimming one doesn’t', () => {
+    const cache = new AnalysisCache();
+    analyse(true, [luminaire], cache);
+    analyse(true, [{ ...luminaire, dimming: 0.5 }], cache);
+    expect(cache.stats).toEqual({ hits: 1, misses: 1 });
+    analyse(true, [{ ...luminaire, position: { x: 1, y: 2.7, z: 0 } }], cache);
+    expect(cache.stats.misses).toBe(2);
+  });
+
+  it('come from luminous openings only: a point source has none', () => {
+    const point = analyseIlluminance(
+      { room, luminaires: [luminaire], furniture: [] },
+      { ...panel, photometry: () => isotropic(100) },
+    );
+    const pointOff = analyseIlluminance(
+      { room, luminaires: [luminaire], furniture: [] },
+      { ...panel, photometry: () => isotropic(100) },
+      DEFAULT_ANALYSIS_SETTINGS,
+      { ...DEFAULT_CALCULATION_OPTIONS, luminaireBodies: false },
+    );
+    expect(ceilingAt(point, 0, 0)).toBe(ceilingAt(pointOff, 0, 0));
   });
 });

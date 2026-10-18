@@ -41,6 +41,8 @@ order:
    the radiosity method, a classic of interior lighting calculation
    ([Light that bounces](./light-that-bounces)). Furniture counts too: it
    hides bounced light, and each of its faces reflects it as its finish does.
+   And each luminaire's body, the box of its opening, hides it too, as a
+   glowing surface does.
 5. **It multiplies by the maintenance factor** ([Maintenance factor](./maintenance)).
 6. **It sums up** each surface: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ and
    $U_0$ ([Uniformity](./uniformity)).
@@ -48,8 +50,8 @@ order:
 ## What it doesn't count yet
 
 - **Furniture is boxes:** a sofa is a block, a table is just its top.
-- **Luminaires don't hide bounced light.** A large sconce right against its
-  wall reads a few points higher than in Radiance (see below).
+- **A luminaire's body is a box:** its opening's, not tilted. Right above a
+  downlight it shows (see below).
 - **Every surface reflects diffusely:** no gloss, no mirrors.
 - **Rooms are rectangular**, and there are no windows yet.
 

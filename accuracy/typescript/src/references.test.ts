@@ -19,13 +19,13 @@ const FAR_TOLERANCE = 0.035;
 const NEAR_TOLERANCE = 0.15;
 
 /**
- * Total light, every room as it is, furniture and all (ADR 0060, 0063), and
- * furnished rooms again with the furniture taken out on both sides. Measured
- * worsts: averages 3.29 % and near points 15.09 % (the wall sconce), far
- * points 6.54 % (the furnished living room's work plane); elsewhere averages
- * within 0.7 %.
+ * Total light, every room as it is, furniture and all (ADR 0060, 0063), with
+ * luminaire bodies hiding bounced light (ADR 0075), and furnished rooms again
+ * with the furniture taken out on both sides. Measured worsts: averages 0.8 %
+ * (the busy and white rooms), far points 6.7 % (the furnished living room's
+ * work plane), near points 10.9 % (the wall behind the sconce).
  */
-const TOTAL = { average: 0.04, far: 0.075, near: 0.16 };
+const TOTAL = { average: 0.015, far: 0.075, near: 0.12 };
 
 /**
  * Rooms whose worst points are in penumbrae (ADR 0068), bounded by how few of
@@ -42,17 +42,17 @@ const PENUMBRAE: Record<string, { readonly share: number; readonly worst: number
 /**
  * Emin and U₀ in total light (ADR 0072), over the points the app counts:
  * those covered by furniture are left out (ADR 0074). Measured worsts: Emin
- * 7.2 % (the wall-wash room's floor), 7.0 % (the bathroom's back wall), 6.9 %
- * (the busy room's floor, in a piece's shadow); the least-lit points get
- * mostly bounced light, which reads high (ADR 0070). MIN_EXCEPTIONS are left
+ * 6.9 % (the wall-wash room's floor: bright pools spread by 25 cm patches),
+ * 6.6 % (the busy room's floor, in a piece's shadow). MIN_EXCEPTIONS are left
  * out, with why.
  */
 const MIN_TOLERANCE = 0.075;
 const MIN_EXCEPTIONS: Record<string, string> = {
   // Its least-lit point is right above a downlight, 3 cm below it, whose
-  // glowing body hides the room from it in Radiance: +130 % (ADR 0070).
+  // glowing body hides the room from it. With bodies (ADR 0075) it's +94 %
+  // (was +130 %): ours is the square of the disc's area, seen 4 rays a patch.
   'busy-open-plan ceiling': 'a luminaire body',
-  // The same, above the bathroom's downlight: +77 %.
+  // The same, above the bathroom's downlight: +55 % (was +77 %).
   'small-bathroom ceiling': 'a luminaire body',
 };
 
@@ -76,22 +76,21 @@ const KNOWN_GAPS: Record<
   }
 > = {
   'small-bathroom': {
-    // In a room this small every surface is near a luminaire, and in Radiance
-    // their glowing bodies hide light; in Lux Studio they don't (ADR 0070).
-    // Bounced light reads +6 to +9 %; with bodies, within 0.7 % (BOUNCE.md).
-    // The downlight's disc, 3 cm under the ceiling, also shades the ceiling
-    // from the wall light's uplight: a near point 34 % off in direct light,
-    // 161 % in total. Measured: total averages 6.1 %, far 8.4 %.
-    why: 'luminaire bodies',
+    // With luminaire bodies (ADR 0075) it agrees like the others (averages
+    // 0.3 %), but for the ceiling right above the downlight, 3 cm under it.
+    // There Radiance's body is a disc and also shades the wall light's uplight
+    // in direct light (34 %); ours is the square of the same area, hiding
+    // bounced light only, sampled 4 rays a patch: +55 % in total.
+    why: 'the ceiling over the downlight',
     direct: { near: 0.4 },
-    total: { average: 0.07, far: 0.09, near: 1.7 },
+    total: { near: 0.6 },
   },
   'wall-wash': {
     // The ceiling gets only the spots' light far off their axis, from 20 cm
     // below: there each program models the 9.5 cm opening differently
     // (direct average −4.5 %, a small share of its total, which is −0.3 %).
     // The bright pools on the walls are spread by 25 cm patches, so the
-    // least-lit points get up to 7.2 % too much bounced light (within MIN_TOLERANCE).
+    // least-lit points get up to 6.9 % too much bounced light (within MIN_TOLERANCE).
     why: 'grazing light, bright pools',
     direct: { average: 0.05 },
   },
@@ -131,7 +130,7 @@ describe('Lux Studio against Radiance', () => {
       expectWithin(name, summarize(points, origins, 'direct'), bounds, penumbrae?.worst);
     });
 
-    it(`${name}, total: averages within 4 %, bright points within 7.5 % (16 % within 1 m of a luminaire)${known}`, () => {
+    it(`${name}, total: averages within 1.5 %, bright points within 7.5 % (12 % within 1 m of a luminaire)${known}`, () => {
       const bounds = { ...TOTAL, ...gap?.total };
       expectWithin(name, summarize(points, origins, 'total'), bounds, penumbrae?.worst);
     });

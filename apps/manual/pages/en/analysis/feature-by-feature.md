@@ -2,7 +2,7 @@
 import LxFeatureStory from '../../../.vitepress/theme/components/analysis/LxFeatureStory.vue'
 import { data } from '../../../.vitepress/theme/diagrams/analysis.data'
 import { headline, stepFigures } from '../../../.vitepress/theme/analysis/headline'
-import { STEPS } from '../../../.vitepress/theme/analysis/names'
+import { ROOMS, STEPS } from '../../../.vitepress/theme/analysis/names'
 
 const h = headline(data.summary, data.timings)
 const f = stepFigures(data.summary, data.timings)
@@ -38,10 +38,11 @@ difference per point in the rooms without furniture drops below
 its opening into 10 cm cells fixes the points close to it. The worst point
 within 1 m of a luminaire goes from **{{ pct(f.nearBeforeSplit, 0) }}** to
 **{{ pct(f.nearAfterSplit, 0) }}**. In exchange, an average gets worse, by
-up to {{ pct(f.splitAverageRise, 1) }} points, in the wall sconce. It has the
-same cause as the extra bounced light ([Where we stand](./#what-it-doesn-t-count-yet)):
-in a trial where the sconce's body hides bounced light, as in Radiance,
-splitting it no longer worsens the average ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
+up to {{ pct(f.splitAverageRise, 1) }} points, in the wall sconce. The last
+step explains it: splitting the sconce's box brings cells closer to the wall
+behind it, and until that step the sconce's body doesn't hide the bounced
+light from that wall. With the body, splitting no longer worsens the average
+([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
 
 **\+ furniture shadows.** In the furnished rooms, the mean difference per
 point drops from **{{ pct(f.beforeShadows) }}** to **{{ pct(f.afterShadows) }}**.
@@ -62,6 +63,16 @@ patch, reflecting as its finish does (oak 45 %, linen 55 %). With both halves,
 the furnished rooms' mean difference per point drops to
 **{{ pct(f.hidesAndReflects) }}**: as in the rooms without furniture. That's
 why the two halves go together, under one switch.
+
+**\+ luminaire bodies hide bounced light.** In Radiance, a glowing surface
+hides bounced light as a black body does; here, each luminaire's body is the
+box of its opening. Bounced light read **{{ pct(f.bouncedBeforeBodies) }}**
+high on average over every surface, and with the bodies it reads
+**{{ pct(f.bouncedAfterBodies) }}**. It shows most in the
+{{ ROOMS[f.bodiesWorstRoom].en.name.replace(/^An? /, '').toLowerCase() }}, where everything is close to a
+luminaire: the mean difference per point goes from
+{{ pct(f.bodiesWorstBefore) }} to **{{ pct(f.bodiesWorstAfter) }}**. It has its
+own switch, because it makes moving a luminaire recalculate the room.
 
 ## What each step costs
 

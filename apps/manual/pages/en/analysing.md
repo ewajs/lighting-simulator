@@ -50,6 +50,11 @@ calculation takes a few seconds.
 - **Furniture in bounced light:** off, furniture shades direct light only.
   It's faster in a furnished room, and less accurate near the furniture. It
   needs bounced light on.
+- **Luminaire bodies:** on, each luminaire's body (the box of its opening)
+  hides bounced light, as in reality: the wall behind a sconce doesn't see the
+  room through it. Off, there's a little too much light near luminaires,
+  most in small, light rooms, and moving a luminaire recalculates faster. It
+  needs bounced light on.
 
 How much each one improves the result and how long it takes, measured against
 Radiance: [Feature by feature](./analysis/feature-by-feature). For now, the
@@ -67,14 +72,13 @@ test rooms:
 
 | Detail | Lit points more than 10 % from Radiance | Time when a light changes |
 |---|---|---|
-| 10 cm (the usual) | 61 of 11042 | 1 × |
-| 5 cm | 40 of 11042 | up to 3 × |
-| 2.5 cm | 34 of 11042 | up to 8 × |
+| 10 cm (the usual) | 37 of 11042 | 1 × |
+| 5 cm | 18 of 11042 | up to 3 × |
+| 2.5 cm | 9 of 11042 | up to 8 × |
 
-Of those points, 32 don't change with the cells: they're in the small
-bathroom and beside the sconce, where what's missing is the luminaires'
-bodies. The ones that do change are in penumbrae, in the busy open-plan room:
-29, 8 and 2.
+The ones that change are in penumbrae, in the busy open-plan room: 29, 10 and
+2. The rest, in the small bathroom and beside the sconce, barely change:
+they're a few centimetres from a luminaire's body.
 
 The time grows with the size of the luminaires: with small downlights it
 barely changes, with long linear luminaires it's what the table says. A good
@@ -105,6 +109,6 @@ changes.
   calculation. How close they are to Radiance, room by room:
   [Where we stand](./analysis/).
 - Furniture counts as boxes: a sofa is a block, a table is just its top.
-- In a room with lots of furniture, moving a piece takes a few seconds to
-  recalculate; moving or dimming a luminaire, much less
+- In a room with lots of furniture, moving a piece or a luminaire takes a few
+  seconds to recalculate; dimming or switching a luminaire, much less
   ([Speed](./analysis/speed)).

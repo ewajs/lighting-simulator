@@ -78,3 +78,4 @@ Each file records one decision: context, options, decision and consequences. To 
 | 0072 | [Emin, uniformity, and what the bright-point cutoff leaves out](0072-emin-uniformity-and-the-cutoff.md) | Accepted |
 | 0073 | [More kinds of room](0073-more-kinds-of-room.md) | Accepted |
 | 0074 | [Points covered by furniture don't count](0074-points-covered-by-furniture.md) | Accepted |
+| 0075 | [Luminaire bodies hide bounced light](0075-luminaire-bodies.md) | Accepted |

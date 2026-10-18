@@ -37,9 +37,9 @@ counted over every room. "Far" points are at least 1 m from every luminaire.
 
 | Cell | Worst surface average | Worst far point | Worst near point | Bright points off by over 10 % |
 |---|---|---|---|---|
-| 10 cm (default) | 6.13 % | 46.82 % | 161.19 % | 61 of 11042 (0.55 %) |
-| 5 cm | 6.14 % | 19.70 % | 161.13 % | 40 of 11042 (0.36 %) |
-| 2.5 cm | 6.13 % | 10.74 % | 161.11 % | 34 of 11042 (0.31 %) |
+| 10 cm (default) | 0.84 % | 47.04 % | 55.33 % | 37 of 11042 (0.34 %) |
+| 5 cm | 0.84 % | 20.01 % | 55.27 % | 18 of 11042 (0.16 %) |
+| 2.5 cm | 0.84 % | 11.05 % | 55.25 % | 9 of 11042 (0.08 %) |
 
 ### Time
 
@@ -47,9 +47,9 @@ The whole calculation for every room, on the machine that ran it.
 
 | Cell | Time, all rooms (s) |
 |---|---|
-| 10 cm (default) | 9.8 |
-| 5 cm | 13.7 |
-| 2.5 cm | 29.7 |
+| 10 cm (default) | 13.3 |
+| 5 cm | 17.0 |
+| 2.5 cm | 32.7 |
 
 ### Worst far point in direct light, room by room
 

@@ -39,6 +39,12 @@ export interface CalculationOptions {
    * does (ADR 0063). Needs `bouncedLight` and `furnitureShadows`.
    */
   readonly furnitureInBouncedLight: boolean;
+  /**
+   * Each luminaire's body, the box of its luminous opening, hides bounced
+   * light, as a glowing surface does (ADR 0075): the wall behind a sconce
+   * doesn't see the room through it. Needs `bouncedLight`.
+   */
+  readonly luminaireBodies: boolean;
 }
 
 /** The defaults: everything counted, sizes chosen by measurement (ADRs 0060, 0069; accuracy/PATCH-SIZE.md, SOURCE-CELL.md). */
@@ -50,6 +56,7 @@ export const DEFAULT_CALCULATION_OPTIONS: CalculationOptions = {
   furnitureShadows: true,
   bouncedLight: true,
   furnitureInBouncedLight: true,
+  luminaireBodies: true,
 };
 
 /**
@@ -70,5 +77,8 @@ export function checkCalculationOptions(options: CalculationOptions): void {
   }
   if (options.furnitureInBouncedLight && !(options.bouncedLight && options.furnitureShadows)) {
     throw new RangeError('furnitureInBouncedLight needs bouncedLight and furnitureShadows');
+  }
+  if (options.luminaireBodies && !options.bouncedLight) {
+    throw new RangeError('luminaireBodies needs bouncedLight');
   }
 }

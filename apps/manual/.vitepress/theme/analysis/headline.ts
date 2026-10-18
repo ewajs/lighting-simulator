@@ -22,26 +22,25 @@ const worstMin = (surfaces: readonly SurfaceSummary[]) =>
  */
 export const BUSY_ROOM = 'busy-open-plan';
 /**
- * The small bathroom, where every surface is near a luminaire whose body hides
- * light in Radiance but not in Lux Studio (ADR 0070, 0073): quoted apart too.
+ * The small bathroom: with luminaire bodies (ADR 0075) it agrees like the
+ * others, but its ceiling's least-lit point is right above its downlight, as
+ * BUSY_ROOM's is. Their Emin and U₀ are quoted apart.
  */
 export const SMALL_ROOM = 'small-bathroom';
-const APART = [BUSY_ROOM, SMALL_ROOM];
 
 /** The section's headline figures. */
 export interface Headline {
   /** Reference points in all rooms. */
   readonly points: number;
   readonly rooms: number;
-  /** The rooms not quoted apart. */
+  /** The rooms whose points aren't quoted apart: all but BUSY_ROOM. */
   readonly usualRooms: number;
-  /** The worst surface average and far point, every room but BUSY_ROOM and SMALL_ROOM. */
+  /** The worst surface average, every room; the worst far point, every room but BUSY_ROOM. */
   readonly worstAverage: number;
   readonly worstFar: number;
-  /** BUSY_ROOM's worst far point; SMALL_ROOM's worst average. */
+  /** BUSY_ROOM's worst far point: penumbrae (ADR 0068). */
   readonly busyWorstFar: number;
-  readonly smallWorstAverage: number;
-  /** The worst Emin or U₀ difference in total light, every room but those two; and theirs. */
+  /** The worst Emin or U₀ difference in total light, every room but BUSY_ROOM and SMALL_ROOM; and theirs. */
   readonly worstMin: number;
   readonly busyWorstMin: number;
   readonly smallWorstMin: number;
@@ -67,17 +66,17 @@ export function headline(summary: AccuracySummary, timings: Timings): Headline {
   const radiance = timings.rooms.flatMap((r) =>
     r.radiance ? [r.radiance.direct.wallSeconds + r.radiance.bounced.wallSeconds] : [],
   );
-  const usual = summary.rooms.filter((r) => !APART.includes(r.name));
+  const usual = summary.rooms.filter((r) => r.name !== BUSY_ROOM);
+  const minUsual = usual.filter((r) => r.name !== SMALL_ROOM);
   const total = (name: string) => summary.rooms.find((r) => r.name === name)?.total ?? [];
   return {
     points: summary.rooms.reduce((sum, r) => sum + r.points, 0),
     rooms: summary.rooms.length,
     usualRooms: usual.length,
-    worstAverage: Math.max(...usual.map((r) => worstAverage(r.total))),
+    worstAverage: Math.max(...summary.rooms.map((r) => worstAverage(r.total))),
     worstFar: Math.max(...usual.map((r) => worstFar(r.total))),
     busyWorstFar: worstFar(total(BUSY_ROOM)),
-    smallWorstAverage: worstAverage(total(SMALL_ROOM)),
-    worstMin: Math.max(...usual.map((r) => worstMin(r.total))),
+    worstMin: Math.max(...minUsual.map((r) => worstMin(r.total))),
     busyWorstMin: worstMin(total(BUSY_ROOM)),
     smallWorstMin: worstMin(total(SMALL_ROOM)),
     furnishedBefore: Math.max(
@@ -86,7 +85,9 @@ export function headline(summary: AccuracySummary, timings: Timings): Headline {
       ),
     ),
     furnishedAfter: Math.max(
-      ...furnished.map((r) => r.features[r.features.length - 1]!.meanPointError),
+      ...furnished.map(
+        (r) => r.features.find((f) => f.step === 'furniture-in-bounce')!.meanPointError,
+      ),
     ),
     directOnlyMin: Math.min(...directOnly),
     directOnlyMax: Math.max(...directOnly),
@@ -115,6 +116,13 @@ export interface StepFigures {
   /** The furnished rooms' worst mean point error with black furniture hiding bounced light, and with it reflecting too. */
   readonly hidesOnly: number;
   readonly hidesAndReflects: number;
+  /** Mean bounced-light difference over every room's surfaces, signed, before and after luminaire bodies (ADR 0075). */
+  readonly bouncedBeforeBodies: number;
+  readonly bouncedAfterBodies: number;
+  /** The worst room's mean point error before and after luminaire bodies, and that room. */
+  readonly bodiesWorstBefore: number;
+  readonly bodiesWorstAfter: number;
+  readonly bodiesWorstRoom: string;
   /** Each step's median time, averaged over the rooms, in ms. */
   readonly stepMs: readonly { readonly step: string; readonly ms: number }[];
 }
@@ -147,11 +155,31 @@ export function stepFigures(summary: AccuracySummary, timings: Timings): StepFig
     hidesAndReflects: Math.max(
       ...furnished.map((r) => at(r, 'furniture-in-bounce').meanPointError),
     ),
+    ...bodiesFigures(summary),
     stepMs: steps.map((step) => ({
       step,
       ms:
         timings.rooms.reduce((sum, r) => sum + r.steps.find((s) => s.step === step)!.medianMs, 0) /
         timings.rooms.length,
     })),
+  };
+}
+
+/** What luminaire bodies change: bounced light's mean difference, and the room they help most. */
+function bodiesFigures(summary: AccuracySummary) {
+  const mean = (values: readonly number[]) => values.reduce((s, v) => s + v, 0) / values.length;
+  const at = (room: RoomSummary, step: string) => room.features.find((f) => f.step === step)!;
+  const worst = [...summary.rooms].sort(
+    (a, b) =>
+      at(b, 'furniture-in-bounce').meanPointError - at(a, 'furniture-in-bounce').meanPointError,
+  )[0]!;
+  return {
+    bouncedBeforeBodies: mean(
+      summary.rooms.flatMap((r) => r.bouncedBeforeBodies.map((s) => s.averageError)),
+    ),
+    bouncedAfterBodies: mean(summary.rooms.flatMap((r) => r.bounced.map((s) => s.averageError))),
+    bodiesWorstBefore: at(worst, 'furniture-in-bounce').meanPointError,
+    bodiesWorstAfter: at(worst, 'luminaire-bodies').meanPointError,
+    bodiesWorstRoom: worst.name,
   };
 }
