@@ -15,6 +15,9 @@ coordinates (metres, Y-up, the floor's centre at the origin):
   ``reflectance`` Radiance gives them (black when left out). Lux Studio's
   furniture blocks direct light only (ADR 0057); the reference shows what
   else it does.
+- ``decor``: optionally, furniture for the room's picture only (ADR 0062):
+  pieces that block no light in Lux Studio, such as chairs, each a ``kind``,
+  ``at`` (x, z) and ``rotationDeg``. Neither program calculates with them.
 - ``bounces``: optionally, how many bounces Radiance follows (24 when left
   out). A room that reflects more than Lux Studio's default room needs more:
   Radiance leaves out about ρⁿ of the bounced light after n bounces.

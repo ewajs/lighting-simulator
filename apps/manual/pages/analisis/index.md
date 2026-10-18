@@ -30,7 +30,7 @@ real vaya a dar exactamente lo mismo.
   del **{{ pct(h.worstAverage) }}** del de Radiance, y ningún punto iluminado
   ([al menos el 10 % del más iluminado](./metodo#que-deja-afuera-el-corte)) a
   más de 1 m de una luminaria se aleja más del **{{ pct(h.worstFar) }}**. Las
-  dos excepciones tienen explicación. En el [ambiente con diez
+  dos excepciones tienen explicación. En el [ambiente lleno de
   muebles](./busy-open-plan), unos pocos puntos en la penumbra del borde de un
   mueble llegan a un {{ pct(h.busyWorstFar, 0) }}. En el [baño
   chico](./small-bathroom), todo está cerca de las luminarias, cuyo cuerpo tapa
@@ -41,7 +41,7 @@ real vaya a dar exactamente lo mismo.
   ([Uniformidad](../conceptos/uniformidad)), quedan dentro del
   **{{ pct(h.worstMin) }}** en esos {{ h.usualRooms }} ambientes. Junto al
   cuerpo de una luminaria, no: un punto del techo justo encima de una
-  downlight da {{ pct(h.busyWorstMin, 0) }} de más en el ambiente con diez
+  downlight da {{ pct(h.busyWorstMin, 0) }} de más en el ambiente lleno de
   muebles y {{ pct(h.smallWorstMin, 0) }} en el baño.
 - **Los muebles cuentan también para la luz que rebota:** la tapan y la
   reflejan, como su terminación. En los ambientes amueblados, eso llevó la

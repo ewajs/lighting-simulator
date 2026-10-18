@@ -9,7 +9,7 @@ const rooms = {
   'linear-pendant-over-table': 'Un colgante lineal sobre una mesa',
   'wall-sconce': 'Un aplique de pared',
   'furnished-living': 'Un living amueblado',
-  'busy-open-plan': 'Un ambiente integrado con diez muebles',
+  'busy-open-plan': 'Un ambiente integrado lleno de muebles',
   'dark-room': 'Un ambiente oscuro',
   'white-room': 'Un ambiente blanco',
   'tall-hall': 'Un salón alto',

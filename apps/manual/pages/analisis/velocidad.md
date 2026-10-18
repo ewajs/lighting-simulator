@@ -42,7 +42,7 @@ modelo de Lux Studio, no que sea más rápido que Radiance.
 
 ## Cómo crece con el ambiente
 
-El [ambiente integrado con diez muebles](./busy-open-plan) es el más lento:
+El [ambiente integrado lleno de muebles](./busy-open-plan) es el más lento:
 más grande (6 × 5 m), con más puntos, más luminarias y más del doble de
 muebles que el living. Casi todo el tiempo de más son los muebles dentro de la
 luz que rebota: cada rayo entre dos parches, y entre cada punto y cada
@@ -52,10 +52,10 @@ En la aplicación, el análisis corre aparte de la vista 3D, sin trabarla, y
 guarda lo que solo depende del ambiente. Medido en la misma máquina, con seis
 luminarias:
 
-| | 3 muebles, 5 × 4 m | 10 muebles, 6 × 5 m |
+| | 3 muebles, 5 × 4 m | 9 muebles y 4 sillas, 6 × 5 m |
 |---|---|---|
-| Desde cero, o al mover un mueble | 0,7 s | 2,4 s |
-| Al cambiar solo la luz | 0,13 s | 0,24 s |
+| Desde cero, o al mover un mueble | 0,7 s | 2,1 s |
+| Al cambiar solo la luz | 0,12 s | 0,23 s |
 
 Mover o atenuar una luminaria se recalcula enseguida aun en un ambiente
 lleno; mover un mueble tarda unos segundos, porque cambia los rebotes de todo

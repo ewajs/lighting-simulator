@@ -33,8 +33,8 @@ const TOTAL = { average: 0.04, far: 0.075, near: 0.16 };
  * busy open-plan room, floor points between furniture see a downlight only
  * past an edge: Radiance sees a sliver of its 15 cm opening, while each of
  * Lux Studio's 7.6 cm cells is seen or not, so the point reads 0 or double.
- * Measured: 2.7 % of bright points off in direct light, 1.6 % in total;
- * worst 68.4 % and 44.9 %. Averages keep the bounds above.
+ * Measured: 2.1 % of bright points off in direct light, 1.8 % in total;
+ * worst 63.1 % and 46.8 %. Averages keep the bounds above.
  */
 const PENUMBRAE: Record<string, { readonly share: number; readonly worst: number }> = {
   'busy-open-plan': { share: 0.035, worst: 0.75 },
@@ -48,7 +48,7 @@ const PENUMBRAE: Record<string, { readonly share: number; readonly worst: number
 const MIN_TOLERANCE = 0.04;
 const MIN_EXCEPTIONS: Record<string, string> = {
   // Its least-lit point is right above a downlight, 3 cm below it, whose
-  // glowing body hides the room from it in Radiance: +117 % (ADR 0070).
+  // glowing body hides the room from it in Radiance: +130 % (ADR 0070).
   'busy-open-plan ceiling': 'a luminaire body',
   // The same, above the bathroom's downlight: +77 %.
   'small-bathroom ceiling': 'a luminaire body',

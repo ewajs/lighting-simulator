@@ -63,14 +63,14 @@ test rooms:
 
 | Detail | Lit points more than 10 % from Radiance | Time when a light changes |
 |---|---|---|
-| 10 cm (the usual) | 59 of 11045 | 1 × |
-| 5 cm | 36 of 11045 | up to 3 × |
-| 2.5 cm | 34 of 11045 | up to 8 × |
+| 10 cm (the usual) | 61 of 11042 | 1 × |
+| 5 cm | 40 of 11042 | up to 3 × |
+| 2.5 cm | 34 of 11042 | up to 8 × |
 
 Of those points, 32 don't change with the cells: they're in the small
 bathroom and beside the sconce, where what's missing is the luminaires'
-bodies. The ones that do change are in penumbrae, in the room with ten pieces
-of furniture: 27, 4 and 2.
+bodies. The ones that do change are in penumbrae, in the busy open-plan room:
+29, 8 and 2.
 
 The time grows with the size of the luminaires: with small downlights it
 barely changes, with long linear luminaires it's what the table says. A good

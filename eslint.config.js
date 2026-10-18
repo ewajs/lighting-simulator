@@ -14,6 +14,7 @@ export default defineConfig(
       '**/dist/**',
       '**/.bench/**',
       '**/.report/**',
+      '**/.vitepress/cache/**',
       'accuracy/python/**',
       'packages/ui/src/generated/**',
     ],

@@ -29,17 +29,17 @@ counted over every room. "Far" points are at least 1 m from every luminaire.
 
 | Cell | Worst surface average | Worst far point | Worst near point | Bright points off by over 10 % |
 |---|---|---|---|---|
-| 10 cm (default) | 4.54 % | 68.37 % | 34.44 % | 39 of 7405 (0.53 %) |
-| 5 cm | 1.29 % | 40.73 % | 33.64 % | 24 of 7405 (0.32 %) |
-| 2.5 cm | 1.97 % | 25.17 % | 33.34 % | 17 of 7405 (0.23 %) |
+| 10 cm (default) | 4.54 % | 63.12 % | 34.44 % | 34 of 7427 (0.46 %) |
+| 5 cm | 1.29 % | 30.02 % | 33.64 % | 21 of 7427 (0.28 %) |
+| 2.5 cm | 1.97 % | 16.14 % | 33.34 % | 18 of 7427 (0.24 %) |
 
 ### Total light
 
 | Cell | Worst surface average | Worst far point | Worst near point | Bright points off by over 10 % |
 |---|---|---|---|---|
-| 10 cm (default) | 6.13 % | 44.94 % | 161.19 % | 59 of 11045 (0.53 %) |
-| 5 cm | 6.14 % | 23.01 % | 161.13 % | 36 of 11045 (0.33 %) |
-| 2.5 cm | 6.13 % | 14.45 % | 161.11 % | 34 of 11045 (0.31 %) |
+| 10 cm (default) | 6.13 % | 46.82 % | 161.19 % | 61 of 11042 (0.55 %) |
+| 5 cm | 6.14 % | 19.70 % | 161.13 % | 40 of 11042 (0.36 %) |
+| 2.5 cm | 6.13 % | 10.74 % | 161.11 % | 34 of 11042 (0.31 %) |
 
 ### Time
 
@@ -47,14 +47,14 @@ The whole calculation for every room, on the machine that ran it.
 
 | Cell | Time, all rooms (s) |
 |---|---|
-| 10 cm (default) | 9.9 |
-| 5 cm | 13.9 |
-| 2.5 cm | 29.4 |
+| 10 cm (default) | 9.8 |
+| 5 cm | 13.7 |
+| 2.5 cm | 29.7 |
 
 ### Worst far point in direct light, room by room
 
 | Cell | busy-open-plan | dark-room | downlights-and-wall-washer | furnished-living | linear-pendant-over-table | single-downlight | small-bathroom | tall-hall | track-spots | wall-sconce | wall-wash | white-room |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 10 cm (default) | 68.37 % | 0.46 % | 0.25 % | 0.47 % | 0.15 % | 0.15 % | 2.97 % | 0.12 % | 1.77 % | 2.89 % | 2.18 % | 0.45 % |
-| 5 cm | 40.73 % | 0.33 % | 0.24 % | 0.55 % | 0.19 % | 0.11 % | 2.96 % | 0.12 % | 0.54 % | 2.88 % | 0.29 % | 0.31 % |
-| 2.5 cm | 25.17 % | 0.33 % | 0.22 % | 0.49 % | 0.20 % | 0.12 % | 2.93 % | 0.13 % | 0.69 % | 2.88 % | 0.36 % | 0.32 % |
+| 10 cm (default) | 63.12 % | 0.46 % | 0.25 % | 0.47 % | 0.15 % | 0.15 % | 2.97 % | 0.12 % | 1.77 % | 2.89 % | 2.18 % | 0.45 % |
+| 5 cm | 30.02 % | 0.33 % | 0.24 % | 0.55 % | 0.19 % | 0.11 % | 2.96 % | 0.12 % | 0.54 % | 2.88 % | 0.29 % | 0.31 % |
+| 2.5 cm | 16.14 % | 0.33 % | 0.22 % | 0.49 % | 0.20 % | 0.12 % | 2.93 % | 0.13 % | 0.69 % | 2.88 % | 0.36 % | 0.32 % |
