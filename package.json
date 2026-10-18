@@ -34,6 +34,7 @@
     "accuracy:docs": "uv run --directory accuracy/python pdoc luxstudio_accuracy --docformat google",
     "accuracy:patch-size": "npm run patch-size -w accuracy/typescript",
     "accuracy:source-cell": "npm run source-cell -w accuracy/typescript",
+    "accuracy:bounce": "npm run bounce -w accuracy/typescript",
     "accuracy:timings": "npm run timings -w accuracy/typescript"
   },
   "devDependencies": {

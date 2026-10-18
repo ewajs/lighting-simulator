@@ -40,6 +40,8 @@ export interface RoomSummary {
   };
   readonly direct: readonly SurfaceSummary[];
   readonly total: readonly SurfaceSummary[];
+  /** Bounced light alone: total less direct, on both sides. */
+  readonly bounced: readonly SurfaceSummary[];
   /** Total light with the furniture taken out on both sides; empty without furniture. */
   readonly withoutFurniture: readonly SurfaceSummary[];
   readonly features: readonly FeatureResult[];

@@ -38,8 +38,10 @@ difference per point in the rooms without furniture drops below
 its opening into 10 cm cells fixes the points close to it. The worst point
 within 1 m of a luminaire goes from **{{ pct(f.nearBeforeSplit, 0) }}** to
 **{{ pct(f.nearAfterSplit, 0) }}**. In exchange, an average gets worse, by
-up to {{ pct(f.splitAverageRise, 1) }} points, in the wall sconce. That's more
-than Radiance's noise, and it isn't explained yet.
+up to {{ pct(f.splitAverageRise, 1) }} points, in the wall sconce. It has the
+same cause as the extra bounced light ([Where we stand](./#what-it-doesn-t-count-yet)):
+in a trial where the sconce's body hides bounced light, as in Radiance,
+splitting it no longer worsens the average ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
 
 **\+ furniture shadows.** In the furnished rooms, the mean difference per
 point drops from **{{ pct(f.beforeShadows) }}** to **{{ pct(f.afterShadows) }}**.

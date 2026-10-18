@@ -37,8 +37,9 @@ const rho = page.summary.reflectances
 ## Surface by surface
 
 Each measured surface, its average in Radiance and in Lux Studio, and the
-worst difference at a point. For total light, direct light or, in a room with
-furniture, total light without the furniture in both programs.
+worst difference at a point. For total light, direct light, bounced light
+alone (total less direct, in both programs) or, in a room with furniture,
+total light without the furniture in both programs.
 
 <LxSurfaceTable :page="page" />
 
