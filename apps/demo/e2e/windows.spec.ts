@@ -124,3 +124,21 @@ test('the daylight is set in the Room panel, one undo step each', async ({ page 
   await checked(page, 'Mediodía');
   await checked(page, 'Despejado, con sol');
 });
+
+test(
+  'by day, the sun comes in through a window facing it; at night the window is dark',
+  { tag: '@all-browsers' },
+  async ({ page }) => {
+    await openDemo(page);
+    // Buenos Aires, 10:00 at the equinox: the sun in the north-east, north behind the back wall.
+    await page.evaluate(() => {
+      const sim = document.querySelector('lxs-app')!.simulator!;
+      sim.addWindow('tall-window', { position: { x: 0.8, y: 1.15, z: -2 } });
+      sim.setDaylight({ sky: 'clear', solarHour: 10 });
+    });
+    await page.keyboard.press('Escape');
+    await expect(page.locator('lxs-viewport')).toHaveScreenshot('sun-through-window.png');
+    await page.getByRole('radio', { name: 'Noche' }).click();
+    await expect(page.locator('lxs-viewport')).toHaveScreenshot('window-at-night.png');
+  },
+);

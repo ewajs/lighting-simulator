@@ -38,6 +38,9 @@ M6 Windows and daylight, in progress.
   skylight under the overcast sky, the sun through a window, daylight with
   lamps), gensky's skies checked in the open; every surface's average within
   1 % of Radiance's (ADR 0081).
+- Daylight in the 3D view: the sun's beam through the windows, with shadows,
+  each window glowing with the sky behind it, the exposure adapting to a
+  bright room by day, and the sky outside grey, blue or dark (ADR 0082).
 - Versions and this changelog; `npm run bump -- <version>` sets one version on
   every package and the dependencies between them (ADR 0077).
 

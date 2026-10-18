@@ -22,6 +22,12 @@ import type { IlluminanceAnalysis } from '../analysis/analyse';
 import { IlluminanceMeshes, type SurfacePoint } from './IlluminanceMeshes';
 import { RoomMeshes, type RenderMode } from './RoomMeshes';
 import { WindowMeshes } from './WindowMeshes';
+import { DaylightLights } from './DaylightLights';
+import {
+  daylightExposureScale,
+  daylightLighting,
+  type DaylightLighting,
+} from './daylight-lighting';
 import { SurfaceTextures, type PreparedTexture } from './SurfaceTextures';
 
 const VIEW_TRANSITION_MS = 450;
@@ -129,6 +135,9 @@ export class Viewport {
   readonly #models: FixtureModels;
   readonly #furniture = new FurnitureMeshes();
   readonly #windows = new WindowMeshes();
+  readonly #daylight = new DaylightLights();
+  /** The daylight's lights, kept while the room, its windows and the daylight stay. */
+  #daylightLighting: { readonly from: Scene; readonly lighting: DaylightLighting } | undefined;
   readonly #textures: SurfaceTextures;
   // Uniform stand-in for inter-reflections (SPEC §6).
   readonly #bounce = new THREE.HemisphereLight(0xffffff, 0xffffff, 0);
@@ -199,6 +208,7 @@ export class Viewport {
       this.#luminaires.group,
       this.#furniture.group,
       this.#windows.group,
+      this.#daylight.group,
       manipulator,
       this.#bounce,
     );
@@ -320,12 +330,33 @@ export class Viewport {
    */
   #applyLighting(scene: Scene): void {
     const illuminance = this.#renderMode === 'illuminance';
+    const daylight = this.#daylightFor(scene);
+    this.#daylight.update(daylight, scene.room, !illuminance);
+    this.#windows.setOutside(daylight.windows.length > 0 || daylight.sun ? daylight.sky : 'night');
     this.#renderer.toneMapping = illuminance ? THREE.NoToneMapping : THREE.AgXToneMapping;
-    this.#renderer.toneMappingExposure = illuminance ? 1 : toneMappingExposure(this.#exposureEv);
+    // By day the eye adapts to a brighter room (ADR 0082).
+    this.#renderer.toneMappingExposure = illuminance
+      ? 1
+      : toneMappingExposure(this.#exposureEv) * daylightExposureScale(daylight.fluxLm, scene.room);
     this.#bounce.groundColor.set(illuminance ? STUDIO_GROUND : 0xffffff);
+    const flux = this.#luminaires.totalFlux() + daylight.fluxLm;
     this.#bounce.intensity = illuminance
       ? STUDIO_INTENSITY
-      : indirectIlluminance(this.#luminaires.totalFlux(), scene.room) + MIN_FILL_LUX;
+      : indirectIlluminance(flux, scene.room) + MIN_FILL_LUX;
+  }
+
+  /** The daylight's lights for `scene`, worked out again only when what they depend on changed. */
+  #daylightFor(scene: Scene): DaylightLighting {
+    const kept = this.#daylightLighting;
+    const same =
+      kept &&
+      kept.from.room === scene.room &&
+      kept.from.windows === scene.windows &&
+      kept.from.daylight === scene.daylight;
+    if (same) return kept.lighting;
+    const lighting = daylightLighting(scene);
+    this.#daylightLighting = { from: scene, lighting };
+    return lighting;
   }
 
   /** User exposure in EV stops; 0 is the calibrated default. */
@@ -488,6 +519,7 @@ export class Viewport {
     this.#luminaires.dispose();
     this.#furniture.dispose();
     this.#windows.dispose();
+    this.#daylight.dispose();
     this.#models.dispose();
     this.#textures.dispose();
     this.#manipulator.dispose();
@@ -541,6 +573,8 @@ export class Viewport {
     this.#furniture.sync(scene, this.#highlighted, this.#shading);
     this.#windows.sync(scene, this.#highlighted, this.#shading);
     this.#applyLighting(scene);
+    // Whatever moved, the sun's shadows follow.
+    this.#daylight.requestShadows();
     this.#manipulator.refresh();
     this.#reportLoading();
   }

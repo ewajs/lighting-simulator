@@ -1,6 +1,6 @@
 {
   "name": "@luxstudio/demo",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "coverage": "vitest run --coverage --coverage.include='src/**/*.ts' --coverage.exclude='src/**/*.test.ts' --coverage.exclude='src/generated/**' --coverage.exclude='src/dev/**' --coverage.reporter=text-summary --coverage.reporter=html"
   },
   "dependencies": {
-    "@luxstudio/core": "0.5.7",
-    "@luxstudio/ui": "0.5.7"
+    "@luxstudio/core": "0.5.8",
+    "@luxstudio/ui": "0.5.8"
   }
 }

@@ -1,6 +1,6 @@
 import * as THREE from 'three/webgpu';
-import { color } from 'three/tsl';
-import type { GlazingKind, Room, RoomWindow, Scene, WindowCovering } from '../types';
+import { color, uniform } from 'three/tsl';
+import type { GlazingKind, Room, RoomWindow, Scene, SkyKind, WindowCovering } from '../types';
 import { windowRect } from '../windows';
 import { overlayColor, selectionOutline, tagItem } from './overlay';
 import { CLAY_COLOR, type RenderMode } from './RoomMeshes';
@@ -18,9 +18,14 @@ const FRAME_COLOR = '#f2f2ef';
  * outside the glass. The room floats in an empty scene, so without it a window
  * would show the page's background (ADR 0078). It's the opening's size, so it
  * never shows past the wall's edges; being one flat colour, a backdrop farther
- * out would look no different. Daylight's picture (W7) can change it by the hour.
+ * out would look no different. Its colour follows the sky: pale grey when
+ * overcast, blue when clear, dark at night (ADR 0082).
  */
-const OUTSIDE_COLOR = '#d6e4ee';
+const OUTSIDE_COLORS: Readonly<Record<SkyKind, string>> = {
+  overcast: '#dde3e8',
+  clear: '#a9cdef',
+  night: '#0e1626',
+};
 
 /**
  * How each glass looks: a tint and how much of what's behind it shows. Clear
@@ -59,6 +64,8 @@ interface Item {
 export class WindowMeshes {
   readonly group = new THREE.Group();
   readonly #items = new Map<string, Item>();
+  /** The sky's colour behind every window, shared, so a change of sky needs no rebuild. */
+  readonly #outside = uniform(new THREE.Color(OUTSIDE_COLORS.overcast));
 
   sync(scene: Scene, highlighted: readonly string[], mode: RenderMode): void {
     const present = new Set<string>();
@@ -88,6 +95,11 @@ export class WindowMeshes {
       toCamera.subVectors(camera.position, item.root.position);
       item.root.visible = toCamera.dot(item.normal) > 0;
     }
+  }
+
+  /** Colours what's seen through the windows for the sky outside: `night` once the sun has set. */
+  setOutside(sky: SkyKind): void {
+    this.#outside.value.set(OUTSIDE_COLORS[sky]);
   }
 
   /** Shows or hides all highlight outlines without changing which are highlighted. */
@@ -130,7 +142,7 @@ export class WindowMeshes {
       ),
     );
     const sky = new THREE.MeshBasicNodeMaterial();
-    sky.colorNode = overlayColor(color(mode === 'clay' ? '#ffffff' : OUTSIDE_COLOR));
+    sky.colorNode = overlayColor(mode === 'clay' ? color('#ffffff') : this.#outside);
     const outside = new THREE.Mesh(new THREE.PlaneGeometry(width, height), sky);
     outside.position.z = -FRAME_DEPTH_M / 2;
     // Picks and shadows ignore it: it stands for what's outside, not part of the window.
