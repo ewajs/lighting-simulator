@@ -119,6 +119,7 @@ export {
   WINDOW_MARGIN_M,
   WINDOW_SURFACES,
   WINDOW_TYPES,
+  windowAt,
   windowRect,
 } from './windows';
 export type { WindowPatch, WindowPreset, WindowRect, WindowType } from './windows';

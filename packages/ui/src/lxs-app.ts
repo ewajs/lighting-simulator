@@ -3,6 +3,8 @@ import {
   type AnalysisSettings,
   type CalculationOptions,
   type FurnitureKind,
+  type WindowPreset,
+  windowAt,
   type Logger,
   type MoveStartEvent,
   type PickEvent,
@@ -53,6 +55,7 @@ import './lxs-viewport';
 import type {
   DropFileDetail,
   DropFurnitureDetail,
+  DropWindowDetail,
   DropProductDetail,
   LxsViewport,
   ProbeDetail,
@@ -211,6 +214,7 @@ export class LxsApp extends LitElement {
         .autoCalculate=${this.#analysis.auto}
         @lxs-add-product=${this.#onAddProduct}
         @lxs-add-furniture=${this.#onAddFurniture}
+        @lxs-add-window=${this.#onAddWindow}
         @lxs-select=${this.#onSelect}
         @lxs-library-tab=${({ detail }: CustomEvent<{ tab: LibraryTab }>) => (this.libraryTab = detail.tab)}
         @lxs-analysis-settings=${this.#onAnalysisSettings}
@@ -275,6 +279,7 @@ export class LxsApp extends LitElement {
           .iesImport=${this.iesImport}
           @lxs-add-product=${this.#onAddProduct}
           @lxs-add-furniture=${this.#onAddFurniture}
+          @lxs-add-window=${this.#onAddWindow}
         ></lxs-catalog-panel>`;
       case 'scene':
         return html`<lxs-scene-panel
@@ -347,6 +352,7 @@ export class LxsApp extends LitElement {
         (this.selection = selectionForMove(this.selection, detail.target.id))}
       @lxs-drop-product=${this.#onDropProduct}
       @lxs-drop-furniture=${this.#onDropFurniture}
+      @lxs-drop-window=${this.#onDropWindow}
       @lxs-drop-file=${({ detail }: CustomEvent<DropFileDetail>) => void this.#open(detail.file)}
     ></lxs-viewport>`;
   }
@@ -788,6 +794,20 @@ export class LxsApp extends LitElement {
       this.selection = [this.simulator.addFurniture(detail.kind, { at: detail.at })];
   };
 
+  #onAddWindow = ({ detail }: CustomEvent<{ preset: WindowPreset }>): void => {
+    if (!this.simulator) return;
+    this.selection = [this.simulator.addWindow(detail.preset)];
+    if (this.phone) this.#openPhoneTab('properties');
+  };
+
+  #onDropWindow = ({ detail }: CustomEvent<DropWindowDetail>): void => {
+    const sim = this.simulator;
+    if (sim)
+      this.selection = [
+        sim.addWindow(detail.preset, windowAt(detail.preset, detail.at, sim.scene.room)),
+      ];
+  };
+
   #onKeyDown = (event: KeyboardEvent): void => {
     // The help is modal: shortcuts mustn't act on the app behind it, and Esc is its own.
     if (this.helpOpen || this.newOpen || isTyping(event)) return;
@@ -814,10 +834,12 @@ export class LxsApp extends LitElement {
       case 'select-all': {
         // All of the kind selected, luminaires when nothing is.
         if (!this.scene) return;
-        const furniture = selectionKind(this.selection, this.scene) === 'furniture';
-        this.selection = (furniture ? this.scene.furniture : this.scene.luminaires).map(
-          (i) => i.id,
-        );
+        const items = {
+          luminaire: this.scene.luminaires,
+          furniture: this.scene.furniture,
+          window: this.scene.windows,
+        }[selectionKind(this.selection, this.scene) ?? 'luminaire'];
+        this.selection = items.map((i) => i.id);
         return;
       }
       case 'deselect':

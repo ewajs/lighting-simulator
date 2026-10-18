@@ -124,3 +124,22 @@ describe('ItemDrag: luminaires', () => {
     expect(positionOf(sim, id)).toEqual({ x: 0.5, y: 2.03, z: 0 });
   });
 });
+
+describe('ItemDrag: windows', () => {
+  it('slides a window over its own wall, kept inside it, as one undo step', () => {
+    const sim = new Simulator({ catalog });
+    const id = sim.addWindow('window'); // On the back wall, centred at (0, 1.5, −2).
+    const at = (x: number, y: number): Ray => ({
+      origin: { x, y, z: 2 },
+      direction: { x: 0, y: 0, z: -1 },
+    });
+    // Grabbed 0.3 m right of its centre.
+    const drag = new ItemDrag(sim, { kind: 'window', id }, [id], at(0.3, 1.5));
+    drag.moveTo(at(1.3, 1.7));
+    expect(sim.scene.windows[0]!.position).toEqual({ x: 1, y: 1.7, z: -2 });
+    drag.moveTo(at(9, 1.7));
+    expect(sim.scene.windows[0]!.position.x).toBeCloseTo(2.5 - 0.05 - 0.6, 12);
+    sim.undo();
+    expect(sim.scene.windows[0]!.position).toEqual({ x: 0, y: 1.5, z: -2 });
+  });
+});

@@ -3,6 +3,7 @@
 // changes, and the rectangle it opens, for the picture and the calculation.
 
 import type {
+  FloorPoint,
   GlazingKind,
   Room,
   RoomWindow,
@@ -214,6 +215,32 @@ export function addWindow(
   );
   assertWindow(window);
   return { ...scene, windows: [...scene.windows, window] };
+}
+
+/**
+ * Where a window of `preset` dropped at a floor point goes, as the patch to
+ * pass to `addWindow`: a skylight overhead; a wall window on the wall nearest
+ * the point, across from it, at the preset's sill height.
+ */
+export function windowAt(preset: WindowPreset, at: FloorPoint, room: Room): WindowPatch {
+  const type = WINDOW_TYPES[preset];
+  if (type.surface === 'ceiling') {
+    return { surface: 'ceiling', position: { x: at.x, y: room.height, z: at.z } };
+  }
+  const [w, d] = [room.width / 2, room.depth / 2];
+  // A point outside the room counts from the nearest point inside it.
+  const x = Math.min(Math.max(at.x, -w), w);
+  const z = Math.min(Math.max(at.z, -d), d);
+  const walls: readonly { surface: WindowSurface; distance: number }[] = [
+    { surface: 'wall-z-', distance: z + d },
+    { surface: 'wall-z+', distance: d - z },
+    { surface: 'wall-x-', distance: x + w },
+    { surface: 'wall-x+', distance: w - x },
+  ];
+  // Ties go to the first: the back wall, which the default camera faces.
+  const { surface } = walls.reduce((best, wall) => (wall.distance < best.distance ? wall : best));
+  // addWindow puts it on the wall's plane and inside its edges.
+  return { surface, position: { x, y: type.sill + type.height / 2, z } };
 }
 
 /** Applies `patch` to one window, then keeps it on its surface (see constrainWindow). */

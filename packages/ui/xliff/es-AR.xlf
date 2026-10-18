@@ -727,10 +727,6 @@
   <source>Display and decor</source>
   <target>Exhibición y decoración</target>
 </trans-unit>
-<trans-unit id="se800522d994c53ef">
-  <source>Nothing here yet. Add luminaires or furniture from the catalog.</source>
-  <target>Todavía no hay nada. Agregá luminarias o muebles desde el catálogo.</target>
-</trans-unit>
 <trans-unit id="s7e9d0b96d39e517d">
   <source>Colour</source>
   <target>Color</target>
@@ -1054,6 +1050,90 @@
 <trans-unit id="sb40a0c938f9fea5b">
   <source>They hide bounced light, as in reality. Off: a little too much light near them, and moving one is faster.</source>
   <target>Tapan la luz que rebota, como en la realidad. Apagado: un poco de luz de más cerca de ellas, y mover una se recalcula más rápido.</target>
+</trans-unit>
+<trans-unit id="s5c49cfa8045bc89d">
+  <source>Window</source>
+  <target>Ventana</target>
+</trans-unit>
+<trans-unit id="sa34caec37cff37ce">
+  <source>Tall window</source>
+  <target>Ventanal</target>
+</trans-unit>
+<trans-unit id="s8fab2b53f5d5aa3a">
+  <source>Skylight</source>
+  <target>Tragaluz</target>
+</trans-unit>
+<trans-unit id="sb4f1dffbb6be6302">
+  <source>Clear</source>
+  <target>Transparente</target>
+</trans-unit>
+<trans-unit id="s30750adbfe031e9d">
+  <source>Tinted</source>
+  <target>Tonalizado</target>
+</trans-unit>
+<trans-unit id="sa3021cb45a83be54">
+  <source>Frosted</source>
+  <target>Esmerilado</target>
+</trans-unit>
+<trans-unit id="s669b18c6d2d9c95b">
+  <source>None</source>
+  <target>Ninguna</target>
+</trans-unit>
+<trans-unit id="s085cca906a4dae28">
+  <source>Sheer curtain</source>
+  <target>Cortina translúcida</target>
+</trans-unit>
+<trans-unit id="s18fb910d1c6ccc34">
+  <source>Blind</source>
+  <target>Persiana</target>
+</trans-unit>
+<trans-unit id="s2d34c87f67f66c6a">
+  <source>Windows</source>
+  <target>Ventanas</target>
+</trans-unit>
+<trans-unit id="s5f0cfca90a7b467e">
+  <source><x id="0" equiv-text="${Object.keys(WINDOW_TYPES).length}"/> kinds</source>
+  <target><x id="0" equiv-text="${Object.keys(WINDOW_TYPES).length}"/> tipos</target>
+</trans-unit>
+<trans-unit id="s8353defd914b80fe">
+  <source>Nothing here yet. Add luminaires, furniture or windows from the catalog.</source>
+  <target>Todavía no hay nada. Agregá luminarias, muebles o ventanas desde el catálogo.</target>
+</trans-unit>
+<trans-unit id="s3da9d815a26aea7c">
+  <source>Surface</source>
+  <target>Superficie</target>
+</trans-unit>
+<trans-unit id="s78b58424e7bcaff1">
+  <source>Sill</source>
+  <target>Antepecho</target>
+</trans-unit>
+<trans-unit id="sc2558f6fab6ec993">
+  <source>Glass and covering</source>
+  <target>Vidrio y cortina</target>
+</trans-unit>
+<trans-unit id="sb058143c89d1c7ab">
+  <source>Glass</source>
+  <target>Vidrio</target>
+</trans-unit>
+<trans-unit id="s91cdaa9b02141b48">
+  <source>Covering</source>
+  <target>Cortina</target>
+</trans-unit>
+<trans-unit id="sa20c8ae04ac9d1d1">
+  <source><x id="0" equiv-text="${selected.length}"/> windows selected</source>
+  <target><x id="0" equiv-text="${selected.length}"/> ventanas seleccionadas</target>
+</trans-unit>
+<trans-unit id="s9c7496d1d3b850cc">
+  <source>Openings</source>
+  <target>Aberturas</target>
+</trans-unit>
+<trans-unit id="s537493ac48c3eb0f">
+  <source><x id="0" equiv-text="${size}"/> · in the ceiling</source>
+  <target><x id="0" equiv-text="${size}"/> · en el techo</target>
+</trans-unit>
+<trans-unit id="sfa6853674075ed65">
+  <source><x id="0" equiv-text="${size}"/> · sill <x id="1" equiv-text="${sillText}"/> m</source>
+  <target><x id="0" equiv-text="${size}"/> · antepecho <x id="1" equiv-text="${sillText}"/> m</target>
 </trans-unit>
 </body>
 </file>

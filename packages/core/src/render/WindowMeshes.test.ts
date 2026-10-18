@@ -34,3 +34,14 @@ describe('WindowMeshes', () => {
     expect(meshes.group.children[0]).not.toBe(back);
   });
 });
+
+describe('picking a window', () => {
+  it('hits its glass from inside the room', () => {
+    const meshes = new WindowMeshes();
+    meshes.sync(addWindow(emptyScene, 'window', 'w'), [], 'realistic');
+    meshes.group.updateMatrixWorld(true);
+    const ray = new THREE.Raycaster(new THREE.Vector3(0.2, 1.4, 1), new THREE.Vector3(0, 0, -1));
+    const [hit] = ray.intersectObjects(meshes.group.children, true);
+    expect(hit?.distance).toBeCloseTo(3, 1);
+  });
+});

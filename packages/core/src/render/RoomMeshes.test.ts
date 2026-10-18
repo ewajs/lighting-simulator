@@ -6,7 +6,7 @@ import { RoomMeshes } from './RoomMeshes';
 
 /** The area of a mesh's triangles, in m². */
 function area(mesh: THREE.Mesh): number {
-  const geometry = (mesh.geometry).toNonIndexed();
+  const geometry = mesh.geometry.toNonIndexed();
   const position = geometry.getAttribute('position') as THREE.BufferAttribute;
   const [a, b, c] = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
   let total = 0;

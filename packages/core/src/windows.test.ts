@@ -11,6 +11,7 @@ import {
   MIN_WINDOW_SIDE_M,
   updateWindow,
   WINDOW_MARGIN_M,
+  windowAt,
   windowRect,
 } from './windows';
 
@@ -42,6 +43,30 @@ describe('addWindow', () => {
     const [side] = addWindow(emptyScene, 'window', 'w', { surface: 'wall-x+' }).windows;
     expect(side!.position.x).toBe(2.5);
     expect(side!.position.z).toBe(0);
+  });
+});
+
+describe('windowAt', () => {
+  it('puts a wall window on the wall nearest the drop, across from it, at its sill', () => {
+    const scene = addWindow(
+      emptyScene,
+      'window',
+      'w',
+      windowAt('window', { x: 2.2, z: 0.5 }, room),
+    );
+    expect(scene.windows[0]).toMatchObject({
+      surface: 'wall-x+',
+      position: { x: 2.5, y: 0.9 + 0.6, z: 0.5 },
+    });
+    // From outside the room, the wall it was dropped beyond.
+    expect(windowAt('tall-window', { x: 0, z: 9 }, room).surface).toBe('wall-z+');
+  });
+
+  it('puts a skylight overhead', () => {
+    expect(windowAt('skylight', { x: 1, z: -1 }, room)).toEqual({
+      surface: 'ceiling',
+      position: { x: 1, y: 2.7, z: -1 },
+    });
   });
 });
 

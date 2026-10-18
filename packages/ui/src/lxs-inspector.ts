@@ -8,12 +8,13 @@ import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import './lxs-furniture-inspector';
 import './lxs-luminaire-inspector';
 import './lxs-room-inspector';
+import './lxs-window-inspector';
 import { selectionKind } from './selection';
 import { sharedStyles } from './styles';
 
 /**
  * The right panel: the room when nothing is selected, otherwise the selected
- * luminaires or furniture. In `sheet` mode (narrow screens, where it floats over the
+ * luminaires, furniture or windows. In `sheet` mode (narrow screens, where it floats over the
  * viewport) the header toggles it between just the header and the full panel.
  *
  * @fires lxs-sheet-toggle - the header was tapped in sheet mode
@@ -80,7 +81,9 @@ export class LxsInspector extends LitElement {
         ? msg('Luminaire')
         : kind === 'furniture'
           ? msg('Furniture')
-          : msg('Room');
+          : kind === 'window'
+            ? msg('Window')
+            : msg('Room');
     return html`
       ${
         this.sheet
@@ -121,6 +124,12 @@ export class LxsInspector extends LitElement {
           .scene=${this.scene}
           .selection=${this.selection}
         ></lxs-furniture-inspector>`;
+      case 'window':
+        return html`<lxs-window-inspector
+          .simulator=${this.simulator}
+          .scene=${this.scene}
+          .selection=${this.selection}
+        ></lxs-window-inspector>`;
       default:
         return html`<lxs-room-inspector
           .simulator=${this.simulator}

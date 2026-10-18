@@ -171,5 +171,10 @@ export class PointerGestures {
 }
 
 function isHandle(target: PressTarget | null): boolean {
-  return target !== null && target.kind !== 'luminaire' && target.kind !== 'furniture';
+  return (
+    target !== null &&
+    target.kind !== 'luminaire' &&
+    target.kind !== 'furniture' &&
+    target.kind !== 'window'
+  );
 }

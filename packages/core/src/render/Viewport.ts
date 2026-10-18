@@ -700,16 +700,24 @@ export class Viewport {
   }
 
   /**
-   * The luminaire or piece under a screen point. Luminaires come first, even
-   * a little off them or behind a piece: they're small, often over furniture
-   * (a pendant over a table), and what the tool is about. Pieces can also be
-   * picked from the scene list.
+   * The luminaire, piece or window under a screen point. Luminaires come
+   * first, even a little off them or behind a piece: they're small, often over
+   * furniture (a pendant over a table), and what the tool is about. Otherwise
+   * the nearer of a piece and a window. Items can also be picked from the
+   * scene list.
    */
   #itemAt(clientX: number, clientY: number): PickTarget | null {
     const luminaireId = this.#luminaireAt(clientX, clientY);
     if (luminaireId) return { kind: 'luminaire', id: luminaireId };
-    const hit = this.#furnitureHit(clientX, clientY);
-    const furnitureId = hit && itemIdOf(hit.object);
+    const piece = this.#furnitureHit(clientX, clientY);
+    // Only windows drawn: one in a wall seen from outside is hidden with it.
+    const shown = this.#windows.group.children.filter((root) => root.visible);
+    const window = this.#raycasterAt(clientX, clientY).intersectObjects(shown, true)[0];
+    if (window && (!piece || window.distance < piece.distance)) {
+      const id = itemIdOf(window.object);
+      return id ? { kind: 'window', id } : null;
+    }
+    const furnitureId = piece && itemIdOf(piece.object);
     return furnitureId ? { kind: 'furniture', id: furnitureId } : null;
   }
 

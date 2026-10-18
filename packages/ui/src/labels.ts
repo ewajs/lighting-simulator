@@ -1,5 +1,14 @@
 import { msg } from '@lit/localize';
-import type { CalcSurfaceName, FinishName, FurnitureKind, MountType, Scene } from '@luxstudio/core';
+import type {
+  CalcSurfaceName,
+  FinishName,
+  FurnitureKind,
+  GlazingKind,
+  MountType,
+  Scene,
+  WindowCovering,
+  WindowPreset,
+} from '@luxstudio/core';
 
 /** Translated name of a mount type. A function so it's evaluated at render time. */
 export const mountLabel = (mount: MountType): string =>
@@ -90,3 +99,40 @@ export const surfaceLabel = (surface: CalcSurfaceName): string =>
     'wall-z-': msg('Back wall'),
     'wall-z+': msg('Front wall'),
   })[surface];
+
+/** Translated name of a window preset, as the catalog offers it. */
+export const windowPresetLabel = (preset: WindowPreset): string =>
+  ({
+    window: msg('Window'),
+    'tall-window': msg('Tall window'),
+    skylight: msg('Skylight'),
+  })[preset];
+
+/** Translated name of a kind of glass. */
+export const glazingLabel = (glazing: GlazingKind): string =>
+  ({
+    clear: msg('Clear'),
+    tinted: msg('Tinted'),
+    frosted: msg('Frosted'),
+  })[glazing];
+
+/** Translated name of a window covering. */
+export const coveringLabel = (covering: WindowCovering): string =>
+  ({
+    none: msg('None'),
+    sheer: msg('Sheer curtain'),
+    blind: msg('Blind'),
+  })[covering];
+
+/** A display name per window, numbered like furniture: "Window 2", or "Skylight 1" in the ceiling. */
+export function windowNames(scene: Scene): ReadonlyMap<string, string> {
+  let [windows, skylights] = [0, 0];
+  const names = new Map<string, string>();
+  for (const { id, surface } of scene.windows) {
+    names.set(
+      id,
+      surface === 'ceiling' ? `${msg('Skylight')} ${++skylights}` : `${msg('Window')} ${++windows}`,
+    );
+  }
+  return names;
+}

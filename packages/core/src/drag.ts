@@ -1,14 +1,15 @@
-// Moving luminaires and furniture by dragging them in the viewport. Rays are
+// Moving luminaires, furniture and windows by dragging them in the viewport. Rays are
 // plain data, so this runs without three.js and is unit-tested in Node. See
-// ADRs 0038, 0041, 0047 and 0048.
+// ADRs 0038, 0041, 0047, 0048 and 0078.
 
 import { FURNITURE_TYPES } from './furniture-kinds';
 import { itemRules, type ItemRules } from './item-rules';
-import { add, subtract } from './math';
+import { add, dot, scale, subtract } from './math';
 import { horizontalHit, mountSurfaceHit, wallSlideHit, type Ray } from './placement';
 import { snapPosition, type Guide, type SnapOptions } from './snap';
 import type { Simulator } from './simulator';
 import type { PickTarget, Vec3 } from './types';
+import { windowRect } from './windows';
 
 const NO_OFFSET: Vec3 = { x: 0, y: 0, z: 0 };
 
@@ -54,10 +55,11 @@ export class ItemDrag {
   ) {
     this.#grabbedId = grabbed.id;
     this.#rules = itemRules(simulator, grabbed.kind);
-    this.#slide =
-      grabbed.kind === 'luminaire'
-        ? luminaireSlide(simulator, grabbed.id)
-        : furnitureSlide(simulator, grabbed.id, grabHeight);
+    this.#slide = {
+      luminaire: () => luminaireSlide(simulator, grabbed.id),
+      furniture: () => furnitureSlide(simulator, grabbed.id, grabHeight),
+      window: () => windowSlide(simulator, grabbed.id),
+    }[grabbed.kind]();
     for (const id of new Set([grabbed.id, ...groupIds])) {
       const position = this.#position(id);
       if (position) this.#start.set(id, position);
@@ -137,5 +139,27 @@ function furnitureSlide(simulator: Simulator, id: string, grabHeight: number): S
       return hit && { ...hit, y: 0 };
     },
     level: true,
+  };
+}
+
+/** Below this, a ray is taken as parallel to a window's surface. */
+const PARALLEL_EPSILON = 1e-9;
+
+/**
+ * A window slides over its own wall or the ceiling, wherever the ray meets
+ * that plane, even beyond the room's edges: constrainWindow keeps it inside.
+ */
+function windowSlide(simulator: Simulator, id: string): Slide {
+  const grabbed = simulator.scene.windows.find((w) => w.id === id);
+  if (!grabbed) throw new Error(`Cannot drag window "${id}"`);
+  const { normal } = windowRect(grabbed, simulator.scene.room);
+  return {
+    hit: ({ origin, direction }, from) => {
+      const along = dot(direction, normal);
+      if (Math.abs(along) < PARALLEL_EPSILON) return null;
+      const t = dot(subtract(from, origin), normal) / along;
+      return t > 0 ? add(origin, scale(direction, t)) : null;
+    },
+    level: grabbed.surface === 'ceiling',
   };
 }

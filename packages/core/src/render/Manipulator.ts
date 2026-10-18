@@ -10,6 +10,7 @@ import { FURNITURE_TYPES } from '../furniture-kinds';
 import { itemRules } from '../item-rules';
 import {
   furnitureDimensions,
+  windowDimensions,
   groupDimensions,
   luminaireDimensions,
   type Dimension,
@@ -215,7 +216,11 @@ export class Manipulator {
           : new TurnDrag(simulator, { kind: 'luminaire', id: highlighted }, grabbed);
     } else if (target.kind === 'rotate' && highlighted) {
       drag = new TurnDrag(simulator, { kind: 'furniture', id: highlighted }, grabbed);
-    } else if (target.kind === 'luminaire' || target.kind === 'furniture') {
+    } else if (
+      target.kind === 'luminaire' ||
+      target.kind === 'furniture' ||
+      target.kind === 'window'
+    ) {
       const { id } = target;
       // Undo or delete may have removed it since the press.
       if (!findItem(simulator.scene, id)) return undefined;
@@ -234,7 +239,9 @@ export class Manipulator {
     });
     // Where the drag is measured: what was grabbed, or the handle's centre.
     const grabbedItem =
-      target.kind === 'luminaire' || target.kind === 'furniture' ? target : undefined;
+      target.kind === 'luminaire' || target.kind === 'furniture' || target.kind === 'window'
+        ? target
+        : undefined;
     return (event) => {
       const anchor = this.#anchor(grabbedItem);
       const snap =
@@ -262,7 +269,7 @@ export class Manipulator {
     const dimensions = ids.flatMap((id) => {
       const found = findItem(scene, id);
       if (found?.kind === 'furniture') return furnitureDimensions(found.item, scene.room);
-      // Windows' dimension lines come with their editing (W3).
+      if (found?.kind === 'window') return windowDimensions(found.item, scene.room);
       if (found?.kind !== 'luminaire') return [];
       const mount = found && catalog.get(found.item.productId)?.mount;
       return mount

@@ -120,6 +120,7 @@ them locally before opening a PR. CI doesn't run `test:e2e` (ADR 0015). Run
 | Catalog, inspector, room panel, top bar, shortcuts, i18n | `smoke`, `surfaces` |
 | Selection, dragging, handles, snapping, distances | `manipulation` |
 | Furniture | `furniture` |
+| Windows | `windows` |
 | IES files, lights, models, rendering | `smoke`, `models`, `ies-import` |
 | Illuminance maths (`analysis/`, `luminaire-frame.ts`) | unit tests (the Radiance comparison is among them), `mutation-check`, and `models` if the renderer's frame changed |
 | The Analysis panel, its worker and settings, the illuminance view, the probe | `analysis` |

@@ -18,6 +18,11 @@ M6 Windows and daylight, in progress.
 - Windows in the 3D view: a hole in the wall or ceiling, a frame, the glass
   and its covering, with a pale sky behind. The camera can now orbit below
   the horizon, to look up at the ceiling and its skylights.
+- Editing windows: a third catalog section, Windows (a window, a tall window
+  and a skylight), added by click or dropped near a wall; picked and dragged
+  along their wall, with dimension lines to the corner and the floor; an
+  inspector for the surface, size, position, glass and covering; and a
+  Windows group in the Scene list.
 - Versions and this changelog; `npm run bump -- <version>` sets one version on
   every package and the dependencies between them (ADR 0077).
 

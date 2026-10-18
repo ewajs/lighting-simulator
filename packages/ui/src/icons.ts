@@ -1,8 +1,18 @@
 import { html, type TemplateResult } from 'lit';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import type { IconNode } from 'lucide';
-import { LampCeiling, LampDesk, LampFloor, LampWallDown, Lightbulb, Spotlight } from 'lucide';
-import type { MountType } from '@luxstudio/core';
+import {
+  Columns2,
+  Grid2x2,
+  LampCeiling,
+  LampDesk,
+  LampFloor,
+  LampWallDown,
+  Lightbulb,
+  PanelTop,
+  Spotlight,
+} from 'lucide';
+import type { MountType, WindowPreset, WindowSurface } from '@luxstudio/core';
 
 const markup = new WeakMap<IconNode, string>();
 
@@ -60,3 +70,16 @@ const MOUNT_ICONS: Record<MountType, IconNode> = {
 /** Icon for a product's mount type, used when there is no thumbnail. */
 export const mountIcon = (mount: MountType | undefined): TemplateResult =>
   icon(mount ? MOUNT_ICONS[mount] : Lightbulb);
+
+const WINDOW_ICONS: Record<WindowPreset, IconNode> = {
+  window: Grid2x2,
+  'tall-window': Columns2,
+  skylight: PanelTop,
+};
+
+/** Icon for a window preset. A window in the scene shows `windowIcon(iconPresetFor(surface))`. */
+export const windowIcon = (preset: WindowPreset): TemplateResult => icon(WINDOW_ICONS[preset]);
+
+/** The preset whose icon stands for a window in `surface`: a skylight in the ceiling, a window elsewhere. */
+export const iconPresetFor = (surface: WindowSurface): WindowPreset =>
+  surface === 'ceiling' ? 'skylight' : 'window';

@@ -1,8 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { addFurniture, updateFurniture } from './furniture';
 import { FURNITURE_TYPES } from './furniture-kinds';
-import { furnitureDimensions, groupDimensions, luminaireDimensions } from './measure';
+import {
+  furnitureDimensions,
+  groupDimensions,
+  luminaireDimensions,
+  windowDimensions,
+} from './measure';
 import { emptyScene, room } from './test-fixtures';
+import { addWindow } from './windows';
 
 // DEFAULT_ROOM: x ∈ [−2.5, 2.5], z ∈ [−2, 2], 2.7 m high.
 const lengths = (dimensions: { lengthM: number }[]) => dimensions.map((d) => d.lengthM);
@@ -95,5 +101,30 @@ describe('furnitureDimensions', () => {
       expect.closeTo(2 - width / 2),
       expect.closeTo(1.5 - height / 2),
     ]);
+  });
+});
+
+describe('windowDimensions', () => {
+  it('measures a wall window from its side to the nearer corner, and its sill', () => {
+    // On the back wall, 1.2 m wide, its centre at x = 1: the right edge is 1.6 m from x = 0.
+    const [window] = addWindow(emptyScene, 'window', 'w', {
+      position: { x: 1, y: 1.5, z: -2 },
+    }).windows;
+    const [along, sill] = windowDimensions(window!, room);
+    expect(along!.from).toEqual({ x: 1.6, y: 1.5, z: -2 });
+    expect(along!.lengthM).toBeCloseTo(2.5 - 1.6, 12);
+    expect(sill!.lengthM).toBeCloseTo(0.9, 12);
+  });
+
+  it('measures a skylight to the nearer side and back or front walls', () => {
+    const [skylight] = addWindow(emptyScene, 'skylight', 's', {
+      position: { x: -1, y: 2.7, z: 0.5 },
+      height: 1.1,
+    }).windows;
+    const lengths = windowDimensions(skylight!, room).map((d) => d.lengthM);
+    // 0.9 m wide along x, 1.1 m deep along z.
+    expect(lengths[0]).toBeCloseTo(2.5 - 1 - 0.45, 12);
+    expect(lengths[1]).toBeCloseTo(2 - 0.5 - 0.55, 12);
+    expect(lengths).toHaveLength(2);
   });
 });

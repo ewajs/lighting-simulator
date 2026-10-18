@@ -1,10 +1,11 @@
-// Distances from moving luminaires and furniture to the walls and floor,
-// shown while dragging. Pure functions over plain data. See ADRs 0042, 0049.
+// Distances from moving luminaires, furniture and windows to the walls and
+// floor, shown while dragging. Pure functions over plain data. See ADRs 0042,
+// 0049 and 0078.
 
 import { furnitureBounds } from './furniture';
 import { distance } from './math';
 import { wallNormalAxis } from './placement';
-import type { Furniture, MountType, Room, Vec3 } from './types';
+import type { Furniture, MountType, Room, RoomWindow, Vec3 } from './types';
 
 /** Shorter than this, a dimension isn't worth drawing, in m. */
 const MIN_LENGTH_M = 0.001;
@@ -68,6 +69,33 @@ export function furnitureDimensions(piece: Furniture, room: Room): Dimension[] {
     return dimension(edge, { ...edge, [axis]: towardsPlus ? half : -half });
   });
   if (onWall) dimensions.push(dimension({ ...position, y: min.y }, { ...position, y: 0 }));
+  return dimensions.filter(({ lengthM }) => lengthM >= MIN_LENGTH_M);
+}
+
+/**
+ * Dimensions from a window's edges to the edges of its surface, as for a wall
+ * piece: in a wall, from the side facing the nearer corner, along the wall,
+ * and from the sill down to the floor; in the ceiling, from the edges facing
+ * the nearer side wall (x) and the nearer back or front wall (z).
+ */
+export function windowDimensions(window: RoomWindow, room: Room): Dimension[] {
+  const { position, surface } = window;
+  const inCeiling = surface === 'ceiling';
+  const across: ('x' | 'z')[] = inCeiling
+    ? ['x', 'z']
+    : [surface === 'wall-x-' || surface === 'wall-x+' ? 'z' : 'x'];
+  const dimensions = across.map((axis) => {
+    const half = (axis === 'x' ? room.width : room.depth) / 2;
+    // In the ceiling, a window's height runs along z (see windowRect).
+    const extent = (inCeiling && axis === 'z' ? window.height : window.width) / 2;
+    const towardsPlus = position[axis] >= 0;
+    const edge = { ...position, [axis]: position[axis] + (towardsPlus ? extent : -extent) };
+    return dimension(edge, { ...edge, [axis]: towardsPlus ? half : -half });
+  });
+  if (!inCeiling) {
+    const sill = { ...position, y: position.y - window.height / 2 };
+    dimensions.push(dimension(sill, { ...sill, y: 0 }));
+  }
   return dimensions.filter(({ lengthM }) => lengthM >= MIN_LENGTH_M);
 }
 
