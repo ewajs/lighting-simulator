@@ -1,5 +1,6 @@
 {
   "name": "luxstudio",
+  "version": "0.5.0",
   "private": true,
   "type": "module",
   "workspaces": [
@@ -37,7 +38,8 @@
     "accuracy:patch-size": "npm run patch-size -w accuracy/typescript",
     "accuracy:source-cell": "npm run source-cell -w accuracy/typescript",
     "accuracy:bounce": "npm run bounce -w accuracy/typescript",
-    "accuracy:timings": "npm run timings -w accuracy/typescript"
+    "accuracy:timings": "npm run timings -w accuracy/typescript",
+    "bump": "node scripts/bump-version.js"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

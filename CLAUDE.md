@@ -104,6 +104,10 @@ them locally before opening a PR. CI doesn't run `test:e2e` (ADR 0015). Run
   studies, timings, benchmarks and manual screenshots. Until then they may be
   stale. A failure that only shows under the full e2e run's load gets one
   rerun of that test before being treated as real.
+- **Versions:** every PR bumps the patch version (`npm run bump -- <version>`,
+  then `npm install`) and adds its line under Unreleased in `CHANGELOG.md`;
+  a milestone's last PR bumps the minor version and dates the release
+  (ADR 0077).
 - **Baselines:** refresh only what changed on purpose, with
   `--update-snapshots=changed` on the affected specs, and look at each new
   image. Never `=all`: it rewrites every image and buries real changes in
