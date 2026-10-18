@@ -8,6 +8,10 @@ milestones and their PRs, to give the history a shape.
 
 ## [Unreleased]
 
+### Fixed
+- The app's "Read the full manual" link opened the app itself under `npm run dev`;
+  the dev server now serves the manual as last built, or says how to build it.
+
 ### Added
 - Versions and this changelog; `npm run bump -- <version>` sets one version on
   every package and the dependencies between them (ADR 0077).
