@@ -148,6 +148,9 @@ test('key 3 switches to the Iluminancia view, 1 back', async ({ page }) => {
 
 /** The middle of the table, on the work plane, in the default view at 1280 × 800 (smoke.spec.ts). */
 const WORK_PLANE = { x: 640, y: 455 };
+/** The starter scene's pendant, and the glass of a window added to the back wall (as in windows.spec.ts). */
+const PENDANT = { x: 642, y: 356 };
+const BACK_WINDOW_GLASS = { x: 705, y: 315 };
 
 /** The probe's figures: total, direct and bounced lux, and the surface. */
 async function probeReading(page: Page) {
@@ -191,6 +194,53 @@ test('daylight through a window lights the room; at night, or switched off, it i
     .uncheck();
   // The window still lets the room's own light out: a little darker than before it.
   await expect.poll(() => average(page)).toBeLessThan(byLamps);
+});
+
+test('a room lit only by a window is calculated, and the probe reads its daylight', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await ready(page);
+  await page.evaluate(() => {
+    const sim = document.querySelector('lxs-app')!.simulator!;
+    sim.remove(sim.scene.luminaires.map((luminaire) => luminaire.id));
+    sim.addWindow('window');
+  });
+  await page.getByRole('tab', { name: 'Análisis' }).click();
+  await expect(calculated(page)).toBeVisible();
+  // An overcast noon in Buenos Aires: hundreds of lux.
+  expect(await average(page)).toBeGreaterThan(200);
+  await page.getByRole('radio', { name: 'Iluminancia' }).click();
+  await page.mouse.move(WORK_PLANE.x, WORK_PLANE.y);
+  await page.mouse.move(WORK_PLANE.x + 2, WORK_PLANE.y + 2);
+  await expect.poll(async () => (await probeReading(page)).text).toContain('natural');
+  expect((await probeReading(page)).total).toBeGreaterThan(0);
+});
+
+test('deleting from the illuminance view recalculates: the last luminaire, then the window', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await ready(page);
+  await page.evaluate(() => document.querySelector('lxs-app')!.simulator!.addWindow('window'));
+  await page.getByRole('tab', { name: 'Análisis' }).click();
+  await expect(calculated(page)).toBeVisible();
+  const both = await average(page);
+  await page.getByRole('radio', { name: 'Iluminancia' }).click();
+  // Every luminaire, picked in the view and deleted.
+  await page.mouse.click(PENDANT.x, PENDANT.y);
+  await page.keyboard.press('ControlOrMeta+a');
+  await page.keyboard.press('Delete');
+  await expect.poll(() => average(page)).toBeLessThan(both);
+  await expect(calculated(page)).toBeVisible();
+  // Then the window: nothing is left to calculate, and the results go.
+  await page.mouse.click(BACK_WINDOW_GLASS.x, BACK_WINDOW_GLASS.y);
+  await expect(page.locator('lxs-inspector h2')).toHaveText('Ventana');
+  await page.keyboard.press('Delete');
+  await expect(panel(page).getByText(/Agregá luminarias o ventanas/)).toBeVisible();
+  await expect(page.locator('lxs-illuminance-legend')).toContainText(
+    'No hay luminarias ni ventanas para calcular.',
+  );
 });
 
 test.describe('probing on a phone', () => {

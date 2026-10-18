@@ -919,10 +919,6 @@
   <source>Calculated in <x id="0" equiv-text="${formatNumber(state.ms)}"/> ms</source>
   <target>Calculado en <x id="0" equiv-text="${formatNumber(state.ms)}"/> ms</target>
 </trans-unit>
-<trans-unit id="saa902b5e1f0a31dd">
-  <source>Add luminaires to see how much light reaches each surface.</source>
-  <target>Agregá luminarias para ver cuánta luz llega a cada superficie.</target>
-</trans-unit>
 <trans-unit id="sae27ee62b436b569">
   <source>Open the catalog</source>
   <target>Abrir el catálogo</target>
@@ -994,10 +990,6 @@
 <trans-unit id="s407df2ba980f0824">
   <source>Work plane border</source>
   <target>Borde del plano de trabajo</target>
-</trans-unit>
-<trans-unit id="scc4a4b3e781de324">
-  <source>No luminaires to calculate.</source>
-  <target>No hay luminarias para calcular.</target>
 </trans-unit>
 <trans-unit id="s1b3a3c50a93313d9">
   <source>Illuminance (lx)</source>
@@ -1210,6 +1202,14 @@
 <trans-unit id="s27e82dcb8078f24e">
   <source>False-colour scale from 0 to <x id="0" equiv-text="${top}"/> lx</source>
   <target>Escala de colores falsos de 0 a <x id="0" equiv-text="${top}"/> lx</target>
+</trans-unit>
+<trans-unit id="s99fffbc10b85f65b">
+  <source>Add luminaires or windows to see how much light reaches each surface.</source>
+  <target>Agregá luminarias o ventanas para ver cuánta luz llega a cada superficie.</target>
+</trans-unit>
+<trans-unit id="s9419e66defe45dbe">
+  <source>No luminaires or windows to calculate.</source>
+  <target>No hay luminarias ni ventanas para calcular.</target>
 </trans-unit>
 </body>
 </file>

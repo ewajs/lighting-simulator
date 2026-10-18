@@ -20,7 +20,7 @@ import { localized, msg, str } from '@lit/localize';
 import { html, LitElement, nothing, type PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { ChartColumn, Eye, Layers, LayoutGrid, SlidersHorizontal } from 'lucide';
-import { AnalysisController } from './analysis-controller';
+import { AnalysisController, hasLightToCalculate } from './analysis-controller';
 import { appStyles } from './lxs-app.styles';
 import { EMPTY_DISPLAY_CATALOG, type DisplayCatalog } from './display-catalog';
 import { newMergeKey } from './field-change';
@@ -299,7 +299,7 @@ export class LxsApp extends LitElement {
           .options=${this.#analysis.options}
           .auto=${this.#analysis.auto}
           .roomHeight=${this.scene?.room.height ?? 0}
-          .empty=${(this.scene?.luminaires.length ?? 0) === 0}
+          .empty=${!this.scene || !hasLightToCalculate(this.scene)}
           @lxs-analysis-settings=${this.#onAnalysisSettings}
           @lxs-calculation-options=${this.#onCalculationOptions}
           @lxs-auto-calculate=${this.#onAutoCalculate}
@@ -650,7 +650,9 @@ export class LxsApp extends LitElement {
   /** Under the illuminance view's legend: how current the map is. */
   #legendNote(): string {
     const { state } = this.#analysis;
-    if ((this.scene?.luminaires.length ?? 0) === 0) return msg('No luminaires to calculate.');
+    if (!this.scene || !hasLightToCalculate(this.scene)) {
+      return msg('No luminaires or windows to calculate.');
+    }
     if (state.calculating) return msg('Calculating…');
     if (state.error) return msg('Calculation failed');
     if (!state.analysis || state.stale) return msg('Out of date');

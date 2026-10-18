@@ -10,6 +10,7 @@ import { NO_ANALYSIS, type AnalysisState } from './lxs-analysis-panel';
 import './lxs-catalog-panel';
 import './lxs-scene-panel';
 import { sharedStyles } from './styles';
+import { hasLightToCalculate } from './analysis-controller';
 
 /** The left panel's tabs. */
 export type LibraryTab = 'catalog' | 'scene' | 'analysis';
@@ -103,7 +104,7 @@ export class LxsLibrary extends LitElement {
               .options=${this.calculationOptions}
               .auto=${this.autoCalculate}
               .roomHeight=${this.scene?.room.height ?? 0}
-              .empty=${(this.scene?.luminaires.length ?? 0) === 0}
+              .empty=${!this.scene || !hasLightToCalculate(this.scene)}
               @lxs-open-catalog=${() => this.#setTab('catalog')}
             ></lxs-analysis-panel>`
           : this.tab === 'catalog'

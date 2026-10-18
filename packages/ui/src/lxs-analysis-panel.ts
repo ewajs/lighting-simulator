@@ -288,7 +288,7 @@ export class LxsAnalysisPanel extends LitElement {
   @property({ type: Boolean }) auto = true;
   /** The room's height, in m: the work plane must stay below it. */
   @property({ type: Number }) roomHeight = 2.7;
-  /** Whether the scene has any luminaires to calculate. */
+  /** Whether the scene has nothing to light it: no luminaires, no windows. */
   @property({ type: Boolean }) empty = false;
 
   override render() {
@@ -318,7 +318,7 @@ export class LxsAnalysisPanel extends LitElement {
 
   #empty() {
     return html`<div class="empty">
-      <p>${msg('Add luminaires to see how much light reaches each surface.')}</p>
+      <p>${msg('Add luminaires or windows to see how much light reaches each surface.')}</p>
       <button class="btn" type="button" @click=${() => this.#fire('lxs-open-catalog')}>
         ${msg('Open the catalog')}
       </button>
