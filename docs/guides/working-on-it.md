@@ -16,7 +16,8 @@ npm install
 npm run dev           # the demo, with hot reload
 npm run lint          # ESLint, including the demo → ui → core boundary
 npm run typecheck     # TypeScript in every package
-npm test              # unit tests (Vitest)
+npm test              # unit tests (Vitest): core, ui, demo
+npm run test:accuracy # against Radiance, when the calculation changes (ADR 0076)
 npm run test:e2e      # end-to-end tests (Playwright), all three browser projects
 npm run test:e2e:quick -- <specs>   # just those specs, on Chrome
 npm run coverage      # unit-test coverage, into coverage/
