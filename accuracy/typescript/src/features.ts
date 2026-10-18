@@ -19,7 +19,11 @@ const NOTHING = {
   furnitureShadows: false,
   bouncedLight: false,
   furnitureInBouncedLight: false,
+  luminaireBodies: false,
 };
+
+/** Everything up to furniture in bounced light: the default, before luminaire bodies (ADR 0075). */
+const NO_BODIES = { ...DEFAULT_CALCULATION_OPTIONS, luminaireBodies: false };
 
 /**
  * From the simplest calculation, each luminaire one point of direct light, to
@@ -36,8 +40,9 @@ export const FEATURE_STEPS: readonly FeatureStep[] = [
   },
   // Half a feature, shown because it makes things worse: furniture that hides
   // bounced light without reflecting any is a set of black boxes (ADR 0063).
-  { id: 'furniture-hides-bounce', options: DEFAULT_CALCULATION_OPTIONS, blackFurniture: true },
-  { id: 'furniture-in-bounce', options: DEFAULT_CALCULATION_OPTIONS },
+  { id: 'furniture-hides-bounce', options: NO_BODIES, blackFurniture: true },
+  { id: 'furniture-in-bounce', options: NO_BODIES },
+  { id: 'luminaire-bodies', options: DEFAULT_CALCULATION_OPTIONS },
 ];
 
 /** How one step compares with Radiance's full light in one room. */

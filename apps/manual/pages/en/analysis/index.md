@@ -23,24 +23,20 @@ right for that room, not that a real room will read exactly the same.
 
 ## In short
 
-- **It agrees with Radiance.** In {{ h.usualRooms }} of the {{ h.rooms }}
-  rooms, furniture included, each surface's average is within
-  **{{ pct(h.worstAverage) }}** of Radiance's, and no lit point
+- **It agrees with Radiance.** In all {{ h.rooms }} rooms, furniture
+  included, each surface's average is within **{{ pct(h.worstAverage) }}** of
+  Radiance's. In {{ h.usualRooms }} of them, no lit point
   ([at least 10 % of the brightest](./method#what-the-cutoff-leaves-out)) more
   than 1 m from a luminaire is off by more than **{{ pct(h.worstFar) }}**. The
-  two exceptions are explained. In the [busy open-plan
-  room](./busy-open-plan), a few points in the penumbra of a piece's edge
-  reach {{ pct(h.busyWorstFar, 0) }}. In the [small
-  bathroom](./small-bathroom), everything is close to the luminaires, whose
-  bodies hide light in Radiance and not in Lux Studio: averages read up to
-  {{ pct(h.smallWorstAverage) }} high
-  ([What it doesn't count yet](#what-it-doesn-t-count-yet)).
+  exception is a few points in the [busy open-plan room](./busy-open-plan), in
+  the penumbra of a piece's edge: up to {{ pct(h.busyWorstFar, 0) }}.
 - **The minimum and the uniformity,** what decides whether a project passes
   ([Uniformity](../concepts/uniformity)), are within
-  **{{ pct(h.worstMin) }}** in those {{ h.usualRooms }} rooms. Next to a
-  luminaire's body, they aren't: a ceiling point right above a downlight reads
-  {{ pct(h.busyWorstMin, 0) }} high in the busy open-plan room
-  and {{ pct(h.smallWorstMin, 0) }} in the bathroom.
+  **{{ pct(h.worstMin) }}**, except at two ceiling points, each right above a
+  downlight, 3 cm from its body: {{ pct(h.busyWorstMin, 0) }} high in the busy
+  open-plan room and {{ pct(h.smallWorstMin, 0) }} in the
+  [small bathroom](./small-bathroom)
+  ([What it doesn't count yet](#what-it-doesn-t-count-yet)).
 - **Furniture counts for bounced light too:** it hides it and reflects it, as
   its finish does. In the furnished rooms, that took the mean difference per
   point from {{ pct(h.furnishedBefore) }} to **{{ pct(h.furnishedAfter) }}**.
@@ -76,13 +72,11 @@ Each room has its own page, with its maps point by point:
   point can read 0 or double Radiance's, which sees part of the opening. With
   finer shadow detail (5 or 2.5 cm), those points come closer, at a cost in
   time ([Analysing the light](../analysing)).
-- **Luminaires don't hide bounced light.** In Radiance, the glowing body
-  does. That's why bounced light reads 1.6 % higher than Radiance's on
-  average: 4.5 % around the sconce, and up to 9 % in the small bathroom,
-  where everything is close to a luminaire. In a trial where each
-  luminaire's body hides bounced light, the mean difference drops to 0.2 %,
-  the bathroom comes within 0.7 %, and what's left shrinks with the patch
-  size ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
+- **A luminaire's body is a box.** It hides bounced light, as in Radiance,
+  but it's the box of its opening: a disc becomes the square of the same
+  area, a flat opening a thin plate, and it doesn't tilt. Nor does it shade
+  another luminaire's direct light. It hardly ever shows; right above a
+  downlight, 3 cm from its body, it does ([BOUNCE.md](https://github.com/ewajs/lighting-simulator/blob/master/accuracy/BOUNCE.md)).
 - **Every surface reflects diffusely:** no gloss, no mirrors.
 - **Rooms are rectangular**, and there are no windows yet.
 

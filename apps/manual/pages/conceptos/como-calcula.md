@@ -41,6 +41,8 @@ este orden:
    método de radiosidad, clásico en el cálculo de iluminación de interiores
    ([La luz que rebota](./luz-que-rebota)). Los muebles también cuentan: tapan
    la luz que rebota, y cada una de sus caras la refleja según su terminación.
+   Y el cuerpo de cada luminaria, la caja de su abertura, también la tapa,
+   como una superficie que brilla.
 5. **Multiplica por el factor de mantenimiento**
    ([Factor de mantenimiento](./mantenimiento)).
 6. **Resume** cada superficie: $\bar{E}$, $E_\text{min}$, $E_\text{max}$ y $U_0$
@@ -49,8 +51,8 @@ este orden:
 ## Lo que todavía no cuenta
 
 - **Los muebles son cajas:** un sillón es un bloque, una mesa es solo su tapa.
-- **Las luminarias no tapan la luz que rebota.** Un aplique grande pegado a la
-  pared da unos puntos más que en Radiance (ver abajo).
+- **El cuerpo de una luminaria es una caja:** la de su abertura, sin
+  inclinar. Justo encima de una downlight se nota (ver abajo).
 - **Todas las superficies reflejan de forma difusa:** no hay brillos ni espejos.
 - **Los ambientes son rectangulares**, y todavía no hay ventanas.
 

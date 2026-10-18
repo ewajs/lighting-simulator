@@ -54,10 +54,11 @@ six luminaires:
 
 | | 3 pieces, 5 × 4 m | 9 pieces and 4 chairs, 6 × 5 m |
 |---|---|---|
-| From scratch, or after moving furniture | 0.7 s | 2.1 s |
-| When only the light changes | 0.12 s | 0.23 s |
+| From scratch, or after moving furniture or a luminaire | 0.86 s | 2.4 s |
+| After dimming or switching a luminaire | 0.12 s | 0.23 s |
 
-Moving or dimming a luminaire recalculates right away even in a full room;
-moving furniture takes a few seconds, because it changes the bounces of the
-whole room. It hasn't been measured on other machines yet: on a phone or an
+Dimming or switching a luminaire recalculates right away even in a full
+room. Moving furniture, or a luminaire, takes a few seconds, because it
+changes the bounces of the whole room: luminaires' bodies hide bounced light.
+With that setting off, moving a luminaire is immediate again. It hasn't been measured on other machines yet: on a phone or an
 older computer, it will take longer.

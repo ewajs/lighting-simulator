@@ -166,6 +166,18 @@ const MISTAKES = [
     correct: 'maxGridSpacing(Math.max(sizeU, sizeV))',
     slip: 'maxGridSpacing(Math.min(sizeU, sizeV))',
   },
+  {
+    name: 'luminaire bodies left out of bounced light',
+    file: 'src/analysis/scene-light.ts',
+    correct: 'const blockers = [...furniture, ...(options.luminaireBodies ? direct.bodies : [])];',
+    slip: 'const blockers = [...furniture];',
+  },
+  {
+    name: 'covered points still counted',
+    file: 'src/analysis/analyse.ts',
+    correct: 'const measured = illuminanceLx.filter((_, k) => !covered[k]);',
+    slip: 'const measured = illuminanceLx;',
+  },
 ];
 
 const sandbox = mkdtempSync(join(tmpdir(), 'luxstudio-mutation-'));

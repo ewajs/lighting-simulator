@@ -10,6 +10,7 @@ import type { LuminaireFrame } from '../luminaire-frame';
 import { add, scale } from '../math';
 import { DEFAULT_CALCULATION_OPTIONS } from './options';
 import type { LuminousOpening, Photometry, Product, Vec3 } from '../types';
+import type { Blocker } from './occlusion';
 
 /** How a source's intensity varies with direction. */
 export type Distribution =
@@ -115,4 +116,34 @@ function cellOffsets(opening: LuminousOpening | undefined, cellM: number): CellO
 
 function insideEllipse(x: number, z: number, halfX: number, halfZ: number): boolean {
   return (x / halfX) ** 2 + (z / halfZ) ** 2 <= 1;
+}
+
+/** Half the thickness given a flat opening's body, in m: thin, but something a ray can meet. */
+const FLAT_HALF_M = 0.0005;
+
+/**
+ * A luminaire's body, as it hides bounced light (ADR 0075): the box of its
+ * luminous opening, centred on its light and turned about the vertical as it
+ * is. A round opening becomes the square of the same area, a flat one a thin
+ * plate. Tilt is left out: boxes only turn about the vertical, and tilted
+ * luminaires are mostly small spots. A luminaire without an opening (a point
+ * source) has no body. Black: a glowing surface reflects no bounced light.
+ */
+export function luminaireBody(
+  frame: LuminaireFrame,
+  opening: LuminousOpening | undefined,
+): Blocker | undefined {
+  if (!opening || opening.widthM <= 0 || opening.lengthM <= 0) return undefined;
+  const square = opening.round ? Math.sqrt(Math.PI) / 2 : 1;
+  return {
+    centre: frame.origin,
+    half: {
+      x: (opening.widthM * square) / 2,
+      y: Math.max(opening.heightM / 2, FLAT_HALF_M),
+      z: (opening.lengthM * square) / 2,
+    },
+    // A box's own x axis is (cos, 0, −sin) of its yaw: along the frame's side.
+    yawRad: Math.atan2(-frame.side.z, frame.side.x),
+    reflectance: 0,
+  };
 }

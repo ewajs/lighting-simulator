@@ -127,5 +127,6 @@ gives exactly the formula's value ([How we compare](../analysis/method)).
 
 Furniture is part of the room: it hides bounced light (the floor under a table
 doesn't see the ceiling), and each of its faces is one more patch, reflecting
-as its finish does. Luminaires, though, don't hide bounced light. How much
+as its finish does. And luminaires' bodies hide it too: the wall behind a
+sconce doesn't see the room through it. How much
 each of these changes is in [Feature by feature](../analysis/feature-by-feature).

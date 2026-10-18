@@ -20,8 +20,9 @@ it('starts from nothing and ends with every feature the calculation has', () => 
     o.furnitureShadows,
     o.bouncedLight,
     o.furnitureInBouncedLight,
+    o.luminaireBodies,
   ];
-  expect(features(first)).toEqual([false, false, false, false]);
+  expect(features(first)).toEqual([false, false, false, false, false]);
   expect(last).toEqual(DEFAULT_CALCULATION_OPTIONS);
 });
 

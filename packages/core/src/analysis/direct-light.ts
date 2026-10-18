@@ -16,7 +16,7 @@ import {
   type AnalysisInputs,
   type AnalysisSettings,
 } from './settings';
-import { distributionOf, luminaireSources, type PointSource } from './sources';
+import { distributionOf, luminaireBody, luminaireSources, type PointSource } from './sources';
 
 /**
  * A scene's light, ready to be read at any point with `directIlluminance`:
@@ -26,6 +26,11 @@ import { distributionOf, luminaireSources, type PointSource } from './sources';
 export interface DirectLight {
   readonly sources: readonly PointSource[];
   readonly blockers: readonly Blocker[];
+  /**
+   * The luminaires' bodies, which hide bounced light when the options say so
+   * (ADR 0075). Every placed luminaire with a luminous opening has one, on or off.
+   */
+  readonly bodies: readonly Blocker[];
   /** Luminaires lit by an estimate, for want of an IES file: their figures are rough. */
   readonly estimatedLuminaires: readonly string[];
   /** Luminaires left out because the catalog doesn't know their product. */
@@ -52,6 +57,7 @@ export function directLight(
   const estimatedLuminaires: string[] = [];
   const unknownLuminaires: string[] = [];
   const sources: PointSource[] = [];
+  const bodies: Blocker[] = [];
   for (const luminaire of scene.luminaires) {
     const product = inputs.catalog.get(luminaire.productId);
     if (!product) {
@@ -62,6 +68,8 @@ export function directLight(
     if (!photometry) estimatedLuminaires.push(luminaire.id);
     const layout = fixtureLayout(product, inputs.modelFile(product.id));
     const frame = luminaireFrame(luminaire, product.mount, scene.room, layout);
+    const body = luminaireBody(frame, photometry?.luminousOpening);
+    if (body) bodies.push(body);
     const level = luminaire.on ? luminaire.dimming : 0;
     sources.push(
       ...luminaireSources(
@@ -74,5 +82,5 @@ export function directLight(
     );
   }
   const blockers = options.furnitureShadows ? furnitureBlockers(scene.furniture) : [];
-  return { sources, blockers, estimatedLuminaires, unknownLuminaires };
+  return { sources, blockers, bodies, estimatedLuminaires, unknownLuminaires };
 }

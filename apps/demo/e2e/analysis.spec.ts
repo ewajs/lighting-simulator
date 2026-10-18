@@ -75,17 +75,21 @@ test('without auto-calculation, results go out of date until Calculate', async (
   expect((await average(page)) / before).toBeCloseTo(0.5 / 0.8, 2);
 });
 
-test('switching bounced light off leaves direct light only, and furniture in it off too', async ({
+test('switching bounced light off leaves direct light only, and furniture and luminaire bodies in it off too', async ({
   page,
 }) => {
   await openAnalysis(page);
   const withBounces = await average(page);
   const bounce = panel(page).getByRole('switch', { name: /Luz que rebota/ });
   const furniture = panel(page).getByRole('switch', { name: /Muebles en la luz que rebota/ });
+  const bodies = panel(page).getByRole('switch', { name: /Cuerpo de las luminarias/ });
+  await expect(bodies).toBeChecked();
   await bounce.uncheck();
   await expect.poll(() => average(page)).toBeLessThan(withBounces);
-  await expect(furniture).toBeDisabled();
-  await expect(furniture).not.toBeChecked();
+  for (const needsBounce of [furniture, bodies]) {
+    await expect(needsBounce).toBeDisabled();
+    await expect(needsBounce).not.toBeChecked();
+  }
 });
 
 test('shadow detail splits the luminaires into finer cells, and recalculates', async ({ page }) => {

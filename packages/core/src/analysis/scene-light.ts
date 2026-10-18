@@ -67,11 +67,13 @@ export function indirectLight(
   if (!options.bouncedLight) {
     return { patches: [], exitance: new Float64Array(0), iterations: 0, blockers: [] };
   }
-  // Furniture hides and reflects bounced light when it counts (ADR 0063).
-  const blockers = options.furnitureInBouncedLight ? direct.blockers : [];
+  // Furniture hides and reflects bounced light when it counts (ADR 0063);
+  // luminaires' bodies hide it, and reflect none (ADR 0075).
+  const furniture = options.furnitureInBouncedLight ? direct.blockers : [];
+  const blockers = [...furniture, ...(options.luminaireBodies ? direct.bodies : [])];
   const patches = [
     ...roomPatches(room, options.patchSizeM),
-    ...blockers.flatMap((blocker) => boxPatches(blocker, options.patchSizeM)),
+    ...furniture.flatMap((blocker) => boxPatches(blocker, options.patchSizeM)),
   ];
   // Each patch's direct light, averaged over its sample points: a spot's
   // sharp-edged pool lands partly on a patch.

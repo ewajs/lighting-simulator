@@ -86,6 +86,7 @@ function panelRow(cellM: number | undefined, name: string): string {
       splitOpenings: cellM !== undefined,
       bouncedLight: false,
       furnitureInBouncedLight: false,
+      luminaireBodies: false,
     },
   );
   const errors = DISTANCES_M.map((d) => {

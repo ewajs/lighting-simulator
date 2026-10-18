@@ -514,10 +514,11 @@ export class LxsAnalysisPanel extends LitElement {
         msg('Light that bounces'),
         options.bouncedLight,
         (bouncedLight) =>
-          // Furniture in bounced light needs bounced light (ADR 0063): off together.
+          // Furniture and luminaire bodies in bounced light need it (ADR 0063, 0075): off together.
           setOptions({
             bouncedLight,
             furnitureInBouncedLight: bouncedLight && options.furnitureInBouncedLight,
+            luminaireBodies: bouncedLight && options.luminaireBodies,
           }),
         msg('Off: direct light only, faster and a third or more too dark.'),
       )}
@@ -526,6 +527,15 @@ export class LxsAnalysisPanel extends LitElement {
         options.furnitureInBouncedLight,
         (furnitureInBouncedLight) => setOptions({ furnitureInBouncedLight }),
         msg('Off: faster in furnished rooms, less accurate near furniture.'),
+        !options.bouncedLight,
+      )}
+      ${this.#switch(
+        msg('Luminaire bodies'),
+        options.luminaireBodies,
+        (luminaireBodies) => setOptions({ luminaireBodies }),
+        msg(
+          'They hide bounced light, as in reality. Off: a little too much light near them, and moving one is faster.',
+        ),
         !options.bouncedLight,
       )}
     </section>`;
